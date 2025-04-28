@@ -51,65 +51,64 @@ exports.getServiceById = asyncHandler(async (req, res) => {
 });
 
 exports.createService = asyncHandler(async (req, res) => {
-  const { title, description, price, image, type } = req.body;
+  try {
+    const { title, description, price, image, type } = req.body;
 
-  // Kiểm tra cơ bản xem có đủ field không
-  if (!title || !description || !price || !image || !type) {
-    res.status(400);
-    throw new Error("Vui lòng điền đầy đủ thông tin");
+    const service = await Service.create({
+      title,
+      description,
+      price: Number(price),
+      image,
+      type,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: service,
+      message: "Tạo dịch vụ thành công",
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(400);
+      throw new Error(
+        Object.values(error.errors)
+          .map((err) => err.message)
+          .join(", ")
+      );
+    }
+    throw error;
   }
-
-  // Kiểm tra định dạng của description
-  if (!Array.isArray(description)) {
-    res.status(400);
-    throw new Error("Description phải là một mảng các mô tả");
-  }
-
-  const service = await Service.create({
-    title,
-    description,
-    price: Number(price),
-    image,
-    type,
-  });
-
-  res.status(201).json({
-    success: true,
-    data: service,
-    message: "Tạo dịch vụ thành công",
-  });
 });
 
 exports.updateService = asyncHandler(async (req, res) => {
-  const updateData = req.body;
+  try {
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
 
-  // Kiểm tra có dữ liệu cập nhật không
-  if (Object.keys(updateData).length === 0) {
-    res.status(400);
-    throw new Error("Không có dữ liệu để cập nhật");
+    if (!service) {
+      res.status(404);
+      throw new Error("Không tìm thấy dịch vụ");
+    }
+
+    res.status(200).json({
+      success: true,
+      data: service,
+      message: "Cập nhật dịch vụ thành công",
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(400);
+      throw new Error(
+        Object.values(error.errors)
+          .map((err) => err.message)
+          .join(", ")
+      );
+    }
+    throw error;
   }
-
-  // Chuyển đổi price sang Number nếu có
-  if (updateData.price) {
-    updateData.price = Number(updateData.price);
-  }
-
-  const service = await Service.findByIdAndUpdate(
-    req.params.id,
-    { $set: updateData },
-    { new: true, runValidators: true }
-  ).lean();
-
-  if (!service) {
-    res.status(404);
-    throw new Error("Không tìm thấy dịch vụ");
-  }
-
-  res.status(200).json({
-    success: true,
-    data: service,
-    message: "Cập nhật dịch vụ thành công",
-  });
 });
 
 exports.deleteService = asyncHandler(async (req, res) => {

@@ -21,7 +21,8 @@ app.use(express.json());
 
 // CORS
 app.use(cors());
-
+// Cho phép truy cập thư mục uploads
+app.use("/uploads", express.static("uploads"));
 // Routes
 // app.use("/api/users", userRoutes);
 // app.use("/api/emails", emailRoutes);

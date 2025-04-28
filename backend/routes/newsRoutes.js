@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/uploadImage");
 const {
   getNews,
   getNewsById,
@@ -9,6 +10,12 @@ const {
 } = require("../controllers/newsController");
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
+
+// Route upload ảnh
+router.post("/upload", upload.single("image"), (req, res) => {
+  // Trả về đường dẫn file ảnh vừa upload
+  res.json({ imagePath: req.file.path });
+});
 
 // Lấy danh sách bài viết (công khai)
 router.get("/", getNews);
