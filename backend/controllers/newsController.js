@@ -1,9 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const News = require("../models/newsModel");
 
-// @desc    Lấy tất cả bài viết với phân trang và lọc
-// @route   GET /api/news
-// @access  Public
 exports.getNews = asyncHandler(async (req, res) => {
   const {
     type,
@@ -13,6 +10,7 @@ exports.getNews = asyncHandler(async (req, res) => {
     order = "desc",
   } = req.query;
   const query = type ? { type } : {};
+  query.isDeleted = false;
   const skip = (Number(page) - 1) * Number(limit);
 
   // Kiểm tra trường sắp xếp hợp lệ
@@ -42,9 +40,6 @@ exports.getNews = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Lấy một bài viết theo ID và tăng lượt xem
-// @route   GET /api/news/:id
-// @access  Public
 exports.getNewsById = asyncHandler(async (req, res) => {
   const news = await News.findByIdAndUpdate(
     req.params.id,
@@ -64,9 +59,6 @@ exports.getNewsById = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Tạo bài viết mới
-// @route   POST /api/news
-// @access  Private/Admin
 exports.createNews = asyncHandler(async (req, res) => {
   const { title, summary, content, image, type, author } = req.body;
 
@@ -106,9 +98,6 @@ exports.createNews = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Cập nhật bài viết
-// @route   PATCH /api/news/:id
-// @access  Private/Admin
 exports.updateNews = asyncHandler(async (req, res) => {
   const updateData = req.body;
   const newsId = req.params.id;
@@ -122,7 +111,7 @@ exports.updateNews = asyncHandler(async (req, res) => {
     const news = await News.findByIdAndUpdate(
       newsId,
       { $set: updateData },
-      { new: true, runValidators: true } // runValidators: true sẽ kích hoạt validation
+      { new: true, runValidators: true }
     ).lean();
 
     if (!news) {
@@ -146,11 +135,12 @@ exports.updateNews = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Xóa bài viết
-// @route   DELETE /api/news/:id
-// @access  Private/Admin
 exports.deleteNews = asyncHandler(async (req, res) => {
-  const news = await News.findByIdAndDelete(req.params.id);
+  const news = await News.findByIdAndUpdate(
+    req.params.id,
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
 
   if (!news) {
     res.status(404);
@@ -159,6 +149,30 @@ exports.deleteNews = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Xóa bài viết thành công",
+    message: "Đã ẩn bài viết thành công",
+  });
+});
+
+exports.deleteNewsMany = asyncHandler(async (req, res) => {
+  const { ids } = req.body;
+
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    res.status(400);
+    throw new Error("Vui lòng cung cấp danh sách ID bài viết để xóa");
+  }
+
+  const result = await News.updateMany(
+    { _id: { $in: ids } },
+    { $set: { isDeleted: true } }
+  );
+
+  if (result.modifiedCount === 0) {
+    res.status(404);
+    throw new Error("Không tìm thấy bài viết nào để xóa");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
 });
