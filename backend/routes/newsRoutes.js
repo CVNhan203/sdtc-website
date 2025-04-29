@@ -7,9 +7,11 @@ const {
   createNews,
   updateNews,
   deleteNews,
+  deleteNewsMany,
 } = require("../controllers/newsController");
-const authMiddleware = require("../middleware/authMiddleware");
+
 const adminMiddleware = require("../middleware/adminMiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // Route upload ảnh
 router.post("/upload", upload.single("image"), (req, res) => {
@@ -28,6 +30,9 @@ router.post("/", authMiddleware, adminMiddleware, createNews);
 
 // Cập nhật bài viết (yêu cầu admin)
 router.put("/:id", authMiddleware, adminMiddleware, updateNews);
+
+//Xóa nhiều bài viết (yêu cầu admin)
+router.delete("/many", authMiddleware, adminMiddleware, deleteNewsMany);
 
 // Xóa bài viết (yêu cầu admin)
 router.delete("/:id", authMiddleware, adminMiddleware, deleteNews);

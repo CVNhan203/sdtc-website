@@ -49,5 +49,10 @@ const newsSchema = new mongoose.Schema({
     default: 0,
     min: [0, "Lượt thích không được âm"],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
+
 module.exports = mongoose.model("News", newsSchema);

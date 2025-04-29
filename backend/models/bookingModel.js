@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-  serviceId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Service",
-    required: [true, "Gói dịch vụ là bắt buộc"],
-  },
+const bookingSchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: [true, "Họ và tên là bắt buộc"],
@@ -17,9 +12,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: [true, "Số điện thoại là bắt buộc"],
     validate: {
-      validator: function (v) {
-        return /^0\d{9,10}$/.test(v);
-      },
+      validator: (v) => /^0\d{9,10}$/.test(v),
       message: "Số điện thoại không hợp lệ",
     },
   },
@@ -30,20 +23,22 @@ const orderSchema = new mongoose.Schema({
     lowercase: true,
     match: [/.+@.+\..+/, "Email không hợp lệ"],
   },
-  paymentMethod: {
+  service: {
     type: String,
-    enum: ["MOMO", "VNPAY"],
-    required: [true, "Phương thức thanh toán là bắt buộc"],
+    required: [true, "Tên dịch vụ là bắt buộc"],
+    trim: true,
+    minLength: [3, "Tên dịch vụ phải có ít nhất 3 ký tự"],
+    maxLength: [50, "Tên dịch vụ không được vượt quá 50 ký tự"],
   },
-  paymentStatus: {
+  note: {
     type: String,
-    enum: ["pending", "paid", "failed"],
-    default: "pending",
+    trim: true,
+    default: "",
   },
-  orderStatus: {
+  status: {
     type: String,
-    enum: ["pending", "processing", "completed", "cancelled"],
-    default: "pending",
+    enum: ["processing", "completed", "cancelled"],
+    default: "processing",
   },
   createdAt: {
     type: Date,
@@ -51,4 +46,4 @@ const orderSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

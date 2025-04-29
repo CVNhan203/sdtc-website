@@ -10,6 +10,7 @@ exports.getServices = asyncHandler(async (req, res) => {
     order = "asc",
   } = req.query;
   const query = type ? { type } : {};
+  query.isDeleted = false;
   const skip = (Number(page) - 1) * Number(limit);
 
   const sortQuery = {};
@@ -36,7 +37,7 @@ exports.getServices = asyncHandler(async (req, res) => {
 });
 
 exports.getServiceById = asyncHandler(async (req, res) => {
-  const service = await Service.findById(req.params.id).lean();
+  const service = await Service.findOne({ _id: req.params.id, isDeleted: false }).lean();
 
   if (!service) {
     res.status(404);
@@ -51,68 +52,27 @@ exports.getServiceById = asyncHandler(async (req, res) => {
 });
 
 exports.createService = asyncHandler(async (req, res) => {
-  try {
-    const { title, description, price, image, type } = req.body;
-
-    const service = await Service.create({
-      title,
-      description,
-      price: Number(price),
-      image,
-      type,
-    });
-
-    res.status(201).json({
-      success: true,
-      data: service,
-      message: "Tạo dịch vụ thành công",
-    });
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      res.status(400);
-      throw new Error(
-        Object.values(error.errors)
-          .map((err) => err.message)
-          .join(", ")
-      );
-    }
-    throw error;
-  }
+  const { title, description, price, image, type } = req.body;
+  const service = await Service.create({
+    title,
+    description,
+    price: Number(price),
+    image,
+    type,
+  });
+  res.status(201).json({
+    success: true,
+    data: service,
+    message: "Tạo dịch vụ thành công",
+  });
 });
 
 exports.updateService = asyncHandler(async (req, res) => {
-  try {
-    const service = await Service.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true, runValidators: true }
-    );
-
-    if (!service) {
-      res.status(404);
-      throw new Error("Không tìm thấy dịch vụ");
-    }
-
-    res.status(200).json({
-      success: true,
-      data: service,
-      message: "Cập nhật dịch vụ thành công",
-    });
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      res.status(400);
-      throw new Error(
-        Object.values(error.errors)
-          .map((err) => err.message)
-          .join(", ")
-      );
-    }
-    throw error;
-  }
-});
-
-exports.deleteService = asyncHandler(async (req, res) => {
-  const service = await Service.findByIdAndDelete(req.params.id);
+  const service = await Service.findByIdAndUpdate(
+    req.params.id,
+    { $set: req.body },
+    { new: true, runValidators: true }
+  );
 
   if (!service) {
     res.status(404);
@@ -121,6 +81,25 @@ exports.deleteService = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Xóa dịch vụ thành công",
+    data: service,
+    message: "Cập nhật dịch vụ thành công",
+  });
+});
+
+exports.deleteService = asyncHandler(async (req, res) => {
+  const service = await Service.findByIdAndUpdate(
+    req.params.id,
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+
+  if (!service) {
+    res.status(404);
+    throw new Error("Không tìm thấy dịch vụ");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Đã ẩn dịch vụ thành công",
   });
 });
