@@ -7,16 +7,16 @@ const {
   updateService,
   deleteService,
 } = require("../controllers/serviceController");
-const authMiddleware = require("../middleware/authMiddleware");
-const adminMiddleware = require("../middleware/adminMiddleware");
+const { protect } = require("../middleware/authMiddleware");
+const { checkActiveStatus } = require("../middleware/adminMiddleware");
 
 // Routes công khai
 router.get("/", getServices);
 router.get("/:id", getServiceById);
 
 // Routes yêu cầu quyền admin
-router.post("/", authMiddleware, adminMiddleware, createService);
-router.put("/:id", authMiddleware, adminMiddleware, updateService);
-router.delete("/:id", authMiddleware, adminMiddleware, deleteService);
+router.post("/", protect, checkActiveStatus, createService);
+router.put("/:id", protect, checkActiveStatus, updateService);
+router.delete("/:id", protect, checkActiveStatus, deleteService);
 
 module.exports = router;
