@@ -1,7 +1,6 @@
 <template>
   <div class="insert-service-container">
     <div class="form-wrapper">
-      <h2>Thêm Dịch Vụ Mới</h2>
       
       <!-- Error message -->
       <div v-if="error" class="error-message">
@@ -10,74 +9,108 @@
 
       <form @submit.prevent="handleSubmit" class="service-form">
         <div class="form-group">
-          <label for="serviceTitle">Tiêu đề</label>
+          <label for="serviceTitle">Tiêu đề <span class="required">*</span></label>
           <input 
             type="text" 
             id="serviceTitle" 
             v-model="formData.title"
             placeholder="Nhập tiêu đề dịch vụ"
+            :class="{ 'error': errors.title }"
             required
             minlength="3"
-            maxlength="100"
+            maxlength="200"
           >
+          <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
+          <span class="character-count" :class="{ error: formData.title.length > 200 }">
+            {{ formData.title.length }}/200
+          </span>
         </div>
 
         <div class="form-group">
-          <label for="serviceType">Loại dịch vụ</label>
+          <label for="serviceType">Loại dịch vụ <span class="required">*</span></label>
           <select 
             id="serviceType" 
             v-model="formData.type"
+            :class="{ 'error': errors.type }"
             required
           >
+            <option value="" disabled selected>Chọn loại dịch vụ</option>
             <option value="web">Website</option>
             <option value="app">Ứng dụng</option>
             <option value="agency">Agency</option>
           </select>
+          <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
         </div>
 
         <div class="form-group">
-          <label for="serviceImage">Ảnh</label>
-          <div class="image-upload">
-            <input 
-              type="file" 
-              id="serviceImage" 
-              @change="handleImageUpload"
-              accept="image/*"
-              ref="imageInput"
+          <label>Ảnh <span class="required">*</span></label>
+          <div class="image-upload-container" :class="{ 'has-error': errors.image }">
+            <div 
+              class="image-preview" 
+              v-if="imagePreview"
+              :style="{ backgroundImage: `url(${imagePreview})` }"
             >
-            <div class="image-preview" v-if="imagePreview">
-              <img :src="imagePreview" alt="Preview">
-              <button type="button" @click="removeImage" class="remove-image">×</button>
+              <button type="button" class="remove-image" @click="removeImage">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="upload-button" v-else>
+              <input 
+                type="file" 
+                ref="fileInput"
+                @change="handleImageUpload" 
+                accept="image/jpeg,image/png,image/gif"
+                class="file-input"
+                required
+              >
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Tải ảnh lên</span>
             </div>
           </div>
+          <div class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</div>
+          <span class="error-message" v-if="errors.image">{{ errors.image }}</span>
         </div>
 
         <div class="form-group">
-          <label for="servicePrice">Giá</label>
+          <label for="servicePrice">Giá <span class="required">*</span></label>
           <input 
             type="number" 
             id="servicePrice" 
             v-model="formData.price"
             placeholder="Nhập giá dịch vụ"
+            :class="{ 'error': errors.price }"
             required
             min="0"
           >
+          <span class="error-message" v-if="errors.price">{{ errors.price }}</span>
         </div>
 
         <div class="form-group">
-          <label for="serviceContent">Mô tả dịch vụ</label>
+          <label for="serviceContent">Mô tả dịch vụ <span class="required">*</span></label>
           <textarea 
             id="serviceContent" 
             v-model="formData.content"
             placeholder="Nhập mô tả chi tiết về dịch vụ"
-            rows="4"
+            :class="{ 'error': errors.content }"
+            rows="6"
             required
+            maxlength="2000"
           ></textarea>
+          <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
+          <span class="character-count" :class="{ error: formData.content.length > 2000 }">
+            {{ formData.content.length }}/2000
+          </span>
         </div>
 
-        <button type="submit" class="submit-btn" :disabled="loading">
-          {{ loading ? 'Đang xử lý...' : 'Thêm dịch vụ' }}
-        </button>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" @click="$router.push('/admin/dich-vu/danh-sach')">
+            <i class="fas fa-times"></i> Hủy
+          </button>
+          <button type="submit" class="submit-btn" :disabled="loading || !isFormValid">
+            <i class="fas" :class="loading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+            {{ loading ? 'Đang xử lý...' : 'Thêm dịch vụ' }}
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -95,29 +128,97 @@ export default {
         price: '',
         content: '',
         image: null,
-        type: 'web'
+        type: ''
       },
       imagePreview: null,
       loading: false,
-      error: null
+      error: null,
+      maxFileSize: 5 * 1024 * 1024, // 5MB in bytes
+      errors: {} // Add errors object for validation
+    }
+  },
+  computed: {
+    isFormValid() {
+      // Kiểm tra các trường bắt buộc có giá trị
+      const hasRequiredFields = 
+        this.formData.title?.trim() &&
+        this.formData.type &&
+        this.formData.price > 0 &&
+        this.formData.content?.trim() &&
+        (this.formData.image || this.imagePreview);
+
+      // Kiểm tra độ dài các trường
+      const isValidLength = 
+        this.formData.title.length <= 200 &&
+        this.formData.content.length <= 2000;
+
+      // Form hợp lệ khi có đầy đủ thông tin và không có lỗi
+      return hasRequiredFields && isValidLength && Object.keys(this.errors).length === 0;
     }
   },
   methods: {
+    validateForm() {
+      const newErrors = {};
+
+      if (!this.formData.title?.trim()) {
+        newErrors.title = 'Tiêu đề không được để trống';
+      } else if (this.formData.title.length > 200) {
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+      }
+
+      if (!this.formData.type) {
+        newErrors.type = 'Vui lòng chọn loại dịch vụ';
+      }
+
+      if (!this.formData.price || this.formData.price <= 0) {
+        newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
+      }
+
+      if (!this.formData.content?.trim()) {
+        newErrors.content = 'Mô tả không được để trống';
+      } else if (this.formData.content.length > 2000) {
+        newErrors.content = 'Mô tả không được vượt quá 2000 ký tự';
+      }
+
+      if (!this.formData.image && !this.imagePreview) {
+        newErrors.image = 'Vui lòng chọn ảnh cho dịch vụ';
+      }
+
+      this.errors = newErrors;
+      return Object.keys(newErrors).length === 0;
+    },
     handleImageUpload(event) {
       const file = event.target.files[0]
       if (file) {
-        this.formData.image = file
-        this.imagePreview = URL.createObjectURL(file)
+        if (file.size > this.maxFileSize) {
+          this.error = 'Kích thước file không được vượt quá 5MB';
+          this.$refs.fileInput.value = '';
+          return;
+        }
+
+        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+          this.error = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF';
+          this.$refs.fileInput.value = '';
+          return;
+        }
+
+        this.formData.image = file;
+        this.imagePreview = URL.createObjectURL(file);
+        this.error = null;
       }
     },
     removeImage() {
       this.formData.image = null
       this.imagePreview = null
-      if (this.$refs.imageInput) {
-        this.$refs.imageInput.value = ''
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = ''
       }
     },
     async handleSubmit() {
+      if (!this.validateForm()) {
+        return;
+      }
+
       if (this.loading) return;
       this.loading = true;
       this.error = null;
@@ -170,12 +271,12 @@ export default {
         price: '',
         content: '',
         image: null,
-        type: 'web'
+        type: ''
       }
       this.imagePreview = null;
       this.error = null;
-      if (this.$refs.imageInput) {
-        this.$refs.imageInput.value = ''
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = ''
       }
     }
   },
@@ -246,66 +347,133 @@ textarea {
   resize: vertical;
 }
 
-.image-upload {
+.image-upload-container {
   border: 2px dashed #d1d5db;
-  padding: 1.5rem;
-  border-radius: 0.375rem;
-  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.image-upload-container:hover {
+  border-color: #4299e1;
 }
 
 .image-preview {
-  margin-top: 1rem;
   position: relative;
-  max-width: 200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.image-preview img {
-  width: 100%;
-  height: auto;
-  border-radius: 0.375rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
 }
 
 .remove-image {
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
+  top: -10px;
+  right: -10px;
   background: #ef4444;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-button i {
+  font-size: 24px;
+  color: #718096;
+  margin-bottom: 8px;
+}
+
+.upload-button span {
+  display: block;
+  color: #718096;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.cancel-btn,
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: auto;
+  margin: 0;
+}
+
+.cancel-btn {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
 }
 
 .submit-btn {
-  background: #3b82f6;
+  background: #4299e1;
   color: white;
-  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
-  transition: background-color 0.2s;
 }
 
-.submit-btn:hover {
-  background: #2563eb;
+.cancel-btn:hover {
+  background: #edf2f7;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #4299e1;
 }
 
 .submit-btn:disabled {
-  background: #94a3b8;
+  opacity: 0.7;
   cursor: not-allowed;
+  background: #4299e1;
+}
+
+.character-count {
+  font-size: 0.875rem;
+  color: #718096;
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #ef4444;
+}
+
+.has-error {
+  border-color: #dc2626;
 }
 
 @media (max-width: 640px) {
@@ -316,6 +484,11 @@ textarea {
   .form-wrapper {
     padding: 1.5rem;
   }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 

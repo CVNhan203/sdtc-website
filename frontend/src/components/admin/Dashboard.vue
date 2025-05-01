@@ -71,6 +71,14 @@
               <i class="fas fa-plus"></i>
               <span>Thêm tin tức mới</span>
             </router-link>
+            <router-link 
+              to="/admin/tin-tuc/thung-rac" 
+              class="submenu-item"
+              active-class="active">
+              <i class="fas fa-trash-alt"></i>
+              <span>Thùng rác</span>
+              <span v-if="deletedNewsCount" class="badge">{{ deletedNewsCount }}</span>
+            </router-link>
           </div>
         </div>
         
@@ -194,7 +202,8 @@ export default {
       isNewsMenuOpen: false,
       isOrderMenuOpen: false,
       isPaymentMenuOpen: false,
-      deletedServicesCount: 0
+      deletedServicesCount: 0,
+      deletedNewsCount: 0
     }
   },
   async created() {
@@ -204,15 +213,18 @@ export default {
       return;
     }
     
-    // Load số lượng dịch vụ đã xóa
+    // Load số lượng dịch vụ và tin tức đã xóa
     await this.loadDeletedServicesCount();
+    await this.loadDeletedNewsCount();
     
-    // Listen for updates to deleted services count using mitt
+    // Listen for updates to deleted items count using mitt
     emitter.on('update-deleted-services-count', this.loadDeletedServicesCount);
+    emitter.on('update-deleted-news-count', this.loadDeletedNewsCount);
   },
   beforeUnmount() {
-    // Remove event listener
+    // Remove event listeners
     emitter.off('update-deleted-services-count', this.loadDeletedServicesCount);
+    emitter.off('update-deleted-news-count', this.loadDeletedNewsCount);
   },
   computed: {
     currentPageTitle() {
@@ -277,17 +289,25 @@ export default {
       } catch (error) {
         console.error('Error loading deleted services count:', error);
       }
+    },
+    async loadDeletedNewsCount() {
+      try {
+        const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]');
+        this.deletedNewsCount = deletedNewsInfo.filter(news => news.isDeleted).length;
+      } catch (error) {
+        console.error('Error loading deleted news count:', error);
+      }
     }
   },
   watch: {
     '$route'(to) {
       if (to.path.includes('/admin/dich-vu')) {
         this.isServiceMenuOpen = true;
-        // Cập nhật số lượng khi vào các trang dịch vụ
         this.loadDeletedServicesCount();
       }
       if (to.path.includes('/admin/tin-tuc')) {
         this.isNewsMenuOpen = true;
+        this.loadDeletedNewsCount();
       }
       if (to.path.includes('/admin/don-hang')) {
         this.isOrderMenuOpen = true;

@@ -1,24 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ComNews from '../components/view/ComNews.vue'
 import ComNewsDetail from '../components/view/ComNewsDetail.vue'
-import AdminLogin from '../components/admin/login.vue'
+// import AdminLogin from '../components/admin/login.vue'
 import ComPriceList from '../components/view/ComPriceList.vue'
 import AdminDashboard from '../components/admin/Dashboard.vue'
 import AdminServiceList from '../components/admin/service/ServiceList.vue'
 import AdminNewsList from '../components/admin/news/NewsList.vue'
+import AdminInsertNews from '../components/admin/news/InsertNews.vue'
+import AdminEditNews from '../components/admin/news/EditNews.vue'
+import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
 import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
+import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 
-// Auth guard middleware
+// Tạm thời bỏ qua auth guard
 const requireAuth = (to, from, next) => {
-  const token = localStorage.getItem('adminToken')
-  if (!token) {
-    next('/admin')
-  } else {
-    next()
-  }
+  next()
 }
 
 const routes = [
@@ -39,8 +38,7 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'AdminLogin',
-    component: AdminLogin
+    redirect: '/admin/dashboard'
   },
   {
     path: '/admin/dashboard',
@@ -68,8 +66,8 @@ const routes = [
           },
           {
             path: 'chinh-sua/:id',
-            name: 'EditService',
-            component: () => import('@/components/admin/service/EditService.vue'),
+            name: 'AdminEditService',
+            component: AdminEditService,
             meta: { requiresAuth: true }
           }
         ]
@@ -84,8 +82,23 @@ const routes = [
           },
           {
             path: 'them-moi',
-            name: 'AdminNewsAdd',
-            component: AdminNewsList,
+            name: 'AdminInsertNews',
+            component: AdminInsertNews,
+          },
+          {
+            path: 'chinh-sua/:id',
+            name: 'AdminEditNews',
+            component: AdminEditNews,
+            meta: { requiresAuth: true }
+          },
+          {
+            path: 'thung-rac',
+            name: 'AdminTrashNews',
+            component: AdminTrashNews,
+            meta: {
+              requiresAuth: true,
+              title: 'Thùng rác tin tức'
+            }
           }
         ]
       },
@@ -118,22 +131,8 @@ const router = createRouter({
   routes
 })
 
-// Global navigation guard
+// Tạm thời bỏ qua global navigation guard
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('adminToken')
-  
-  // Nếu đã đăng nhập và cố truy cập trang login
-  if (to.path === '/admin' && token) {
-    next('/admin/dashboard')
-    return
-  }
-
-  // Nếu chưa đăng nhập và cố truy cập trang admin
-  if (to.path.startsWith('/admin/') && !token && to.path !== '/admin') {
-    next('/admin')
-    return
-  }
-
   next()
 })
 

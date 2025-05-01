@@ -144,7 +144,7 @@
 
 <script>
 import serviceService from '@/api/services/serviceService';
-import eventBus from '@/utils/eventBus';
+import eventBus from '@/eventBus';
 
 export default {
   name: 'AdminTrashService',

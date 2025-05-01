@@ -37,17 +37,27 @@
 
         <div class="form-group">
           <label for="serviceImage">Ảnh</label>
-          <div class="image-upload">
+          <div class="image-upload-container" @click="triggerFileInput">
             <input 
               type="file" 
               id="serviceImage" 
+              class="file-input"
               @change="handleImageUpload"
               accept="image/*"
               ref="imageInput"
             >
-            <div class="image-preview" v-if="imagePreview || formData.image">
-              <img :src="imagePreview || getImageUrl(formData.image)" alt="Preview">
-              <button type="button" @click="removeImage" class="remove-image">×</button>
+            <div v-if="!imagePreview && !formData.image" class="upload-button">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Tải ảnh lên</span>
+            </div>
+            <div 
+              v-if="imagePreview || formData.image" 
+              class="image-preview"
+              :style="{ backgroundImage: `url('${imagePreview || getImageUrl(formData.image)}')` }"
+            >
+              <button type="button" @click.stop="removeImage" class="remove-image">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -199,6 +209,11 @@ export default {
     },
     handleCancel() {
       this.$router.push('/admin/dich-vu/danh-sach');
+    },
+    triggerFileInput() {
+      if (this.$refs.imageInput) {
+        this.$refs.imageInput.click();
+      }
     }
   },
   beforeUnmount() {
@@ -268,43 +283,79 @@ textarea {
   resize: vertical;
 }
 
-.image-upload {
-  border: 2px dashed #d1d5db;
-  padding: 1.5rem;
-  border-radius: 0.375rem;
-  background-color: #f9fafb;
+.image-upload-container {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.image-upload-container:hover {
+  border-color: #4CAF50;
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #666;
+}
+
+.upload-button i {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #4CAF50;
 }
 
 .image-preview {
-  margin-top: 1rem;
-  position: relative;
-  max-width: 200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.image-preview img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  border-radius: 0.375rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 6px;
 }
 
 .remove-image {
   position: absolute;
-  top: -0.5rem;
-  right: -0.5rem;
-  background: #ef4444;
-  color: white;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  cursor: pointer;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-image:hover {
+  background: #ff4444;
+  color: white;
 }
 
 .form-actions {
