@@ -53,8 +53,12 @@
             <div 
               v-if="imagePreview || formData.image" 
               class="image-preview"
-              :style="{ backgroundImage: `url('${imagePreview || getImageUrl(formData.image)}')` }"
             >
+              <img 
+                :src="imagePreview || getImageUrl(formData.image)" 
+                alt="Preview"
+                class="preview-img"
+              />
               <button type="button" @click.stop="removeImage" class="remove-image">
                 <i class="fas fa-times"></i>
               </button>
@@ -312,29 +316,23 @@ textarea {
   cursor: pointer;
 }
 
-.upload-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #666;
-}
-
-.upload-button i {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-  color: #4CAF50;
-}
-
 .image-preview {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .remove-image {
@@ -351,11 +349,29 @@ textarea {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  z-index: 2;
 }
 
 .remove-image:hover {
   background: #ff4444;
   color: white;
+}
+
+.upload-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+}
+
+.upload-button i {
+  font-size: 2.5em;
+  color: #4CAF50;
+}
+
+.file-input {
+  display: none;
 }
 
 .form-actions {

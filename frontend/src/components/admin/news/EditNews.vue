@@ -22,32 +22,32 @@
         <!-- Ảnh -->
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
-          <div class="image-upload-container" :class="{ 'has-error': errors.image }">
-            <div 
-              class="image-preview" 
-              v-if="imagePreview"
-              :style="{ backgroundImage: `url(${imagePreview})` }"
+          <div class="image-upload-container" @click="triggerFileInput">
+            <input 
+              type="file" 
+              class="file-input"
+              @change="handleImageChange" 
+              accept="image/*"
+              ref="fileInput"
+              :disabled="isSubmitting"
             >
-              <button type="button" class="remove-image" @click="removeImage" :disabled="isSubmitting">
-                <i class="fas fa-times"></i>
-              </button>
-              <div class="image-info" v-if="formData.image">
-                <span>{{ formatFileSize(formData.image.size) }}</span>
-                <span>{{ formData.image.name }}</span>
-              </div>
-            </div>
-            <div class="upload-button" v-else>
-              <input 
-                type="file" 
-                ref="fileInput"
-                @change="handleImageChange" 
-                accept="image/*"
-                class="file-input"
-                :disabled="isSubmitting"
-              >
+            <div v-if="!imagePreview && !formData.image" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+            </div>
+            <div 
+              v-if="imagePreview || formData.image" 
+              class="image-preview"
+            >
+              <img 
+                :src="imagePreview || getImageUrl(formData.image)" 
+                alt="Preview"
+                class="preview-img"
+              />
+              <button type="button" @click.stop="removeImage" class="remove-image" :disabled="isSubmitting">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
           </div>
           <span class="error-message" v-if="errors.image">{{ errors.image }}</span>
@@ -222,12 +222,16 @@ export default {
 
     const hasChanges = computed(() => {
       if (!originalData.value) return false
-      return Object.keys(formData.value).some(key => {
-        if (key === 'image') {
-          return formData.value[key] !== originalData.value[key]
-        }
-        return formData.value[key]?.toString() !== originalData.value[key]?.toString()
-      })
+      
+      // Check if image has changed
+      if (formData.value.image instanceof File) {
+        return true // If a new file is selected, there are changes
+      }
+      
+      // Check text fields
+      return ['title', 'summary', 'content', 'type', 'author', 'publishedDate'].some(field => {
+        return formData.value[field]?.toString() !== originalData.value[field]?.toString();
+      });
     })
 
     const isFormValid = computed(() => {
@@ -238,32 +242,50 @@ export default {
         formData.value.content?.trim() &&
         formData.value.type &&
         formData.value.author?.trim() &&
-        formData.value.publishedDate
-
-      // Kiểm tra độ dài các trường
-      const isValidLength = 
-        formData.value.title.length <= 200 &&
-        formData.value.summary.length <= 500 &&
-        formData.value.content.length <= 5000
-
-      // Form hợp lệ khi có đầy đủ thông tin và không có lỗi
-      return hasRequiredFields && isValidLength && Object.keys(errors.value).length === 0
+        formData.value.publishedDate;
+      
+      // Form hợp lệ khi có đầy đủ thông tin
+      return hasRequiredFields;
     })
 
     // Methods
     const loadNews = async () => {
       try {
+        console.log('Loading news data for ID:', route.params.id);
         const response = await newsService.getNewsById(route.params.id)
+        console.log('News data loaded:', response);
+        
         if (response.data) {
           const news = response.data
+          
+          // Initialize the form with the news data
           formData.value = {
-            ...news,
-            publishedDate: new Date(news.publishedDate).toISOString().split('T')[0]
+            title: news.title || '',
+            summary: news.summary || '',
+            content: news.content || '',
+            image: news.image || null,
+            type: news.type || '',
+            author: news.author || '',
+            publishedDate: news.publishedDate 
+              ? new Date(news.publishedDate).toISOString().split('T')[0] 
+              : new Date().toISOString().split('T')[0],
+            view: news.view || 0,
+            like: news.like || 0,
+            isDeleted: news.isDeleted || false
           }
+          
+          // Save original data for comparison
           originalData.value = { ...formData.value }
+          console.log('Form data initialized:', formData.value);
+          
+          // Create image preview if needed
           if (news.image) {
-            imagePreview.value = news.image
+            imagePreview.value = null // Reset preview first
+            formData.value.image = news.image
           }
+          
+          // Clear any existing errors
+          errors.value = {}
         }
       } catch (error) {
         console.error('Error loading news:', error)
@@ -274,7 +296,163 @@ export default {
       }
     }
 
+    const getImageUrl = (imagePath) => {
+      if (!imagePath) return null;
+      if (imagePath.startsWith('http')) return imagePath;
+      
+      // Clean the path by removing any leading slashes
+      const cleanPath = imagePath.replace(/^[/\\]+/, '');
+      console.log('Formatted image path:', `http://localhost:3000/${cleanPath}`);
+      return `http://localhost:3000/${cleanPath}`;
+    }
+
+    const handleImageChange = (event) => {
+      const file = event.target.files[0]
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+          errors.value.image = 'Kích thước ảnh không được vượt quá 5MB'
+          return
+        }
+
+        if (!file.type.match(/^image\/(jpeg|png|gif)$/)) {
+          errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
+          return
+        }
+
+        formData.value.image = file
+        imagePreview.value = URL.createObjectURL(file)
+        errors.value.image = null
+        console.log('New image selected:', file.name, file.type, file.size)
+      }
+    }
+
+    const removeImage = (e) => {
+      if (e) e.stopPropagation()
+      formData.value.image = null
+      imagePreview.value = null
+      if (fileInput.value) {
+        fileInput.value.value = ''
+      }
+    }
+
+    const handleSubmit = async () => {
+      if (!validateForm()) {
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Vui lòng kiểm tra lại thông tin nhập vào'
+        })
+        return
+      }
+
+      try {
+        isSubmitting.value = true
+        console.log('Submitting form with data:', formData.value)
+        
+        // Tạo đối tượng dữ liệu để gửi lên server
+        const newsData = {
+          title: formData.value.title.trim(),
+          summary: formData.value.summary.trim(),
+          content: formData.value.content.trim(),
+          type: formData.value.type,
+          author: formData.value.author.trim(),
+          publishedDate: new Date(formData.value.publishedDate).toISOString(),
+          view: formData.value.view,
+          like: formData.value.like,
+          isDeleted: formData.value.isDeleted
+        }
+        
+        // Xử lý ảnh
+        let imageUrl = null;
+        
+        // Nếu image là một chuỗi (đã có ảnh trước đó), sử dụng chuỗi đó
+        if (typeof formData.value.image === 'string') {
+          imageUrl = formData.value.image;
+        } 
+        // Nếu có file ảnh mới, upload ảnh
+        else if (formData.value.image instanceof File) {
+          console.log('Uploading new image...');
+          // Tạo FormData
+          const imageFormData = new FormData();
+          imageFormData.append('image', formData.value.image);
+          
+          try {
+            const uploadResponse = await newsService.uploadImage(imageFormData);
+            console.log('Image upload response:', uploadResponse);
+            
+            // Kiểm tra cấu trúc response để tránh lỗi
+            if (uploadResponse && uploadResponse.data && uploadResponse.data.imagePath) {
+              imageUrl = uploadResponse.data.imagePath;
+            } else if (uploadResponse && uploadResponse.imagePath) {
+              imageUrl = uploadResponse.imagePath;
+            } else {
+              console.error('Invalid image upload response structure:', uploadResponse);
+              eventBus.emit('show-toast', {
+                type: 'error',
+                message: 'Định dạng response ảnh không hợp lệ. Vui lòng thử lại sau.'
+              });
+              isSubmitting.value = false;
+              return;
+            }
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            eventBus.emit('show-toast', {
+              type: 'error',
+              message: 'Không thể tải lên hình ảnh. Vui lòng thử lại.'
+            });
+            isSubmitting.value = false;
+            return;
+          }
+        }
+        
+        // Chỉ thêm trường image nếu có dữ liệu
+        if (imageUrl) {
+          newsData.image = imageUrl;
+        }
+
+        console.log('Sending news data to update:', newsData);
+        
+        try {
+          // Gọi API cập nhật tin tức
+          const response = await newsService.updateNews(route.params.id, newsData);
+          console.log('Update response:', response);
+
+          if (response) {
+            // Hiển thị thông báo thành công
+            eventBus.emit('show-toast', {
+              type: 'success',
+              message: 'Tin tức đã được cập nhật thành công'
+            });
+            
+            // Chuyển về trang danh sách
+            router.push('/admin/tin-tuc/danh-sach');
+          } else {
+            throw new Error('Không nhận được phản hồi từ server');
+          }
+        } catch (updateError) {
+          console.error('Error updating news:', updateError);
+          eventBus.emit('show-toast', {
+            type: 'error',
+            message: updateError.response?.data?.message || updateError.message || 'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.'
+          });
+        }
+      } catch (error) {
+        console.error('Uncaught error in form submission:', error);
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: error.message || 'Có lỗi xảy ra. Vui lòng thử lại.'
+        });
+      } finally {
+        isSubmitting.value = false;
+      }
+    }
+
+    const confirmCancel = () => {
+      showConfirmModal.value = false
+      router.push('/admin/tin-tuc/danh-sach')
+    }
+
     const validateForm = () => {
+      console.log('Validating form data:', formData.value);
       const newErrors = {}
 
       if (!formData.value.title?.trim()) {
@@ -308,7 +486,9 @@ export default {
       }
 
       errors.value = newErrors
-      return Object.keys(newErrors).length === 0
+      const isValid = Object.keys(newErrors).length === 0;
+      console.log('Form validation result:', isValid, newErrors);
+      return isValid;
     }
 
     const formatFileSize = (bytes) => {
@@ -319,101 +499,15 @@ export default {
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
     }
 
-    const handleImageChange = (event) => {
-      const file = event.target.files[0]
-      if (file) {
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
-          errors.value.image = 'Kích thước ảnh không được vượt quá 5MB'
-          return
-        }
-
-        if (!file.type.match(/^image\/(jpeg|png|gif)$/)) {
-          errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
-          return
-        }
-
-        formData.value.image = file
-        imagePreview.value = URL.createObjectURL(file)
-        errors.value.image = null
+    const triggerFileInput = () => {
+      if (fileInput.value && !isSubmitting.value) {
+        fileInput.value.click()
       }
-    }
-
-    const removeImage = () => {
-      formData.value.image = null
-      imagePreview.value = null
-      if (fileInput.value) {
-        fileInput.value.value = ''
-      }
-    }
-
-    const handleSubmit = async () => {
-      if (!validateForm()) {
-        eventBus.emit('show-toast', {
-          type: 'error',
-          message: 'Vui lòng kiểm tra lại thông tin nhập vào'
-        })
-        return
-      }
-
-      try {
-        isSubmitting.value = true
-
-        // Tạo đối tượng dữ liệu để gửi lên server
-        const newsData = {
-          title: formData.value.title.trim(),
-          summary: formData.value.summary.trim(),
-          content: formData.value.content.trim(),
-          type: formData.value.type,
-          author: formData.value.author.trim(),
-          publishedDate: new Date(formData.value.publishedDate).toISOString(),
-          view: formData.value.view,
-          like: formData.value.like,
-          isDeleted: formData.value.isDeleted
-        }
-
-        // Nếu có file ảnh mới, upload ảnh
-        if (formData.value.image instanceof File) {
-          const uploadResponse = await newsService.uploadImage(formData.value.image)
-          if (uploadResponse.success) {
-            newsData.image = uploadResponse.imagePath
-          }
-        } else if (imagePreview.value) {
-          newsData.image = imagePreview.value
-        }
-
-        // Gọi API cập nhật tin tức
-        const response = await newsService.updateNews(route.params.id, newsData)
-        
-        if (response.data.success) {
-          // Hiển thị thông báo thành công
-          eventBus.emit('show-toast', {
-            type: 'success',
-            message: 'Tin tức đã được cập nhật thành công'
-          })
-          
-          // Chuyển về trang danh sách
-          router.push('/admin/tin-tuc/danh-sach')
-        } else {
-          throw new Error(response.data.message || 'Có lỗi xảy ra khi cập nhật tin tức')
-        }
-      } catch (error) {
-        console.error('Error updating news:', error)
-        eventBus.emit('show-toast', {
-          type: 'error',
-          message: error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.'
-        })
-      } finally {
-        isSubmitting.value = false
-      }
-    }
-
-    const confirmCancel = () => {
-      showConfirmModal.value = false
-      router.push('/admin/tin-tuc/danh-sach')
     }
 
     // Load news data when component mounts
     onMounted(() => {
+      console.log('EditNews component mounted - loading news with ID:', route.params.id);
       loadNews()
     })
 
@@ -431,7 +525,9 @@ export default {
       removeImage,
       handleSubmit,
       confirmCancel,
-      formatFileSize
+      formatFileSize,
+      getImageUrl,
+      triggerFileInput
     }
   }
 }
@@ -536,63 +632,75 @@ textarea:focus {
   padding: 20px;
   text-align: center;
   cursor: pointer;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
 }
 
 .image-upload-container:hover {
   border-color: #4299e1;
+  background-color: rgba(66, 153, 225, 0.05);
+}
+
+.file-input {
+  display: none;
 }
 
 .image-preview {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .remove-image {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #e53e3e;
-  color: white;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.remove-image:hover {
+  background: #ff4444;
+  color: white;
 }
 
 .upload-button {
-  position: relative;
-  overflow: hidden;
-}
-
-.file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #666;
 }
 
 .upload-button i {
-  font-size: 24px;
-  color: #718096;
-  margin-bottom: 8px;
-}
-
-.upload-button span {
-  display: block;
-  color: #718096;
+  font-size: 2.5em;
+  color: #4299e1;
 }
 
 .form-actions {
@@ -679,19 +787,6 @@ textarea:focus {
   font-size: 0.8rem;
   color: #666;
   margin-top: 8px;
-}
-
-.image-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 8px;
-  font-size: 0.8rem;
-  display: flex;
-  justify-content: space-between;
 }
 
 .submitting {

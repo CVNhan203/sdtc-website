@@ -7,12 +7,15 @@ const api = axios.create({
     }
 });
 
-// Add a request interceptor
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('adminToken');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        }
+        // For FormData, let the browser set the Content-Type
+        if (config.data instanceof FormData) {
+            delete config.headers['Content-Type'];
         }
         return config;
     },
@@ -20,7 +23,6 @@ api.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
 // Add a response interceptor
 api.interceptors.response.use(
     (response) => response,
@@ -34,4 +36,4 @@ api.interceptors.response.use(
     }
 );
 
-export default api; 
+export default api;

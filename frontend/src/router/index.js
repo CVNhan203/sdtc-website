@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ComNews from '../components/view/ComNews.vue'
 import ComNewsDetail from '../components/view/ComNewsDetail.vue'
-// import AdminLogin from '../components/admin/login.vue'
+import AdminLogin from '../components/admin/login.vue'
 import ComPriceList from '../components/view/ComPriceList.vue'
 import AdminDashboard from '../components/admin/Dashboard.vue'
 import AdminServiceList from '../components/admin/service/ServiceList.vue'
@@ -10,15 +10,13 @@ import AdminInsertNews from '../components/admin/news/InsertNews.vue'
 import AdminEditNews from '../components/admin/news/EditNews.vue'
 import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
+import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
+import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
 import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
 import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 
-// Tạm thời bỏ qua auth guard
-const requireAuth = (to, from, next) => {
-  next()
-}
 
 const routes = [
   {
@@ -38,13 +36,13 @@ const routes = [
   },
   {
     path: '/admin',
-    redirect: '/admin/dashboard'
+    name: 'AdminLogin',
+    component: AdminLogin,
   },
   {
     path: '/admin/dashboard',
     name: 'AdminDashboard',
     component: AdminDashboard,
-    beforeEnter: requireAuth,
     children: [
       {
         path: '/admin/dich-vu',
@@ -109,6 +107,16 @@ const routes = [
             path: 'danh-sach',
             name: 'AdminOrderList',
             component: AdminOrderList,
+          },
+          {
+            path: 'cho-duyet',
+            name: 'AdminPendingOrders',
+            component: AdminPendingOrders,
+          },
+          {
+            path: 'lich-su',
+            name: 'AdminOrderHistory',
+            component: AdminOrderHistory,
           }
         ]
       },
@@ -129,11 +137,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
-})
-
-// Tạm thời bỏ qua global navigation guard
-router.beforeEach((to, from, next) => {
-  next()
 })
 
 export default router

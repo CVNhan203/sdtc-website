@@ -289,6 +289,10 @@ export default {
 </script>
 
 <style scoped>
+/* Import the admin styles */
+@import '@/styles/admin.css';
+
+/* Component specific overrides */
 .insert-service-container {
   padding: 2rem;
   max-width: 800px;
@@ -304,176 +308,37 @@ export default {
   margin: 0 auto;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #374151;
+/* Override admin.css to left-align labels */
+.form-group label {
+  text-align: left;
 }
 
-.error-message {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-input[type="text"],
-input[type="number"],
-textarea,
-select {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  background-color: #fff;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.image-upload-container {
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.image-upload-container:hover {
-  border-color: #4299e1;
-}
-
-.image-preview {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-}
-
-.remove-image {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-button {
-  position: relative;
-  overflow: hidden;
-}
-
-.file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.upload-button i {
-  font-size: 24px;
-  color: #718096;
-  margin-bottom: 8px;
-}
-
-.upload-button span {
-  display: block;
-  color: #718096;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.cancel-btn,
-.submit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: auto;
-  margin: 0;
-}
-
-.cancel-btn {
-  background: #f7fafc;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-}
-
-.submit-btn {
-  background: #4299e1;
-  color: white;
-  border: none;
-}
-
-.cancel-btn:hover {
-  background: #edf2f7;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background: #4299e1;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  background: #4299e1;
+.detail-item label {
+  text-align: left;
+  justify-content: flex-start;
 }
 
 .character-count {
   font-size: 0.875rem;
   color: #718096;
   margin-top: 0.5rem;
+  text-align: right;
 }
 
-.error {
+.character-count.error {
   color: #ef4444;
 }
 
+.required {
+  color: #ef4444;
+}
+
+.error {
+  border-color: #ef4444;
+}
+
 .has-error {
-  border-color: #dc2626;
+  border-color: #ef4444;
 }
 
 @media (max-width: 640px) {
@@ -484,11 +349,6 @@ textarea {
   .form-wrapper {
     padding: 1.5rem;
   }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 </style>
 

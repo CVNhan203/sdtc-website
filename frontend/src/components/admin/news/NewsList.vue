@@ -13,18 +13,19 @@
       </div>
 
       <template v-else>
-        <!-- Header Actions -->
-        <div class="actions-header">
-          <div class="search-filter">
-            <div class="search-box">
-              <i class="fas fa-search"></i>
-              <input 
-                type="text" 
-                v-model="searchQuery" 
-                placeholder="Tìm kiếm theo tiêu đề..."
-                @input="handleSearch"
-              >
-            </div>
+      <!-- Header Actions -->
+      <div class="actions-header">
+        <div class="search-filter">
+          <div class="search-box">
+            <!-- Correct Font Awesome icon class -->
+            <i class="fas fa-search"></i>
+            <input 
+              type="text" 
+              v-model="searchQuery" 
+              placeholder="Tìm kiếm theo tiêu đề..."
+              @input="handleSearch"
+            >
+          </div>
             
             <div class="filter-box">
               <select v-model="filterType" @change="handleFilter">
@@ -52,32 +53,28 @@
                 <th>Thao tác</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="news in filteredNews" :key="news._id">
-                <td>{{ news._id }}</td>
-                <td>
-                  <div class="image-container">
-                    <template v-if="news.image">
-                      <img 
-                        :src="getImageUrl(news.image)" 
-                        :alt="news.title"
-                        class="news-image"
-                        @error="handleImageError($event, news._id)"
-                        v-show="!imageLoadError[news._id]"
-                      />
-                      <div v-show="imageLoadError[news._id]" class="no-image">
-                        <i class="fas fa-image"></i>
-                      </div>
-                    </template>
-                    <div v-else class="no-image">
-                      <i class="fas fa-image"></i>
-                    </div>
-                  </div>
-                </td>
+            
+              <tbody>
+                <tr v-for="news in filteredNews" :key="news._id">
+                  <td>{{ news._id }}</td>
+        <td>
+          <div class="image-container">
+            <img 
+              v-if="news.image" 
+              :src="getImageUrl(news.image)" 
+              alt="News image" 
+              class="news-image"
+              @error="handleImageError($event, news._id)"
+            />
+            <div v-else class="no-image">
+              <i class="fas fa-image"></i>
+            </div>
+          </div>
+        </td>
                 <td>{{ news.title }}</td>
-                <td class="content">{{ formatDescription(news.summary) }}</td>
-                <td class="content">{{ formatDescription(news.content) }}</td>
-                <td>{{ formatType(news.type) }}</td>
+                <td class="content-cell">{{ formatDescription(news.summary) }}</td>
+                <td class="content-cell">{{ formatDescription(news.content) }}</td>
+                <td class="type-cell">{{ formatType(news.type) }}</td>
                 <td>{{ news.author }}</td>
                 <td class="actions-cell">
                   <div class="actions">
@@ -342,7 +339,7 @@
       const loading = ref(false)
       const error = ref(null)
       const isEditing = ref(false)
-      const baseImageUrl = ref('http://localhost:3000/api')
+      const baseImageUrl = ref('http://localhost:3000')  // Hardcode for now until .env is set up
       const imageLoadError = ref({})
       const router = useRouter()
 
@@ -375,12 +372,10 @@
         error.value = null
         
         try {
-          const response = await newsService.getNews()
-          // Lấy danh sách đã xóa từ localStorage
+          const newsData = await newsService.getNews()
           const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
           const deletedIds = deletedNewsInfo.map(item => item._id)
-          // Lọc bỏ các tin đã xóa và lấy data từ response.data.data
-          news.value = response.data.data.filter(item => !deletedIds.includes(item._id))
+          news.value = newsData.filter(item => !deletedIds.includes(item._id))
         } catch (err) {
           console.error('Error loading news:', err)
           error.value = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
@@ -484,22 +479,10 @@
       }
 
       const getImageUrl = (imagePath) => {
-        if (!imagePath) {
-          console.log('No image path provided')
-          return null
-        }
-        // Kiểm tra xem path có phải là URL đầy đủ không
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-          console.log('Full URL:', imagePath)
-          return imagePath
-        }
-        // Xử lý đường dẫn ảnh
-        const cleanPath = imagePath.replace(/^[/\\]+/, '')
-        const fullUrl = `${baseImageUrl.value}/news/images/${cleanPath}`
-        console.log('Image path:', imagePath)
-        console.log('Clean path:', cleanPath)
-        console.log('Full URL:', fullUrl)
-        return fullUrl
+        if (!imagePath) return null;
+        if (imagePath.startsWith('http')) return imagePath;
+        const cleanPath = imagePath.replace(/^[/\\]+/, '');
+        return `${baseImageUrl.value}/${cleanPath}`;
       }
 
       const formatDate = (date) => {
@@ -516,7 +499,7 @@
       }
 
       const formatDescription = (text) => {
-        return text?.length > 100 ? text.slice(0, 100) + '...' : text
+        return text?.length > 50 ? text.slice(0, 50) + '...' : text
       }
 
       const openAddModal = () => {
@@ -569,8 +552,16 @@
       }
 
       const handleImageError = (event, newsId) => {
-        if (event) event.target.src = '' // Clear the broken image source
-        imageLoadError.value[newsId] = true
+        if (event) {
+          event.target.src = ''; // Clear the broken image source
+          event.target.style.display = 'none'; // Hide the broken image
+          const parent = event.target.parentElement;
+          if (parent) {
+            parent.classList.add('no-image');
+            parent.innerHTML = '<i class="fas fa-image"></i>';
+          }
+        }
+        imageLoadError.value[newsId] = true;
       }
 
       onMounted(() => {
@@ -634,126 +625,16 @@
   </script>
   
   <style scoped>
-  /* Import font Roboto */
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+  /* Import the admin styles */
+  @import '@/styles/admin.css';
 
-  /* Apply Roboto font to all elements */
-  *{
-    font-family: 'Roboto', sans-serif
-  }
-
+  /* Component specific overrides */
   .news-list {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     overflow-x: auto;
-  }
-
-  .actions-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .search-filter {
-    display: flex;
-    gap: 1rem;
-    flex: 1;
-  }
-
-  .search-box {
-    position: relative;
-    flex: 2;
-  }
-
-  .search-box i {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-  }
-
-  .search-box input {
-    width: 90%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-  }
-
-  .search-box input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .filter-box {
-    flex: 1;
-  }
-
-  .filter-box select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    background-color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .filter-box select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .table-container {
-    margin-top: 1rem;
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  th, td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: middle;
-  }
-
-  th {
-    background: #f8fafc;
-    font-weight: 600;
-    color: #475569;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-
-  td {
-    font-size: 0.95rem;
-    color: #1e293b;
-  }
-
-  .image-container {
-    width: 60px;
-    height: 60px;
-    position: relative;
-    margin: 0 auto;
   }
 
   .news-image {
@@ -769,362 +650,81 @@
     transform: scale(1.1);
   }
 
-  .no-image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8fafc;
+  .detail-image {
+    max-width: 200px;
+    height: auto;
     border-radius: 8px;
-    border: 2px dashed #e2e8f0;
-    color: #94a3b8;
+    margin-top: 0.5rem;
   }
 
-  .no-image i {
-    font-size: 1.5rem;
+  /* Table column widths */
+  table {
+    table-layout: fixed;
+    min-width: 1100px;
   }
 
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
+  th:nth-child(1), 
+  td:nth-child(1) { 
+    width: 100px; /* ID */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .icon-btn {
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 1rem;
+  th:nth-child(2), 
+  td:nth-child(2) { 
+    width: 100px; /* Ảnh */
+    min-width: 80px;
   }
 
-  .icon-btn:hover {
-    transform: translateY(-1px);
+  th:nth-child(3), 
+  td:nth-child(3) { 
+    width: 180px; /* Tiêu đề */
   }
 
-  .icon-btn.info {
-    background: #e0f2fe;
-    color: #0369a1;
+  th:nth-child(4), 
+  td:nth-child(4) { 
+    width: 200px; /* Tóm tắt */
   }
 
-  .icon-btn.info:hover {
-    background: #bae6fd;
+  th:nth-child(5), 
+  td:nth-child(5) { 
+    width: 200px; /* Nội dung */
   }
 
-  .icon-btn.edit {
-    background: #f1f5f9;
-    color: #475569;
+  th:nth-child(6), 
+  td:nth-child(6) { 
+    width: 90px; /* Loại */
   }
 
-  .icon-btn.edit:hover {
-    background: #e2e8f0;
+  th:nth-child(7), 
+  td:nth-child(7) { 
+    width: 100px; /* Tác giả */
   }
 
-  .icon-btn.delete {
-    background: #fee2e2;
-    color: #991b1b;
+  th:nth-child(8), 
+  td:nth-child(8) { 
+    width: 130px; /* Thao tác */
   }
 
-  .icon-btn.delete:hover {
-    background: #fecaca;
+  /* Single line content with ellipsis */
+  .content-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
   }
 
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    animation: modalFadeIn 0.3s ease;
+  td:nth-child(3) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
   }
 
-  @keyframes modalFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .modal-content {
-    background: white;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .modal-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8fafc;
-    border-radius: 12px 12px 0 0;
-  }
-
-  .modal-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #1e293b;
-    font-weight: 600;
-  }
-
-  .close-btn {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 6px;
-    background: none;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .close-btn:hover {
-    background: #e2e8f0;
-    color: #1e293b;
-  }
-
-  .modal-body {
-    padding: 1.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #475569;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .form-group textarea {
-    min-height: 120px;
-    resize: vertical;
-  }
-
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-
-  .form-actions button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 100px;
-  }
-
-  .cancel-btn {
-    background: #f1f5f9;
-    color: #475569;
-  }
-
-  .cancel-btn:hover {
-    background: #e2e8f0;
-  }
-
-  .submit-btn {
-    background: #3b82f6;
-    color: white;
-  }
-
-  .submit-btn:hover {
-    background: #2563eb;
-  }
-
-  .delete-btn {
-    background: #ef4444;
-    color: white;
-  }
-
-  .delete-btn:hover {
-    background: #dc2626;
-  }
-
-  .warning-text {
-    color: #dc2626;
-    background: #fee2e2;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-    border-left: 4px solid #dc2626;
-  }
-
-  .warning-text::before {
-    content: '⚠️';
-  }
-
-  /* Loading & Error States */
-  .loading-container,
-  .error-container {
-    text-align: center;
-    padding: 2rem;
-  }
-
-  .loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3b82f6;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  .error-message {
-    color: #dc2626;
-    margin-bottom: 1rem;
-  }
-
-  .retry-btn {
-    padding: 0.75rem 1.5rem;
-    background: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .retry-btn:hover {
-    background: #2563eb;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 1024px) {
-    .search-filter {
-      flex-direction: column;
-    }
-
-    .search-box,
-    .filter-box {
-      flex: none;
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .actions-header {
-      flex-direction: column;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
-
-    .form-actions button {
-      width: 100%;
-    }
-
-    .icon-btn {
-      width: 28px;
-      height: 28px;
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .news-list {
-      padding: 1rem;
-    }
-
-    th, td {
-      padding: 0.75rem;
-      font-size: 0.9rem;
-    }
-
-    .image-container {
-      width: 50px;
-      height: 50px;
-    }
-
-    .modal-content {
-      margin: 0;
-      height: 100%;
-      max-height: 100%;
-      border-radius: 0;
-    }
-  }
-
-  /* Custom Scrollbar */
-  .table-container::-webkit-scrollbar,
-  .modal-content::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  .table-container::-webkit-scrollbar-track,
-  .modal-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-  }
-
-  .table-container::-webkit-scrollbar-thumb,
-  .modal-content::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-  }
-
-  .table-container::-webkit-scrollbar-thumb:hover,
-  .modal-content::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+  .type-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   </style>

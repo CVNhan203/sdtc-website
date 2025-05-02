@@ -2,79 +2,115 @@ import api from '../config'
 
 const newsService = {
   // Lấy danh sách tin tức
-  getNews() {
-    return api.get('/news')
+  async getNews() {
+    try {
+      const response = await api.get('/news')
+      // Assuming the API returns an object with a 'data' property that contains the array
+      return response.data.data || [] // Align with serviceService.js
+    } catch (error) {
+      console.error('Error fetching news:', error)
+      throw error
+    }
   },
 
   // Lấy chi tiết tin tức
-  getNewsById(id) {
-    return api.get(`/news/${id}`)
+  async getNewsById(id) {
+    try {
+      const response = await api.get(`/news/${id}`)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching news details:', error)
+      throw error
+    }
   },
 
   // Tạo tin tức mới
-  createNews(data) {
-    const formData = new FormData()
-    
-    // Thêm các trường dữ liệu vào FormData
-    Object.keys(data).forEach(key => {
-      if (key === 'image' && data[key] instanceof File) {
-        formData.append('image', data[key])
-      } else {
-        formData.append(key, data[key])
-      }
-    })
-
-    return api.post('/news', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  async createNews(data) {
+    try {
+      const response = await api.post('/news', JSON.stringify(data), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.error('Error creating news:', error)
+      throw error
+    }
   },
 
   // Cập nhật tin tức
-  updateNews(id, data) {
-    const formData = new FormData()
-    
-    // Thêm các trường dữ liệu vào FormData
-    Object.keys(data).forEach(key => {
-      if (key === 'image' && data[key] instanceof File) {
-        formData.append('image', data[key])
-      } else {
-        formData.append(key, data[key])
-      }
-    })
-
-    return api.put(`/news/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  async updateNews(id, data) {
+    try {
+      console.log('Updating news with ID:', id, 'Data:', data);
+      const response = await api.put(`/news/${id}`, JSON.stringify(data), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Update news response:', response);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating news:', error);
+      throw error;
+    }
   },
 
   // Xóa tin tức
-  deleteNews(id) {
-    return api.delete(`/news/${id}`)
+  async deleteNews(id) {
+    try {
+      const response = await api.delete(`/news/${id}`)
+      return response.data
+    } catch (error) {
+      console.error('Error deleting news:', error)
+      throw error
+    }
   },
 
   // Upload ảnh
-  async uploadImage(imageFile) {
-    const formData = new FormData()
-    formData.append('image', imageFile)
-    
-    return api.post('/news/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+  async uploadImage(formData) {
+    try {
+      console.log('Sending image upload request with FormData');
+      const response = await api.post('/news/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Raw upload response:', response);
+      
+      if (!response.data) {
+        console.error('No data in upload response');
+        throw new Error('Invalid upload response: missing data');
       }
-    })
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error uploading image:', error.response || error);
+      throw error;
+    }
   },
 
-  restoreNews(id) {
-    return api.patch(`/news/${id}/restore`)
+  // Khôi phục tin tức
+  async restoreNews(id) {
+    try {
+      const response = await api.patch(`/news/${id}/restore`)
+      return response.data
+    } catch (error) {
+      console.error('Error restoring news:', error)
+      throw error
+    }
   },
 
-  permanentDeleteNews(id) {
-    return api.delete(`/news/${id}/permanent`)
+  // Xóa vĩnh viễn tin tức
+  async permanentDeleteNews(id) {
+    try {
+      const response = await api.delete(`/news/${id}/permanent`)
+      return response.data
+    } catch (error) {
+      console.error('Error permanently deleting news:', error)
+      throw error
+    }
   }
 }
 
-export default newsService 
+export default newsService

@@ -1,7 +1,34 @@
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 module.exports = (req, res, next) => {
-  // Giả lập: kiểm tra nếu req.user && req.user.role === 'admin'
-  if (req.user && req.user.role === 'admin') {
-    return next();
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Không tìm thấy token xác thực' 
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    req.user = decoded;
+
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn không có quyền truy cập (chỉ dành cho admin)'
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Auth Error:', error);
+    return res.status(401).json({
+      success: false,
+      message: 'Token không hợp lệ hoặc đã hết hạn'
+    });
   }
-  return res.status(403).json({ success: false, message: 'Bạn không có quyền truy cập (admin only)' });
 };
