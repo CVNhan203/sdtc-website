@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
     trim: true,
     minlength: [3, "Họ và tên phải có ít nhất 3 ký tự"],
     maxlength: [50, "Họ và tên không được vượt quá 50 ký tự"],
-    match: [/^[a-zA-Z\s]+$/, "Họ và tên chỉ được chứa chữ cái và khoảng trắng"],
+    match: [/^[a-zA-Z\s]/, "Họ và tên chỉ được chứa chữ cái và khoảng trắng"],
   },
   phone: {
     type: String,
