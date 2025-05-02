@@ -30,7 +30,7 @@ const verifyConnection = async () => {
 // @route   POST /api/emails
 // @access  Public
 const sendEmail = asyncHandler(async (req, res) => {
-  const { fullname, phone, email, demand } = req.body;
+  const { fullname, phone, email, demand, note } = req.body;
 
   // Validate input
   if (!fullname || !phone || !email || !demand) {
@@ -44,13 +44,14 @@ const sendEmail = asyncHandler(async (req, res) => {
       fullname,
       phone,
       email,
-      demand
+      demand,
+      note: note || '' // Đảm bảo note luôn có giá trị, mặc định là chuỗi rỗng
     });
 
     // Gửi email thông báo cho các admin khác (nếu có)
     const adminNotificationOptions = {
-      from: process.env.ADMIN_EMAIL, // Email admin gửi
-      to: process.env.ADMIN_NOTIFICATION_EMAILS || process.env.ADMIN_EMAIL, // Có thể gửi đến nhiều admin
+      from: process.env.ADMIN_EMAIL,
+      to: process.env.ADMIN_NOTIFICATION_EMAILS || process.env.ADMIN_EMAIL,
       subject: "Yêu cầu tư vấn mới từ website",
       html: `
         <h2>Thông tin khách hàng:</h2>
@@ -58,6 +59,7 @@ const sendEmail = asyncHandler(async (req, res) => {
         <p><strong>Số điện thoại:</strong> ${phone}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Nhu cầu:</strong> ${demand}</p>
+        <p><strong>Ghi chú:</strong> ${note || 'Không có'}</p>
         <p><strong>Thời gian:</strong> ${new Date().toLocaleString('vi-VN')}</p>
       `
     };
@@ -65,8 +67,8 @@ const sendEmail = asyncHandler(async (req, res) => {
     // Gửi email phản hồi cho khách hàng
     const customerMailOptions = {
       from: {
-        name: "SDTC Support", // Tên hiển thị khi gửi email
-        address: process.env.ADMIN_EMAIL // Email admin gửi
+        name: "SDTC Support",
+        address: process.env.ADMIN_EMAIL
       },
       to: email,
       subject: "Xác nhận yêu cầu tư vấn - SDTC",
@@ -78,6 +80,7 @@ const sendEmail = asyncHandler(async (req, res) => {
           <li><strong>Nhu cầu:</strong> ${demand}</li>
           <li><strong>Số điện thoại:</strong> ${phone}</li>
           <li><strong>Email:</strong> ${email}</li>
+          ${note ? `<li><strong>Ghi chú:</strong> ${note}</li>` : ''}
         </ul>
         <p>Đội ngũ SDTC sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
         <br/>
