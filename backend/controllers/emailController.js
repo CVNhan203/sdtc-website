@@ -4,7 +4,7 @@ const Email = require("../models/emailModel");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER || "hotansanh0304@gmail.com",
+    user: process.env.ADMIN_EMAIL || "hotansanh0304@gmail.com",
     pass: process.env.EMAIL_PASS || "rlop szhs itxb mvmm",
   },
   tls: {
