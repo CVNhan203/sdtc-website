@@ -25,38 +25,34 @@
             >
           </div>
           
-          <div class="filter-box">
-            <select v-model="statusFilter" @change="applyFilters">
-              <option value="">Tất cả trạng thái</option>
-              <option value="pending">Chờ xử lý</option>
-              <option value="processing">Đang xử lý</option>
-              <option value="completed">Hoàn thành</option>
-              <option value="cancelled">Đã hủy</option>
-            </select>
-          </div>
+          <select v-model="statusFilter" @change="applyFilters">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xử lý</option>
+            <option value="processing">Đang xử lý</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="cancelled">Đã hủy</option>
+          </select>
           
-          <div class="filter-box">
-            <select v-model="paymentFilter" @change="applyFilters">
-              <option value="">Tất cả TT thanh toán</option>
-              <option value="pending">Chờ thanh toán</option>
-              <option value="paid">Đã thanh toán</option>
-              <option value="failed">Thanh toán thất bại</option>
-            </select>
-          </div>
+          <select v-model="paymentFilter" @change="applyFilters">
+            <option value="">Tất cả TT thanh toán</option>
+            <option value="pending">Chờ thanh toán</option>
+            <option value="paid">Đã thanh toán</option>
+            <option value="failed">Thanh toán thất bại</option>
+          </select>
         </div>
       </div>
 
       <!-- Orders Table -->
-      <div class="table-container">
+      <div class="table-container responsive-table">
         <table>
           <thead>
             <tr>
               <th>STT</th>
               <th>Mã đơn hàng</th>
               <th>Tên khách hàng</th>
-              <th>Số điện thoại</th>
-              <th>Email</th>
-              <th>Phương thức thanh toán</th>
+              <th class="responsive-hide">Số điện thoại</th>
+              <th class="responsive-hide">Email</th>
+              <th class="responsive-hide">Phương thức thanh toán</th>
               <th>Trạng thái đơn hàng</th>
               <th>Trạng thái thanh toán</th>
               <th>Ngày tạo</th>
@@ -67,10 +63,10 @@
             <tr v-for="(order, index) in filteredOrders" :key="order._id">
               <td>{{ index + 1 }}</td>
               <td class="order-id">{{ formatOrderId(order._id) }}</td>
-              <td>{{ order.fullName }}</td>
-              <td>{{ order.phone }}</td>
-              <td>{{ order.email }}</td>
-              <td>{{ getPaymentMethodText(order.paymentMethod) }}</td>
+              <td class="truncate-text">{{ order.fullName }}</td>
+              <td class="responsive-hide">{{ order.phone }}</td>
+              <td class="responsive-hide">{{ order.email }}</td>
+              <td class="responsive-hide">{{ getPaymentMethodText(order.paymentMethod) }}</td>
               <td>
                 <span :class="['status-badge', getOrderStatusClass(order.orderStatus)]">
                   {{ getStatusText(order.orderStatus) }}

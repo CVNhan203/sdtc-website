@@ -13,19 +13,17 @@
           >
         </div>
         
-        <div class="filter-box">
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="web">Website</option>
-            <option value="app">Ứng dụng</option>
-            <option value="agency">Agency</option>
-          </select>
-        </div>
+        <select v-model="filterType" @change="handleFilter">
+          <option value="">Tất cả loại</option>
+          <option value="web">Website</option>
+          <option value="app">Ứng dụng</option>
+          <option value="agency">Agency</option>
+        </select>
       </div>
     </div>
 
     <!-- Service Table -->
-    <div class="table-container">
+    <div class="table-container responsive-table">
       <table>
         <thead>
           <tr>
@@ -34,13 +32,13 @@
             <th>Tiêu đề</th>
             <th>Giá</th>
             <th>Loại</th>
-            <th>Mô tả</th>
+            <th class="responsive-hide">Mô tả</th>
             <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="service in filteredServices" :key="service._id">
-            <td>{{ service._id }}</td>
+            <td class="service-id">{{ service._id }}</td>
             <td>
               <img 
                 v-if="service.image" 
@@ -50,10 +48,10 @@
               />
               <span v-else class="no-image">No image</span>
             </td>
-            <td>{{ service.title }}</td>
+            <td class="truncate-text">{{ service.title }}</td>
             <td>{{ formatPrice(service.price) }}</td>
             <td>{{ formatType(service.type) }}</td>
-            <td class="content">{{ formatDescription(service.description) }}</td>
+            <td class="content responsive-hide">{{ formatDescription(service.description) }}</td>
             <td class="actions-cell">
               <div class="actions">
                 <button class="icon-btn info" @click="showDetails(service)">

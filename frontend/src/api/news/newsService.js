@@ -71,11 +71,8 @@ const newsService = {
   async uploadImage(formData) {
     try {
       console.log('Sending image upload request with FormData');
-      const response = await api.post('/news/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      // Don't manually set Content-Type for FormData - let the browser set it with boundary
+      const response = await api.post('/news/upload', formData);
       console.log('Raw upload response:', response);
       
       if (!response.data) {

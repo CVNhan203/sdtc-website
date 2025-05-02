@@ -38,15 +38,17 @@
               <td>{{ order.paymentMethod }}</td>
               <td>{{ formatDate(order.createdAt) }}</td>
               <td class="actions">
-                <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
-                  <i class="fas fa-info-circle"></i>
-                </button>
-                <button class="icon-btn approve" @click="approveOrder(order)" title="Duyệt đơn">
-                  <i class="fas fa-check"></i>
-                </button>
-                <button class="icon-btn reject" @click="rejectOrder(order)" title="Từ chối">
-                  <i class="fas fa-times"></i>
-                </button>
+                <div class="action-buttons">
+                  <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
+                    <i class="fas fa-info-circle"></i>
+                  </button>
+                  <button class="icon-btn approve" @click="approveOrder(order)" title="Duyệt đơn">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="icon-btn reject" @click="rejectOrder(order)" title="Từ chối">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
               </td>
             </tr>
             <tr v-if="pendingOrders.length === 0">
@@ -237,18 +239,21 @@ export default {
 }
 
 .loading-container {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
 }
 
 .loading-spinner {
-  border: 4px solid #f3f3f3;
+  border: 4px solid #f3f4f6;
   border-top: 4px solid #3b82f6;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -257,8 +262,11 @@ export default {
 }
 
 .error-container {
-  text-align: center;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
 }
 
 .error-message {
@@ -267,12 +275,14 @@ export default {
 }
 
 .retry-btn {
-  padding: 0.5rem 1rem;
   background: #3b82f6;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .retry-btn:hover {
@@ -280,38 +290,105 @@ export default {
 }
 
 .table-container {
+  min-width: 100%;
   overflow-x: auto;
-  margin-top: 1rem;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+  min-width: 950px;
 }
 
 th, td {
   padding: 1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
 }
 
 th {
   background: #f8fafc;
-  font-weight: 600;
+  font-weight: 500;
   color: #475569;
+  text-align: center;
+}
+
+/* Column widths */
+th:nth-child(1), 
+td:nth-child(1) {
+  width: 60px; /* STT */
+}
+
+th:nth-child(2), 
+td:nth-child(2) {
+  width: 200px; /* Mã đơn hàng */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(3), 
+td:nth-child(3) {
+  width: 150px; /* Tên khách hàng */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(4), 
+td:nth-child(4) {
+  width: 120px; /* Số điện thoại */
+}
+
+th:nth-child(5), 
+td:nth-child(5) {
+  width: 180px; /* Email */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(6), 
+td:nth-child(6) {
+  width: 150px; /* Phương thức thanh toán */
+}
+
+th:nth-child(7), 
+td:nth-child(7) {
+  width: 120px; /* Ngày tạo */
+}
+
+th:nth-child(8), 
+td:nth-child(8) {
+  width: 120px; /* Thao tác */
+  text-align: center;
 }
 
 .actions {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.action-buttons {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .icon-btn {
-  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
 .icon-btn.info {
@@ -319,9 +396,17 @@ th {
   color: #0369a1;
 }
 
+.icon-btn.info:hover {
+  background: #bae6fd;
+}
+
 .icon-btn.approve {
   background: #dcfce7;
   color: #166534;
+}
+
+.icon-btn.approve:hover {
+  background: #bbf7d0;
 }
 
 .icon-btn.reject {
@@ -329,14 +414,15 @@ th {
   color: #991b1b;
 }
 
-.icon-btn:hover {
-  opacity: 0.8;
+.icon-btn.reject:hover {
+  background: #fecaca;
 }
 
 .no-data {
   text-align: center;
-  color: #64748b;
+  color: #6b7280;
   font-style: italic;
+  padding: 2rem 0;
 }
 
 /* Modal Styles */
@@ -355,33 +441,61 @@ th {
 
 .modal-content {
   background: white;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease;
   max-height: 90vh;
   overflow-y: auto;
 }
 
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #1e293b;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 1.25rem;
-  color: #64748b;
+  color: #6b7280;
   cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
 }
 
 .modal-body {
@@ -389,79 +503,106 @@ th {
 }
 
 .detail-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .detail-section h4 {
-  color: #1e293b;
   font-size: 1.1rem;
+  color: #1f2937;
+  margin-top: 0;
   margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
 }
 
 .detail-item {
-  margin-bottom: 1rem;
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
 }
 
 .detail-item label {
   font-weight: 500;
-  color: #64748b;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #1f2937;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-btn,
-.submit-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: 2rem;
 }
 
 .cancel-btn {
-  background: #f1f5f9;
-  color: #475569;
+  background: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
 }
 
 .submit-btn {
-  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .submit-btn.approve {
-  background: #22c55e;
+  background: #10b981;
+  color: white;
+}
+
+.submit-btn.approve:hover {
+  background: #059669;
 }
 
 .submit-btn.reject {
   background: #ef4444;
+  color: white;
 }
 
-.submit-btn:hover {
-  opacity: 0.9;
+.submit-btn.reject:hover {
+  background: #dc2626;
 }
 
-.cancel-btn:hover {
-  background: #e2e8f0;
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
-  .modal-content {
-    margin: 1rem;
+  .form-actions {
+    flex-direction: column;
   }
 
-  .detail-item {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
+  .form-actions button {
+    width: 100%;
   }
 }
 </style> 

@@ -66,15 +66,9 @@ const serviceService = {
     },
 
     // Upload ảnh dịch vụ
-    async uploadImage(file) {
+    async uploadImage(formData) {
         try {
-            const formData = new FormData();
-            formData.append('image', file);
-            const response = await api.post('/services/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+            const response = await api.post('/services/upload', formData);
             return response.data;
         } catch (error) {
             console.error('Error uploading image:', error);

@@ -154,114 +154,10 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+/* Import admin styles */
+@import '@/styles/admin.css';
 
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: 'Poppins', sans-serif;
-  padding: 1rem;
-}
-
-.login-form {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 420px;
-  backdrop-filter: blur(10px);
-}
-
-.form-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.form-header h2 {
-  color: #2d3748;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.form-header p {
-  color: #718096;
-  font-size: 0.95rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #4a5568;
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-
-.input-container i {
-  position: absolute;
-  left: 1rem;
-  color: #a0aec0;
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
-}
-
-.input-container.error-container i {
-  color: #e53e3e;
-}
-
-input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.8rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: white;
-}
-
-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  outline: none;
-}
-
-input.error {
-  border-color: #e53e3e;
-}
-
-input.error:focus {
-  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
-}
-
-.error-message {
-  color: #e53e3e;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.error-message i {
-  font-size: 1rem;
-}
-
+/* Component-specific styles */
 .message {
   display: flex;
   align-items: center;
@@ -286,40 +182,6 @@ input.error:focus {
   font-size: 1rem;
 }
 
-.login-button {
-  width: 100%;
-  padding: 0.875rem;
-  background: linear-gradient(to right, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.login-button:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.login-button:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.loading-text {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .fa-spinner {
   animation: spin 1s linear infinite;
 }
@@ -327,16 +189,5 @@ input.error:focus {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-@media (max-width: 480px) {
-  .login-form {
-    padding: 2rem;
-    margin: 1rem;
-  }
-
-  .form-header h2 {
-    font-size: 1.75rem;
-  }
 }
 </style>

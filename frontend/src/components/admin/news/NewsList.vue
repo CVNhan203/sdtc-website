@@ -26,37 +26,35 @@
               @input="handleSearch"
             >
           </div>
-            
-            <div class="filter-box">
-              <select v-model="filterType" @change="handleFilter">
-                <option value="">Tất cả loại</option>
-                <option value="tin-tuc">Tin tức</option>
-                <option value="su-kien">Sự kiện</option>
-                <option value="thong-bao">Thông báo</option>
-              </select>
-            </div>
-          </div>
+          
+          <select v-model="filterType" @change="handleFilter">
+            <option value="">Tất cả loại</option>
+            <option value="tin-tuc">Tin tức</option>
+            <option value="su-kien">Sự kiện</option>
+            <option value="thong-bao">Thông báo</option>
+          </select>
         </div>
+      </div>
     
         <!-- News Table -->
-        <div class="table-container">
+        <div class="table-container responsive-table">
           <table>
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Ảnh</th>
                 <th>Tiêu đề</th>
-                <th>Tóm tắt</th>
-                <th>Nội dung</th>
+                <th class="responsive-hide">Tóm tắt</th>
+                <th class="responsive-hide">Nội dung</th>
                 <th>Loại</th>
-                <th>Tác giả</th>
+                <th class="responsive-hide">Tác giả</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
             
               <tbody>
                 <tr v-for="news in filteredNews" :key="news._id">
-                  <td>{{ news._id }}</td>
+                  <td class="news-id">{{ news._id }}</td>
         <td>
           <div class="image-container">
             <img 
@@ -71,11 +69,11 @@
             </div>
           </div>
         </td>
-                <td>{{ news.title }}</td>
-                <td class="content-cell">{{ formatDescription(news.summary) }}</td>
-                <td class="content-cell">{{ formatDescription(news.content) }}</td>
+                <td class="truncate-text">{{ news.title }}</td>
+                <td class="content-cell responsive-hide">{{ formatDescription(news.summary) }}</td>
+                <td class="content-cell responsive-hide">{{ formatDescription(news.content) }}</td>
                 <td class="type-cell">{{ formatType(news.type) }}</td>
-                <td>{{ news.author }}</td>
+                <td class="responsive-hide">{{ news.author }}</td>
                 <td class="actions-cell">
                   <div class="actions">
                     <button class="icon-btn info" @click="showDetails(news)">

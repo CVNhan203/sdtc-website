@@ -1,5 +1,8 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" :class="{'sidebar-collapsed': isSidebarCollapsed, 'sidebar-open': isSidebarOpen}">
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" @click="closeMobileMenu"></div>
+    
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
@@ -167,9 +170,6 @@
     <div class="main-content">
       <header class="top-header">
         <div class="header-left">
-          <button class="menu-toggle" @click="toggleSidebar">
-            <i class="fas fa-bars"></i>
-          </button>
           <h1 class="page-title">{{ currentPageTitle }}</h1>
         </div>
         
@@ -190,7 +190,6 @@
 
 <script>
 import authService from '@/api/services/authService';
-import serviceService from '@/api/services/serviceService';
 import emitter from '@/eventBus';
 
 export default {
@@ -198,6 +197,7 @@ export default {
   data() {
     return {
       isSidebarCollapsed: false,
+      isSidebarOpen: false,
       isServiceMenuOpen: false,
       isNewsMenuOpen: false,
       isOrderMenuOpen: false,
@@ -220,11 +220,17 @@ export default {
     // Listen for updates to deleted items count using mitt
     emitter.on('update-deleted-services-count', this.loadDeletedServicesCount);
     emitter.on('update-deleted-news-count', this.loadDeletedNewsCount);
+
+    // Handle screen resize
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
   beforeUnmount() {
     // Remove event listeners
     emitter.off('update-deleted-services-count', this.loadDeletedServicesCount);
     emitter.off('update-deleted-news-count', this.loadDeletedNewsCount);
+    // Remove resize event listener
+    window.removeEventListener('resize', this.handleResize);
   },
   computed: {
     currentPageTitle() {
@@ -256,8 +262,13 @@ export default {
   },
   methods: {
     toggleSidebar() {
-      this.isSidebarCollapsed = !this.isSidebarCollapsed
-      document.body.classList.toggle('sidebar-collapsed')
+      if (window.innerWidth <= 768) {
+        // On mobile, toggle open/close
+        this.isSidebarOpen = !this.isSidebarOpen;
+      } else {
+        // On desktop, toggle collapsed state
+        this.isSidebarCollapsed = !this.isSidebarCollapsed;
+      }
     },
     toggleServiceMenu() {
       this.isServiceMenuOpen = !this.isServiceMenuOpen
@@ -284,8 +295,8 @@ export default {
     },
     async loadDeletedServicesCount() {
       try {
-        const services = await serviceService.getServices();
-        this.deletedServicesCount = services.filter(service => service.isDeleted).length;
+        const deletedServicesInfo = JSON.parse(localStorage.getItem('deletedServicesInfo') || '[]');
+        this.deletedServicesCount = deletedServicesInfo.filter(service => service.isDeleted).length;
       } catch (error) {
         console.error('Error loading deleted services count:', error);
       }
@@ -297,7 +308,26 @@ export default {
       } catch (error) {
         console.error('Error loading deleted news count:', error);
       }
+    },
+    handleResize() {
+      // Set appropriate sidebar state based on screen size
+      if (window.innerWidth <= 768) {
+        // On mobile, keep sidebar visible
+        this.isSidebarCollapsed = false;
+        this.isSidebarOpen = false;
+      } else {
+        // On desktop, reset sidebar open state
+        this.isSidebarOpen = false;
+      }
+    },
+    closeMobileMenu() {
+      this.isSidebarOpen = false;
     }
+  },
+  mounted() {
+    // Handle resize events
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
   watch: {
     '$route'(to) {
@@ -321,269 +351,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
-
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
-  background-color: #f8f9fa;
-}
-
-/* Sidebar Styles */
-.sidebar {
-  width: 280px;
-  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar-header {
-  padding: 2rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.sidebar-header h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.sidebar-nav {
-  padding: 1.5rem 1rem;
-  flex: 1;
-}
-
-.nav-group {
-  margin-bottom: 0.5rem;
-}
-
-.nav-item-content {
-  display: flex;
-  align-items: center;
-  flex: 1;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.875rem 1.25rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.nav-item i {
-  font-size: 1.25rem;
-  margin-right: 1rem;
-  width: 24px;
-  text-align: center;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-weight: 500;
-}
-
-.sidebar-footer {
-  padding: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.logout-btn {
-  width: 100%;
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: #e53e3e; /* Màu đỏ khi hover */
-}
-
-.logout-btn:active {
-  transform: translateY(1px);
-}
-
-/* Main Content Styles */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-}
-
-.top-header {
-  background: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  color: #2c3e50;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.menu-toggle:hover {
-  background: #f8f9fa;
-}
-
-.page-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
-}
-
-.admin-profile {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 1rem;
-  background: #f8f9fa;
-  border-radius: 50px;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.admin-name {
-  font-weight: 500;
-  color: #2c3e50;
-}
-
-.content-area {
-  padding: 2rem;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.submenu {
-  margin-left: 1rem;
-  padding-left: 1rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.submenu-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  border-radius: 6px;
-  margin-bottom: 0.25rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.submenu-item i {
-  font-size: 1rem;
-  margin-right: 0.75rem;
-  width: 20px;
-  text-align: center;
-}
-
-.submenu-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.submenu-item.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  font-weight: 500;
-}
-
-.badge {
-  position: absolute;
-  right: 10px;
-  background: #e53e3e;
-  color: white;
-  font-size: 0.75rem;
-  padding: 0.125rem 0.375rem;
-  border-radius: 9999px;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 1000;
-    transform: translateX(-100%);
-  }
-
-  .sidebar-collapsed .sidebar {
-    transform: translateX(0);
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .page-title {
-    font-size: 1.25rem;
-  }
-
-  .admin-name {
-    display: none;
-  }
-}
+/* All styles moved to admin.css */
+@import '@/styles/admin.css';
 </style> 

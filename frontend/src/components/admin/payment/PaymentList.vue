@@ -12,6 +12,12 @@
             @input="handleSearch"
           >
         </div>
+        
+        <select v-model="statusFilter" @change="handleFilter">
+          <option value="">Tất cả trạng thái</option>
+          <option value="active">Hoạt động</option>
+          <option value="inactive">Không hoạt động</option>
+        </select>
       </div>
 
       <button class="add-btn" @click="openAddModal">
@@ -21,7 +27,7 @@
     </div>
 
     <!-- Payment Methods Table -->
-    <div class="table-container">
+    <div class="table-container responsive-table">
       <table>
         <thead>
           <tr>
@@ -35,8 +41,8 @@
         <tbody>
           <tr v-for="(method, index) in filteredPaymentMethods" :key="method.id">
             <td>{{ index + 1 }}</td>
-            <td>{{ method.code }}</td>
-            <td>{{ method.name }}</td>
+            <td class="truncate-text">{{ method.code }}</td>
+            <td class="truncate-text">{{ method.name }}</td>
             <td>
               <span :class="['status-badge', method.status]">
                 {{ getStatusText(method.status) }}
@@ -198,6 +204,7 @@ export default {
         }
       ],
       searchQuery: '',
+      statusFilter: '',
       showDetailsModal: false,
       showFormModal: false,
       showDeleteModal: false,
@@ -213,13 +220,23 @@ export default {
   },
   computed: {
     filteredPaymentMethods() {
-      if (!this.searchQuery) return this.paymentMethods
-
-      const query = this.searchQuery.toLowerCase()
-      return this.paymentMethods.filter(method => 
-        method.code.toLowerCase().includes(query) ||
-        method.name.toLowerCase().includes(query)
-      )
+      let result = [...this.paymentMethods];
+      
+      // Apply text search filter
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        result = result.filter(method => 
+          method.code.toLowerCase().includes(query) ||
+          method.name.toLowerCase().includes(query)
+        );
+      }
+      
+      // Apply status filter
+      if (this.statusFilter) {
+        result = result.filter(method => method.status === this.statusFilter);
+      }
+      
+      return result;
     }
   },
   methods: {
@@ -232,6 +249,9 @@ export default {
     },
     handleSearch() {
       // Implement debounce if needed
+    },
+    handleFilter() {
+      // This method exists to handle filter changes, can be extended if needed
     },
     showDetails(method) {
       this.selectedMethod = { ...method }
@@ -299,16 +319,21 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .search-filter {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .search-box {
   position: relative;
-  width: 300px;
+  flex: 1;
+  max-width: 400px;
 }
 
 .search-box i {
@@ -327,74 +352,130 @@ export default {
   font-size: 0.95rem;
 }
 
+select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 160px;
+}
+
 .add-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
   background: #3b82f6;
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
 .add-btn:hover {
   background: #2563eb;
 }
 
+.add-btn i {
+  font-size: 0.9rem;
+}
+
 .table-container {
+  min-width: 100%;
   overflow-x: auto;
-  margin-top: 1rem;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+  min-width: 750px;
 }
 
 th, td {
   padding: 1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
 }
 
 th {
   background: #f8fafc;
-  font-weight: 600;
+  font-weight: 500;
   color: #475569;
+  text-align: center;
+}
+
+/* Column widths */
+th:nth-child(1), 
+td:nth-child(1) {
+  width: 80px; /* STT */
+}
+
+th:nth-child(2), 
+td:nth-child(2) {
+  width: 180px; /* Mã phương thức */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(3), 
+td:nth-child(3) {
+  width: 220px; /* Tên phương thức */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(4), 
+td:nth-child(4) {
+  width: 150px; /* Trạng thái */
+}
+
+th:nth-child(5), 
+td:nth-child(5) {
+  width: 120px; /* Thao tác */
+  text-align: center;
 }
 
 .status-badge {
+  display: inline-block;
   padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  font-size: 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 
 .status-badge.active {
-  background: #dcfce7;
+  background-color: #dcfce7;
   color: #166534;
 }
 
 .status-badge.inactive {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: #f3f4f6;
+  color: #6b7280;
 }
 
 .actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .icon-btn {
-  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
 .icon-btn.info {
@@ -402,9 +483,17 @@ th {
   color: #0369a1;
 }
 
+.icon-btn.info:hover {
+  background: #bae6fd;
+}
+
 .icon-btn.edit {
-  background: #f1f5f9;
-  color: #475569;
+  background: #e0f7fa;
+  color: #0288d1;
+}
+
+.icon-btn.edit:hover {
+  background: #b3e5fc;
 }
 
 .icon-btn.delete {
@@ -412,8 +501,14 @@ th {
   color: #991b1b;
 }
 
-.icon-btn:hover {
-  opacity: 0.8;
+.icon-btn.delete:hover {
+  background: #fecaca;
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Modal Styles */
@@ -432,16 +527,27 @@ th {
 
 .modal-content {
   background: white;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -450,15 +556,26 @@ th {
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #1e293b;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 1.25rem;
-  color: #64748b;
+  color: #6b7280;
   cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  color: #1f2937;
 }
 
 .modal-body {
@@ -467,52 +584,55 @@ th {
 
 .detail-item {
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .detail-item label {
   font-weight: 500;
-  color: #64748b;
-  display: block;
+  color: #6b7280;
   margin-bottom: 0.25rem;
 }
 
-.payment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.detail-item p {
+  margin: 0;
+  color: #1f2937;
+  word-break: break-word;
 }
 
-.form-group {
-  margin-bottom: 1rem;
+/* Form Styles */
+.payment-form .form-group {
+  margin-bottom: 1.25rem;
 }
 
-.form-group label {
+.payment-form label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #475569;
+  color: #4b5563;
 }
 
-.form-group .required {
-  color: #ef4444;
+.payment-form .required {
+  color: #dc2626;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.payment-form input,
+.payment-form select,
+.payment-form textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 0.95rem;
 }
 
-.form-group textarea {
+.payment-form textarea {
   resize: vertical;
+  min-height: 100px;
 }
 
-.form-group input:disabled {
-  background: #f8fafc;
+.payment-form input:disabled {
+  background-color: #f3f4f6;
   cursor: not-allowed;
 }
 
@@ -520,59 +640,62 @@ th {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-btn,
-.submit-btn,
-.delete-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: 2rem;
 }
 
 .cancel-btn {
-  background: #f1f5f9;
-  color: #475569;
+  background: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
 }
 
 .submit-btn {
   background: #3b82f6;
   color: white;
-}
-
-.delete-btn {
-  background: #ef4444;
-  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .submit-btn:hover {
   background: #2563eb;
 }
 
-.delete-btn:hover {
-  background: #dc2626;
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.cancel-btn:hover {
-  background: #e2e8f0;
+.delete-btn:hover {
+  background: #dc2626;
 }
 
 @media (max-width: 768px) {
   .actions-header {
     flex-direction: column;
-    gap: 1rem;
-  }
-
-  .search-filter {
-    width: 100%;
+    align-items: stretch;
   }
 
   .search-box {
-    width: 100%;
+    max-width: none;
   }
 
   .add-btn {
@@ -580,8 +703,24 @@ th {
     justify-content: center;
   }
 
-  .modal-content {
-    margin: 1rem;
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* Responsive table adjustments */
+.responsive-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .responsive-hide {
+    display: none;
   }
 }
 </style>

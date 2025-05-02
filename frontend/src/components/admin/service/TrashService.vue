@@ -1,40 +1,51 @@
 <template>
   <div class="trash-service">
     <div class="header-actions">
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input 
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="Tìm kiếm theo tiêu đề..."
-          @input="handleSearch"
+      <div class="actions-header">
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input 
+              type="text" 
+              v-model="searchQuery" 
+              placeholder="Tìm kiếm theo tiêu đề..."
+              @input="handleSearch"
+            >
+          </div>
+          
+          <select v-model="filterType" @change="handleFilter">
+            <option value="">Tất cả loại</option>
+            <option value="web">Website</option>
+            <option value="app">Ứng dụng</option>
+            <option value="agency">Agency</option>
+          </select>
+        </div>
+        
+        <button 
+          v-if="selectedServices.length > 0" 
+          class="bulk-action-btn restore" 
+          @click="confirmBulkRestore"
         >
+          <i class="fas fa-trash-restore"></i>
+          Khôi phục đã chọn
+        </button>
+        
+        <button 
+          v-if="selectedServices.length > 0" 
+          class="bulk-action-btn delete" 
+          @click="confirmBulkDelete"
+        >
+          <i class="fas fa-trash-alt"></i>
+          Xóa vĩnh viễn đã chọn
+        </button>
       </div>
-      
-      <button 
-        v-if="selectedServices.length > 0" 
-        class="bulk-action-btn restore" 
-        @click="confirmBulkRestore"
-      >
-        <i class="fas fa-trash-restore"></i>
-        Khôi phục đã chọn
-      </button>
-      
-      <button 
-        v-if="selectedServices.length > 0" 
-        class="bulk-action-btn delete" 
-        @click="confirmBulkDelete"
-      >
-        <i class="fas fa-trash-alt"></i>
-        Xóa vĩnh viễn đã chọn
-      </button>
     </div>
 
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th width="40px">
+            <th width="50px">
               <input 
                 type="checkbox" 
                 :checked="isAllSelected"
@@ -47,7 +58,7 @@
             <th>Giá</th>
             <th>Loại</th>
             <th>Ngày xóa</th>
-            <th>Thao tác</th>
+            <th class="action-column">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -59,15 +70,19 @@
                 @change="toggleSelect(service._id)"
               >
             </td>
-            <td>{{ service._id }}</td>
+            <td :title="service._id">{{ truncateId(service._id) }}</td>
             <td>
-              <img 
-                v-if="service.image" 
-                :src="getImageUrl(service.image)" 
-                alt="Service image" 
-                class="service-image"
-              />
-              <span v-else class="no-image">No image</span>
+              <div class="image-container">
+                <img 
+                  v-if="service.image" 
+                  :src="getImageUrl(service.image)" 
+                  alt="Service image" 
+                  class="service-image"
+                />
+                <div v-else class="no-image">
+                  <i class="fas fa-image"></i>
+                </div>
+              </div>
             </td>
             <td>{{ service.title }}</td>
             <td>{{ formatPrice(service.price) }}</td>
@@ -157,16 +172,29 @@ export default {
       showDeleteModal: false,
       loading: false,
       error: null,
-      baseImageUrl: 'http://localhost:3000'
+      baseImageUrl: 'http://localhost:3000',
+      filterType: ''
     }
   },
   computed: {
     filteredServices() {
-      return this.services.filter(service => {
-        if (!service.isDeleted) return false;
-        if (!this.searchQuery) return true;
-        return service.title.toLowerCase().includes(this.searchQuery.toLowerCase());
-      });
+      // Filter only deleted services
+      let result = this.services.filter(service => service.isDeleted);
+      
+      // Apply text search filter
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        result = result.filter(service => 
+          service.title.toLowerCase().includes(query)
+        );
+      }
+      
+      // Apply type filter
+      if (this.filterType) {
+        result = result.filter(service => service.type === this.filterType);
+      }
+      
+      return result;
     },
     isAllSelected() {
       return this.filteredServices.length > 0 && 
@@ -294,6 +322,14 @@ export default {
       } catch (error) {
         console.error('Error deleting services:', error);
       }
+    },
+    handleFilter() {
+      // Implement filter logic
+    },
+    truncateId(id) {
+      if (!id) return '';
+      // Hiển thị 25 ký tự đầu tiên của ID, vì cột có kích thước lớn hơn
+      return id.length > 25 ? id.substring(0, 25) + '...' : id;
     }
   },
   async created() {
@@ -319,6 +355,22 @@ export default {
   flex-wrap: wrap;
 }
 
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-filter {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .search-box {
   position: relative;
   flex: 1;
@@ -339,6 +391,28 @@ export default {
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 0.95rem;
+}
+
+.select-box {
+  position: relative;
+  flex: 1;
+  max-width: 200px;
+}
+
+.select-box select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 160px;
 }
 
 .bulk-action-btn {
@@ -372,6 +446,7 @@ export default {
 }
 
 .table-container {
+  min-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -380,18 +455,72 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  table-layout: fixed;
+  min-width: 950px;
 }
 
 th, td {
   padding: 1rem;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
 }
 
 th {
   background: #f8fafc;
   font-weight: 500;
   color: #475569;
+  text-align: center;
+}
+
+th:nth-child(1), 
+td:nth-child(1) {
+  width: 50px; /* Checkbox */
+}
+
+th:nth-child(2), 
+td:nth-child(2) {
+  width: 200px; /* ID */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(3), 
+td:nth-child(3) {
+  width: 100px; /* Ảnh */
+}
+
+th:nth-child(4), 
+td:nth-child(4) {
+  width: 150px; /* Tiêu đề */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(5), 
+td:nth-child(5) {
+  width: 120px; /* Giá */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:nth-child(6), 
+td:nth-child(6) {
+  width: 100px; /* Loại */
+}
+
+th:nth-child(7), 
+td:nth-child(7) {
+  width: 150px; /* Ngày xóa */
+}
+
+th:nth-child(8), 
+td:nth-child(8) {
+  width: 100px; /* Thao tác */
+  text-align: center;
 }
 
 .service-image {
@@ -399,11 +528,31 @@ th {
   height: 50px;
   object-fit: cover;
   border-radius: 4px;
+  margin: 0 auto;
+  display: block;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.no-image {
+  color: #a0aec0;
+  font-size: 12px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .icon-btn {
@@ -595,5 +744,18 @@ th {
   margin: 0 0 1.5rem;
   color: #4b5563;
   line-height: 1.5;
+}
+
+.action-column {
+  text-align: center;
+}
+
+th input[type="checkbox"],
+td input[type="checkbox"] {
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
 }
 </style> 

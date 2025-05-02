@@ -24,16 +24,16 @@
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
             >
           </div>
-        </div>
-        <div class="filter-group">
-          <select v-model="statusFilter">
+          
+          <select v-model="statusFilter" @change="applyFilters">
             <option value="">Tất cả trạng thái</option>
             <option value="processing">Đang xử lý</option>
             <option value="completed">Hoàn thành</option>
             <option value="cancelled">Đã hủy</option>
           </select>
-          <select v-model="paymentFilter">
-            <option value="">Tất cả trạng thái thanh toán</option>
+          
+          <select v-model="paymentFilter" @change="applyFilters">
+            <option value="">Tất cả TT thanh toán</option>
             <option value="pending">Chờ thanh toán</option>
             <option value="paid">Đã thanh toán</option>
             <option value="failed">Thanh toán thất bại</option>
@@ -42,15 +42,15 @@
       </div>
 
       <!-- Orders Table -->
-      <div class="table-container">
+      <div class="table-container responsive-table">
         <table>
           <thead>
             <tr>
               <th>STT</th>
               <th>Mã đơn hàng</th>
               <th>Tên khách hàng</th>
-              <th>Số điện thoại</th>
-              <th>Email</th>
+              <th class="responsive-hide">Số điện thoại</th>
+              <th class="responsive-hide">Email</th>
               <th>Trạng thái đơn hàng</th>
               <th>Trạng thái thanh toán</th>
               <th>Ngày tạo</th>
@@ -60,10 +60,10 @@
           <tbody>
             <tr v-for="(order, index) in filteredOrders" :key="order._id">
               <td>{{ index + 1 }}</td>
-              <td>{{ order._id }}</td>
-              <td>{{ order.fullName }}</td>
-              <td>{{ order.phone }}</td>
-              <td>{{ order.email }}</td>
+              <td class="order-id">{{ formatOrderId(order._id) }}</td>
+              <td class="truncate-text">{{ order.fullName }}</td>
+              <td class="responsive-hide">{{ order.phone }}</td>
+              <td class="responsive-hide">{{ order.email }}</td>
               <td>
                 <span :class="['status-badge', order.orderStatus]">
                   {{ getStatusText(order.orderStatus) }}
@@ -74,7 +74,12 @@
                   {{ getPaymentStatusText(order.paymentStatus) }}
                 </span>
               </td>
-              <td>{{ formatDate(order.createdAt) }}</td>
+              <td class="date-cell">
+                <div class="date-time">
+                  <div class="date-part">{{ formatDatePart(order.createdAt) }}</div>
+                  <div class="time-part">{{ formatTimePart(order.createdAt) }}</div>
+                </div>
+              </td>
               <td class="actions">
                 <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
@@ -90,9 +95,9 @@
 
       <!-- Order Details Modal -->
       <div class="modal" v-if="showDetailsModal">
-        <div class="modal-content">
+        <div class="modal-content detail-modal">
           <div class="modal-header">
-            <h3>Chi tiết đơn hàng</h3>
+            <h3>Chi tiết đơn hàng #{{ selectedOrder._id }}</h3>
             <button class="close-btn" @click="showDetailsModal = false">
               <i class="fas fa-times"></i>
             </button>
@@ -122,7 +127,10 @@
               </div>
               <div class="detail-item">
                 <label>Ngày đặt:</label>
-                <p>{{ formatDate(selectedOrder.createdAt) }}</p>
+                <p class="date-time-detail">
+                  <span class="date-part">{{ formatDatePart(selectedOrder.createdAt) }}</span>
+                  <span class="time-part">{{ formatTimePart(selectedOrder.createdAt) }}</span>
+                </p>
               </div>
               <div class="detail-item">
                 <label>Trạng thái đơn hàng:</label>
@@ -205,6 +213,21 @@ export default {
       })
     },
 
+    formatDatePart(date) {
+      return new Date(date).toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+    },
+
+    formatTimePart(date) {
+      return new Date(date).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    },
+
     getStatusText(status) {
       const statusMap = {
         pending: 'Chờ xử lý',
@@ -244,6 +267,16 @@ export default {
     showDetails(order) {
       this.selectedOrder = { ...order }
       this.showDetailsModal = true
+    },
+
+    formatOrderId(id) {
+      if (!id) return '';
+      // Display only the last 6 characters for better readability
+      return id.length > 6 ? id.substring(id.length - 6) : id;
+    },
+
+    applyFilters() {
+      // Implementation of applyFilters method
     }
   },
   created() {
@@ -253,291 +286,42 @@ export default {
 </script>
 
 <style scoped>
+/* Import the admin styles */
+@import '@/styles/admin.css';
+
+/* Component specific overrides */
 .order-history {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-}
-
-.actions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.search-filter {
-  flex: 1;
-  min-width: 300px;
-}
-
-.search-box {
-  position: relative;
   width: 100%;
 }
 
-.search-box i {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-.filter-group {
-  display: flex;
-  gap: 1rem;
-}
-
-.filter-group select {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  color: #475569;
-  background: white;
-}
-
-.loading-container {
-  text-align: center;
-  padding: 2rem;
-}
-
-.loading-spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-container {
-  text-align: center;
-  padding: 2rem;
-}
-
-.error-message {
-  color: #dc2626;
-  margin-bottom: 1rem;
-}
-
-.retry-btn {
-  padding: 0.5rem 1rem;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.retry-btn:hover {
-  background: #2563eb;
-}
-
-.table-container {
-  overflow-x: auto;
-  margin-top: 1rem;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-th {
-  background: #f8fafc;
+/* Order ID format */
+.order-id {
+  font-family: monospace;
   font-weight: 600;
-  color: #475569;
 }
 
-.status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
+/* Ensure proper width of filter selects */
+.filter-group select {
+  min-width: 160px;
 }
 
-.status-badge.pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-badge.processing {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.status-badge.completed {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-badge.cancelled {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.status-badge.paid {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-badge.failed {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.icon-btn {
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.icon-btn.info {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.icon-btn:hover {
-  opacity: 0.8;
-}
-
-.no-data {
-  text-align: center;
-  color: #64748b;
-  font-style: italic;
-}
-
-/* Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1e293b;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  color: #64748b;
-  cursor: pointer;
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.detail-section {
-  margin-bottom: 2rem;
-}
-
-.detail-section h4 {
-  color: #1e293b;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.detail-item {
-  margin-bottom: 1rem;
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 1rem;
-}
-
-.detail-item label {
-  font-weight: 500;
-  color: #64748b;
-}
-
-@media (max-width: 768px) {
-  .actions-header {
-    flex-direction: column;
+/* Custom media queries for extreme mobile cases */
+@media (max-width: 480px) {
+  .order-history {
+    padding: 1rem;
+    border-radius: 8px;
   }
-
-  .search-filter {
-    width: 100%;
-  }
-
+  
   .filter-group {
-    width: 100%;
-    flex-wrap: wrap;
+    margin-top: 0.75rem;
   }
-
-  .filter-group select {
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .modal-content {
-    margin: 1rem;
-  }
-
-  .detail-item {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
+  
+  .search-box input {
+    font-size: 0.875rem;
   }
 }
 </style> 

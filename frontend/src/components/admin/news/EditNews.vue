@@ -19,6 +19,54 @@
           </span>
         </div>
 
+        <!-- Phân loại + Tác giả + Ngày -->
+        <div class="info-section">
+          <!-- Phân loại -->
+          <div class="form-group">
+            <label>Phân loại <span class="required">*</span></label>
+            <select 
+              v-model="formData.type"
+              :class="{ 'error': errors.type }"
+              :disabled="isSubmitting"
+              required
+            >
+              <option value="">Chọn loại tin tức</option>
+              <option value="tin-tuc">Tin tức</option>
+              <option value="su-kien">Sự kiện</option>
+              <option value="thong-bao">Thông báo</option>
+            </select>
+            <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
+          </div>
+
+          <!-- Tác giả -->
+          <div class="form-group">
+            <label>Tác giả <span class="required">*</span></label>
+            <input 
+              type="text" 
+              v-model.trim="formData.author"
+              :class="{ 'error': errors.author }"
+              :disabled="isSubmitting"
+              placeholder="Nhập tên tác giả"
+              required
+            >
+            <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
+          </div>
+
+          <!-- Ngày đăng -->
+          <div class="form-group">
+            <label>Ngày đăng <span class="required">*</span></label>
+            <input 
+              type="date" 
+              v-model="formData.publishedDate"
+              :class="{ 'error': errors.publishedDate }"
+              :disabled="isSubmitting"
+              :min="minDate"
+              required
+            >
+            <span class="error-message" v-if="errors.publishedDate">{{ errors.publishedDate }}</span>
+          </div>
+        </div>
+
         <!-- Ảnh -->
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
@@ -71,7 +119,7 @@
         </div>
 
         <!-- Nội dung chi tiết -->
-        <div class="form-group">
+        <div class="form-group content-section">
           <label>Nội dung chi tiết <span class="required">*</span></label>
           <textarea 
             v-model.trim="formData.content"
@@ -85,51 +133,6 @@
           <span class="character-count" :class="{ 'error': formData.content.length > 5000 }">
             {{ formData.content.length }}/5000
           </span>
-        </div>
-
-        <!-- Phân loại -->
-        <div class="form-group">
-          <label>Phân loại <span class="required">*</span></label>
-          <select 
-            v-model="formData.type"
-            :class="{ 'error': errors.type }"
-            :disabled="isSubmitting"
-            required
-          >
-            <option value="">Chọn loại tin tức</option>
-            <option value="tin-tuc">Tin tức</option>
-            <option value="su-kien">Sự kiện</option>
-            <option value="thong-bao">Thông báo</option>
-          </select>
-          <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
-        </div>
-
-        <!-- Tác giả -->
-        <div class="form-group">
-          <label>Tác giả <span class="required">*</span></label>
-          <input 
-            type="text" 
-            v-model.trim="formData.author"
-            :class="{ 'error': errors.author }"
-            :disabled="isSubmitting"
-            placeholder="Nhập tên tác giả"
-            required
-          >
-          <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
-        </div>
-
-        <!-- Ngày đăng -->
-        <div class="form-group">
-          <label>Ngày đăng <span class="required">*</span></label>
-          <input 
-            type="date" 
-            v-model="formData.publishedDate"
-            :class="{ 'error': errors.publishedDate }"
-            :disabled="isSubmitting"
-            :min="minDate"
-            required
-          >
-          <span class="error-message" v-if="errors.publishedDate">{{ errors.publishedDate }}</span>
         </div>
 
         <!-- Form Actions -->
@@ -535,7 +538,7 @@ export default {
 
 <style scoped>
 .edit-news {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -558,20 +561,24 @@ export default {
 
 .form-container {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 32px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
   color: #2d3748;
+  font-size: 0.95rem;
 }
 
 .required {
@@ -584,14 +591,14 @@ input[type="date"],
 select,
 textarea {
   width: 100%;
-  padding: 12px;
+  padding: 12px 16px;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 1rem;
   line-height: 1.5;
   transition: all 0.3s ease;
   background-color: #fff;
-  min-height: 42px;
+  min-height: 46px;
   box-sizing: border-box;
 }
 
@@ -599,8 +606,8 @@ select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
 textarea {
@@ -613,7 +620,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
 }
 
 .error {
@@ -622,18 +629,18 @@ textarea:focus {
 
 .error-message {
   color: #e53e3e;
-  font-size: 12px;
-  margin-top: 4px;
+  font-size: 13px;
+  margin-top: 6px;
 }
 
 .image-upload-container {
   border: 2px dashed #e2e8f0;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  min-height: 200px;
+  min-height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -658,14 +665,14 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 16px;
 }
 
 .preview-img {
   max-width: 100%;
   max-height: 180px;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .remove-image {
@@ -675,14 +682,15 @@ textarea:focus {
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .remove-image:hover {
@@ -694,20 +702,29 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #666;
 }
 
 .upload-button i {
   font-size: 2.5em;
   color: #4299e1;
+  margin-bottom: 8px;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: #718096;
+  margin-top: 8px;
+  line-height: 1.4;
 }
 
 .form-actions {
+  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 16px;
+  margin-top: 16px;
   padding-top: 24px;
   border-top: 1px solid #e2e8f0;
 }
@@ -717,11 +734,14 @@ textarea:focus {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 140px;
+  justify-content: center;
 }
 
 .cancel-btn {
@@ -748,45 +768,19 @@ textarea:focus {
 
 .submit-btn:hover:not(:disabled) {
   background: #3182ce;
+  transform: translateY(-1px);
 }
 
-@media (max-width: 640px) {
-  .edit-news {
-    padding: 16px;
-  }
-
-  .form-container {
-    padding: 16px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Additional styles */
 .character-count {
   display: block;
   text-align: right;
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #718096;
+  margin-top: 6px;
 }
 
 .character-count.error {
   color: #dc2626;
-}
-
-.upload-hint {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 8px;
 }
 
 .submitting {
@@ -814,21 +808,24 @@ textarea:focus {
 
 .modal-content {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90%;
   max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #f8fafc;
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.75rem;
 }
 
 .modal-actions {
@@ -842,24 +839,148 @@ textarea:focus {
   background: #dc2626;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .confirm-btn:hover {
   background: #b91c1c;
 }
 
-.has-error {
-  border-color: #dc2626;
+/* Form layout for specific sections */
+.content-section {
+  grid-column: 1 / -1;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.info-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 0;
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+  
+  .info-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .edit-news {
+    padding: 16px;
+  }
+
+  .form-container {
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Additional responsive styles for very small devices */
+@media (max-width: 480px) {
+  .edit-news {
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    gap: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    min-height: 42px;
+  }
+
+  .error-message,
+  .character-count,
+  .upload-hint {
+    font-size: 0.8rem;
+  }
+
+  .image-upload-container {
+    min-height: 180px;
+    padding: 16px;
+  }
+
+  .preview-img {
+    max-height: 160px;
+  }
+}
+
+@media (max-width: 360px) {
+  .edit-news {
+    padding: 8px;
+  }
+
+  .form-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    min-height: 38px;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .image-upload-container {
+    min-height: 160px;
+    padding: 12px;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .upload-button i {
+    font-size: 2em;
+  }
 }
 </style> 
