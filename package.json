@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
