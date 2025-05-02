@@ -38,6 +38,12 @@ const newsSchema = new mongoose.Schema({
     type: String,
     default: "Admin",
     trim: true,
+    minlength: [3, "Tên tác giả phải có ít nhất 3 ký tự"],
+    maxlength: [50, "Tên tác giả không được vượt quá 50 ký tự"],
+    match: [
+      /^[a-zA-Z\s]+$/,
+      "Tên tác giả chỉ được chứa chữ cái và khoảng trắng",
+    ],
   },
   views: {
     type: Number,
