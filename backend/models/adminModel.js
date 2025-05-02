@@ -9,7 +9,7 @@ const adminSchema = new mongoose.Schema({
     trim: true,
     minlength: [3, "Tên phải có ít nhất 3 ký tự"],
     maxlength: [50, "Tên không được vượt quá 50 ký tự"],
-    match: [/^[a-zA-Z\s]+$/, "Tên chỉ được chứa chữ cái và khoảng trắng"],
+    match: [/^[a-zA-Z\s]/, "Tên chỉ được chứa chữ cái và khoảng trắng"],
   },
   email: {
     type: String,

@@ -26,11 +26,10 @@ router.get("/:id", getServiceById);
 router.post(
   "/",
   authMiddleware,
-  authMiddleware,
   adminMiddleware,
   createService
 );
-router.put("/:id", adminMiddleware, adminMiddleware, updateService);
+router.put("/:id", authMiddleware, adminMiddleware, updateService);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteService);
 
 module.exports = router;
