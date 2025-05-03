@@ -23,12 +23,7 @@ router.get("/", getServices);
 router.get("/:id", getServiceById);
 
 // Routes yêu cầu quyền admin
-router.post(
-  "/",
-  authMiddleware,
-  adminMiddleware,
-  createService
-);
+router.post("/", authMiddleware, adminMiddleware, createService);
 router.put("/:id", authMiddleware, adminMiddleware, updateService);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteService);
 

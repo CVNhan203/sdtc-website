@@ -37,7 +37,10 @@ exports.getServices = asyncHandler(async (req, res) => {
 });
 
 exports.getServiceById = asyncHandler(async (req, res) => {
-  const service = await Service.findOne({ _id: req.params.id, isDeleted: false }).lean();
+  const service = await Service.findOne({
+    _id: req.params.id,
+    isDeleted: false,
+  }).lean();
 
   if (!service) {
     res.status(404);
