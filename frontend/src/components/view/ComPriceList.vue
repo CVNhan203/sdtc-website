@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="price-list-container">
     <div class="price-list-header">
       <h2 class="pricce-list">Bảng giá dịch vụ</h2>
@@ -690,4 +691,22 @@ h3 {
   }
 }
 
+=======
+    <div>
+    <h2>Chào mừng đến </h2>
+    <p>Đây là phần nội dung.</p>
+  </div>
+</template>
+<script>
+export default {
+    name: 'ComPriceList',
+    data() {
+        return {
+            // Define your data properties here
+        };
+    },
+}
+</script>
+<style scoped>
+>>>>>>> origin/nhanFE
 </style>
