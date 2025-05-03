@@ -25,13 +25,14 @@ exports.login = asyncHandler(async (req, res) => {
   const token = jwt.sign(
     { id: admin._id, role: admin.role },
     process.env.JWT_SECRET || "secret",
+
     { expiresIn: "1h" }
+
   );
   res.json({
     success: true,
     token,
     admin: { fullName: admin.fullName, email: admin.email, role: admin.role },
-  });
 });
 
 // Thống kê dashboard
@@ -54,4 +55,5 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       bookings: bookingsCount,
     },
   });
+});
 });
