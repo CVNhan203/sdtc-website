@@ -1598,19 +1598,37 @@ td {
   position: relative;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 0.5rem;
 }
 
 .input-container i {
   position: absolute;
-  left: 1rem;
-  color: var(--text-tertiary);
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
+  left: 12px;
+  color: #94a3b8;
+  font-size: 1rem;
+  z-index: 1;
 }
 
-.input-container.error-container i {
-  color: var(--danger-color);
+.input-container input {
+  flex: 1;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  width: 100%;
+}
+
+.input-container input::placeholder {
+  color: #94a3b8;
+}
+
+.input-container.error-container {
+  border-color: var(--danger-color);
 }
 
 .login-button {

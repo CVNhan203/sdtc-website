@@ -16,29 +16,57 @@ import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
 import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
+import Home from "@/components/view/ComHome.vue";
+import Procedure from "@/components/view/ComProcedure.vue";
+import Team from "@/components/view/ComTeam.vue";
+import Advise from "@/components/view/ComAdvise.vue";
 
 
 const routes = [
   {
-    path: '/tin-tuc',
-    name: 'News',
-    component: ComNews
+    path: '/',
+    name: 'Home',
+    component: Home,
+  },
+  // Trang quy trình
+  {
+      path: "/procedure",
+      name: "Procedure",
+      component: Procedure,
+  },
+  // Trang đội ngũ
+  {
+      path: "/team",
+      name: "Team",
+      component: Team,
+  },
+  // Trang bảng giá
+  {
+      path: "/price-list",
+      name: "PriceList",
+      component: ComPriceList,
   },
   {
-    path: '/tin-tuc/:id',
+    path: '/news',
+    name: 'News',
+    component: ComNews,
+  },
+  {
+    path: '/news/:id',
     name: 'NewsDetail',
     component: ComNewsDetail
   },
   {
-    path: '/bang-gia',
-    name: 'PriceList',
-    component: ComPriceList
+    path: "/advise",
+    name: "Advise",
+    component: Advise,
   },
   {
     path: '/admin',
     name: 'AdminLogin',
     component: AdminLogin,
   },
+  
   {
     path: '/admin/dashboard',
     name: 'AdminDashboard',

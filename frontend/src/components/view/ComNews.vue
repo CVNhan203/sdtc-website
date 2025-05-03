@@ -127,7 +127,7 @@ export default {
     },
     goToNewsDetail(news) {
       this.router.push({
-        path: `/tin-tuc/${news.id}`,
+        path: `/news/${news.id}`,
         query: {
           title: news.title,
           date: news.date,

@@ -31,31 +31,33 @@
 
       <!-- Sidebar -->
       <div class="sidebar">
-        <div class="search-container">
-          <input 
-            type="text" 
-            class="search-input"
-            placeholder="Tìm kiếm bài viết"
-            v-model="searchQuery"
-          >
-          <button class="search-button">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
+        <div class="sidebar-inner">
+          <div class="search-container">
+            <input 
+              type="text" 
+              class="search-input"
+              placeholder="Tìm kiếm bài viết"
+              v-model="searchQuery"
+            >
+            <button class="search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
 
-        <div class="recent-posts">
-          <h2>Bài viết gần đây</h2>
-          <div class="posts-list">
-            <div v-for="(post, index) in filteredNews" 
-                 :key="index"
-                 class="post-item"
-                 @click="goToNewsDetail(post)">
-              <div class="post-image">
-                <img :src="post.image" :alt="post.title">
-              </div>
-              <div class="post-info">
-                <div class="post-date">{{ post.date }}</div>
-                <div class="post-excerpt">{{ post.title }}</div>
+          <div class="recent-posts">
+            <h2>Bài viết gần đây</h2>
+            <div class="posts-list">
+              <div v-for="(post, index) in filteredNews" 
+                   :key="index"
+                   class="post-item"
+                   @click="goToNewsDetail(post)">
+                <div class="post-image">
+                  <img :src="post.image" :alt="post.title">
+                </div>
+                <div class="post-info">
+                  <div class="post-date">{{ post.date }}</div>
+                  <div class="post-excerpt">{{ post.title }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -194,6 +196,7 @@ export default {
   max-width: 1240px;
   margin: 0 auto;
   padding: 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .back-link {
@@ -204,7 +207,6 @@ export default {
   font-size: 14px;
   margin-bottom: 24px;
   cursor: pointer;
-  font-family: Roboto;
 }
 
 .back-icon {
@@ -233,6 +235,7 @@ export default {
 .news-content-wrapper {
   display: flex;
   gap: 40px;
+  background-color: #fff;
 }
 
 .main-content {
@@ -282,6 +285,10 @@ export default {
   flex-shrink: 0;
 }
 
+.sidebar-inner {
+  background-color: #fff;
+}
+
 .search-container {
   position: relative;
   margin-bottom: 24px;
@@ -317,23 +324,38 @@ export default {
   justify-content: center;
 }
 
+.recent-posts {
+  background-color: #fff;
+}
+
 .recent-posts h2 {
   font-size: 18px;
   font-weight: 600;
   color: #000;
   margin-bottom: 16px;
+  padding-left: 4px;
+  border-left: 3px solid #004AAD;
 }
 
 .posts-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background-color: #fff;
 }
 
 .post-item {
   display: flex;
   gap: 12px;
   cursor: pointer;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fff;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .post-image {

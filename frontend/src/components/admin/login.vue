@@ -8,30 +8,23 @@
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
           <label for="email">Email</label>
-          <div class="input-container" :class="{ 'error-container': emailError }">
-            <i class="fas fa-envelope"></i>
-            <input
-              type="email"
-              id="email"
-              v-model="credentials.email"
-              :class="{ 'error': emailError }"
-              @input="validateEmail"
-              placeholder="Nhập email của bạn"
-              required
-            />
-          </div>
-          <span class="error-message" v-if="emailError">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ emailError }}
-          </span>
+          <input
+            type="email"
+            id="email"
+            v-model="credentials.email"
+            :class="{ 'error': emailError }"
+            @input="validateEmail"
+            placeholder="Nhập email của bạn"
+            required
+          />
+          <span class="error-text" v-if="emailError">{{ emailError }}</span>
         </div>
 
         <div class="form-group">
           <label for="password">Mật khẩu</label>
-          <div class="input-container" :class="{ 'error-container': passwordError }">
-            <i class="fas fa-lock"></i>
+          <div class="password-container">
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               id="password"
               v-model="credentials.password"
               :class="{ 'error': passwordError }"
@@ -39,24 +32,20 @@
               placeholder="Nhập mật khẩu"
               required
             />
+            <button type="button" class="show-password" @click="showPassword = !showPassword">
+              {{ showPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
           </div>
-          <span class="error-message" v-if="passwordError">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ passwordError }}
-          </span>
+          <span class="error-text" v-if="passwordError">{{ passwordError }}</span>
         </div>
 
         <div v-if="loginMessage" :class="['message', loginMessage.type]">
-          <i :class="loginMessage.type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
           {{ loginMessage.text }}
         </div>
 
         <button type="submit" :disabled="!isFormValid || isLoading" class="login-button">
           <span v-if="!isLoading">Đăng nhập</span>
-          <span v-else class="loading-text">
-            <i class="fas fa-spinner fa-spin"></i>
-            Đang xử lý...
-          </span>
+          <span v-else>Đang xử lý...</span>
         </button>
       </form>
     </div>
@@ -77,7 +66,8 @@ export default {
       emailError: '',
       passwordError: '',
       loginMessage: null,
-      isLoading: false
+      isLoading: false,
+      showPassword: false
     }
   },
   computed: {
@@ -158,36 +148,90 @@ export default {
 @import '@/styles/admin.css';
 
 /* Component-specific styles */
-.message {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+.form-group {
   margin-bottom: 1rem;
-  font-size: 0.875rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group input.error {
+  border-color: #ef4444;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
 .message.success {
-  background-color: #c6f6d5;
-  color: #2f855a;
+  background-color: #d1fae5;
+  color: #065f46;
 }
 
 .message.error {
-  background-color: #fed7d7;
-  color: #c53030;
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
 
-.message i {
-  font-size: 1rem;
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.fa-spinner {
-  animation: spin 1s linear infinite;
+.login-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.password-container {
+  position: relative;
+  display: flex;
+}
+
+.password-container input {
+  width: 100%;
+}
+
+.show-password {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+}
+
+.show-password:hover {
+  color: #333;
 }
 </style>
