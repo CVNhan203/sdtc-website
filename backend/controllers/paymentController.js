@@ -7,7 +7,11 @@ const sendMail = require("../controllers/emailController");
 exports.createPayment = asyncHandler(async (req, res) => {
   const { orderId, method } = req.body;
   const payment = await Payment.create({ orderId, method, status: "pending" });
-  res.status(201).json({ success: true, data: payment, message: "Khởi tạo thanh toán thành công" });
+  res.status(201).json({
+    success: true,
+    data: payment,
+    message: "Khởi tạo thanh toán thành công",
+  });
 });
 
 // Cập nhật trạng thái thanh toán (giả lập)
@@ -27,17 +31,25 @@ exports.confirmPayment = asyncHandler(async (req, res) => {
       { new: true }
     );
     // Gửi email xác nhận
-    if (order) {
-      await sendMail(
-        order.email,
-        "Xác nhận đặt hàng thành công",
-        `<h3>Chào ${order.fullName},</h3><p>Bạn đã đặt hàng thành công với phương thức thanh toán ${method}.</p><p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>`
-      );
+    if (order && order.email) {
+      try {
+        await sendMail(
+          order.email,
+          "Xác nhận đặt hàng thành công",
+          `<h3>Chào ${order.fullName || "bạn"},</h3>
+          <p>Bạn đã đặt hàng thành công với phương thức thanh toán ${method}.</p>
+          <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>`
+        );
+      } catch (err) {
+        console.error("Lỗi gửi email xác nhận đơn hàng:", err);
+      }
+    } else {
+      console.warn("Không tìm thấy email người nhận trong đơn hàng:", order);
     }
   }
-  res.json({
+  res.status(200).json({
     success: true,
-    message: "Cập nhật trạng thái thanh toán thành công",
     data: payment,
+    message: "Cập nhật trạng thái thanh toán thành công",
   });
 });

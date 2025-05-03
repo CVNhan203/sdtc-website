@@ -4,21 +4,30 @@ const paymentSchema = new mongoose.Schema({
   orderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order",
-    required: [true, "orderId là bắt buộc"],
+    required: [true, "ID đơn hàng là bắt buộc"],
+    validate: {
+      validator: async function (v) {
+        const order = await mongoose.model("Order").findById(v);
+        return !!order;
+      },
+      message: "Đơn hàng không tồn tại",
+    },
   },
   method: {
     type: String,
-    enum: ["MOMO", "VNPAY"],
+    enum: {
+      values: ["MOMO", "VNPAY", "BANK_TRANSFER"],
+      message: "Phương thức thanh toán phải là 'MOMO', 'VNPAY'",
+    },
     required: [true, "Phương thức thanh toán là bắt buộc"],
   },
   status: {
     type: String,
-    enum: ["pending", "paid", "failed"],
+    enum: {
+      values: ["pending", "paid", "failed"],
+      message: "Trạng thái thanh toán phải là 'pending', 'paid', hoặc 'failed'",
+    },
     default: "pending",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   },
 });
 

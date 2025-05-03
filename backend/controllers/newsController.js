@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const News = require("../models/newsModel");
 
+
+// Lấy danh sách bài viết
+
 exports.getNews = asyncHandler(async (req, res) => {
   const {
     type,
@@ -40,6 +43,8 @@ exports.getNews = asyncHandler(async (req, res) => {
   });
 });
 
+// Lấy chi tiết bài viết
+
 exports.getNewsById = asyncHandler(async (req, res) => {
   const news = await News.findByIdAndUpdate(
     req.params.id,
@@ -58,6 +63,9 @@ exports.getNewsById = asyncHandler(async (req, res) => {
     message: "Lấy chi tiết bài viết thành công",
   });
 });
+
+
+// Tạo bài viết mới
 
 exports.createNews = asyncHandler(async (req, res) => {
   const { title, summary, content, image, type, author } = req.body;
@@ -98,6 +106,8 @@ exports.createNews = asyncHandler(async (req, res) => {
   }
 });
 
+// Cập nhật bài viết
+
 exports.updateNews = asyncHandler(async (req, res) => {
   const updateData = req.body;
   const newsId = req.params.id;
@@ -135,6 +145,8 @@ exports.updateNews = asyncHandler(async (req, res) => {
   }
 });
 
+// Xóa bài viết (đánh dấu là đã xóa)
+
 exports.deleteNews = asyncHandler(async (req, res) => {
   const news = await News.findByIdAndUpdate(
     req.params.id,
@@ -152,6 +164,8 @@ exports.deleteNews = asyncHandler(async (req, res) => {
     message: "Đã ẩn bài viết thành công",
   });
 });
+
+// Xóa nhiều bài viết (đánh dấu là đã xóa)
 
 exports.deleteNewsMany = asyncHandler(async (req, res) => {
   const { ids } = req.body;
@@ -175,4 +189,8 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
+
 });
+
+
+

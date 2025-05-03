@@ -1,9 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/orderModel");
+const sendMail = require("../controllers/emailController");
+const Service = require("../models/serviceModel");
 
 // Tạo đơn hàng mới
 exports.createOrder = asyncHandler(async (req, res) => {
   const { serviceId, fullName, phone, email, paymentMethod } = req.body;
+  // Lấy thông tin dịch vụ
+  const service = await Service.findById(serviceId);
+  const serviceTitle = service ? service.title : "Không xác định";
   const order = await Order.create({
     serviceId,
     fullName,
@@ -11,6 +16,20 @@ exports.createOrder = asyncHandler(async (req, res) => {
     email,
     paymentMethod,
   });
+  // Gửi email thông báo cho admin
+  await sendMail(
+    process.env.ADMIN_EMAIL || "hotansanh0304@gmail.com",
+    "[SDTC] Có đơn hàng mới",
+    `<h3>Đơn hàng mới vừa được tạo:</h3>
+      <ul>
+        <li><b>Họ tên:</b> ${fullName}</li>
+        <li><b>Số điện thoại:</b> ${phone}</li>
+        <li><b>Email:</b> ${email}</li>
+        <li><b>ID dịch vụ:</b> ${serviceId}</li>
+        <li><b>Tên dịch vụ:</b> ${serviceTitle}</li>
+        <li><b>Phương thức thanh toán:</b> ${paymentMethod}</li>
+      </ul>`
+  );
   res.status(201).json({
     success: true,
     data: order,
@@ -28,7 +47,9 @@ exports.getOrders = asyncHandler(async (req, res) => {
 exports.getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
   if (!order)
-    return res.status(404).json({ success: false, message: "Không tìm thấy đơn hàng" });
+    return res
+      .status(404)
+      .json({ success: false, message: "Không tìm thấy đơn hàng" });
   res.json({ success: true, data: order });
 });
 
@@ -41,7 +62,9 @@ exports.updateOrderStatus = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!order)
-    return res.status(404).json({ success: false, message: "Không tìm thấy đơn hàng" });
+    return res
+      .status(404)
+      .json({ success: false, message: "Không tìm thấy đơn hàng" });
   res.json({
     success: true,
     data: order,
