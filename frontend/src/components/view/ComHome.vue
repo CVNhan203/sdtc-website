@@ -1,4 +1,5 @@
 <template>
+  <!-- Section đầu trang -->
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
@@ -232,38 +233,103 @@
     </div>
   </section>
 
-  <!-- Sự tin tưởng của khách hàng -->
+  <!-- Section Sự tin tưởng của khách hàng -->
   <section class="customer-trust-section">
     <div class="customer-trust-container">
       <!-- Left: Images & Badge -->
-      <div class="customer-trust-visual">
-        <div class="circle-group">
-          <div class="circle circle-lg">
-            <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+      <div class="circle-layout">
+        <div class="circle image image-main">
+          <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+        </div>
+        <div class="circle badge-center">
+          <div class="badge-text">
+            <strong>200+</strong><br />
+            Khách hàng<br />
+            hài lòng
           </div>
-          <div class="circle circle-md">
-            <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
-          </div>
-          <div class="circle circle-sm">
-            <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
-          </div>
-          <div class="circle-badge">
-            <span>200+<br />Khách hàng<br />hài lòng</span>
-          </div>
+        </div>
+        <div class="circle image image-left">
+          <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
+        </div>
+        <div class="circle image image-bottom">
+          <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
         </div>
       </div>
       <!-- Right: Text -->
-      <div class="customer-trust-content">
-        <p class="trust-label">Về chúng tôi</p>
-        <h2 class="trust-title">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
-        <p class="trust-desc">
+      <div class="intro-section">
+        <p class="subheading">Về chúng tôi</p>
+        <h2 class="main-heading">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
+        <p class="description">
           Chúng tôi không ngừng nỗ lực để mang đến giải pháp tốt nhất, được khách hàng tin tưởng
           theo thời gian.
         </p>
-        <button class="trust-btn">Bắt đầu ngay</button>
+        <button class="cta-button">Bắt đầu ngay</button>
       </div>
     </div>
   </section>
+
+  <!-- Section Thành công vượt bậc  -->
+  <!-- ... existing code ... -->
+  <!-- Section Thành công vượt bậc  -->
+  <section class="successfull">
+    <div class="successfull-content">
+      <p>Dự án</p>
+      <h2>Thành công vượt bậc</h2>
+      <p>
+        Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
+        thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
+        kết của chúng tôi.
+      </p>
+    </div>
+    <div class="projects-group-grid">
+      <div class="project-card large">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website Thẩm mỹ</h3>
+          <p>
+            Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người
+            dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút
+          </p>
+        </div>
+      </div>
+      <div class="project-card-group">
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-2.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website bán hàng</h3>
+            <p>
+              Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm
+              giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán
+              nhanh chóng, giúp tối ưu doanh số.
+            </p>
+          </div>
+        </div>
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-3.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website phong thuỷ</h3>
+            <p>
+              Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển
+              ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong
+              thuỷ sâu sắc
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="successfull-btn-wrapper">
+      <button class="">Khám phá dự án của chúng tôi</button>
+    </div>
+  </section>
+  <!-- ... existing code ... -->
 </template>
 
 <script>
@@ -586,7 +652,7 @@ h1 {
   border-radius: 2rem;
 }
 
-/* Khách hàng tin tưởng bên trái */
+/* Khách hàng tin tưởng bên phải */
 .cooperation-info {
   background: #f8f8f8;
   border-radius: 2rem;
@@ -747,8 +813,6 @@ h1 {
   gap: 60px;
   /* margin-bottom: 1.2rem; */
 }
-
-
 
 .timeline-grid {
   position: relative;
@@ -928,7 +992,7 @@ h1 {
   min-height: 348px;
 }
 
-.customer-trust-visual {
+/* .customer-trust-visual {
   flex: 1.2;
   display: flex;
   align-items: center;
@@ -1014,9 +1078,75 @@ h1 {
   line-height: 1.2;
   letter-spacing: 0.5px;
   display: block;
+} */
+
+.circle-layout {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
 }
 
-.customer-trust-content {
+/* Base circle style */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Vị trí ảnh lớn bên phải */
+.image-main {
+  width: 230px;
+  height: 230px;
+  top: 26px;
+  left: 251px;
+  z-index: 1;
+}
+
+/* Vị trí ảnh trung bình bên trái */
+.image-left {
+  width: 220px;
+  height: 220px;
+  top: 90px;
+  left: -19px;
+  z-index: 2;
+}
+
+/* Vị trí badge xanh nằm chính giữa */
+.badge-center {
+  width: 160px;
+  height: 160px;
+  top: 140px;
+  left: 160px;
+  background-color: #0057ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 3;
+  border: #ffffff solid 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Vị trí ảnh nhỏ ở dưới cùng */
+.image-bottom {
+  width: 120px;
+  height: 120px;
+  top: 270px;
+  left: 180px;
+  z-index: 4;
+}
+
+/* .customer-trust-content {
   flex: 1.1;
   padding: 48px 0 48px 48px;
   display: flex;
@@ -1047,7 +1177,8 @@ h1 {
 }
 
 .trust-btn {
-  background: #2563eb;
+  width: 200px !important;
+  background: #265FF3;
   color: #fff;
   border: none;
   padding: 0.8rem 2.2rem;
@@ -1063,5 +1194,51 @@ h1 {
 .trust-btn:hover {
   background: #1746a2;
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
+} */
+
+.intro-section {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: left;
+  padding: 40px 20px;
+}
+
+.subheading {
+  color: #a0aec0; /* màu xám nhạt */
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.main-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.description {
+  font-size: 16px;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.cta-button {
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #0057ff, #3c8bff);
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.35);
+  transform: translateY(-2px);
 }
 </style>
