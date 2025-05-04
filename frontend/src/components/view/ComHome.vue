@@ -318,12 +318,12 @@
     <button class="inspiration-btn">Xem dự án</button>
   </div>
   <div class="inspiration-carousel-group">
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="100" class="carousel-row">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" class="carousel-row">
       <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
     </Carousel>
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="100" :dir="'rtl'" class="carousel-row carousel-row-bottom">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
       <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
@@ -332,9 +332,63 @@
 </section>
 
 <!-- Section Thành tựu nổi bật -->
- <section class="achievements">
+<section class="achievements">
+  <div class="achievements-header">
+    <p class="achievements-label">Những gì khách hàng nhận xét</p>
+    <h2 class="achievements-title">Thành tựu nổi bật</h2>
+    <p class="achievements-desc">
+      Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
+    </p>
+  </div>
+  <div class="achievements-carousel-wrapper">
+    <button class="achievements-arrow left" @click="prevAchievement">
+      <span>&#8592;</span>
+    </button>
+    <Carousel
+      ref="achievementsCarousel"
+      :itemsToShow="1"
+      :wrapAround="true"
+      :mouseDrag="false"
+      :touchDrag="false"
+      :paginationEnabled="false"
+      class="achievements-carousel"
+    >
+      <Slide v-for="(item, idx) in achievements" :key="idx">
+        <div class="achievement-slide">
+          <div class="achievement-quote-icon">
+            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+              <text x="0" y="35" font-size="120" fill="#ededed" font-family="Arial">&#8220;</text>
+            </svg>
+          </div>
+          <div class="achievement-logo">
+            <img :src="item.logo" :alt="item.company" />
+          </div>
+          <p class="achievement-content">{{ item.content }}</p>
+          <div class="achievement-author">
+            <div class="author-name">{{ item.author }}</div>
+            <div class="author-role">{{ item.role }}</div>
+          </div>
+        </div>
+      </Slide>
+    </Carousel>
+    <button class="achievements-arrow right" @click="nextAchievement">
+      <span>&#8594;</span>
+    </button>
+  </div>
+</section>
 
- </section>
+<!-- Section bạn đồng hành -->
+<section class="companion-section">
+  <div class="companion-content">
+    <div class="companion-text">
+      <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+      <p>
+        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
+      </p>
+    </div>
+    <button class="companion-btn">Đặt lịch tư vấn</button>
+  </div>
+</section>
 </template>
 
 <script>
@@ -349,11 +403,47 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
+      
+      achievements: [
+        {
+          logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),
+          company: 'Google',
+          content:
+            'Chúng tôi đã hợp tác với đội ngũ thiết kế website này trong dự án phát triển nền tảng thương mại điện tử của công ty. Điều làm tôi ấn tượng nhất là cách họ thấu hiểu nhu cầu và biến những yêu cầu phức tạp thành một giải pháp dễ sử dụng nhưng đầy hiệu quả. Từ giao diện mượt mà đến tốc độ xử lý nhanh chóng, website của chúng tôi giờ đây không chỉ thu hút khách hàng mà còn giúp tăng doanh thu đáng kể. Đội ngũ luôn sẵn sàng hỗ trợ và đảm bảo mọi thứ hoạt động ổn định. Tôi chắc chắn sẽ tiếp tục hợp tác trong các dự án tiếp theo!',
+          author: 'Anh Minh',
+          role: 'CEO Công ty Thương mại Điện tử',
+        },
+        {
+          logo: require('@/assets/sdtc-image/trang-chu/Logo/drTuanAnh.png'),
+          company: 'Viện Thẩm Mỹ Nguyễn Tuấn Anh',
+          content:
+            'Chúng tôi đã hợp tác với đội ngũ thiết kế website này trong dự án phát triển nền tảng thương mại điện tử của công ty. Điều làm tôi ấn tượng nhất là cách họ thấu hiểu nhu cầu và biến những yêu cầu phức tạp thành một giải pháp dễ sử dụng nhưng đầy hiệu quả. Từ giao diện mượt mà đến tốc độ xử lý nhanh chóng, website của chúng tôi giờ đây không chỉ thu hút khách hàng mà còn giúp tăng doanh thu đáng kể. Đội ngũ luôn sẵn sàng hỗ trợ và đảm bảo mọi thứ hoạt động ổn định. Tôi chắc chắn sẽ tiếp tục hợp tác trong các dự án tiếp theo!',
+          author: 'Anh Tuấn Anh',
+          role: 'Bác Sĩ Chuyên Khoa Viện Thẩm Mỹ Nguyễn Tuấn Anh',
+        },
+        {
+          logo: require('@/assets/sdtc-image/trang-chu/Logo/vnpay.png'),
+          company: 'VNPAY',
+          content:
+            'Chúng tôi đã hợp tác với đội ngũ thiết kế website này trong dự án phát triển nền tảng thương mại điện tử của công ty. Điều làm tôi ấn tượng nhất là cách họ thấu hiểu nhu cầu và biến những yêu cầu phức tạp thành một giải pháp dễ sử dụng nhưng đầy hiệu quả. Từ giao diện mượt mà đến tốc độ xử lý nhanh chóng, website của chúng tôi giờ đây không chỉ thu hút khách hàng mà còn giúp tăng doanh thu đáng kể. Đội ngũ luôn sẵn sàng hỗ trợ và đảm bảo mọi thứ hoạt động ổn định. Tôi chắc chắn sẽ tiếp tục hợp tác trong các dự án tiếp theo!',
+          author: 'Anh Hào',
+          role: 'CEO Công ty Thương mại Tiền Bạc',
+        },
+      ],
+      
     }
   },
   mounted() {
     this.inspirationImagesTop = inspirationImagesTop
     this.inspirationImagesBottom = inspirationImagesBottom
+  },
+  methods: {
+    nextAchievement() {
+      this.$refs.achievementsCarousel.next()
+    },
+    prevAchievement() {
+      this.$refs.achievementsCarousel.prev()
+    },
   },
 }
 const inspirationImagesTop = [
@@ -378,7 +468,7 @@ const inspirationImagesBottom = [
 </script>
 
 <style scoped>
-/* Phần đầu trang */
+/*-------------------------------------- Phần đầu trang --------------------------------------*/
 .hero-section {
   width: 100%;
   background-color: #f8f7fa;
@@ -626,8 +716,8 @@ h1 {
   }
 }
 
-/* Phần hợp tác */
-/* Sếp bên trái */
+/*-------------------------------------- Phần hợp tác --------------------------------------*/
+/*-------------------------------------- Sếp bên trái --------------------------------------*/
 .cooperation-section {
   padding: 2rem;
   background: #FFFFFF;
@@ -691,7 +781,7 @@ h1 {
   border-radius: 2rem;
 }
 
-/* Khách hàng tin tưởng bên phải */
+/*-------------------------------------- Khách hàng tin tưởng bên phải --------------------------------------*/
 .cooperation-info {
   background: #f8f8f8;
   border-radius: 2rem;
@@ -774,7 +864,7 @@ h1 {
   transform: translateY(-2px) scale(1.03);
 }
 
-/* Sectione bảng timeline */
+/*-------------------------------------- Sectione bảng timeline --------------------------------------*/
 .commit-timeline-section {
   width: 100%;
   margin: 0;
@@ -853,8 +943,6 @@ h1 {
   gap: 60px;
   /* margin-bottom: 1.2rem; */
 }
-
-
 
 .timeline-grid {
   position: relative;
@@ -1017,7 +1105,7 @@ h1 {
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
 }
 
-/* Sự tin tưởng của khách hàng */
+/*-------------------------------------- Sự tin tưởng của khách hàng --------------------------------------*/
 .customer-trust-section {
   width: 100%;
   margin: 0;
@@ -1172,10 +1260,10 @@ h1 {
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
 } 
 
-/* Section Thành công vượt bậc */
+/*-------------------------------------- Section Thành công vượt bậc -------------------------------------- */
 .successfull {
   width: 100%;
-  background: #fff;
+  background: #FFFFFF;
   padding: 48px 0 64px 0;
   display: flex;
   flex-direction: column;
@@ -1185,6 +1273,7 @@ h1 {
 .successfull-content {
   text-align: center;
   margin-bottom: 32px;
+  max-width: 700px;
 }
 
 .successfull-content p {
@@ -1201,7 +1290,7 @@ h1 {
 
 .projects-group-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr 1.2fr;
   gap: 32px;
   max-width: 1200px;
   width: 100%;
@@ -1219,12 +1308,13 @@ h1 {
 }
 
 .project-card.large {
-  min-height: 420px;
+  min-height: 530px;
+  min-width: 557px;
 }
 
 .project-card.small {
-  min-height: 200px;
-  margin-bottom: 24px;
+  min-height: 260px;
+  margin-bottom: 2px;
 }
 
 .project-card-group {
@@ -1241,6 +1331,7 @@ h1 {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 1;
+  filter: brightness(62%);
 }
 
 .project-overlay {
@@ -1249,7 +1340,6 @@ h1 {
   padding: 32px 24px 24px 24px;
   color: #fff;
   width: 100%;
-  background: linear-gradient(180deg, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.85) 100%);
   border-radius: 0 0 24px 24px;
 }
 
@@ -1263,15 +1353,16 @@ h1 {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  color:#D1D4DC
 }
 
-/* Nguồn cảm hứng */
+/*-------------------------------------- Nguồn cảm hứng -------------------------------------- */
 .inspiration-section {
   width: 100%;
   background: #fff;
-  padding: 48px 0 32px 0;
-  max-width: 1400px;
-  margin: 0 auto 32px auto;
+  padding: 0;
+
+  margin: 0;
 }
 
 .inspiration-header {
@@ -1306,7 +1397,7 @@ h1 {
 }
 
 .inspiration-btn {
-  background: #2563eb;
+  background: #265FF3;
   color: #fff;
   border: none;
   padding: 0.9rem 2.2rem;
@@ -1314,8 +1405,8 @@ h1 {
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
-  margin-top: 24px;
+   
+  margin-top: 200px;
   transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 
@@ -1326,12 +1417,13 @@ h1 {
 }
 
 .inspiration-carousel-group {
+  width: auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
 }
+
 
 .carousel-row {
   width: 100%;
@@ -1343,23 +1435,194 @@ h1 {
 }
 
 .carousel-img {
-  width: 100%;
-  height: 180px;
+  width: auto;
+  /* height: 300px; */
   object-fit: cover;
-  border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  background: #f8f8f8;
-  margin: 0 8px;
+  background: #F2F2F2;
+  margin: 8px 8px;
+  image-rendering: auto;
 }
 
-@media (max-width: 900px) {
-  .inspiration-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .carousel-img {
-    height: 120px;
-  }
+/*-------------------------------------- Thành tựu nổi bật --------------------------------------*/
+.achievements {
+  width: 100%;
+  background: #fff;
+  padding: 64px 0 48px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.achievements-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.achievements-label {
+  color: #bfc2c9;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.achievements-title {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.achievements-desc {
+  color: #bfc2c9;
+  font-size: 1.08rem;
+  margin-bottom: 0;
+}
+
+.achievements-carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.achievements-carousel {
+  width: 100%;
+  max-width: 900px;
+}
+
+.achievement-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+}
+
+.achievement-quote-icon {
+  margin-bottom: 12px;
+  opacity: 0.25;
+}
+
+.achievement-logo img {
+  height: 54px;
+  margin-bottom: 18px;
+  margin-top: 8px;
+}
+
+.achievement-content {
+  font-size: 1.35rem;
+  color: #555;
+  text-align: center;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  line-height: 1.6;
+  font-weight: 400;
+  max-width: 900px;
+}
+
+.achievement-author {
+  text-align: center;
+}
+
+.author-name {
+  color: #3ba3ff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.author-role {
+  color: #a7abb6;
+  font-size: 1rem;
+  margin-top: 0;
+  color: #3ba3ff;
+}
+
+.achievements-arrow {
+  background: #fff;
+  border: 1.5px solid #2563eb;
+  color: #2563eb;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
+  transition: background 0.18s, box-shadow 0.18s;
+}
+
+.achievements-arrow:hover {
+  background: #f3f7ff;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.13);
+}
+
+.achievements-arrow.left {
+  order: 0;
+}
+
+.achievements-arrow.right {
+  order: 2;
+}
+
+
+/*-------------------------------------- Bạn đồng hành --------------------------------------*/
+.companion-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px ;
+  background: #FFFFFF;
+}
+
+.companion-content {
+  background: #3976ff;
+  border-radius: 2rem;
+  width: 95%;
+  max-width: 1600px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 48px;
+  box-sizing: border-box;
+}
+
+.companion-text h2 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.companion-text p {
+  color: #e6edff;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.companion-btn {
+  background: #fff;
+  color: #2563eb;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  padding: 18px 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
+}
+
+.companion-btn:hover {
+  background: #e6edff;
+  color: #1746a2;
 }
 </style>
