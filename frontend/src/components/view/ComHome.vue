@@ -150,84 +150,85 @@
 
   <!-- Section Timeline -->
   <section class="commit-timeline-section">
-    <div class="commit-timeline-container">
-      <!-- Bên trái: Nội dung chữ -->
-      <div class="commit-content">
-        <p class="commit-label">Cam kết chất lượng</p>
-        <h2 class="commit-title">Làm việc nhanh chóng là chất lượng của chúng tôi</h2>
-        <p class="commit-desc">
-          Chúng tôi cam kết hoàn thành công việc với tốc độ tối ưu mà không làm giảm chất lượng. Với
-          quy trình hiệu quả và đội ngũ chuyên nghiệp, bạn luôn nhận được kết quả nhanh chóng và
-          đáng tin cậy
-        </p>
-      </div>
-      <!-- Bên phải: Bảng Timeline -->
-      <div class="commit-timeline">
-        <section class="timeline-section">
-          <div class="timeline-header">
-            <h2>Timeline</h2>
-            <div class="timeline-legend">
-              <span class="dot done"></span> Dự án hoàn thành
-              <span class="dot progress"></span> Trong quá trình
-            </div>
-          </div>
-          <div class="timeline-grid">
-            <div class="timeline-labels">
-              <span>S10</span><span>M11</span><span>T12</span><span>W13</span> <span>T14</span
-              ><span>F15</span><span>S16</span><span>S17</span> <span>M18</span><span>T19</span
-              ><span>W20</span><span>T21</span>
-            </div>
-            <div class="timeline-lines">
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line blue"></div><!-- Đường xanh ở T14 -->
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-            </div>
-            <div class="timeline-tasks">
-              <!-- Task 1 -->
-              <div class="timeline-task done" style="grid-column: 2 / span 5">
-                <span class="percent">100%</span>
-                <span class="task-name">Thiết kế hệ thống</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                </div>
-              </div>
-              <!-- Task 2 -->
-              <div class="timeline-task progress" style="grid-column: 4 / span 6">
-                <span class="percent">80%</span>
-                <span class="task-name">Phát triển website</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                </div>
-              </div>
-              <!-- Task 3 -->
-              <div class="timeline-task progress" style="grid-column: 8 / span 4">
-                <span class="percent">40%</span>
-                <span class="task-name">Tối ưu website</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                </div>
+    <div class="timeline-container">
+      <div class="timeline-content">
+        <div class="commit-content">
+          <p class="commit-label">Cam kết chất lượng</p>
+          <h2 class="commit-title">Làm việc nhanh chóng là chất lượng của chúng tôi</h2>
+          <p class="commit-desc">
+            Chúng tôi cam kết hoàn thành công việc với tốc độ tối ưu mà không làm giảm chất lượng.
+            Với quy trình hiệu quả và đội ngũ chuyên nghiệp, bạn luôn nhận được kết quả nhanh chóng
+            và đáng tin cậy
+          </p>
+        </div>
+        <div class="commit-timeline">
+          <section class="timeline-section">
+            <div class="timeline-header">
+              <h2>Timeline</h2>
+              <div class="legend">
+                <span class="dot completed"></span> Dự án hoàn thành
+                <span class="dot in-progress"></span> Trong quá trình
               </div>
             </div>
-          </div>
-        </section>
+            <div class="timeline-grid">
+              <div class="timeline-labels">
+                <span>S10</span><span>M11</span><span>T12</span><span>W13</span> <span>T14</span
+                ><span>F15</span><span>S16</span><span>S17</span> <span>M18</span><span>T19</span
+                ><span>W20</span><span>T21</span>
+              </div>
+              <div class="timeline-lines">
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line blue"></div>
+                <!-- Đường xanh ở T14 -->
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-tasks">
+                <!-- Task 1 -->
+                <div class="timeline-task done" style="grid-column: 2 / span 5">
+                  <span class="percent">100%</span>
+                  <span class="task-name">Thiết kế hệ thống</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                  </div>
+                </div>
+                <!-- Task 2 -->
+                <div class="timeline-task progress" style="grid-column: 4 / span 6">
+                  <span class="percent">80%</span>
+                  <span class="task-name">Phát triển website</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                  </div>
+                </div>
+                <!-- Task 3 -->
+                <div class="timeline-task progress" style="grid-column: 8 / span 4">
+                  <span class="percent">40%</span>
+                  <span class="task-name">Tối ưu website</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </section>
@@ -266,8 +267,6 @@
   </section>
 
 <!-- Section Thành công vượt bậc  -->
-<!-- ... existing code ... -->
-<!-- Section Thành công vượt bậc  -->
 <section class="successfull">
   <div class="successfull-content">
     <p>Dự án</p>
@@ -284,6 +283,7 @@
         <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
       </div>
     </div>
+
     <div class="project-card-group">
       <div class="project-card small">
         <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
@@ -292,6 +292,7 @@
           <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
         </div>
       </div>
+      
       <div class="project-card small">
         <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
         <div class="project-overlay">
@@ -301,21 +302,82 @@
       </div>
     </div>
   </div>
-  <div class="successfull-btn-wrapper">
-    <button class="">Khám phá dự án của chúng tôi</button>
+    <button class="cta-button">Khám phá dự án của chúng tôi</button>
+</section>
+
+<!-- Section Nguồn cảm hứng -->
+<section class="inspiration-section">
+  <div class="inspiration-header">
+    <div>
+      <p class="inspiration-label">Nguồn cảm hứng</p>
+      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+      <p class="inspiration-desc">
+        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
+      </p>
+    </div>
+    <button class="inspiration-btn">Xem dự án</button>
+  </div>
+  <div class="inspiration-carousel-group">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="100" class="carousel-row">
+      <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
+        <img :src="img" class="carousel-img" />
+      </Slide>
+    </Carousel>
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="100" :dir="'rtl'" class="carousel-row carousel-row-bottom">
+      <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
+        <img :src="img" class="carousel-img" />
+      </Slide>
+    </Carousel>
   </div>
 </section>
-<!-- ... existing code ... -->
+
+<!-- Section Thành tựu nổi bật -->
+ <section class="achievements">
+
+ </section>
 </template>
 
 <script>
+import { Carousel, Slide } from 'vue3-carousel'
 export default {
   name: 'ComHome',
+  components: {
+    Carousel,
+    Slide,
+  },
+  data() {
+    return {
+      inspirationImagesTop: [],
+      inspirationImagesBottom: [],
+    }
+  },
+  mounted() {
+    this.inspirationImagesTop = inspirationImagesTop
+    this.inspirationImagesBottom = inspirationImagesBottom
+  },
 }
+const inspirationImagesTop = [
+  require('@/assets/sdtc-image/trang-chu/carousel/image.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-2.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-3.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-4.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-6.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-7.png'),
+]
+
+const inspirationImagesBottom = [
+  require('@/assets/sdtc-image/trang-chu/carousel/image.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-2.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-3.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-4.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-6.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-7.png'),
+]
 </script>
 
 <style scoped>
-
 /* Phần đầu trang */
 .hero-section {
   width: 100%;
@@ -564,12 +626,11 @@ h1 {
   }
 }
 
-
 /* Phần hợp tác */
 /* Sếp bên trái */
 .cooperation-section {
   padding: 2rem;
-  margin-bottom: 2rem;
+  background: #FFFFFF;
 }
 
 .cooperation-container {
@@ -632,7 +693,7 @@ h1 {
 
 /* Khách hàng tin tưởng bên phải */
 .cooperation-info {
-  background: #F8F8F8;
+  background: #f8f8f8;
   border-radius: 2rem;
   padding: 2.5rem 2rem;
   display: flex;
@@ -651,13 +712,13 @@ h1 {
 }
 .trust-header h2 {
   font-size: 1.875rem;
-  color: #5D5D5D;
+  color: #5d5d5d;
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.2;
 }
 .trust-description {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   font-weight: 400;
   margin-bottom: 0;
@@ -681,13 +742,13 @@ h1 {
 }
 .stat-item h3 {
   font-size: 3rem;
-  color:#0041E8;
+  color: #0041e8;
   font-weight: 900;
   margin-bottom: 0.2rem;
   letter-spacing: 1px;
 }
 .stat-item p {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   font-weight: 500;
   margin: 0;
@@ -702,7 +763,10 @@ h1 {
   font-size: 1.1rem;
   cursor: pointer;
   box-shadow: 0 8px 32px rgba(21, 99, 255, 0.15);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
 }
 .start-btn:hover {
   background: #0041e8;
@@ -710,12 +774,15 @@ h1 {
   transform: translateY(-2px) scale(1.03);
 }
 
-
 /* Sectione bảng timeline */
 .commit-timeline-section {
   width: 100%;
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
 }
 
 .commit-timeline-container {
@@ -723,13 +790,13 @@ h1 {
   align-items: stretch;
   justify-content: center;
   max-width: 1200px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 0 auto;
   min-height: 340px;
   gap: 0;
 }
 
 .commit-content {
-  flex: 1.0;
+  flex: 1;
   padding: 56px 0 56px 48px;
   display: flex;
   flex-direction: column;
@@ -746,13 +813,13 @@ h1 {
 .commit-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #5D5D5D;
+  color: #5d5d5d;
   margin-bottom: 1.2rem;
   line-height: 1.15;
 }
 
 .commit-desc {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   line-height: 1.7;
   max-width: 415px;
@@ -772,48 +839,22 @@ h1 {
   box-shadow: none;
 }
 
+.timeline-content {
+  display: flex;
+  align-items: center;
+}
+
+.timeline-container {
+  align-items: center;
+}
 .timeline-header {
+  padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 14rem;
-  margin-bottom: 1.2rem;
+  gap: 60px;
+  /* margin-bottom: 1.2rem; */
 }
 
-.timeline-header h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #202020;
-  margin: 0;
-}
 
-.timeline-legend {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  font-size: 1.1rem;
-  color: #202020;
-  font-weight: 400;
-}
-
-.timeline-legend .dot {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-  border: 2.5px solid #2563eb;
-}
-
-.timeline-legend .done {
-  background: #2563eb;
-  border-color: #2563eb;
-}
-.timeline-legend .progress {
-  background: #fff;
-  border-color: #b0b4bb;
-}
 
 .timeline-grid {
   position: relative;
@@ -826,7 +867,7 @@ h1 {
 .timeline-labels {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  color: #E7E7E7;
+  color: #e7e7e7;
   font-size: 1rem;
   position: relative;
   z-index: 2;
@@ -835,7 +876,7 @@ h1 {
 
 .timeline-labels span {
   text-align: right;
-  color: #E7E7E7;
+  color: #e7e7e7;
 }
 
 .timeline-lines {
@@ -848,6 +889,36 @@ h1 {
   grid-template-columns: repeat(12, 1fr);
   z-index: 1;
   pointer-events: none;
+}
+.timeline-container {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.legend .dot {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0 6px;
+}
+
+.completed {
+  background-color: #1d4ed8;
+}
+
+.in-progress {
+  display: inline-block;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 2.5px solid #c2c2c2;
 }
 
 .timeline-line {
@@ -907,20 +978,20 @@ h1 {
 }
 
 .timeline-task .percent {
-  background: #4D7AEE1A;
-  color: #4D7AEE;
+  background: #4d7aee1a;
+  color: #4d7aee;
   border-radius: 16px;
   padding: 0.2rem 1.1rem;
   margin-right: 0.7rem;
   font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
 .timeline-task.done .percent {
-  background: #4D7AEE;
+  background: #4d7aee;
   color: #fff;
   box-shadow: none;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
 .timeline-task .task-name {
@@ -951,6 +1022,7 @@ h1 {
   width: 100%;
   margin: 0;
   padding: 0;
+  background: #FFFFFF;
 }
 
 .customer-trust-container {
@@ -1098,6 +1170,196 @@ h1 {
 .trust-btn:hover {
   background: #1746a2;
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
+} 
+
+/* Section Thành công vượt bậc */
+.successfull {
+  width: 100%;
+  background: #fff;
+  padding: 48px 0 64px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.successfull-content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.successfull-content p {
+  color: #a7abb6;
+  margin-bottom: 8px;
+}
+
+.successfull-content h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #444;
+}
+
+.projects-group-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto 32px auto;
+}
+
+.project-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+
+.project-card.large {
+  min-height: 420px;
+}
+
+.project-card.small {
+  min-height: 200px;
+  margin-bottom: 24px;
+}
+
+.project-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.project-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+
+.project-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 32px 24px 24px 24px;
+  color: #fff;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.85) 100%);
+  border-radius: 0 0 24px 24px;
+}
+
+.project-overlay h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.project-overlay p {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Nguồn cảm hứng */
+.inspiration-section {
+  width: 100%;
+  background: #fff;
+  padding: 48px 0 32px 0;
+  max-width: 1400px;
+  margin: 0 auto 32px auto;
+}
+
+.inspiration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inspiration-label {
+  color: #a7abb6;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.inspiration-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.inspiration-desc {
+  color: #a7abb6;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.inspiration-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
+  margin-top: 24px;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.inspiration-btn:hover {
+  background: #1746a2;
+  box-shadow: 0 12px 36px rgba(37, 99, 235, 0.22);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.inspiration-carousel-group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.carousel-row {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.carousel-row-bottom {
+  margin-top: 8px;
+}
+
+.carousel-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  background: #f8f8f8;
+  margin: 0 8px;
+}
+
+@media (max-width: 900px) {
+  .inspiration-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .carousel-img {
+    height: 120px;
+  }
+}
 </style>
