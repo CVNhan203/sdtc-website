@@ -18,8 +18,8 @@ export default {
   computed: {
     isAdminRoute() {
       return this.$route.path.startsWith('/admin')
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -53,5 +53,11 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  margin-top: 5rem;
 }
 </style>

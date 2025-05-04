@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import api from '@/api/config';
+import api from '@/api/config'
 
 export default {
   name: 'AdminDashboardHome',
@@ -49,30 +49,30 @@ export default {
       },
       loading: true,
       error: '',
-    };
+    }
   },
   mounted() {
-    this.fetchDashboardStats();
+    this.fetchDashboardStats()
   },
   methods: {
     async fetchDashboardStats() {
-      this.loading = true;
-      this.error = '';
+      this.loading = true
+      this.error = ''
       try {
-        const res = await api.get('/admin/dashboard');
+        const res = await api.get('/admin/dashboard')
         if (res.data.success) {
-          this.stats = res.data.data;
+          this.stats = res.data.data
         } else {
-          this.error = 'Không lấy được dữ liệu tổng quan.';
+          this.error = 'Không lấy được dữ liệu tổng quan.'
         }
       } catch (err) {
-        this.error = 'Lỗi khi tải dữ liệu tổng quan.';
+        this.error = 'Lỗi khi tải dữ liệu tổng quan.'
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -93,7 +93,7 @@ export default {
 .stat-card {
   background: #f5faff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   padding: 24px 32px;
   min-width: 180px;
 }
@@ -107,4 +107,4 @@ export default {
   color: red;
   margin-top: 16px;
 }
-</style> 
+</style>
