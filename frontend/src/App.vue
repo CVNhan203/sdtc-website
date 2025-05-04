@@ -1,56 +1,25 @@
 <template>
-<<<<<<< HEAD
-   <div id="app">
-    <!-- Header ở trên cùng-->
-  <Header />
-  
-  <!-- Nội dung chính của các trang sẽ được hiển thị thông qua router-view -->
-  <main> 
-    <router-view /> 
-  </main>
-
-  <!-- Footer ở dưới cùng-->
-    <Footer />
+  <div id="app">
+    <Header v-if="!isAdminRoute" />
+    <main>
+      <router-view />
+    </main>
+    <Footer v-if="!isAdminRoute" />
   </div>
-
 </template>
 
 <script>
-
-import Header from "./components/ComHeader.vue";
-import Footer from "./components/ComFooter.vue";
+import Header from './components/view/ComHeader.vue'
+import Footer from './components/view/ComFooter.vue'
 
 export default {
   name: 'App',
-  components: {
-    Header,
-    Footer,
+  components: { Header, Footer },
+  computed: {
+    isAdminRoute() {
+      return this.$route.path.startsWith('/admin')
+    },
   },
-};
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-.body{
-  margin: 0;
-  padding: 0;
-  
-=======
-  <div id="app">
-    <router-view></router-view>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'App'
 }
 </script>
 
@@ -67,6 +36,28 @@ body {
 #app {
   width: 100%;
   min-height: 100vh;
->>>>>>> origin/huynhFE
+}
+.html {
+  font-size: 10px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  margin-top: 5rem;
 }
 </style>

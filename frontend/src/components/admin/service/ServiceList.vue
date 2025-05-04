@@ -5,14 +5,14 @@
       <div class="search-filter">
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input 
-            type="text" 
-            v-model="searchQuery" 
+          <input
+            type="text"
+            v-model="searchQuery"
             placeholder="Tìm kiếm theo tiêu đề..."
             @input="handleSearch"
-          >
+          />
         </div>
-        
+
         <select v-model="filterType" @change="handleFilter">
           <option value="">Tất cả loại</option>
           <option value="web">Website</option>
@@ -32,7 +32,6 @@
             <th>Tiêu đề</th>
             <th>Giá</th>
             <th>Loại</th>
-            <th class="responsive-hide">Mô tả</th>
             <th>Thao tác</th>
           </tr>
         </thead>
@@ -40,10 +39,10 @@
           <tr v-for="service in filteredServices" :key="service._id">
             <td class="service-id">{{ service._id }}</td>
             <td>
-              <img 
-                v-if="service.image" 
-                :src="getImageUrl(service.image)" 
-                alt="Service image" 
+              <img
+                v-if="service.image"
+                :src="getImageUrl(service.image)"
+                alt="Service image"
                 class="service-image"
               />
               <span v-else class="no-image">No image</span>
@@ -51,7 +50,7 @@
             <td class="truncate-text">{{ service.title }}</td>
             <td>{{ formatPrice(service.price) }}</td>
             <td>{{ formatType(service.type) }}</td>
-            <td class="content responsive-hide">{{ formatDescription(service.description) }}</td>
+
             <td class="actions-cell">
               <div class="actions">
                 <button class="icon-btn info" @click="showDetails(service)">
@@ -60,25 +59,25 @@
                 <button class="icon-btn edit" @click="openEditModal(service)">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button 
+                <button
                   v-if="!service.isDeleted"
-                  class="icon-btn delete" 
+                  class="icon-btn delete"
                   @click="confirmSoftDelete(service)"
                   title="Chuyển vào thùng rác"
                 >
                   <i class="fas fa-trash"></i>
                 </button>
-                <button 
+                <button
                   v-else
-                  class="icon-btn restore" 
+                  class="icon-btn restore"
                   @click="confirmRestore(service)"
                   title="Khôi phục"
                 >
                   <i class="fas fa-trash-restore"></i>
                 </button>
-                <button 
+                <button
                   v-if="service.isDeleted"
-                  class="icon-btn permanent-delete" 
+                  class="icon-btn permanent-delete"
                   @click="confirmPermanentDelete(service)"
                   title="Xóa vĩnh viễn"
                 >
@@ -107,10 +106,10 @@
           </div>
           <div class="detail-item">
             <label>Ảnh:</label>
-            <img 
-              v-if="selectedService.image" 
-              :src="getImageUrl(selectedService.image)" 
-              alt="Service image" 
+            <img
+              v-if="selectedService.image"
+              :src="getImageUrl(selectedService.image)"
+              alt="Service image"
               class="detail-image"
             />
             <span v-else class="no-image">No image</span>
@@ -152,28 +151,23 @@
           <form @submit.prevent="handleSubmit">
             <div class="form-group">
               <label>ID</label>
-              <input type="text" v-model="formData._id" required>
+              <input type="text" v-model="formData._id" required />
             </div>
             <div class="form-group">
               <label>Ảnh</label>
-              <input 
-                type="file" 
-                @change="handleImageUpload" 
-                accept="image/*"
-                ref="imageInput"
-              >
+              <input type="file" @change="handleImageUpload" accept="image/*" ref="imageInput" />
               <div v-if="imagePreview || formData.image" class="image-preview">
-                <img :src="imagePreview || formData.image" alt="Preview">
+                <img :src="imagePreview || formData.image" alt="Preview" />
                 <button type="button" @click="removeImage" class="remove-image">×</button>
               </div>
             </div>
             <div class="form-group">
               <label>Tiêu đề</label>
-              <input type="text" v-model="formData.title" required>
+              <input type="text" v-model="formData.title" required />
             </div>
             <div class="form-group">
               <label>Giá</label>
-              <input type="number" v-model="formData.price" required min="0">
+              <input type="number" v-model="formData.price" required min="0" />
             </div>
             <div class="form-group">
               <label>Mô tả</label>
@@ -207,7 +201,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Bạn có chắc chắn muốn chuyển dịch vụ "{{ selectedService.title }}" vào thùng rác không?</p>
+          <p>
+            Bạn có chắc chắn muốn chuyển dịch vụ "{{ selectedService.title }}" vào thùng rác không?
+          </p>
           <div class="form-actions">
             <button class="cancel-btn" @click="showSoftDeleteModal = false">Hủy</button>
             <button class="delete-btn" @click="handleSoftDelete">Chuyển vào thùng rác</button>
@@ -249,7 +245,9 @@
           <p>Bạn có chắc chắn muốn xóa vĩnh viễn dịch vụ "{{ selectedService.title }}" không?</p>
           <div class="form-actions">
             <button class="cancel-btn" @click="showPermanentDeleteModal = false">Hủy</button>
-            <button class="permanent-delete-btn" @click="handlePermanentDelete">Xóa vĩnh viễn</button>
+            <button class="permanent-delete-btn" @click="handlePermanentDelete">
+              Xóa vĩnh viễn
+            </button>
           </div>
         </div>
       </div>
@@ -258,8 +256,8 @@
 </template>
 
 <script>
-import serviceService from '@/api/services/serviceService';
-import eventBus from '@/eventBus';
+import serviceService from '@/api/services/serviceService'
+import eventBus from '@/eventBus'
 
 export default {
   name: 'ServiceList',
@@ -280,56 +278,54 @@ export default {
         title: '',
         price: 0,
         description: '',
-        status: true
+        status: true,
       },
       imagePreview: null,
       isEditing: false,
       loading: false,
       error: null,
-      baseImageUrl: 'http://localhost:3000'
+      baseImageUrl: 'http://localhost:3000',
     }
   },
   computed: {
     filteredServices() {
-      const services = Array.isArray(this.services) ? this.services : [];
-      
-      let result = services.filter(service => !service.isDeleted);
-      
+      const services = Array.isArray(this.services) ? this.services : []
+
+      let result = services.filter((service) => !service.isDeleted)
+
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase()
-        result = result.filter(service => 
-          service.title.toLowerCase().includes(query)
-        )
+        result = result.filter((service) => service.title.toLowerCase().includes(query))
       }
-      
+
       if (this.filterType !== '') {
-        result = result.filter(service => service.type === this.filterType)
+        result = result.filter((service) => service.type === this.filterType)
       }
-      
+
       return result
-    }
+    },
   },
   methods: {
     formatPrice(price) {
       return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
-        currency: 'VND'
+        currency: 'VND',
       }).format(price)
     },
     formatType(type) {
       const types = {
-        'web': 'Website',
-        'app': 'Ứng dụng',
-        'agency': 'Agency'
-      };
-      return types[type] || type;
+        web: 'Website',
+        app: 'Ứng dụng',
+        agency: 'Agency',
+      }
+      return types[type] || type
     },
     formatDescription(description) {
-      if (!description) return '';
+      if (!description) return ''
       if (Array.isArray(description)) {
-        return description.map(item => `• ${item}`).join('\n');
+        return description.map((item) => `• ${item}`).join('\n')
       }
-      return `• ${description.toString()}`;
+      return `• ${description.toString()}`
     },
     handleSearch() {
       // Implement debounce if needed
@@ -349,13 +345,13 @@ export default {
         title: '',
         price: 0,
         description: '',
-        status: true
+        status: true,
       }
       this.imagePreview = null
       this.showFormModal = true
     },
     openEditModal(service) {
-      this.$router.push(`/admin/dich-vu/chinh-sua/${service._id}`);
+      this.$router.push(`/admin/dich-vu/chinh-sua/${service._id}`)
     },
     confirmSoftDelete(service) {
       this.selectedService = service
@@ -370,22 +366,22 @@ export default {
       this.showPermanentDeleteModal = true
     },
     async loadServices() {
-      this.loading = true;
-      this.error = null;
+      this.loading = true
+      this.error = null
       try {
-        const response = await serviceService.getServices();
+        const response = await serviceService.getServices()
         // Lấy danh sách đã xóa từ localStorage
-        const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]');
+        const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
         // Lọc bỏ các service đã xóa
-        this.services = Array.isArray(response) ? 
-          response.filter(service => !deletedServices.includes(service._id)) : 
-          [];
+        this.services = Array.isArray(response)
+          ? response.filter((service) => !deletedServices.includes(service._id))
+          : []
       } catch (error) {
-        console.error('Error loading services:', error);
-        this.error = 'Không thể tải danh sách dịch vụ';
-        this.services = [];
+        console.error('Error loading services:', error)
+        this.error = 'Không thể tải danh sách dịch vụ'
+        this.services = []
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     async handleSubmit() {
@@ -418,30 +414,32 @@ export default {
     },
     async handleSoftDelete() {
       try {
-        const serviceIndex = this.services.findIndex(s => s._id === this.selectedService._id);
+        const serviceIndex = this.services.findIndex((s) => s._id === this.selectedService._id)
         if (serviceIndex !== -1) {
           // Lưu ID service đã xóa vào localStorage
-          const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]');
-          deletedServices.push(this.selectedService._id);
-          localStorage.setItem('deletedServices', JSON.stringify(deletedServices));
-          
+          const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
+          deletedServices.push(this.selectedService._id)
+          localStorage.setItem('deletedServices', JSON.stringify(deletedServices))
+
           // Lưu thông tin service đã xóa
           const deletedServiceInfo = {
             ...this.services[serviceIndex],
             isDeleted: true,
-            deletedAt: new Date()
-          };
-          const deletedServicesInfo = JSON.parse(localStorage.getItem('deletedServicesInfo') || '[]');
-          deletedServicesInfo.push(deletedServiceInfo);
-          localStorage.setItem('deletedServicesInfo', JSON.stringify(deletedServicesInfo));
+            deletedAt: new Date(),
+          }
+          const deletedServicesInfo = JSON.parse(
+            localStorage.getItem('deletedServicesInfo') || '[]'
+          )
+          deletedServicesInfo.push(deletedServiceInfo)
+          localStorage.setItem('deletedServicesInfo', JSON.stringify(deletedServicesInfo))
 
           // Xóa khỏi danh sách hiện tại
-          this.services.splice(serviceIndex, 1);
+          this.services.splice(serviceIndex, 1)
         }
-        this.showSoftDeleteModal = false;
-        eventBus.emit('update-deleted-services-count');
+        this.showSoftDeleteModal = false
+        eventBus.emit('update-deleted-services-count')
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error)
       }
     },
     async handleRestore() {
@@ -481,26 +479,26 @@ export default {
       }
     },
     getImageUrl(imagePath) {
-      if (!imagePath) return null;
-      if (imagePath.startsWith('http')) return imagePath;
-      return `${this.baseImageUrl}/${imagePath}`;
-    }
+      if (!imagePath) return null
+      if (imagePath.startsWith('http')) return imagePath
+      return `${this.baseImageUrl}/${imagePath}`
+    },
   },
   created() {
-    this.loadServices();
+    this.loadServices()
     // Listen for updates from TrashService
     eventBus.on('update-deleted-services-count', () => {
-      this.loadServices();
-    });
+      this.loadServices()
+    })
   },
   beforeUnmount() {
     // Cleanup event listeners
-    eventBus.off('update-deleted-services-count');
+    eventBus.off('update-deleted-services-count')
     // Cleanup image previews
     if (this.imagePreview) {
-      URL.revokeObjectURL(this.imagePreview);
+      URL.revokeObjectURL(this.imagePreview)
     }
-  }
+  },
 }
 </script>
 
@@ -537,4 +535,4 @@ export default {
   line-height: 1.5;
   padding: 10px;
 }
-</style> 
+</style>
