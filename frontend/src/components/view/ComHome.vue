@@ -482,32 +482,42 @@ const inspirationImagesBottom = [
 }
 
 .content-wrapper {
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  gap: 2rem;
+  gap: 2rem; */
+  display: flex;
+  align-items: center;
+  gap: 60px;
 }
 
 .trust-card {
+  position: relative;
+  align-items: center;
   background: #fff;
-  padding: 0.5rem;
-  margin-top: 6.5rem;
-  border-radius: 20px;
-  width: 217px;
-  height: 82px;
+  /* padding: 0.5rem;
+  margin-top: 6.5rem; */
+  margin: 10px;;
+  padding: 12px 14px 12px 14px;
+  border-radius: 16px;
+  width: 240px;
+  height: 100px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  top: 28px;
+  /* left: 30px; */
 }
 .stats-card {
+  position: relative;
+  top: 20px;
   background: #fff;
   padding: 1rem;
-  margin-top: 4.2rem;
   border-radius: 20px;
-  width: 213px;
-  height: 152px;
+  width: 240px;
+  height: 160px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 .stats-card h3,
 .trust-card h3 {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .growth-card {
@@ -610,6 +620,8 @@ h1 {
 }
 
 .cta-button {
+  width: 170px;
+  height: 60px;
   background: #265ff3;
   color: white;
   border: none;
