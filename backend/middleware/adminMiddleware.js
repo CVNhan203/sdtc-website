@@ -1,24 +1,34 @@
-const Admin = require('../models/adminModel');
-const asyncHandler = require('express-async-handler');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-// Middleware kiểm tra trạng thái hoạt động của admin
-const checkActiveStatus = asyncHandler(async (req, res, next) => {
-  if (req.admin && req.admin.isActive) {
+module.exports = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Không tìm thấy token xác thực",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded;
+
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền truy cập (chỉ dành cho admin)",
+      });
+    }
+
     next();
-  } else {
-    res.status(403);
-    throw new Error('Tài khoản admin đã bị vô hiệu hóa');
-  }
-});
-
-// Middleware cập nhật thời gian đăng nhập cuối
-const updateLastLogin = asyncHandler(async (req, res, next) => {
-  if (req.admin) {
-    await Admin.findByIdAndUpdate(req.admin._id, {
-      lastLogin: new Date()
+  } catch (error) {
+    console.error("Auth Error:", error);
+    return res.status(401).json({
+      success: false,
+      message: "Token không hợp lệ hoặc đã hết hạn",
     });
   }
-  next();
-});
-
-module.exports = { checkActiveStatus, updateLastLogin };
+};

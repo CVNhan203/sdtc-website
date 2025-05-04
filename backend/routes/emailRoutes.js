@@ -1,23 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const {
-  sendEmail,
-  getEmails,
-  updateEmailStatus,
-  deleteEmail
-} = require('../controllers/emailController');
-const { protect } = require('../middleware/authMiddleware');
-const { checkActiveStatus } = require('../middleware/adminMiddleware');
+const sendMail = require('../controllers/emailController');
 
-// Route công khai
-router.post('/', sendEmail);
-
-// Routes yêu cầu quyền admin
-router.use(protect);
-router.use(checkActiveStatus);
-
-router.get('/', getEmails);
-router.put('/:id', updateEmailStatus);
-router.delete('/:id', deleteEmail);
+router.post('/send', async (req, res) => {
+  const { to, subject, html } = req.body;
+  try {
+    await sendMail(to, subject, html);
+    res.json({ success: true, message: 'Đã gửi email!' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 module.exports = router;

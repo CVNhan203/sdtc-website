@@ -1,14 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/uploadImage");
 const {
   getNews,
   getNewsById,
   createNews,
   updateNews,
   deleteNews,
+  deleteNewsMany,
 } = require("../controllers/newsController");
-const { protect } = require("../middleware/authMiddleware");
-const { checkActiveStatus } = require("../middleware/adminMiddleware");
+
+const adminMiddleware = require("../middleware/adminMiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
+
+// Route upload ảnh
+router.post("/upload", upload.single("image"), (req, res) => {
+  // Trả về đường dẫn file ảnh vừa upload
+  res.json({ imagePath: req.file.path });
+});
 
 // Lấy danh sách bài viết (công khai)
 router.get("/", getNews);
@@ -21,6 +30,9 @@ router.post("/", protect, checkActiveStatus, createNews);
 
 // Cập nhật bài viết (yêu cầu admin)
 router.put("/:id", protect, checkActiveStatus, updateNews);
+
+//Xóa nhiều bài viết (yêu cầu admin)
+router.delete("/many", authMiddleware, adminMiddleware, deleteNewsMany);
 
 // Xóa bài viết (yêu cầu admin)
 router.delete("/:id", protect, checkActiveStatus, deleteNews);

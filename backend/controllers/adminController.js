@@ -1,67 +1,57 @@
-const asyncHandler = require("express-async-handler");
 const Admin = require("../models/adminModel");
+const Order = require("../models/orderModel");
+const Payment = require("../models/paymentModel");
+const Service = require("../models/serviceModel");
+const News = require("../models/newsModel");
+const Booking = require("../models/bookingModel");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 
-// Tạo token JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
-  });
-};
-
-// @desc    Đăng nhập admin
-// @route   POST /api/admin/login
-// @access  Public
-const loginAdmin = asyncHandler(async (req, res) => {
+// Đăng nhập admin
+exports.login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
   const admin = await Admin.findOne({ email });
-
-  if (admin && (await admin.matchPassword(password))) {
-    // Cập nhật thời gian đăng nhập cuối
-    admin.lastLogin = new Date();
-    await admin.save();
-
-    res.json({
-      _id: admin._id,
-      email: admin.email,
-      token: generateToken(admin._id),
-      message: "Đăng nhập thành công"
-    });
-  } else {
-    res.status(401);
-    throw new Error('Email hoặc mật khẩu không đúng');
-  }
+  if (!admin)
+    return res
+      .status(401)
+      .json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch)
+    return res
+      .status(401)
+      .json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+  // Tạo token
+  const token = jwt.sign(
+    { id: admin._id, role: admin.role },
+    process.env.JWT_SECRET || "secret",
+    { expiresIn: "1h" }
+  );
+  res.json({
+    success: true,
+    token,
+    admin: { fullName: admin.fullName, email: admin.email, role: admin.role },
+  });
 });
 
-// @desc    Đăng xuất admin
-// @route   POST /api/admin/logout
-// @access  Private
-const logoutAdmin = asyncHandler(async (req, res) => {
-  res.json({ message: "Đăng xuất thành công" });
+// Thống kê dashboard
+exports.getDashboardStats = asyncHandler(async (req, res) => {
+  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount] =
+    await Promise.all([
+      Order.countDocuments(),
+      Payment.countDocuments(),
+      Service.countDocuments(),
+      News.countDocuments(),
+      Booking.countDocuments(),
+    ]);
+  res.json({
+    success: true,
+    data: {
+      orders: orderCount,
+      payments: paymentCount,
+      services: serviceCount,
+      news: newsCount,
+      bookings: bookingsCount,
+    },
+  });
 });
-
-// @desc    Lấy thông tin admin
-// @route   GET /api/admin/profile
-// @access  Private
-const getAdminProfile = asyncHandler(async (req, res) => {
-  const admin = await Admin.findById(req.admin._id);
-
-  if (admin) {
-    res.json({
-      _id: admin._id,
-      email: admin.email,
-      lastLogin: admin.lastLogin,
-      message: "Lấy thông tin admin thành công"
-    });
-  } else {
-    res.status(404);
-    throw new Error('Không tìm thấy admin');
-  }
-});
-
-module.exports = {
-  loginAdmin,
-  logoutAdmin,
-  getAdminProfile,
-};

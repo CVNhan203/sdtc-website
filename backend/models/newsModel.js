@@ -35,6 +35,10 @@ const newsSchema = new mongoose.Schema({
   author: {
     type: String,
     default: "Admin",
+    trim: true,
+    minlength: [3, "Tên tác giả phải có ít nhất 3 ký tự"],
+    maxlength: [50, "Tên tác giả không được vượt quá 50 ký tự"],
+    match: [/^[a-zA-Z\s]/, "Tên tác giả chỉ được chứa chữ cái và khoảng trắng"],
   },
   views: {
     type: Number,
@@ -44,10 +48,10 @@ const newsSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-}, {
-  timestamps: true
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const News = mongoose.model("News", newsSchema);
-
-module.exports = News;
+module.exports = mongoose.model("News", newsSchema);
