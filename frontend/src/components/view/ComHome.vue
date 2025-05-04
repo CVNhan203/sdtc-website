@@ -274,8 +274,8 @@
     <p>Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.</p>
   </div>
     <div class="projects-group">
-      <div class="">
-      <img src="" alt="">
+      <div class="project-item">
+      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="project-1" />
     </div>
     </div>
    </div>
