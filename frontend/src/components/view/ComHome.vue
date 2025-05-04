@@ -149,84 +149,85 @@
 
   <!-- Section Timeline -->
   <section class="commit-timeline-section">
-    <div class="commit-timeline-container">
-      <!-- Bên trái: Nội dung chữ -->
-      <div class="commit-content">
-        <p class="commit-label">Cam kết chất lượng</p>
-        <h2 class="commit-title">Làm việc nhanh chóng là chất lượng của chúng tôi</h2>
-        <p class="commit-desc">
-          Chúng tôi cam kết hoàn thành công việc với tốc độ tối ưu mà không làm giảm chất lượng. Với
-          quy trình hiệu quả và đội ngũ chuyên nghiệp, bạn luôn nhận được kết quả nhanh chóng và
-          đáng tin cậy
-        </p>
-      </div>
-      <!-- Bên phải: Bảng Timeline -->
-      <div class="commit-timeline">
-        <section class="timeline-section">
-          <div class="timeline-header">
-            <h2>Timeline</h2>
-            <div class="timeline-legend">
-              <span class="dot done"></span> Dự án hoàn thành
-              <span class="dot progress"></span> Trong quá trình
-            </div>
-          </div>
-          <div class="timeline-grid">
-            <div class="timeline-labels">
-              <span>S10</span><span>M11</span><span>T12</span><span>W13</span> <span>T14</span
-              ><span>F15</span><span>S16</span><span>S17</span> <span>M18</span><span>T19</span
-              ><span>W20</span><span>T21</span>
-            </div>
-            <div class="timeline-lines">
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line blue"></div><!-- Đường xanh ở T14 -->
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-              <div class="timeline-line"></div>
-            </div>
-            <div class="timeline-tasks">
-              <!-- Task 1 -->
-              <div class="timeline-task done" style="grid-column: 2 / span 5">
-                <span class="percent">100%</span>
-                <span class="task-name">Thiết kế hệ thống</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                </div>
-              </div>
-              <!-- Task 2 -->
-              <div class="timeline-task progress" style="grid-column: 4 / span 6">
-                <span class="percent">80%</span>
-                <span class="task-name">Phát triển website</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                </div>
-              </div>
-              <!-- Task 3 -->
-              <div class="timeline-task progress" style="grid-column: 8 / span 4">
-                <span class="percent">40%</span>
-                <span class="task-name">Tối ưu website</span>
-                <div class="avatars">
-                  <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                  <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                </div>
+    <div class="timeline-container">
+      <div class="timeline-content">
+        <div class="commit-content">
+          <p class="commit-label">Cam kết chất lượng</p>
+          <h2 class="commit-title">Làm việc nhanh chóng là chất lượng của chúng tôi</h2>
+          <p class="commit-desc">
+            Chúng tôi cam kết hoàn thành công việc với tốc độ tối ưu mà không làm giảm chất lượng.
+            Với quy trình hiệu quả và đội ngũ chuyên nghiệp, bạn luôn nhận được kết quả nhanh chóng
+            và đáng tin cậy
+          </p>
+        </div>
+        <div class="commit-timeline">
+          <section class="timeline-section">
+            <div class="timeline-header">
+              <h2>Timeline</h2>
+              <div class="legend">
+                <span class="dot completed"></span> Dự án hoàn thành
+                <span class="dot in-progress"></span> Trong quá trình
               </div>
             </div>
-          </div>
-        </section>
+            <div class="timeline-grid">
+              <div class="timeline-labels">
+                <span>S10</span><span>M11</span><span>T12</span><span>W13</span> <span>T14</span
+                ><span>F15</span><span>S16</span><span>S17</span> <span>M18</span><span>T19</span
+                ><span>W20</span><span>T21</span>
+              </div>
+              <div class="timeline-lines">
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line blue"></div>
+                <!-- Đường xanh ở T14 -->
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-tasks">
+                <!-- Task 1 -->
+                <div class="timeline-task done" style="grid-column: 2 / span 5">
+                  <span class="percent">100%</span>
+                  <span class="task-name">Thiết kế hệ thống</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                  </div>
+                </div>
+                <!-- Task 2 -->
+                <div class="timeline-task progress" style="grid-column: 4 / span 6">
+                  <span class="percent">80%</span>
+                  <span class="task-name">Phát triển website</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                  </div>
+                </div>
+                <!-- Task 3 -->
+                <div class="timeline-task progress" style="grid-column: 8 / span 4">
+                  <span class="percent">40%</span>
+                  <span class="task-name">Tối ưu website</span>
+                  <div class="avatars">
+                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </section>
@@ -272,7 +273,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Phần đầu trang */
 .hero-section {
   width: 100%;
@@ -521,7 +521,6 @@ h1 {
   }
 }
 
-
 /* Phần hợp tác */
 /* Sếp bên trái */
 .cooperation-section {
@@ -589,7 +588,7 @@ h1 {
 
 /* Khách hàng tin tưởng bên trái */
 .cooperation-info {
-  background: #F8F8F8;
+  background: #f8f8f8;
   border-radius: 2rem;
   padding: 2.5rem 2rem;
   display: flex;
@@ -608,13 +607,13 @@ h1 {
 }
 .trust-header h2 {
   font-size: 1.875rem;
-  color: #5D5D5D;
+  color: #5d5d5d;
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.2;
 }
 .trust-description {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   font-weight: 400;
   margin-bottom: 0;
@@ -638,13 +637,13 @@ h1 {
 }
 .stat-item h3 {
   font-size: 3rem;
-  color:#0041E8;
+  color: #0041e8;
   font-weight: 900;
   margin-bottom: 0.2rem;
   letter-spacing: 1px;
 }
 .stat-item p {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   font-weight: 500;
   margin: 0;
@@ -659,7 +658,10 @@ h1 {
   font-size: 1.1rem;
   cursor: pointer;
   box-shadow: 0 8px 32px rgba(21, 99, 255, 0.15);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
 }
 .start-btn:hover {
   background: #0041e8;
@@ -667,12 +669,14 @@ h1 {
   transform: translateY(-2px) scale(1.03);
 }
 
-
 /* Sectione bảng timeline */
 .commit-timeline-section {
   width: 100%;
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .commit-timeline-container {
@@ -686,7 +690,7 @@ h1 {
 }
 
 .commit-content {
-  flex: 1.0;
+  flex: 1;
   padding: 56px 0 56px 48px;
   display: flex;
   flex-direction: column;
@@ -703,13 +707,13 @@ h1 {
 .commit-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #5D5D5D;
+  color: #5d5d5d;
   margin-bottom: 1.2rem;
   line-height: 1.15;
 }
 
 .commit-desc {
-  color: #A7ABB6;
+  color: #a7abb6;
   font-size: 1rem;
   line-height: 1.7;
   max-width: 415px;
@@ -729,48 +733,22 @@ h1 {
   box-shadow: none;
 }
 
+.timeline-content {
+  display: flex;
+  align-items: center;
+}
+
+.timeline-container {
+  align-items: center;
+}
 .timeline-header {
+  padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 14rem;
-  margin-bottom: 1.2rem;
+  gap: 60px;
+  /* margin-bottom: 1.2rem; */
 }
 
-.timeline-header h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #202020;
-  margin: 0;
-}
 
-.timeline-legend {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  font-size: 1.1rem;
-  color: #202020;
-  font-weight: 400;
-}
-
-.timeline-legend .dot {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-  border: 2.5px solid #2563eb;
-}
-
-.timeline-legend .done {
-  background: #2563eb;
-  border-color: #2563eb;
-}
-.timeline-legend .progress {
-  background: #fff;
-  border-color: #b0b4bb;
-}
 
 .timeline-grid {
   position: relative;
@@ -783,7 +761,7 @@ h1 {
 .timeline-labels {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  color: #E7E7E7;
+  color: #e7e7e7;
   font-size: 1rem;
   position: relative;
   z-index: 2;
@@ -792,7 +770,7 @@ h1 {
 
 .timeline-labels span {
   text-align: right;
-  color: #E7E7E7;
+  color: #e7e7e7;
 }
 
 .timeline-lines {
@@ -805,6 +783,36 @@ h1 {
   grid-template-columns: repeat(12, 1fr);
   z-index: 1;
   pointer-events: none;
+}
+.timeline-container {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.legend .dot {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0 6px;
+}
+
+.completed {
+  background-color: #1d4ed8;
+}
+
+.in-progress {
+  display: inline-block;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 2.5px solid #c2c2c2;
 }
 
 .timeline-line {
@@ -864,20 +872,20 @@ h1 {
 }
 
 .timeline-task .percent {
-  background: #4D7AEE1A;
-  color: #4D7AEE;
+  background: #4d7aee1a;
+  color: #4d7aee;
   border-radius: 16px;
   padding: 0.2rem 1.1rem;
   margin-right: 0.7rem;
   font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
 .timeline-task.done .percent {
-  background: #4D7AEE;
+  background: #4d7aee;
   color: #fff;
   box-shadow: none;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
 .timeline-task .task-name {
@@ -1056,5 +1064,4 @@ h1 {
   background: #1746a2;
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
 }
-
 </style>
