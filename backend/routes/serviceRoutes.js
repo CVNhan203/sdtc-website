@@ -1,5 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/uploadImage");
+
+// Route upload ảnh riêng
+router.post("/upload", upload.single("image"), (req, res) => {
+  //Trả về đường dẫn của ảnh
+  res.json({ imagePath: req.file.path });
+});
+
 const {
   getServices,
   getServiceById,
@@ -7,8 +15,8 @@ const {
   updateService,
   deleteService,
 } = require("../controllers/serviceController");
-const { protect } = require("../middleware/authMiddleware");
-const { checkActiveStatus } = require("../middleware/adminMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // Routes công khai
 router.get("/", getServices);

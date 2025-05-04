@@ -10,6 +10,7 @@ exports.getServices = asyncHandler(async (req, res) => {
     order = "asc",
   } = req.query;
   const query = type ? { type } : {};
+  query.isDeleted = false;
   const skip = (Number(page) - 1) * Number(limit);
 
   const sortQuery = {};
@@ -36,7 +37,10 @@ exports.getServices = asyncHandler(async (req, res) => {
 });
 
 exports.getServiceById = asyncHandler(async (req, res) => {
-  const service = await Service.findById(req.params.id).lean();
+  const service = await Service.findOne({
+    _id: req.params.id,
+    isDeleted: false,
+  }).lean();
 
   if (!service) {
     res.status(404);
@@ -52,19 +56,6 @@ exports.getServiceById = asyncHandler(async (req, res) => {
 
 exports.createService = asyncHandler(async (req, res) => {
   const { title, description, price, image, type } = req.body;
-
-  // Kiểm tra cơ bản xem có đủ field không
-  if (!title || !description || !price || !image || !type) {
-    res.status(400);
-    throw new Error("Vui lòng điền đầy đủ thông tin");
-  }
-
-  // Kiểm tra định dạng của description
-  if (!Array.isArray(description)) {
-    res.status(400);
-    throw new Error("Description phải là một mảng các mô tả");
-  }
-
   const service = await Service.create({
     title,
     description,
@@ -72,7 +63,6 @@ exports.createService = asyncHandler(async (req, res) => {
     image,
     type,
   });
-
   res.status(201).json({
     success: true,
     data: service,
@@ -81,24 +71,11 @@ exports.createService = asyncHandler(async (req, res) => {
 });
 
 exports.updateService = asyncHandler(async (req, res) => {
-  const updateData = req.body;
-
-  // Kiểm tra có dữ liệu cập nhật không
-  if (Object.keys(updateData).length === 0) {
-    res.status(400);
-    throw new Error("Không có dữ liệu để cập nhật");
-  }
-
-  // Chuyển đổi price sang Number nếu có
-  if (updateData.price) {
-    updateData.price = Number(updateData.price);
-  }
-
   const service = await Service.findByIdAndUpdate(
     req.params.id,
-    { $set: updateData },
+    { $set: req.body },
     { new: true, runValidators: true }
-  ).lean();
+  );
 
   if (!service) {
     res.status(404);
@@ -113,7 +90,11 @@ exports.updateService = asyncHandler(async (req, res) => {
 });
 
 exports.deleteService = asyncHandler(async (req, res) => {
-  const service = await Service.findByIdAndDelete(req.params.id);
+  const service = await Service.findByIdAndUpdate(
+    req.params.id,
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
 
   if (!service) {
     res.status(404);
@@ -122,6 +103,6 @@ exports.deleteService = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Xóa dịch vụ thành công",
+    message: "Đã ẩn dịch vụ thành công",
   });
 });
