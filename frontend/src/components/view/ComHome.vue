@@ -1,4 +1,5 @@
 <template>
+  <!-- Section đầu trang -->
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
@@ -231,7 +232,7 @@
     </div>
   </section>
 
-  <!-- Sự tin tưởng của khách hàng -->
+  <!-- Section Sự tin tưởng của khách hàng -->
   <section class="customer-trust-section">
     <div class="customer-trust-container">
       <!-- Left: Images & Badge -->
@@ -263,6 +264,22 @@
       </div>
     </div>
   </section>
+
+<!-- Section Thành công vượt bậc  -->
+ <section class="successfull">
+   <div class="successfull-container">
+    <div class="">
+    <p>Dự án</p>
+    <h2>Thành công vượt bậc</h2>
+    <p>Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.</p>
+  </div>
+    <div class="projects-group">
+      <div class="">
+      <img src="" alt="">
+    </div>
+    </div>
+   </div>
+ </section>
 </template>
 
 <script>
@@ -587,7 +604,7 @@ h1 {
   border-radius: 2rem;
 }
 
-/* Khách hàng tin tưởng bên trái */
+/* Khách hàng tin tưởng bên phải */
 .cooperation-info {
   background: #F8F8F8;
   border-radius: 2rem;
