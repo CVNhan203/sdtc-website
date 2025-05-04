@@ -26,15 +26,15 @@ router.get("/", getNews);
 router.get("/:id", getNewsById);
 
 // Tạo bài viết mới (yêu cầu admin)
-router.post("/", protect, checkActiveStatus, createNews);
+router.post("/", authMiddleware, adminMiddleware, createNews);
 
 // Cập nhật bài viết (yêu cầu admin)
-router.put("/:id", protect, checkActiveStatus, updateNews);
+router.put("/:id", authMiddleware, adminMiddleware, updateNews);
 
 //Xóa nhiều bài viết (yêu cầu admin)
 router.delete("/many", authMiddleware, adminMiddleware, deleteNewsMany);
 
 // Xóa bài viết (yêu cầu admin)
-router.delete("/:id", protect, checkActiveStatus, deleteNews);
+router.delete("/:id", authMiddleware, adminMiddleware, deleteNews);
 
 module.exports = router;
