@@ -266,20 +266,46 @@
   </section>
 
 <!-- Section Thành công vượt bậc  -->
- <section class="successfull">
-   <div class="successfull-container">
-    <div class="">
+<!-- ... existing code ... -->
+<!-- Section Thành công vượt bậc  -->
+<section class="successfull">
+  <div class="successfull-content">
     <p>Dự án</p>
     <h2>Thành công vượt bậc</h2>
-    <p>Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.</p>
+    <p>
+      Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.
+    </p>
   </div>
-    <div class="projects-group">
-      <div class="project-item">
-      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="project-1" />
+  <div class="projects-group-grid">
+    <div class="project-card large">
+      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
+      <div class="project-overlay">
+        <h3>Website Thẩm mỹ</h3>
+        <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
+      </div>
     </div>
+    <div class="project-card-group">
+      <div class="project-card small">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website bán hàng</h3>
+          <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
+        </div>
+      </div>
+      <div class="project-card small">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website phong thuỷ</h3>
+          <p>Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong thuỷ sâu sắc</p>
+        </div>
+      </div>
     </div>
-   </div>
- </section>
+  </div>
+  <div class="successfull-btn-wrapper">
+    <button class="">Khám phá dự án của chúng tôi</button>
+  </div>
+</section>
+<!-- ... existing code ... -->
 </template>
 
 <script>
@@ -1056,7 +1082,7 @@ h1 {
 }
 
 .trust-btn {
-  background: #2563eb;
+  background: #265FF3;
   color: #fff;
   border: none;
   padding: 0.8rem 2.2rem;
