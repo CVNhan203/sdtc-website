@@ -515,11 +515,12 @@ export default {
   font-weight: 600;
   min-width: 80px;
   font-family: Roboto Slab;
-line-height: 100%;
-letter-spacing: 0.83px;
-text-align: center;
-
-  
+  line-height: 100%;
+  letter-spacing: 0.83px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tab-buttons button.active {
@@ -615,9 +616,12 @@ h3 {
   border-radius: 20px;
   border: none;
   cursor: pointer;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto 24px;
   width: fit-content;
+  height: 36px;
 }
 
 .features {
@@ -672,6 +676,9 @@ h3 {
   font-size: 16px;
   font-weight: 600;
   min-width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tab-btn.active {
