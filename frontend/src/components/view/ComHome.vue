@@ -322,13 +322,13 @@
 
   <div class="inspiration-carousel-group">
     <!-- trên  -->
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="1000" class="carousel-row">
+    <Carousel :itemsToShow="9" :wrapAround="true" :autoplay="1000" class="carousel-row">
       <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
     </Carousel>
     <!-- dưới  -->
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="1000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
+    <Carousel :itemsToShow="9" :wrapAround="true" :autoplay="1000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
       <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
@@ -1542,7 +1542,7 @@ h1 {
 }
 
 .inspiration-carousel-group {
-  width: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -1560,9 +1560,7 @@ h1 {
 }
 
 .carousel-img {
-  width: auto;
   /* height: 300px; */
-  object-fit: cover;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   background: #F2F2F2;
   margin: 8px 8px;
@@ -1695,8 +1693,8 @@ h1 {
 .companion-section {
   width: 100%;
   display: flex;
+  padding-bottom: 40px;
   justify-content: center;
-  margin-bottom: 40px ;
   background: #FFFFFF;
 }
 

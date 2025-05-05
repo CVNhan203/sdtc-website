@@ -146,9 +146,9 @@ export default {
 .grid-item {
   cursor: pointer;
   overflow: hidden;
-  border-radius: 8px;
-  position: relative;
+  border-radius: 0.5rem;
   aspect-ratio: 16/9;
+  position: relative;
 }
 
 .grid-item img {

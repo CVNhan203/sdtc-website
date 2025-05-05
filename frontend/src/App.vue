@@ -41,11 +41,12 @@ body {
  font-family: 'Roboto', sans-serif;
  margin: 0;
  padding: 0;
- background: rgba(248, 247, 250, 1);
 }
+
 .html{
  font-size: 10px;
 }
+
 * {
  margin: 0;
  padding: 0;
