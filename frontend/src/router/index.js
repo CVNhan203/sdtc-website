@@ -105,6 +105,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Nếu có vị trí scroll đã lưu (như khi nhấn nút back/forward)
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      // Mặc định scroll lên đầu trang
+      return { top: 0 };
+    }
+  }
 })
 
 // Route guard: bảo vệ các route admin
