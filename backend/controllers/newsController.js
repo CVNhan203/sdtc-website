@@ -14,6 +14,12 @@ exports.getNews = asyncHandler(async (req, res) => {
   } = req.query;
   const query = type ? { type } : {};
   query.isDeleted = false;
+
+  // Nếu là staff, chỉ lấy bài viết của mình
+  if (req.user && req.user.role === 'staff') {
+    query.author = req.user.fullName;
+  }
+
   const skip = (Number(page) - 1) * Number(limit);
 
   // Kiểm tra trường sắp xếp hợp lệ
@@ -46,110 +52,142 @@ exports.getNews = asyncHandler(async (req, res) => {
 // Lấy chi tiết bài viết
 
 exports.getNewsById = asyncHandler(async (req, res) => {
-  const news = await News.findById(req.params.id);
+  const news = await News.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { views: 1 } },
+    { new: true }
+  ).lean();
 
-  if (news) {
-    res.json(news);
-  } else {
+  if (!news) {
     res.status(404);
     throw new Error("Không tìm thấy bài viết");
   }
+
+  res.status(200).json({
+    success: true,
+    data: news,
+    message: "Lấy chi tiết bài viết thành công",
+  });
 });
 
 
 // Tạo bài viết mới
 
 exports.createNews = asyncHandler(async (req, res) => {
-  const { title, summary, content, type, image } = req.body;
+  const { title, summary, content, image, type } = req.body;
 
+  // Kiểm tra các trường bắt buộc (đơn giản)
   if (!title || !summary || !content || !type) {
     res.status(400);
-    throw new Error("Vui lòng điền đầy đủ thông tin bài viết");
+    throw new Error("Vui lòng điền đầy đủ thông tin bắt buộc");
   }
 
-  const news = new News({
-    title,
-    summary,
-    content,
-    type,
-    image: image || "",
-    author: req.staff._id,
-    authorName: req.staff.fullName
-  });
+  // Lấy author từ user đăng nhập
+  const author = req.user ? req.user.fullName : "Admin";
 
-  const createdNews = await news.save();
-  res.status(201).json(createdNews);
-});
+  try {
+    const news = await News.create({
+      title,
+      summary,
+      content,
+      image,
+      type,
+      publishedDate: new Date(),
+      views: 0,
+      like: 0,
+      author,
+    });
 
-// @desc    Lấy danh sách bài viết của staff đăng nhập
-// @route   GET /api/staff/news
-// @access  Private (Staff)
-exports.getNewsByStaff = asyncHandler(async (req, res) => {
-  const news = await News.find({ author: req.staff._id, isDeleted: false });
-  res.json(news);
-});
-
-// @desc    Lấy chi tiết bài viết theo ID (staff)
-// @route   GET /api/staff/news/:id
-// @access  Private (Staff)
-exports.getNewsByIdByStaff = asyncHandler(async (req, res) => {
-  const news = await News.findById(req.params.id);
-
-  if (news) {
-    res.json(news);
-  } else {
-    res.status(404);
-    throw new Error("Không tìm thấy bài viết");
+    res.status(201).json({
+      success: true,
+      data: news,
+      message: "Tạo bài viết thành công",
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(400);
+      const messages = Object.values(error.errors).map((err) => err.message);
+      throw new Error(messages.join(", "));
+    }
+    throw error;
   }
 });
 
-// @desc    Cập nhật bài viết (chỉ tác giả mới có quyền)
-// @route   PUT /api/staff/news/:id
-// @access  Private (Staff + Ownership)
+// Cập nhật bài viết
+
 exports.updateNews = asyncHandler(async (req, res) => {
-  const { title, summary, content, type, image } = req.body;
+  const updateData = req.body;
+  const newsId = req.params.id;
 
-  const news = await News.findById(req.params.id);
+  if (Object.keys(updateData).length === 0) {
+    res.status(400);
+    throw new Error("Không có dữ liệu để cập nhật");
+  }
 
-  if (news) {
-    news.title = title || news.title;
-    news.summary = summary || news.summary;
-    news.content = content || news.content;
-    news.type = type || news.type;
-    news.image = image || news.image;
-
-    const updatedNews = await news.save();
-    res.json(updatedNews);
+  let news;
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndUpdate(
+      { _id: newsId, author: req.user.fullName },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).lean();
   } else {
+    news = await News.findByIdAndUpdate(
+      newsId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).lean();
+  }
+
+  if (!news) {
     res.status(404);
     throw new Error("Không tìm thấy bài viết");
   }
+
+  res.status(200).json({
+    success: true,
+    data: news,
+    message: "Cập nhật bài viết thành công",
+  });
 });
 
-// @desc    Xóa bài viết (chỉ tác giả mới có quyền)
-// @route   DELETE /api/staff/news/:id
-// @access  Private (Staff + Ownership)
-exports.deleteNews = asyncHandler(async (req, res) => {
-  const news = await News.findById(req.params.id);
+// Xóa bài viết (đánh dấu là đã xóa)
 
-  if (news) {
-    news.isDeleted = true;
-    await news.save();
-    res.json({ message: "Bài viết đã được xóa" });
+exports.deleteNews = asyncHandler(async (req, res) => {
+  let news;
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndUpdate(
+      { _id: req.params.id, author: req.user.fullName },
+      { $set: { isDeleted: true } },
+      { new: true }
+    );
   } else {
+    news = await News.findByIdAndUpdate(
+      req.params.id,
+      { $set: { isDeleted: true } },
+      { new: true }
+    );
+  }
+
+  if (!news) {
     res.status(404);
     throw new Error("Không tìm thấy bài viết");
   }
+
+  res.status(200).json({
+    success: true,
+    message: "Đã ẩn bài viết thành công",
+  });
 });
 
 // Xóa nhiều bài viết (đánh dấu là đã xóa)
 
 exports.deleteNewsMany = asyncHandler(async (req, res) => {
-  const { ids } = req.body;
-
-  if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    res.status(400);
-    throw new Error("Vui lòng cung cấp danh sách ID bài viết để xóa");
+  let { ids } = req.body;
+  if (req.user && req.user.role === 'staff') {
+    // Lấy các bài viết thuộc staff
+    const ownNews = await News.find({ _id: { $in: ids }, author: req.user.fullName });
+    ids = ownNews.map(n => n._id);
   }
 
   const result = await News.updateMany(
@@ -166,18 +204,4 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
-
 });
-
-module.exports = {
-  getNews: exports.getNews,
-  getNewsById: exports.getNewsById,
-  createNews: exports.createNews,
-  updateNews: exports.updateNews,
-  deleteNews: exports.deleteNews,
-  deleteNewsMany: exports.deleteNewsMany,
-  getNewsByStaff: exports.getNewsByStaff
-};
-
-
-

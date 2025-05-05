@@ -13,13 +13,10 @@ module.exports = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // Log để debug
-    console.log("Decoded token:", decoded);
 
-    req.admin = decoded;
+    req.user = decoded;
 
-    if (!req.admin || req.admin.role !== "admin") {
+    if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền truy cập (chỉ dành cho admin)",
