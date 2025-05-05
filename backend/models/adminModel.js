@@ -40,15 +40,21 @@ const adminSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: {
-      values: "admin",
-      message: "Vai trò phải là admin",
+      values: ["admin", "staff"],
+      message: "Vai trò không hợp lệ",
+   
     },
-    default: "admin",
+    default: "staff",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 // Middleware: Mã hóa mật khẩu trước khi lưu

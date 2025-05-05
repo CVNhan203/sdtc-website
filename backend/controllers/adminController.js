@@ -36,13 +36,14 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Thống kê dashboard
 exports.getDashboardStats = asyncHandler(async (req, res) => {
-  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount] =
+  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount, adminCount] =
     await Promise.all([
       Order.countDocuments(),
       Payment.countDocuments(),
       Service.countDocuments(),
       News.countDocuments(),
       Booking.countDocuments(),
+      Admin.countDocuments({ role: 'staff', isDeleted: { $ne: true } }),
     ]);
   res.json({
     success: true,
@@ -52,6 +53,51 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       services: serviceCount,
       news: newsCount,
       bookings: bookingsCount,
+      admins: adminCount,
     },
   });
 });
+
+// Lấy danh sách staff
+exports.getStaffs = asyncHandler(async (req, res) => {
+  const staffs = await Admin.find({ role: 'staff', isDeleted: { $ne: true } }).select('-password');
+  res.json({ success: true, data: staffs });
+});
+
+// Tạo staff
+exports.createStaff = asyncHandler(async (req, res) => {
+  const { fullName, email, password } = req.body;
+  const staff = new Admin({ fullName, email, password, role: 'staff' });
+  await staff.save();
+  res.status(201).json({ success: true, data: staff });
+});
+// Lấy chi tiết staff
+exports.getStaffById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const staff = await Admin.findOne({ _id: id, role: 'staff', isDeleted: { $ne: true} }).select('-password');
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, data: staff });
+});
+
+// Cập nhật staff
+exports.updateStaff = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  if (updateData.password) delete updateData.password; // Không cho update password ở đây
+  const staff = await Admin.findOneAndUpdate({ _id: id, role: 'staff' }, updateData, { new: true });
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, data: staff });
+});
+
+//Xóa staff (đánh dấu là đã xóa)
+exports.deleteStaff = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const staff = await Admin.findOneAndUpdate(
+    { _id: id, role: 'staff' },
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, message: 'Đã ẩn staff thành công' });
+});
+
