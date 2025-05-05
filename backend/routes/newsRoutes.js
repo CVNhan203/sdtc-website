@@ -10,7 +10,7 @@ const {
   deleteNewsMany,
 } = require("../controllers/newsController");
 
-const adminMiddleware = require("../middleware/adminMiddleware");
+const adminOrStaffMiddleware = require("../middleware/adminOrStaffMiddleware");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Route upload ảnh
@@ -25,16 +25,16 @@ router.get("/", getNews);
 // Lấy chi tiết bài viết (công khai)
 router.get("/:id", getNewsById);
 
-// Tạo bài viết mới (yêu cầu admin)
-router.post("/", authMiddleware, adminMiddleware, createNews);
+// Tạo bài viết mới (yêu cầu admin hoặc staff)
+router.post("/", authMiddleware, adminOrStaffMiddleware, createNews);
 
-// Cập nhật bài viết (yêu cầu admin)
-router.put("/:id", authMiddleware, adminMiddleware, updateNews);
+// Cập nhật bài viết (yêu cầu admin hoặc staff)
+router.put("/:id", authMiddleware, adminOrStaffMiddleware, updateNews);
 
-//Xóa nhiều bài viết (yêu cầu admin)
-router.delete("/many", authMiddleware, adminMiddleware, deleteNewsMany);
+//Xóa nhiều bài viết (yêu cầu admin hoặc staff)
+router.delete("/many", authMiddleware, adminOrStaffMiddleware, deleteNewsMany);
 
-// Xóa bài viết (yêu cầu admin)
-router.delete("/:id", authMiddleware, adminMiddleware, deleteNews);
+// Xóa bài viết (yêu cầu admin hoặc staff)
+router.delete("/:id", authMiddleware, adminOrStaffMiddleware, deleteNews);
 
 module.exports = router;
