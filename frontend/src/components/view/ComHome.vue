@@ -1,9 +1,9 @@
 <template>
-  <!-- Section đầu trang -->
+  <!---------------------------------------- Section đầu trang ---------------------------------------->
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
-        <!-- Nội dung bên trái -->
+        <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <!-- Nội dung chính ở giữa  -->
+        <!---------------------------------------- Nội dung chính ở giữa  ---------------------------------------->
         <div class="main-content">
           <p class="subtitle">Designing With Us</p>
           <h1>
@@ -37,7 +37,7 @@
           </p>
         </div>
 
-        <!-- Nội dung bên phải -->
+        <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
           <h3>Khách hàng tin tưởng</h3>
           <div class="avatar-group">
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <!-- Dịch vụ -->
+      <!---------------------------------------- Dịch vụ ---------------------------------------->
       <div class="wrapper">
         <div class="services">
           <span>UI/UX Design</span>
@@ -88,14 +88,14 @@
       </div>
 
       <div class="abc">
-        <!-- Link mạng xã hội -->
+        <!---------------------------------------- Link mạng xã hội ---------------------------------------->
         <div class="social-links">
           <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
           <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
           <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
         </div>
-        <!-- Logo đối tác -->
+        <!---------------------------------------- Logo đối tác ---------------------------------------->
         <div class="partners">
           <h3>Đối tác tin cậy</h3>
           <div class="partner-logos">
@@ -108,10 +108,10 @@
     </div>
   </section>
 
-  <!-- Section Hợp tác -->
+  <!---------------------------------------- Section Hợp tác ---------------------------------------->
   <section class="cooperation-section">
     <div class="cooperation-container">
-      <!-- Phần bên trái Sếp -->
+      <!---------------------------------------- Phần bên trái Sếp ---------------------------------------->
       <div class="cooperation-banner">
         <div class="banner-content">
           <p class="subtitle-1">Hợp tác phát triển</p>
@@ -124,7 +124,7 @@
           class="banner-image"
         />
       </div>
-      <!-- Phần bên phải - khách hàng tin tưởng -->
+      <!---------------------------------------- Phần bên phải - khách hàng tin tưởng ---------------------------------------->
       <div class="cooperation-info">
         <div class="trust-header">
           <h2>Khách hàng<br />tin tưởng</h2>
@@ -148,7 +148,7 @@
     </div>
   </section>
 
-  <!-- Section Timeline -->
+  <!---------------------------------------- Section Timeline ---------------------------------------->
   <section class="commit-timeline-section">
     <div class="timeline-container">
       <div class="timeline-content">
@@ -233,10 +233,10 @@
     </div>
   </section>
 
-  <!-- Section Sự tin tưởng của khách hàng -->
+  <!---------------------------------------- Section Sự tin tưởng của khách hàng ---------------------------------------->
   <section class="customer-trust-section">
     <div class="customer-trust-container">
-      <!-- Left: Images & Badge -->
+      <!---------------------------------------- Left: Images & Badge ---------------------------------------->
       <div class="customer-trust-visual">
         <div class="circle-group">
           <div class="circle circle-lg">
@@ -253,7 +253,7 @@
           </div>
         </div>
       </div>
-      <!-- Right: Text -->
+      <!---------------------------------------- Right: Text ---------------------------------------->
       <div class="customer-trust-content">
         <p class="trust-label">Về chúng tôi</p>
         <h2 class="trust-title">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
@@ -266,7 +266,7 @@
     </div>
   </section>
 
-<!-- Section Thành công vượt bậc  -->
+<!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
 <section class="successfull">
   <div class="successfull-content">
     <p>Dự án</p>
@@ -305,7 +305,7 @@
     <button class="cta-button">Khám phá dự án của chúng tôi</button>
 </section>
 
-<!-- Section Nguồn cảm hứng -->
+<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
 <section class="inspiration-section">
   <div class="inspiration-header">
     <div>
@@ -317,12 +317,15 @@
     </div>
     <button class="inspiration-btn">Xem dự án</button>
   </div>
+
   <div class="inspiration-carousel-group">
+    <!-- trên  -->
     <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" class="carousel-row">
       <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
     </Carousel>
+    <!-- dưới  -->
     <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
       <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
         <img :src="img" class="carousel-img" />
@@ -331,7 +334,7 @@
   </div>
 </section>
 
-<!-- Section Thành tựu nổi bật -->
+<!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
 <section class="achievements">
   <div class="achievements-header">
     <p class="achievements-label">Những gì khách hàng nhận xét</p>
@@ -377,7 +380,7 @@
   </div>
 </section>
 
-<!-- Section bạn đồng hành -->
+<!---------------------------------------- Section bạn đồng hành ---------------------------------------->
 <section class="companion-section">
   <div class="companion-content">
     <div class="companion-text">
