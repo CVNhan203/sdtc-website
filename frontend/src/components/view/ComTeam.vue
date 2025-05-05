@@ -47,6 +47,9 @@ export default {
     return {
       selectedImage: require ('@/assets/sdtc-image/ve-chung-toi/image 13.png'),
       selectedImageAlt: 'Main Team Photo',
+      originalImage: require ('@/assets/sdtc-image/ve-chung-toi/image 13.png'),
+      originalImageAlt: 'Main Team Photo',
+      resetTimer: null,
       images: [
         {
           src: require('@/assets/sdtc-image/ve-chung-toi/image 14.png'),
@@ -65,8 +68,20 @@ export default {
   },
   methods: {
     selectImage(image) {
+      // Xóa timer cũ nếu có
+      if (this.resetTimer) {
+        clearTimeout(this.resetTimer);
+      }
+      
+      // Thay đổi ảnh hiển thị
       this.selectedImage = image.src;
       this.selectedImageAlt = image.alt;
+      
+      // Đặt timer để trở về ảnh ban đầu sau 5 giây
+      this.resetTimer = setTimeout(() => {
+        this.selectedImage = this.originalImage;
+        this.selectedImageAlt = this.originalImageAlt;
+      }, 3000);
     }
   }
 }
