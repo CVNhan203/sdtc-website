@@ -49,7 +49,7 @@ export default {
 
 .header-container {
   width: 1440px;
-  height: 74px;
+  height: 120px;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
@@ -58,14 +58,14 @@ export default {
 }
 
 .logo img {
-  height: 50px;
-  width: 131.71px;
+  height: 100px;
+  width: 260px;
 }
 
 .menu {
   display: flex;
   list-style: none;
-  width: 539px;
+  /* width: 539px; */
   height: 23px;
   margin: 0;
   padding: 0;
@@ -77,7 +77,7 @@ export default {
   text-decoration: none;
   color: #8fa0ad;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 20px;
   transition: color 0.3s ease;
   line-height: 100%;
   letter-spacing: 0%;

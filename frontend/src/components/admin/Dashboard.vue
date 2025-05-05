@@ -15,7 +15,7 @@
       <!-- Tổng quan Dashboard -->
       <div class="nav-group">
         <div class="nav-item" :class="{ active: isDashboardActive }">
-          <router-link to="/admin/dashboard" class="nav-item-content">
+          <router-link to="/admin/dashboard" class="nav-item-content" active-class="active">
             <i class="fas fa-tachometer-alt"></i>
             <span>Tổng quan</span>
           </router-link>

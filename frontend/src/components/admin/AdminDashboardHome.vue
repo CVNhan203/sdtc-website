@@ -53,7 +53,6 @@
 
 <script>
 import api from '@/api/config';
-import Chart from 'chart.js/auto';
 
 export default {
   name: 'AdminDashboardHome',
@@ -68,12 +67,10 @@ export default {
       },
       loading: true,
       error: '',
-      pieChart: null,
-      barChart: null,
     };
   },
   mounted() {
-    this.fetchDashboardStats();
+    this.fetchDashboardStats()
   },
   updated() {
     if (!this.loading && !this.error) {
@@ -82,157 +79,22 @@ export default {
   },
   methods: {
     async fetchDashboardStats() {
-      this.loading = true;
-      this.error = '';
+      this.loading = true
+      this.error = ''
       try {
-        const res = await api.get('/admin/dashboard');
+        const res = await api.get('/admin/dashboard')
         if (res.data.success) {
-          this.stats = res.data.data;
+          this.stats = res.data.data
         } else {
-          this.error = 'Không lấy được dữ liệu tổng quan.';
+          this.error = 'Không lấy được dữ liệu tổng quan.'
         }
       } catch (err) {
-        this.error = 'Lỗi khi tải dữ liệu tổng quan.';
+        this.error = 'Lỗi khi tải dữ liệu tổng quan.'
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
-    renderCharts() {
-      this.renderPieChart();
-      this.renderBarChart();
-    },
-    renderPieChart() {
-      if (this.pieChart) {
-        this.pieChart.destroy();
-      }
-      
-      const canvas = this.$refs.pieChart;
-      if (!canvas) return;
-      
-      const ctx = canvas.getContext('2d');
-      
-      const chartData = [
-        Math.max(this.stats.orders, 1),
-        Math.max(this.stats.payments, 1),
-        Math.max(this.stats.services, 1),
-        Math.max(this.stats.news, 1),
-        Math.max(this.stats.bookings, 1),
-      ];
-      
-      this.pieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['Đơn hàng', 'Thanh toán', 'Dịch vụ', 'Tin tức', 'Lịch đặt'],
-          datasets: [{
-            data: chartData,
-            backgroundColor: [
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-              '#4BC0C0',
-              '#9966FF'
-            ],
-            hoverOffset: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                font: {
-                  size: 14
-                }
-              }
-            },
-            title: {
-              display: true,
-              text: 'Phân bố dữ liệu hệ thống',
-              font: {
-                size: 16
-              }
-            }
-          }
-        }
-      });
-    },
-    renderBarChart() {
-      if (this.barChart) {
-        this.barChart.destroy();
-      }
-      
-      const canvas = this.$refs.barChart;
-      if (!canvas) return;
-      
-      const ctx = canvas.getContext('2d');
-      
-      const labels = ['Đơn hàng', 'Thanh toán', 'Dịch vụ', 'Tin tức', 'Lịch đặt'];
-      const data = [
-        this.stats.orders,
-        this.stats.payments,
-        this.stats.services,
-        this.stats.news,
-        this.stats.bookings
-      ];
-      
-      this.barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Số lượng',
-            data: data,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.7)',
-              'rgba(54, 162, 235, 0.7)',
-              'rgba(255, 206, 86, 0.7)',
-              'rgba(75, 192, 192, 0.7)',
-              'rgba(153, 102, 255, 0.7)'
-            ],
-            borderColor: [
-              'rgb(255, 99, 132)',
-              'rgb(54, 162, 235)',
-              'rgb(255, 206, 86)',
-              'rgb(75, 192, 192)',
-              'rgb(153, 102, 255)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            },
-            title: {
-              display: true,
-              text: 'So sánh số lượng',
-              font: {
-                size: 16
-              }
-            }
-          }
-        }
-      });
-    }
   },
-  beforeUnmount() {
-    if (this.pieChart) {
-      this.pieChart.destroy();
-    }
-    if (this.barChart) {
-      this.barChart.destroy();
-    }
-  }
 };
 </script>
 
@@ -254,7 +116,7 @@ export default {
 .stat-card {
   background: #f5faff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   padding: 24px 32px;
   min-width: 180px;
 }
@@ -267,37 +129,5 @@ export default {
 .error {
   color: red;
   margin-top: 16px;
-}
-
-.charts-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 40px;
-}
-
-.chart-section {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 20px;
-}
-
-.chart-wrapper {
-  position: relative;
-  height: 300px;
-  width: 100%;
-}
-
-.chart-section h3 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 18px;
-}
-
-@media (max-width: 768px) {
-  .charts-row {
-    grid-template-columns: 1fr;
-  }
 }
 </style> 

@@ -30,10 +30,10 @@ export default {
   computed: {
     // Check if current route is an admin route
     isAdminRoute() {
-      return this.$route.path.includes('/admin');
+      return this.$route.path.startsWith('/admin')
     }
   }
-};
+}
 </script>
 
 <style>
@@ -53,16 +53,5 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-main {
-  flex: 1; /* Phần main sẽ chiếm không gian còn lại của trang */
-  width: 100%;
-  margin-top: 5rem;
-}
-
-/* Admin view doesn't need the top margin since there's no header */
-.admin-view {
-  margin-top: 0;
 }
 </style>
