@@ -46,123 +46,100 @@ exports.getNews = asyncHandler(async (req, res) => {
 // Lấy chi tiết bài viết
 
 exports.getNewsById = asyncHandler(async (req, res) => {
-  const news = await News.findByIdAndUpdate(
-    req.params.id,
-    { $inc: { views: 1 } },
-    { new: true }
-  ).lean();
+  const news = await News.findById(req.params.id);
 
-  if (!news) {
+  if (news) {
+    res.json(news);
+  } else {
     res.status(404);
     throw new Error("Không tìm thấy bài viết");
   }
-
-  res.status(200).json({
-    success: true,
-    data: news,
-    message: "Lấy chi tiết bài viết thành công",
-  });
 });
 
 
 // Tạo bài viết mới
 
 exports.createNews = asyncHandler(async (req, res) => {
-  const { title, summary, content, image, type, author } = req.body;
+  const { title, summary, content, type, image } = req.body;
 
-  // Kiểm tra các trường bắt buộc (đơn giản)
   if (!title || !summary || !content || !type) {
     res.status(400);
-    throw new Error("Vui lòng điền đầy đủ thông tin bắt buộc");
+    throw new Error("Vui lòng điền đầy đủ thông tin bài viết");
   }
 
-  // Mongoose sẽ xử lý validation chi tiết (độ dài, định dạng...)
-  try {
-    const news = await News.create({
-      title,
-      summary,
-      content,
-      image,
-      type,
-      publishedDate: new Date(),
-      views: 0,
-      like: 0,
-      author: author || "Admin",
-    });
+  const news = new News({
+    title,
+    summary,
+    content,
+    type,
+    image: image || "",
+    author: req.staff._id,
+    authorName: req.staff.fullName
+  });
 
-    res.status(201).json({
-      success: true,
-      data: news,
-      message: "Tạo bài viết thành công",
-    });
-  } catch (error) {
-    // Xử lý lỗi validation từ Mongoose
-    if (error.name === "ValidationError") {
-      res.status(400);
-      const messages = Object.values(error.errors).map((err) => err.message);
-      throw new Error(messages.join(", "));
-    }
-    throw error;
-  }
+  const createdNews = await news.save();
+  res.status(201).json(createdNews);
 });
 
-// Cập nhật bài viết
-
-exports.updateNews = asyncHandler(async (req, res) => {
-  const updateData = req.body;
-  const newsId = req.params.id;
-
-  if (Object.keys(updateData).length === 0) {
-    res.status(400);
-    throw new Error("Không có dữ liệu để cập nhật");
-  }
-
-  try {
-    const news = await News.findByIdAndUpdate(
-      newsId,
-      { $set: updateData },
-      { new: true, runValidators: true }
-    ).lean();
-
-    if (!news) {
-      res.status(404);
-      throw new Error("Không tìm thấy bài viết");
-    }
-
-    res.status(200).json({
-      success: true,
-      data: news,
-      message: "Cập nhật bài viết thành công",
-    });
-  } catch (error) {
-    // Xử lý lỗi validation từ Mongoose
-    if (error.name === "ValidationError") {
-      res.status(400);
-      const messages = Object.values(error.errors).map((err) => err.message);
-      throw new Error(messages.join(", "));
-    }
-    throw error;
-  }
+// @desc    Lấy danh sách bài viết của staff đăng nhập
+// @route   GET /api/staff/news
+// @access  Private (Staff)
+exports.getNewsByStaff = asyncHandler(async (req, res) => {
+  const news = await News.find({ author: req.staff._id, isDeleted: false });
+  res.json(news);
 });
 
-// Xóa bài viết (đánh dấu là đã xóa)
+// @desc    Lấy chi tiết bài viết theo ID (staff)
+// @route   GET /api/staff/news/:id
+// @access  Private (Staff)
+exports.getNewsByIdByStaff = asyncHandler(async (req, res) => {
+  const news = await News.findById(req.params.id);
 
-exports.deleteNews = asyncHandler(async (req, res) => {
-  const news = await News.findByIdAndUpdate(
-    req.params.id,
-    { $set: { isDeleted: true } },
-    { new: true }
-  );
-
-  if (!news) {
+  if (news) {
+    res.json(news);
+  } else {
     res.status(404);
     throw new Error("Không tìm thấy bài viết");
   }
+});
 
-  res.status(200).json({
-    success: true,
-    message: "Đã ẩn bài viết thành công",
-  });
+// @desc    Cập nhật bài viết (chỉ tác giả mới có quyền)
+// @route   PUT /api/staff/news/:id
+// @access  Private (Staff + Ownership)
+exports.updateNews = asyncHandler(async (req, res) => {
+  const { title, summary, content, type, image } = req.body;
+
+  const news = await News.findById(req.params.id);
+
+  if (news) {
+    news.title = title || news.title;
+    news.summary = summary || news.summary;
+    news.content = content || news.content;
+    news.type = type || news.type;
+    news.image = image || news.image;
+
+    const updatedNews = await news.save();
+    res.json(updatedNews);
+  } else {
+    res.status(404);
+    throw new Error("Không tìm thấy bài viết");
+  }
+});
+
+// @desc    Xóa bài viết (chỉ tác giả mới có quyền)
+// @route   DELETE /api/staff/news/:id
+// @access  Private (Staff + Ownership)
+exports.deleteNews = asyncHandler(async (req, res) => {
+  const news = await News.findById(req.params.id);
+
+  if (news) {
+    news.isDeleted = true;
+    await news.save();
+    res.json({ message: "Bài viết đã được xóa" });
+  } else {
+    res.status(404);
+    throw new Error("Không tìm thấy bài viết");
+  }
 });
 
 // Xóa nhiều bài viết (đánh dấu là đã xóa)
@@ -191,6 +168,16 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
   });
 
 });
+
+module.exports = {
+  getNews: exports.getNews,
+  getNewsById: exports.getNewsById,
+  createNews: exports.createNews,
+  updateNews: exports.updateNews,
+  deleteNews: exports.deleteNews,
+  deleteNewsMany: exports.deleteNewsMany,
+  getNewsByStaff: exports.getNewsByStaff
+};
 
 
 

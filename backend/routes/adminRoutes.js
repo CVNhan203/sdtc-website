@@ -1,12 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const adminController = require("../controllers/adminController");
 const adminMiddleware = require("../middleware/adminMiddleware");
-const authMiddleware = require("../middleware/authMiddleware");
+const {
+  login,
+  getDashboardStats,
+  createStaff,
+  getAllStaff,
+  getStaffById,
+  updateStaff,
+  deactivateStaff
+} = require("../controllers/adminController");
 
 // Đăng nhập admin
-router.post("/login", adminController.login);
+router.post("/login", login);
 // Thống kê Dashboard
-router.get("/dashboard", authMiddleware, adminController.getDashboardStats);
+router.get("/dashboard", adminMiddleware, getDashboardStats);
+
+// Routes quản lý staff
+router.post("/staff", adminMiddleware, createStaff);
+router.get("/staff", adminMiddleware, getAllStaff);
+router.get("/staff/:id", adminMiddleware, getStaffById);
+router.put("/staff/:id", adminMiddleware, updateStaff);
+router.delete("/staff/:id", adminMiddleware, deactivateStaff);
 
 module.exports = router;
