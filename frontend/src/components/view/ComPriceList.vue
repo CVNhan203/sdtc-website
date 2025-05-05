@@ -679,15 +679,291 @@ h3 {
   color: white;
 }
 
-@media (max-width: 768px) {
-  .page-btn {
-    width: 32px;
-    height: 32px;
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .price-list-container {
+    max-width: 1140px;
+    padding: 30px 15px;
   }
-  
-  .page-info {
+
+  .pricce-list {
+    font-size: 50px;
+    width: auto;
+    height: auto;
+  }
+
+  .price-cards {
+    width: 100%;
+    height: auto;
+    gap: 30px;
+    padding: 15px;
+  }
+
+  .price-card {
+    width: 100%;
+    height: auto;
+    padding: 40px 10px;
+  }
+
+  .features {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .price-list-container {
+    max-width: 960px;
+  }
+
+  .pricce-list {
+    font-size: 45px;
+  }
+
+  .tab-buttons {
+    width: 260px;
+    height: 40px;
+  }
+
+  .tab-buttons button {
+    padding: 6px 20px;
+    font-size: 15px;
+  }
+
+  .price-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .card-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .card-icon img {
+    width: 100px;
+    height: 80px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  .price {
+    font-size: 22px;
+  }
+
+  .btn-detail {
+    padding: 8px 35px;
+    font-size: 15px;
+  }
+
+  .features li {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .price-list-container {
+    padding: 20px 10px;
+  }
+
+  .price-list-header {
+    margin-bottom: 30px;
+  }
+
+  .pricce-list {
+    font-size: 40px;
+  }
+
+  .tab-buttons {
+    width: 240px;
+    height: 38px;
+    margin: 15px auto;
+  }
+
+  .tab-buttons button {
+    padding: 5px 18px;
+    font-size: 14px;
+    min-width: 70px;
+  }
+
+  .price-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 10px;
+  }
+
+  .price-card {
+    padding: 30px 10px;
+    border-radius: 30px;
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+  }
+
+  .card-icon img {
+    width: 90px;
+    height: 70px;
+  }
+
+  h3 {
+    font-size: 17px;
+    margin: 12px 0 6px;
+  }
+
+  .price {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .btn-detail {
+    padding: 7px 30px;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .features {
+    padding: 8px;
+  }
+
+  .features li {
+    margin-bottom: 10px;
     font-size: 12px;
   }
+}
+
+@media screen and (max-width: 480px) {
+  .price-list-container {
+    padding: 15px 8px;
+  }
+
+  .price-list-header {
+    margin-bottom: 25px;
+  }
+
+  .pricce-list {
+    font-size: 32px;
+  }
+
+  .tab-buttons {
+    width: 220px;
+    height: 36px;
+    margin: 12px auto;
+  }
+
+  .tab-buttons button {
+    padding: 4px 15px;
+    font-size: 13px;
+    min-width: 65px;
+  }
+
+  .price-cards {
+    gap: 15px;
+    padding: 8px;
+  }
+
+  .price-card {
+    padding: 25px 8px;
+    border-radius: 25px;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 12px;
+  }
+
+  .card-icon img {
+    width: 80px;
+    height: 60px;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+
+  .price {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .btn-detail {
+    padding: 6px 25px;
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+
+  .features {
+    padding: 6px;
+  }
+
+  .features li {
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+}
+
+/* Animation and Hover Effects */
+.price-card {
+  transition: all 0.3s ease;
+}
+
+.price-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-detail {
+  transition: all 0.3s ease;
+}
+
+.btn-detail:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Improve touch targets for mobile */
+@media screen and (max-width: 768px) {
+  .price-card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .price-card:active {
+    transform: scale(0.98);
+  }
+
+  .btn-detail:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Fix for long text content */
+.features li {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Add smooth scrolling for better UX */
+.price-list-container {
+  scroll-behavior: smooth;
+}
+
+/* Improve tab button accessibility */
+.tab-buttons button {
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-buttons button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(13, 146, 244, 0.3);
 }
 
 </style>
