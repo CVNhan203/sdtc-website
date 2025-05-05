@@ -36,14 +36,15 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Thống kê dashboard
 exports.getDashboardStats = asyncHandler(async (req, res) => {
-  // Lấy số lượng các loại dữ liệu
-  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount] =
+
+  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount, adminCount] =
     await Promise.all([
       Order.countDocuments(),
       Payment.countDocuments(),
       Service.countDocuments(),
       News.countDocuments(),
       Booking.countDocuments(),
+      Admin.countDocuments({ role: 'staff', isDeleted: { $ne: true } }),
     ]);
 
   // Dữ liệu cho biểu đồ đơn hàng theo tháng
@@ -161,35 +162,51 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       services: serviceCount,
       news: newsCount,
       bookings: bookingsCount,
-      ordersTrend,
-      paymentsTrend: 8, // Giả lập, thay bằng tính toán thực nếu cần
-      servicesTrend: 0,
-      newsTrend: 5,
-      bookingsTrend: -2,
-      ordersChart: {
-        labels: ordersChartLabels,
-        data: ordersChartData
-      },
-      servicesDistribution,
-      recentActivities
+
+      admins: adminCount,
     },
   });
 });
 
-// Hàm định dạng thời gian
-function formatTime(date) {
-  const now = new Date();
-  const diff = now - new Date(date);
-  
-  // Chuyển đổi millisecond sang giờ
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  
-  if (hours < 1) {
-    return 'Vừa xong';
-  } else if (hours < 24) {
-    return `${hours} giờ trước`;
-  } else {
-    const days = Math.floor(hours / 24);
-    return `${days} ngày trước`;
-  }
-}
+// Lấy danh sách staff
+exports.getStaffs = asyncHandler(async (req, res) => {
+  const staffs = await Admin.find({ role: 'staff', isDeleted: { $ne: true } }).select('-password');
+  res.json({ success: true, data: staffs });
+});
+
+// Tạo staff
+exports.createStaff = asyncHandler(async (req, res) => {
+  const { fullName, email, password } = req.body;
+  const staff = new Admin({ fullName, email, password, role: 'staff' });
+  await staff.save();
+  res.status(201).json({ success: true, data: staff });
+});
+// Lấy chi tiết staff
+exports.getStaffById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const staff = await Admin.findOne({ _id: id, role: 'staff', isDeleted: { $ne: true} }).select('-password');
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, data: staff });
+});
+
+// Cập nhật staff
+exports.updateStaff = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  if (updateData.password) delete updateData.password; // Không cho update password ở đây
+  const staff = await Admin.findOneAndUpdate({ _id: id, role: 'staff' }, updateData, { new: true });
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, data: staff });
+});
+
+//Xóa staff (đánh dấu là đã xóa)
+exports.deleteStaff = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const staff = await Admin.findOneAndUpdate(
+    { _id: id, role: 'staff' },
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+  if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+  res.json({ success: true, message: 'Đã ẩn staff thành công' });
+});
