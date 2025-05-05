@@ -395,4 +395,319 @@ export default {
     height: 50px;
   }
 }
+
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .news-detail-container {
+    max-width: 1140px;
+    padding: 18px;
+  }
+
+  .news-content-wrapper {
+    gap: 30px;
+  }
+
+  .news-title {
+    font-size: 28px;
+  }
+
+  .news-meta {
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .sidebar {
+    width: 320px;
+  }
+
+  .post-image {
+    width: 75px;
+    height: 55px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .news-detail-container {
+    max-width: 960px;
+    padding: 16px;
+  }
+
+  .news-content-wrapper {
+    gap: 25px;
+  }
+
+  .news-title {
+    font-size: 26px;
+  }
+
+  .news-meta {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .news-image {
+    margin-bottom: 20px;
+  }
+
+  .content-paragraph {
+    font-size: 15px;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .search-container {
+    max-width: 500px;
+    margin: 0 auto 20px;
+  }
+
+  .posts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .post-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  .post-item:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .news-detail-container {
+    padding: 15px;
+  }
+
+  .back-link {
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .back-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .news-title {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .news-meta {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .news-image {
+    margin-bottom: 18px;
+  }
+
+  .content-paragraph {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .search-container {
+    margin-bottom: 18px;
+  }
+
+  .search-input {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .search-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .recent-posts h2 {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .posts-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .post-item {
+    padding: 8px;
+  }
+
+  .post-image {
+    width: 65px;
+    height: 45px;
+  }
+
+  .post-date {
+    font-size: 12px;
+  }
+
+  .post-excerpt {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .news-detail-container {
+    padding: 12px;
+  }
+
+  .back-link {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .back-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .news-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .news-meta {
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+
+  .news-image {
+    margin-bottom: 16px;
+  }
+
+  .content-paragraph {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .search-container {
+    margin-bottom: 16px;
+  }
+
+  .search-input {
+    height: 38px;
+    font-size: 12px;
+    padding: 0 38px 0 12px;
+  }
+
+  .search-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .recent-posts h2 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .posts-list {
+    gap: 12px;
+  }
+
+  .post-item {
+    padding: 6px;
+  }
+
+  .post-image {
+    width: 60px;
+    height: 40px;
+  }
+
+  .post-date {
+    font-size: 11px;
+  }
+
+  .post-excerpt {
+    font-size: 12px;
+  }
+}
+
+/* Animation and Hover Effects */
+.back-link {
+  transition: all 0.3s ease;
+}
+
+.post-item {
+  transition: all 0.3s ease;
+}
+
+.search-input {
+  transition: all 0.3s ease;
+}
+
+/* Improve touch targets for mobile */
+@media screen and (max-width: 768px) {
+  .back-link,
+  .post-item,
+  .search-button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .post-item:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Add smooth scrolling for better UX */
+.news-detail-container {
+  scroll-behavior: smooth;
+}
+
+/* Improve accessibility */
+.search-input:focus {
+  box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.2);
+}
+
+.post-item:focus-within {
+  outline: 2px solid #004AAD;
+  outline-offset: 2px;
+}
+
+/* Loading state styles */
+.news-image img {
+  transition: opacity 0.3s ease;
+}
+
+.news-image img.loading {
+  opacity: 0.7;
+}
+
+/* Improve text readability */
+.content-paragraph {
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Add responsive image handling */
+.news-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Improve meta information display */
+.news-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media screen and (max-width: 480px) {
+  .news-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 </style>
