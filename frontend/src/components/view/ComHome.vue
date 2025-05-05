@@ -1,8 +1,9 @@
 <template>
+  <!-- Section đầu trang -->
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
-        <!-- Nội dung bên trái -->
+        <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
@@ -23,7 +24,7 @@
           </div>
         </div>
 
-        <!-- Nội dung chính ở giữa  -->
+        <!---------------------------------------- Nội dung chính ở giữa  ---------------------------------------->
         <div class="main-content">
           <p class="subtitle">Designing With Us</p>
           <h1>
@@ -36,7 +37,7 @@
           </p>
         </div>
 
-        <!-- Nội dung bên phải -->
+        <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
           <h3>Khách hàng tin tưởng</h3>
           <div class="avatar-group">
@@ -73,7 +74,7 @@
         </div>
       </div>
 
-      <!-- Dịch vụ -->
+      <!---------------------------------------- Dịch vụ ---------------------------------------->
       <div class="wrapper">
         <div class="services">
           <span>UI/UX Design</span>
@@ -87,14 +88,14 @@
       </div>
 
       <div class="abc">
-        <!-- Link mạng xã hội -->
+        <!---------------------------------------- Link mạng xã hội ---------------------------------------->
         <div class="social-links">
           <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
           <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
           <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
         </div>
-        <!-- Logo đối tác -->
+        <!---------------------------------------- Logo đối tác ---------------------------------------->
         <div class="partners">
           <h3>Đối tác tin cậy</h3>
           <div class="partner-logos">
@@ -107,10 +108,10 @@
     </div>
   </section>
 
-  <!-- Section Hợp tác -->
+  <!---------------------------------------- Section Hợp tác ---------------------------------------->
   <section class="cooperation-section">
     <div class="cooperation-container">
-      <!-- Phần bên trái Sếp -->
+      <!---------------------------------------- Phần bên trái Sếp ---------------------------------------->
       <div class="cooperation-banner">
         <div class="banner-content">
           <p class="subtitle-1">Hợp tác phát triển</p>
@@ -123,7 +124,7 @@
           class="banner-image"
         />
       </div>
-      <!-- Phần bên phải - khách hàng tin tưởng -->
+      <!---------------------------------------- Phần bên phải - khách hàng tin tưởng ---------------------------------------->
       <div class="cooperation-info">
         <div class="trust-header">
           <h2>Khách hàng<br />tin tưởng</h2>
@@ -147,7 +148,7 @@
     </div>
   </section>
 
-  <!-- Section Timeline -->
+  <!---------------------------------------- Section Timeline ---------------------------------------->
   <section class="commit-timeline-section">
     <div class="commit-timeline-container">
       <!-- Bên trái: Nội dung chữ -->
@@ -231,38 +232,164 @@
     </div>
   </section>
 
-  <!-- Sự tin tưởng của khách hàng -->
+  <!-- Section Sự tin tưởng của khách hàng -->
   <section class="customer-trust-section">
     <div class="customer-trust-container">
       <!-- Left: Images & Badge -->
-      <div class="customer-trust-visual">
-        <div class="circle-group">
-          <div class="circle circle-lg">
-            <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+      <div class="circle-layout">
+        <div class="circle image image-main">
+          <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+        </div>
+        <div class="circle badge-center">
+          <div class="badge-text">
+            <strong>200+</strong><br />
+            Khách hàng<br />
+            hài lòng
           </div>
-          <div class="circle circle-md">
-            <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
-          </div>
-          <div class="circle circle-sm">
-            <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
-          </div>
-          <div class="circle-badge">
-            <span>200+<br />Khách hàng<br />hài lòng</span>
-          </div>
+        </div>
+        <div class="circle image image-left">
+          <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
+        </div>
+        <div class="circle image image-bottom">
+          <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
         </div>
       </div>
       <!-- Right: Text -->
-      <div class="customer-trust-content">
-        <p class="trust-label">Về chúng tôi</p>
-        <h2 class="trust-title">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
-        <p class="trust-desc">
+      <div class="intro-section">
+        <p class="subheading">Về chúng tôi</p>
+        <h2 class="main-heading">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
+        <p class="description">
           Chúng tôi không ngừng nỗ lực để mang đến giải pháp tốt nhất, được khách hàng tin tưởng
           theo thời gian.
         </p>
-        <button class="trust-btn">Bắt đầu ngay</button>
+        <button class="cta-button">Bắt đầu ngay</button>
       </div>
     </div>
   </section>
+
+<!-- Section Thành công vượt bậc  -->
+<section class="successfull">
+  <div class="successfull-content">
+    <p>Dự án</p>
+    <h2>Thành công vượt bậc</h2>
+    <p>
+      Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.
+    </p>
+  </div>
+  <div class="projects-group-grid">
+    <div class="project-card large">
+      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
+      <div class="project-overlay">
+        <h3>Website Thẩm mỹ</h3>
+        <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
+      </div>
+    </div>
+
+    <div class="project-card-group">
+      <div class="project-card small">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website bán hàng</h3>
+          <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
+        </div>
+      </div>
+      
+      <div class="project-card small">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website phong thuỷ</h3>
+          <p>Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong thuỷ sâu sắc</p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <button class="cta-button">Khám phá dự án của chúng tôi</button>
+</section>
+
+<!-- Section Nguồn cảm hứng -->
+<section class="inspiration-section">
+  <div class="inspiration-header">
+    <div>
+      <p class="inspiration-label">Nguồn cảm hứng</p>
+      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+      <p class="inspiration-desc">
+        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
+      </p>
+    </div>
+    <button class="inspiration-btn">Xem dự án</button>
+  </div>
+  <div class="inspiration-carousel-group">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" class="carousel-row">
+      <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
+        <img :src="img" class="carousel-img" />
+      </Slide>
+    </Carousel>
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
+      <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
+        <img :src="img" class="carousel-img" />
+      </Slide>
+    </Carousel>
+  </div>
+</section>
+
+<!-- Section Thành tựu nổi bật -->
+<section class="achievements">
+  <div class="achievements-header">
+    <p class="achievements-label">Những gì khách hàng nhận xét</p>
+    <h2 class="achievements-title">Thành tựu nổi bật</h2>
+    <p class="achievements-desc">
+      Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
+    </p>
+  </div>
+  <div class="achievements-carousel-wrapper">
+    <button class="achievements-arrow left" @click="prevAchievement">
+      <span>&#8592;</span>
+    </button>
+    <Carousel
+      ref="achievementsCarousel"
+      :itemsToShow="1"
+      :wrapAround="true"
+      :mouseDrag="false"
+      :touchDrag="false"
+      :paginationEnabled="false"
+      class="achievements-carousel"
+    >
+      <Slide v-for="(item, idx) in achievements" :key="idx">
+        <div class="achievement-slide">
+          <div class="achievement-quote-icon">
+            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+              <text x="0" y="35" font-size="120" fill="#ededed" font-family="Arial">&#8220;</text>
+            </svg>
+          </div>
+          <div class="achievement-logo">
+            <img :src="item.logo" :alt="item.company" />
+          </div>
+          <p class="achievement-content">{{ item.content }}</p>
+          <div class="achievement-author">
+            <div class="author-name">{{ item.author }}</div>
+            <div class="author-role">{{ item.role }}</div>
+          </div>
+        </div>
+      </Slide>
+    </Carousel>
+    <button class="achievements-arrow right" @click="nextAchievement">
+      <span>&#8594;</span>
+    </button>
+  </div>
+</section>
+
+<!-- Section bạn đồng hành -->
+<section class="companion-section">
+  <div class="companion-content">
+    <div class="companion-text">
+      <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+      <p>
+        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
+      </p>
+    </div>
+    <button class="companion-btn">Đặt lịch tư vấn</button>
+  </div>
+</section>
 </template>
 
 <script>
@@ -912,7 +1039,7 @@ h1 {
 
 .customer-trust-container {
   max-width: 1200px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -920,7 +1047,7 @@ h1 {
   min-height: 348px;
 }
 
-.customer-trust-visual {
+/* .customer-trust-visual {
   flex: 1.2;
   display: flex;
   align-items: center;
@@ -981,9 +1108,9 @@ h1 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+} */
 
-.circle-badge {
+/* .circle-badge {
   position: absolute;
   left: 60px;
   top: 120px;
@@ -1055,6 +1182,6 @@ h1 {
 .trust-btn:hover {
   background: #1746a2;
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
-}
+} 
 
 </style>
