@@ -9,6 +9,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const staffRoutes = require("./routes/staffRoutes");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,6 +34,8 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/bookings", bookingRoutes);
 // Admin routes
 app.use("/api/admin", adminRoutes);
+// Staff routes
+app.use("/api/staff", staffRoutes);
 
 app.listen(port, () => {
   console.log(`Server đang chạy tại http://localhost:${port}`);
