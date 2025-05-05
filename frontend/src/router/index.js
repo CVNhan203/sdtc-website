@@ -118,10 +118,33 @@ const router = createRouter({
 
 // Route guard: bảo vệ các route admin
 router.beforeEach((to, from, next) => {
+  // Kiểm tra đăng nhập cho trang admin
   if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
     const isLoggedIn = !!localStorage.getItem('adminToken');
     if (!isLoggedIn) {
       return next('/admin/login');
+    }
+    
+    // Kiểm tra quyền truy cập cho role staff
+    const adminInfoString = localStorage.getItem('adminInfo');
+    if (adminInfoString) {
+      try {
+        const adminInfo = JSON.parse(adminInfoString);
+        const isStaff = adminInfo.role === 'staff';
+        
+        // Nếu là staff và không phải đang truy cập trang tin tức
+        if (isStaff && !to.path.includes('/admin/tin-tuc')) {
+          // Redirect về trang tin tức
+          console.log('Staff attempting to access restricted area, redirecting to news section');
+          return next('/admin/tin-tuc/danh-sach');
+        }
+      } catch (error) {
+        console.error('Error parsing admin info:', error);
+        // Nếu có lỗi khi parse JSON, logout để đăng nhập lại
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminInfo');
+        return next('/admin/login');
+      }
     }
   }
   next();

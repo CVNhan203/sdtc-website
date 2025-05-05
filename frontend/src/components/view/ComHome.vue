@@ -1758,6 +1758,7 @@ h1 {
   color: #1746a2;
 }
 
+
 /* Responsive Styles */
 @media screen and (max-width: 1200px) {
   /* Hero Section */
@@ -2392,3 +2393,4 @@ h1 {
   }
 }
 </style>
+

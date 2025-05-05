@@ -1,969 +1,704 @@
 <template>
-  <div class="price-list-container">
-    <div class="price-list-header">
-      <h2 class="pricce-list">Bảng giá dịch vụ</h2>
-      <div class="tab-buttons">
-        <button 
-          :class="{ active: activeTab === 'Website' }"
-          @click="switchTab('Website')"
-        >
-          Website
-        </button>
-        <button 
-          :class="{ active: activeTab === 'App' }"
-          @click="switchTab('App')"
-        >
-          App
-        </button>
-        <button 
-          :class="{ active: activeTab === 'Agency' }"
-          @click="switchTab('Agency')"
-        >
-          Agency
-        </button>
-      </div>
-    </div>
-    
-    <div class="price-cards">
-      <div v-for="(service, index) in filteredServices" :key="index" class="price-card">
-        <!-- Icon section -->
-        <div class="card-icon">
-          <img :src="service.icon" :alt="service.title">
-        </div>
-
-        <!-- Header section with title and price -->
-        <div class="card-header">
-          <h3>{{ service.title }}</h3>
-          <div class="price">{{ service.price }}đ</div>
-        </div>
-        
-        <button class="btn-detail">Bắt đầu</button>
-        
-        <!-- Features section -->
-        <div class="features-container">
-          <ul class="features">
-            <li v-for="(feature, fIndex) in service.features" :key="fIndex">
-              <div class="feature-icon-wrapper">
-                <img :src="feature.icon" class="feature-icon" alt="Feature Icon">
-              </div>
-              <div class="feature-content">
-                <span class="feature-text">{{ feature.text }}</span>
-              </div>
-            </li>
-          </ul>
+    <div class="price-list-container">
+      <!-- Phần header cho bảng giá -->
+      <div class="price-list-header">
+        <h2 class="pricce-list">Bảng giá dịch vụ</h2>
+        <!-- Tab chuyển đổi giữa các loại dịch vụ -->
+        <div class="tab-buttons">
+          <button 
+            :class="{ active: activeTab === 'Website' }"
+            @click="switchTab('Website')"
+          >
+            Website
+          </button>
+          <button 
+            :class="{ active: activeTab === 'App' }"
+            @click="switchTab('App')"
+          >
+            App
+          </button>
+          <button 
+            :class="{ active: activeTab === 'Agency' }"
+            @click="switchTab('Agency')"
+          >
+            Agency
+          </button>
         </div>
       </div>
+      
+      <!-- Hiển thị card dịch vụ -->
+      <div class="price-cards">
+        <div v-for="(service, index) in filteredServices" :key="index" class="price-card">
+          <!-- Icon dịch vụ -->
+          <div class="card-icon">
+            <img :src="service.icon" :alt="service.title">
+          </div>
+  
+          <!-- Header của card: tiêu đề và giá -->
+          <div class="card-header">
+            <h3>{{ service.title }}</h3>
+            <div class="price">{{ service.price }}đ</div>
+          </div>
+          
+          <button class="btn-detail">Bắt đầu</button>
+          
+          <!-- Danh sách tính năng của dịch vụ -->
+          <div class="features-container">
+            <ul class="features">
+              <li v-for="(feature, fIndex) in service.features" :key="fIndex">
+                <div class="feature-icon-wrapper">
+                  <img :src="feature.icon" class="feature-icon" alt="Feature Icon">
+                </div>
+                <div class="feature-content">
+                  <span class="feature-text">{{ feature.text }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'ComPriceList',
-  data() {
-    return {
-      activeTab: 'Website',
-      services: [
-        // Website Services
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Website',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        // App Services
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'App',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        // Agency Services
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Agency',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/Agency.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế Website',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/website.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        {
-          type: 'Agency',
-          title: 'Gói Thiết Kế App',
-          price: '2.500.000',
-          icon: require('@/assets/sdtc-image/icon/App.svg'),
-          features: [
-            { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
-            { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
-            { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
-            { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
-            { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
-            { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
-          ]
-        },
-        
-      ]
-    }
-  },
-  computed: {
-    filteredServices() {
-      return this.services.filter(service => service.type === this.activeTab)
-    }
-  },
-  methods: {
-    switchTab(tab) {
-      this.activeTab = tab;
+  </template>
+  
+  <script>
+  export default {
+    name: 'ComPriceList',
+    data() {
+      return {
+        // Tab đang chọn, mặc định là Website
+        activeTab: 'Website',
+        // Danh sách dịch vụ phân loại theo type
+        services: [
+          // Website Services
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Website',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          // App Services
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'App',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          // Agency Services
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Agency',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/Agency.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế Website',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/website.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          {
+            type: 'Agency',
+            title: 'Gói Thiết Kế App',
+            price: '2.500.000',
+            icon: require('@/assets/sdtc-image/icon/App.svg'),
+            features: [
+              { icon: require('@/assets/sdtc-image/icon/ldea.svg'), text: 'Phong cách: Hiện đại, tối giản' },
+              { icon: require('@/assets/sdtc-image/icon/shake-hand.svg'), text: 'Tư vấn thiết kế miễn phí' },
+              { icon: require('@/assets/sdtc-image/icon/Timing.svg'), text: 'Thời gian triển khai: 10-20 ngày' },
+              { icon: require('@/assets/sdtc-image/icon/presentation.svg'), text: 'Chỉnh sửa tối đa 3 lần' },
+              { icon: require('@/assets/sdtc-image/icon/human.svg'), text: 'Kiến trúc sư 1-3 năm kinh nghiệm' },
+              { icon: require('@/assets/sdtc-image/icon/target.svg'), text: 'Bàn giao: 3D + bản vẽ kỹ thuật' }
+            ]
+          },
+          
+        ]
+      }
+    },
+    computed: {
+      // Lọc dịch vụ theo tab đang chọn
+      filteredServices() {
+        return this.services.filter(service => service.type === this.activeTab)
+      }
+    },
+    methods: {
+      // Phương thức chuyển đổi tab
+      switchTab(tab) {
+        this.activeTab = tab;
+      }
     }
   }
-}
-</script>
 
-<style scoped>
-
-/* ComPriceList */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-.pricce-list {
-  color: #4da6ff;
-  width: 445;
-  height: 70;
-  font-family: Roboto;
-  font-weight: 700;
-  font-size: 60px;
-  line-height: 100%;
-  letter-spacing: 0%;
-}
-.price-list-container {
-  font-family: 'Roboto', sans-serif;
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.price-list-header {
-  font-family: 'Roboto', sans-serif;
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.tab-buttons {
-  font-family: 'Roboto', sans-serif;  
-  display: flex;
-  justify-content: center;
-  margin: 20px auto;
-  background: rgba(255, 255, 255, 1);
-
-  width: 280px;
-  height: 44px;
-  border-radius: 22px;
-  padding: 4px;
-  gap: 8px;
-}
-
-.tab-buttons button {
-  padding: 8px 24px;
-  border: none;
-  border-radius: 22px;
-  background: transparent;
-  color: rgba(93, 187, 255, 1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
-  font-weight: 600;
-  min-width: 80px;
-  font-family: Roboto Slab;
-line-height: 100%;
-letter-spacing: 0.83px;
-text-align: center;
-
+  </script>
   
-}
+  <style scoped>
+  
+  /* ComPriceList */
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+  .pricce-list {
+    color: #4da6ff;
+    width: 445;
+    height: 70;
+    font-family: Roboto;
+    font-weight: 700;
+    font-size: 60px;
 
-.tab-buttons button.active {
-  background: rgba(13, 146, 244, 1);
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.price-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  padding: 20px;
-  width: 1301;
-  height: 1790;
-  top: 424px;
-  left: 337px;
-  gap: 40px;
-
-}
-
-.price-card {
-    width: 407;
-    height: 570;
-    gap: 36px;
-    border-radius: 37px;
-    border-width: 1px;
-    padding-top: 50px;
-    padding-right: 12px;
-    padding-bottom: 18px;
-    padding-left: 12px;
-    background: rgba(227, 242, 253, 1);
-    border: 1px solid rgba(179, 229, 252, 1);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
-}
-
-.price-card:hover {
-  transform: translateY(-5px);
-}
-
-.card-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card-icon img {
-  width: 120px;
-  height: 100px;
-  top: 52.5px;
-  left: 143.5px;
-  object-fit: contain;
-}
-h3 {
-    width: 283;
-    height: 35;
-    gap: 10px;
-
-
-  text-align: center;
-  color:rgba(0, 74, 173, 1);
-  font-size: 20px;
-  font-weight: 600;
-  margin: 16px 0 8px;
-}
-
-.price {
-    font-family: Roboto Slab;
-    font-weight: 400px;
-    font-size: 30px;
     line-height: 100%;
     letter-spacing: 0%;
+  }
+  .price-list-container {
+    font-family: 'Roboto', sans-serif;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .price-list-header {
+    font-family: 'Roboto', sans-serif;
     text-align: center;
-
-    color: rgba(0, 123, 255, 1);
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 16px;
-}
-
-.btn-detail {
-  font-weight: bold;
-  font-family: 'Roboto', sans-serif;    
-  background: #007bff;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 8px 40px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto 24px;
-  width: fit-content;
-}
-
-.features {
-    width: 383;
-    height: 214;
-    border-radius: 15px;
-    padding: 10px;
-    gap: 10px;
-    background: rgba(203, 233, 255, 1);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-
-}
-
-.features li {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  color: #333;
-  font-size: 14px;
-}
-
-.feature-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-.page-indicator {
-  text-align: center;
-  margin: 20px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-.page-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.tab-btn {
-  padding: 8px 24px;
-  border: none;
-  border-radius: 22px;
-  background: transparent;
-  color: #5DBBFF;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
-  font-weight: 600;
-  min-width: 80px;
-}
-
-.tab-btn.active {
-  background: #0D92F4;
-  color: white;
-}
-
-/* Responsive Styles */
-@media screen and (max-width: 1200px) {
-  .price-list-container {
-    max-width: 1140px;
-    padding: 30px 15px;
+    margin-bottom: 40px;
   }
-
-  .pricce-list {
-    font-size: 50px;
-    width: auto;
-    height: auto;
-  }
-
-  .price-cards {
-    width: 100%;
-    height: auto;
-    gap: 30px;
-    padding: 15px;
-  }
-
-  .price-card {
-    width: 100%;
-    height: auto;
-    padding: 40px 10px;
-  }
-
-  .features {
-    width: 100%;
-    height: auto;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .price-list-container {
-    max-width: 960px;
-  }
-
-  .pricce-list {
-    font-size: 45px;
-  }
-
+  
   .tab-buttons {
-    width: 260px;
-    height: 40px;
+    font-family: 'Roboto', sans-serif;  
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 1);
+  
+    width: 280px;
+    height: 44px;
+    border-radius: 22px;
+    padding: 4px;
+    gap: 8px;
   }
-
+  
   .tab-buttons button {
-    padding: 6px 20px;
-    font-size: 15px;
-  }
-
-  .price-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-  }
-
-  .card-icon {
-    width: 70px;
-    height: 70px;
-  }
-
-  .card-icon img {
-    width: 100px;
-    height: 80px;
-  }
-
-  h3 {
-    font-size: 18px;
-  }
-
-  .price {
-    font-size: 22px;
-  }
-
-  .btn-detail {
-    padding: 8px 35px;
-    font-size: 15px;
-  }
-
-  .features li {
-    font-size: 13px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .price-list-container {
-    padding: 20px 10px;
-  }
-
-  .price-list-header {
-    margin-bottom: 30px;
-  }
-
-  .pricce-list {
-    font-size: 40px;
-  }
-
-  .tab-buttons {
-    width: 240px;
-    height: 38px;
-    margin: 15px auto;
-  }
-
-  .tab-buttons button {
-    padding: 5px 18px;
-    font-size: 14px;
-    min-width: 70px;
-  }
-
-  .price-cards {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 10px;
-  }
-
-  .price-card {
-    padding: 30px 10px;
-    border-radius: 30px;
-  }
-
-  .card-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 15px;
-  }
-
-  .card-icon img {
-    width: 90px;
-    height: 70px;
-  }
-
-  h3 {
-    font-size: 17px;
-    margin: 12px 0 6px;
-  }
-
-  .price {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
-
-  .btn-detail {
-    padding: 7px 30px;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .features {
-    padding: 8px;
-  }
-
-  .features li {
-    margin-bottom: 10px;
-    font-size: 12px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .price-list-container {
-    padding: 15px 8px;
-  }
-
-  .price-list-header {
-    margin-bottom: 25px;
-  }
-
-  .pricce-list {
-    font-size: 32px;
-  }
-
-  .tab-buttons {
-    width: 220px;
-    height: 36px;
-    margin: 12px auto;
-  }
-
-  .tab-buttons button {
-    padding: 4px 15px;
-    font-size: 13px;
-    min-width: 65px;
-  }
-
-  .price-cards {
-    gap: 15px;
-    padding: 8px;
-  }
-
-  .price-card {
-    padding: 25px 8px;
-    border-radius: 25px;
-  }
-
-  .card-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 12px;
-  }
-
-  .card-icon img {
-    width: 80px;
-    height: 60px;
-  }
-
-  h3 {
-    font-size: 16px;
-    margin: 10px 0 5px;
-  }
-
-  .price {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .btn-detail {
-    padding: 6px 25px;
-    font-size: 13px;
-    margin-bottom: 15px;
-  }
-
-  .features {
-    padding: 6px;
-  }
-
-  .features li {
-    margin-bottom: 8px;
-    font-size: 11px;
-  }
-}
-
-/* Animation and Hover Effects */
-.price-card {
-  transition: all 0.3s ease;
-}
-
-.price-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.btn-detail {
-  transition: all 0.3s ease;
-}
-
-.btn-detail:hover {
-  background: #0056b3;
-  transform: translateY(-2px);
-}
-
-/* Improve touch targets for mobile */
-@media screen and (max-width: 768px) {
-  .price-card {
+    border: none;
+    border-radius: 22px;
+    background: transparent;
+    color: rgba(93, 187, 255, 1);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+
+    min-width: 80px;
+    font-family: Roboto Slab;
+  line-height: 100%;
+  letter-spacing: 0.83px;
+  text-align: center;
+  
+    
   }
+  
+  .tab-buttons button.active {
+    background: rgba(13, 146, 244, 1);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
 
-  .price-card:active {
-    transform: scale(0.98);
+
   }
-
-  .btn-detail:active {
-    transform: scale(0.95);
+  
+  .price-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    padding: 20px;
+    width: 1301;
+    height: 1790;
+    top: 424px;
+    left: 337px;
+    gap: 40px;
+  
   }
-}
-
-/* Fix for long text content */
-.features li {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  hyphens: auto;
-}
-
-/* Add smooth scrolling for better UX */
-.price-list-container {
-  scroll-behavior: smooth;
-}
-
-/* Improve tab button accessibility */
-.tab-buttons button {
-  position: relative;
-  overflow: hidden;
-}
-
-.tab-buttons button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(13, 146, 244, 0.3);
-}
-
-</style>
+  
+  .price-card {
+      width: 407;
+      height: 570;
+      gap: 36px;
+      border-radius: 37px;
+      border-width: 1px;
+      padding-top: 50px;
+      padding-right: 12px;
+      padding-bottom: 18px;
+      padding-left: 12px;
+      background: rgba(227, 242, 253, 1);
+      border: 1px solid rgba(179, 229, 252, 1);
+      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  
+  }
+  
+  .price-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-icon img {
+    width: 120px;
+    height: 100px;
+    top: 52.5px;
+    left: 143.5px;
+    object-fit: contain;
+  }
+  h3 {
+      width: 283;
+      height: 35;
+      gap: 10px;
+  
+  
+    text-align: center;
+    color:rgba(0, 74, 173, 1);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+  }
+  
+  .price {
+      font-family: Roboto Slab;
+      font-weight: 400px;
+      font-size: 30px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+  
+      color: rgba(0, 123, 255, 1);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+  }
+  
+  .btn-detail {
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;    
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 40px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 24px;
+    width: fit-content;
+  }
+  
+  .features {
+      width: 383;
+      height: 214;
+      border-radius: 15px;
+      padding: 10px;
+      gap: 10px;
+      background: rgba(203, 233, 255, 1);
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  
+  }
+  
+  .features li {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .feature-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  
+  .page-indicator {
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .page-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .tab-btn {
+    padding: 8px 24px;
+    border: none;
+    border-radius: 22px;
+    background: transparent;
+    color: #5DBBFF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 80px;
+  }
+  
+  .tab-btn.active {
+    background: #0D92F4;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .page-btn {
+      width: 32px;
+      height: 32px;
+    }
+    
+    .page-info {
+      font-size: 12px;
+    }
+  }
+  
+  </style>

@@ -1,23 +1,25 @@
 <template>
+  <!-- Container chính quản lý danh sách tin tức -->
   <div class="news-list">
-    <!-- Loading state -->
+    <!-- Hiển thị trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>
       <p>Đang tải danh sách tin tức...</p>
     </div>
 
-    <!-- Error state -->
+    <!-- Hiển thị khi có lỗi -->
     <div v-else-if="error" class="error-container">
       <p class="error-message">{{ error }}</p>
       <button class="retry-btn" @click="loadNews">Thử lại</button>
     </div>
 
+    <!-- Nội dung chính - hiển thị khi không có lỗi và đã tải xong -->
     <template v-else>
-      <!-- Header Actions -->
+      <!-- Thanh công cụ tìm kiếm và lọc -->
       <div class="actions-header">
         <div class="search-filter">
           <div class="search-box">
-            <!-- Correct Font Awesome icon class -->
+            <!-- Icon tìm kiếm -->
             <i class="fas fa-search"></i>
             <input
               type="text"
@@ -27,6 +29,7 @@
             />
           </div>
 
+          <!-- Dropdown lọc theo loại tin tức -->
           <select v-model="filterType" @change="handleFilter">
             <option value="">Tất cả loại</option>
             <option value="tin-tuc">Tin tức</option>
@@ -36,15 +39,14 @@
         </div>
       </div>
 
-      <!-- News Table -->
+      <!-- Bảng danh sách tin tức -->
       <div class="table-container responsive-table">
         <table>
           <thead>
             <tr>
               <th>ID</th>
               <th>Ảnh</th>
-              <th>Tiêu đề</th>
-              <th class="responsive-hide">Tóm tắt</th>
+              <th style="max-width: 250px;">Tiêu đề</th>
               <th>Loại</th>
               <th class="responsive-hide">Tác giả</th>
               <th>Thao tác</th>
@@ -52,8 +54,10 @@
           </thead>
 
           <tbody>
+            <!-- Hiển thị từng dòng tin tức -->
             <tr v-for="news in filteredNews" :key="news._id">
               <td class="news-id">{{ news._id }}</td>
+              <!-- Ảnh đại diện tin tức -->
               <td>
                 <div class="image-container">
                   <img
@@ -68,20 +72,21 @@
                   </div>
                 </div>
               </td>
-              <td class="truncate-text">{{ news.title }}</td>
-              <td class="content-cell responsive-hide">
-                {{ formatDescription(news.summary) }}
-              </td>
+              <td class="truncate-text" style="max-width: 250px;">{{ news.title }}</td>
               <td class="type-cell">{{ formatType(news.type) }}</td>
               <td class="responsive-hide">{{ news.author }}</td>
+              <!-- Các nút thao tác trên từng tin tức -->
               <td class="actions-cell">
                 <div class="actions">
+                  <!-- Nút xem chi tiết -->
                   <button class="icon-btn info" @click="showDetails(news)">
                     <i class="fas fa-info-circle"></i>
                   </button>
+                  <!-- Nút chỉnh sửa -->
                   <button class="icon-btn edit" @click="openEditModal(news)">
                     <i class="fas fa-edit"></i>
                   </button>
+                  <!-- Nút xóa tạm thời (chuyển vào thùng rác) -->
                   <button
                     v-if="!news.isDeleted"
                     class="icon-btn delete"
@@ -90,6 +95,7 @@
                   >
                     <i class="fas fa-trash"></i>
                   </button>
+                  <!-- Nút khôi phục tin đã xóa -->
                   <button
                     v-else
                     class="icon-btn restore"
@@ -98,6 +104,7 @@
                   >
                     <i class="fas fa-trash-restore"></i>
                   </button>
+                  <!-- Nút xóa vĩnh viễn (chỉ hiển thị với tin đã xóa) -->
                   <button
                     v-if="news.isDeleted"
                     class="icon-btn permanent-delete"
@@ -113,7 +120,7 @@
         </table>
       </div>
 
-      <!-- News Details Modal -->
+      <!-- Modal xem chi tiết tin tức -->
       <div class="modal" v-if="showDetailsModal">
         <div class="modal-content">
           <div class="modal-header">
@@ -123,6 +130,7 @@
             </button>
           </div>
           <div class="modal-body">
+            <!-- Các trường thông tin chi tiết -->
             <div class="detail-item">
               <label>ID:</label>
               <p>{{ selectedNews._id }}</p>
@@ -178,7 +186,7 @@
         </div>
       </div>
 
-      <!-- Add/Edit News Modal -->
+      <!-- Modal thêm/chỉnh sửa tin tức -->
       <div class="modal" v-if="showFormModal">
         <div class="modal-content">
           <div class="modal-header">
@@ -188,6 +196,7 @@
             </button>
           </div>
           <div class="modal-body">
+            <!-- Form nhập/sửa thông tin tin tức -->
             <form @submit.prevent="handleSubmit">
               <div class="form-group">
                 <label>Tiêu đề</label>
@@ -229,11 +238,13 @@
               <div class="form-group">
                 <label>Ảnh</label>
                 <div class="image-upload">
+                  <!-- Input chọn file ảnh -->
                   <input
                     type="file"
                     accept="image/*"
                     @change="handleImageUpload"
                   />
+                  <!-- Hiển thị xem trước ảnh đã chọn -->
                   <div v-if="imagePreview" class="image-preview">
                     <img :src="imagePreview" alt="Preview" />
                     <button
@@ -244,6 +255,7 @@
                       <i class="fas fa-times"></i>
                     </button>
                   </div>
+                  <!-- Hiển thị thanh tiến trình khi đang tải ảnh lên -->
                   <div
                     v-if="uploadProgress > 0 && uploadProgress < 100"
                     class="upload-progress"
@@ -255,6 +267,7 @@
                   </div>
                 </div>
               </div>
+              <!-- Các nút hành động form -->
               <div class="form-actions">
                 <button
                   type="button"
@@ -272,7 +285,7 @@
         </div>
       </div>
 
-      <!-- Delete Confirmation Modal -->
+      <!-- Modal xác nhận xóa tạm thời -->
       <div class="modal" v-if="showSoftDeleteModal">
         <div class="modal-content">
           <div class="modal-header">
@@ -298,7 +311,7 @@
         </div>
       </div>
 
-      <!-- Restore Confirmation Modal -->
+      <!-- Modal xác nhận khôi phục -->
       <div class="modal" v-if="showRestoreModal">
         <div class="modal-content">
           <div class="modal-header">
@@ -324,7 +337,7 @@
         </div>
       </div>
 
-      <!-- Permanent Delete Confirmation Modal -->
+      <!-- Modal xác nhận xóa vĩnh viễn -->
       <div class="modal" v-if="showPermanentDeleteModal">
         <div class="modal-content">
           <div class="modal-header">
@@ -372,15 +385,16 @@ import { useRouter } from "vue-router";
 export default {
   name: "NewsList",
   setup() {
-    const news = ref([]);
-    const searchQuery = ref("");
-    const filterType = ref("");
-    const showDetailsModal = ref(false);
-    const showFormModal = ref(false);
-    const showSoftDeleteModal = ref(false);
-    const showRestoreModal = ref(false);
-    const showPermanentDeleteModal = ref(false);
-    const selectedNews = ref({});
+    // Khai báo các biến phản ứng (reactive)
+    const news = ref([]); // Dữ liệu tin tức
+    const searchQuery = ref(""); // Chuỗi tìm kiếm
+    const filterType = ref(""); // Loại tin cần lọc
+    const showDetailsModal = ref(false); // Điều khiển hiển thị modal chi tiết
+    const showFormModal = ref(false); // Điều khiển hiển thị modal form
+    const showSoftDeleteModal = ref(false); // Điều khiển hiển thị modal xóa tạm thời
+    const showRestoreModal = ref(false); // Điều khiển hiển thị modal khôi phục
+    const showPermanentDeleteModal = ref(false); // Điều khiển hiển thị modal xóa vĩnh viễn
+    const selectedNews = ref({}); // Tin tức được chọn để thao tác
     const formData = ref({
       title: "",
       summary: "",
@@ -390,16 +404,17 @@ export default {
       author: "",
       publishedDate: "",
       isDeleted: false,
-    });
-    const imagePreview = ref(null);
-    const uploadProgress = ref(0);
-    const loading = ref(false);
-    const error = ref(null);
-    const isEditing = ref(false);
-    const baseImageUrl = ref("http://localhost:3000"); // Hardcode for now until .env is set up
-    const imageLoadError = ref({});
-    const router = useRouter();
+    }); // Dữ liệu form
+    const imagePreview = ref(null); // URL xem trước ảnh
+    const uploadProgress = ref(0); // Tiến trình tải ảnh
+    const loading = ref(false); // Trạng thái đang tải
+    const error = ref(null); // Thông báo lỗi nếu có
+    const isEditing = ref(false); // Trạng thái đang chỉnh sửa hay thêm mới
+    const baseImageUrl = ref("http://localhost:3000"); // URL cơ sở cho hình ảnh
+    const imageLoadError = ref({}); // Lưu các lỗi khi tải hình ảnh
+    const router = useRouter(); // Router để điều hướng
 
+    // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
       let filtered = [...news.value];
 
@@ -422,6 +437,7 @@ export default {
       return filtered;
     });
 
+    // Tải danh sách tin tức từ API
     const loadNews = async () => {
       loading.value = true;
       error.value = null;
@@ -441,38 +457,46 @@ export default {
       }
     };
 
+    // Xử lý sự kiện tìm kiếm
     const handleSearch = () => {
       // Thực hiện tìm kiếm thông qua computed property
     };
 
+    // Xử lý sự kiện lọc
     const handleFilter = () => {
       // Thực hiện lọc thông qua computed property
     };
 
+    // Hiển thị chi tiết tin tức
     const showDetails = (item) => {
       selectedNews.value = item;
       showDetailsModal.value = true;
     };
 
+    // Mở modal chỉnh sửa tin tức (chuyển hướng đến trang chỉnh sửa)
     const openEditModal = (news) => {
       router.push(`/admin/tin-tuc/chinh-sua/${news._id}`);
     };
 
+    // Hiển thị modal xác nhận xóa tạm thời
     const confirmSoftDelete = (item) => {
       selectedNews.value = item;
       showSoftDeleteModal.value = true;
     };
 
+    // Hiển thị modal xác nhận khôi phục
     const confirmRestore = (item) => {
       selectedNews.value = item;
       showRestoreModal.value = true;
     };
 
+    // Hiển thị modal xác nhận xóa vĩnh viễn
     const confirmPermanentDelete = (item) => {
       selectedNews.value = item;
       showPermanentDeleteModal.value = true;
     };
 
+    // Xử lý xóa tạm thời tin tức (chuyển vào thùng rác)
     const handleSoftDelete = async () => {
       try {
         const newsToDelete = news.value.find(
@@ -516,6 +540,7 @@ export default {
       }
     };
 
+    // Xử lý khôi phục tin tức từ thùng rác
     const handleRestore = async () => {
       try {
         await newsService.restoreNews(selectedNews.value._id);
@@ -526,6 +551,7 @@ export default {
       }
     };
 
+    // Xử lý xóa vĩnh viễn tin tức
     const handlePermanentDelete = async () => {
       try {
         await newsService.permanentDeleteNews(selectedNews.value._id);
@@ -536,6 +562,7 @@ export default {
       }
     };
 
+    // Xử lý sự kiện tải ảnh lên
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       if (file) {
@@ -544,6 +571,7 @@ export default {
       }
     };
 
+    // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
       if (!imagePath) return null;
       if (imagePath.startsWith("http")) return imagePath;
@@ -551,10 +579,12 @@ export default {
       return `${baseImageUrl.value}/${cleanPath}`;
     };
 
+    // Định dạng hiển thị ngày tháng
     const formatDate = (date) => {
       return new Date(date).toLocaleDateString("vi-VN");
     };
 
+    // Định dạng hiển thị loại tin tức
     const formatType = (type) => {
       const types = {
         "tin-tuc": "Tin tức",
@@ -564,10 +594,12 @@ export default {
       return types[type] || type;
     };
 
+    // Rút gọn nội dung mô tả để hiển thị
     const formatDescription = (text) => {
       return text?.length > 50 ? text.slice(0, 50) + "..." : text;
     };
 
+    // Mở modal thêm tin tức mới
     const openAddModal = () => {
       isEditing.value = false;
       formData.value = {
@@ -587,6 +619,7 @@ export default {
       showFormModal.value = true;
     };
 
+    // Xử lý gửi form thêm/chỉnh sửa tin tức
     const handleSubmit = async () => {
       try {
         if (isEditing.value) {
@@ -606,6 +639,7 @@ export default {
       }
     };
 
+    // Xử lý xóa tin tức
     const handleDelete = async () => {
       try {
         await newsService.deleteNews(selectedNews.value._id);
@@ -617,10 +651,11 @@ export default {
       }
     };
 
+    // Xử lý lỗi khi tải hình ảnh
     const handleImageError = (event, newsId) => {
       if (event) {
-        event.target.src = ""; // Clear the broken image source
-        event.target.style.display = "none"; // Hide the broken image
+        event.target.src = ""; // Xóa nguồn ảnh bị lỗi
+        event.target.style.display = "none"; // Ẩn ảnh bị lỗi
         const parent = event.target.parentElement;
         if (parent) {
           parent.classList.add("no-image");
@@ -630,24 +665,27 @@ export default {
       imageLoadError.value[newsId] = true;
     };
 
+    // Gọi khi component được tạo
     onMounted(() => {
       loadNews();
-      // Listen for updates from TrashNews
+      // Lắng nghe sự kiện cập nhật từ TrashNews
       eventBus.on("update-deleted-news-count", () => {
         loadNews();
       });
       console.log("Base Image URL:", baseImageUrl.value);
     });
 
+    // Dọn dẹp khi component bị hủy
     onBeforeUnmount(() => {
-      // Cleanup event listeners
+      // Dọn dẹp các event listener
       eventBus.off("update-deleted-news-count");
-      // Cleanup image previews
+      // Dọn dẹp các URL xem trước ảnh
       if (imagePreview.value) {
         URL.revokeObjectURL(imagePreview.value);
       }
     });
 
+    // Trả về các biến và phương thức sử dụng trong template
     return {
       news,
       searchQuery,
@@ -691,106 +729,132 @@ export default {
 </script>
 
 <style scoped>
-/* Import the admin styles */
+/* Nhập các styles chung từ file admin.css */
 @import "@/styles/admin.css";
 
-/* Component specific overrides */
-.news-list {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  overflow-x: auto;
+/* Tùy chỉnh kiểu dáng cho ảnh tin tức */
+
+.image-container {
+  width: 70px;
+  height: 70px;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: var(--bg-secondary);
 }
 
+/* Kiểu dáng ảnh tin tức */
 .news-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
-  border: 2px solid #e2e8f0;
-  transition: transform 0.3s ease;
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
+/* Hiệu ứng hover trên ảnh */
 .news-image:hover {
   transform: scale(1.1);
+  border-color: var(--primary-color);
 }
 
-.detail-image {
-  max-width: 200px;
-  height: auto;
+/* Hiển thị khi không có ảnh */
+.no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
   border-radius: 8px;
-  margin-top: 0.5rem;
+  border: 2px dashed var(--border-color);
+  color: var(--text-tertiary);
 }
 
-/* Table column widths */
-table {
-  table-layout: fixed;
-  min-width: 1100px;
+/* Icon hiển thị khi không có ảnh */
+.no-image i {
+  font-size: 1.5rem;
 }
 
-th:nth-child(1),
-td:nth-child(1) {
-  width: 100px; /* ID */
+/* Kiểu dáng cho tiêu đề bị cắt ngắn */
+.truncate-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 250px; /* Giới hạn chiều rộng tối đa */
+  padding: 0 10px;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
-  width: 100px; /* Ảnh */
-  min-width: 80px;
+/* Kiểu dáng ảnh trong phần xem chi tiết */
+.detail-image {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: var(--border-radius-md);
+  object-fit: contain;
+  border: 2px solid var(--border-color);
+  margin-top: var(--spacing-sm);
 }
 
-th:nth-child(3),
-td:nth-child(3) {
-  width: 180px; /* Tiêu đề */
-}
-
-th:nth-child(4),
-td:nth-child(4) {
-  width: 200px; /* Tóm tắt */
-}
-
-th:nth-child(5),
-td:nth-child(5) {
-  width: 200px; /* Nội dung */
-}
-
-th:nth-child(6),
-td:nth-child(6) {
-  width: 90px; /* Loại */
-}
-
-th:nth-child(7),
-td:nth-child(7) {
-  width: 100px; /* Tác giả */
-}
-
-th:nth-child(8),
-td:nth-child(8) {
-  width: 130px; /* Thao tác */
-}
-
-/* Single line content with ellipsis */
-.content-cell {
-  white-space: nowrap;
+/* Vùng xem trước ảnh trong form */
+.image-preview {
+  margin-top: var(--spacing-sm);
+  position: relative;
+  width: 200px;
+  height: 150px;
+  border-radius: var(--border-radius-md);
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
+  border: 2px solid var(--border-color);
 }
 
-td:nth-child(3) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
+/* Ảnh xem trước trong form */
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.type-cell {
-  white-space: nowrap;
+/* Nút xóa ảnh xem trước */
+.remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 25px;
+  height: 25px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hiệu ứng hover trên nút xóa ảnh */
+.remove-image:hover {
+  background: var(--danger-color);
+}
+
+/* Thanh tiến trình tải ảnh */
+.upload-progress {
+  margin-top: var(--spacing-sm);
+  width: 100%;
+  height: 10px;
+  background-color: var(--bg-secondary);
+  border-radius: 5px;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+/* Thanh tiến độ */
+.progress-bar {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
 }
 </style>
