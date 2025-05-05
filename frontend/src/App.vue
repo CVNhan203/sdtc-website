@@ -37,6 +37,12 @@ export default {
 </script>
 
 <style>
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: rgba(248, 247, 250, 1);
+}
 .html{
   font-size: 10px;
 }
@@ -53,5 +59,15 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  padding-top: 120px;
+}
+
+main.admin-view {
+  padding-top: 0; /* Không cần padding-top cho trang admin vì không có header cố định */
 }
 </style>
