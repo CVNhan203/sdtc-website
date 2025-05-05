@@ -19,7 +19,7 @@ const adminSchema = new mongoose.Schema({
     lowercase: true,
     match: [
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Vui lòng nhập email hợp lệ (ví dụ: sanhdepchoai@gmail.com)",
+      "Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)",
     ],
   },
   password: {
@@ -40,15 +40,21 @@ const adminSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: {
-      values: "admin",
-      message: "Vai trò phải là admin",
+      values: ["admin", "staff"],
+      message: "Vai trò không hợp lệ",
+   
     },
-    default: "admin",
+    default: "staff",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 // Middleware: Mã hóa mật khẩu trước khi lưu

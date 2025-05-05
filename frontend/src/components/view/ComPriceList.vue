@@ -467,6 +467,7 @@
       }
     }
   }
+
   </script>
   
   <style scoped>
@@ -480,6 +481,7 @@
     font-family: Roboto;
     font-weight: 700;
     font-size: 60px;
+
     line-height: 100%;
     letter-spacing: 0%;
   }
@@ -519,6 +521,7 @@
     transition: all 0.3s ease;
     font-size: 16px;
     font-weight: 600;
+
     min-width: 80px;
     font-family: Roboto Slab;
   line-height: 100%;
@@ -533,6 +536,8 @@
     color: white;
     font-weight: 600;
     font-size: 14px;
+
+
   }
   
   .price-cards {
