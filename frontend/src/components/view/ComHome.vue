@@ -304,7 +304,7 @@
       </div>
     </div>
   </div>
-    <button class="cta-button">Khám phá dự án của chúng tôi</button>
+    <button class="custom-button">Khám phá dự án của chúng tôi</button>
 </section>
 
 <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
@@ -322,13 +322,13 @@
 
   <div class="inspiration-carousel-group">
     <!-- trên  -->
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" class="carousel-row">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="1000" class="carousel-row">
       <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
     </Carousel>
     <!-- dưới  -->
-    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
+    <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="1000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
       <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
@@ -347,7 +347,7 @@
   </div>
   <div class="achievements-carousel-wrapper">
     <button class="achievements-arrow left" @click="prevAchievement">
-      <span>&#8592;</span>
+      <span>←</span>
     </button>
     <Carousel
       ref="achievementsCarousel"
@@ -360,11 +360,6 @@
     >
       <Slide v-for="(item, idx) in achievements" :key="idx">
         <div class="achievement-slide">
-          <div class="achievement-quote-icon">
-            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
-              <text x="0" y="35" font-size="120" fill="#ededed" font-family="Arial">&#8220;</text>
-            </svg>
-          </div>
           <div class="achievement-logo">
             <img :src="item.logo" :alt="item.company" />
           </div>
@@ -388,7 +383,7 @@
     <div class="companion-text">
       <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
       <p>
-        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
+        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển <br> bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
       </p>
     </div>
     <button class="companion-btn">Đặt lịch tư vấn</button>
@@ -624,7 +619,7 @@ h1 {
   margin-top: 2rem;
 }
 
-.cta-button {
+/* .cta-button {
   width: 170px;
   height: 60px;
   background: #265ff3;
@@ -639,7 +634,7 @@ h1 {
 
 .cta-button:hover {
   transform: translateY(-2px);
-}
+} */
 
 .avatar-group {
   display: flex;
@@ -717,21 +712,7 @@ h1 {
   object-fit: contain;
 }
 
-@media (max-width: 768px) {
-  .content-wrapper {
-    grid-template-columns: 1fr;
-  }
 
-  .stats-card,
-  .trust-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-}
 
 /*-------------------------------------- Phần hợp tác --------------------------------------*/
 /*-------------------------------------- Sếp bên trái --------------------------------------*/
@@ -862,23 +843,20 @@ h1 {
 }
 
 .start-btn {
-  background: #1563ff;
-  color: #fff;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #0057ff, #3c8bff);
   border: none;
-  padding: 0.9rem 2.2rem;
   border-radius: 999px;
-  font-size: 1.1rem;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 8px 32px rgba(21, 99, 255, 0.15);
-  transition:
-    background 0.2s,
-    box-shadow 0.2s,
-    transform 0.15s;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.25);
+  transition: all 0.3s ease;
 }
 .start-btn:hover {
-  background: #0041e8;
-  box-shadow: 0 12px 36px rgba(21, 99, 255, 0.22);
-  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.35);
+  transform: translateY(-2px);
 }
 
 /*-------------------------------------- Sectione bảng timeline --------------------------------------*/
@@ -1485,12 +1463,31 @@ h1 {
   color:#D1D4DC
 }
 
+.custom-button{
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #0057ff, #3c8bff);
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+
+
 /*-------------------------------------- Nguồn cảm hứng -------------------------------------- */
 .inspiration-section {
   width: 100%;
   background: #fff;
   padding: 0;
-
   margin: 0;
 }
 
@@ -1526,23 +1523,22 @@ h1 {
 }
 
 .inspiration-btn {
-  background: #265FF3;
-  color: #fff;
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #0057ff, #3c8bff);
   border: none;
-  padding: 0.9rem 2.2rem;
   border-radius: 999px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-   
-  margin-top: 200px;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.25);
+  transition: all 0.3s ease;
+  margin-top: 170px;
 }
 
 .inspiration-btn:hover {
-  background: #1746a2;
-  box-shadow: 0 12px 36px rgba(37, 99, 235, 0.22);
-  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.35);
+  transform: translateY(-2px);
 }
 
 .inspiration-carousel-group {
@@ -1576,7 +1572,7 @@ h1 {
 /*-------------------------------------- Thành tựu nổi bật --------------------------------------*/
 .achievements {
   width: 100%;
-  background: #fff;
+  background: #FFFFFF;
   padding: 64px 0 48px 0;
   display: flex;
   flex-direction: column;
@@ -1585,7 +1581,7 @@ h1 {
 
 .achievements-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 1rem;
 }
 
 .achievements-label {
@@ -1630,11 +1626,6 @@ h1 {
   padding: 0 32px;
 }
 
-.achievement-quote-icon {
-  margin-bottom: 12px;
-  opacity: 0.25;
-}
-
 .achievement-logo img {
   height: 54px;
   margin-bottom: 18px;
@@ -1671,20 +1662,19 @@ h1 {
 }
 
 .achievements-arrow {
-  background: #fff;
-  border: 1.5px solid #2563eb;
-  color: #2563eb;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 2rem;
+  border: 2px solid #2563eb; /* viền xanh */
+  background-color: white;
+  color: #2563eb; /* mũi tên xanh */
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
-  transition: background 0.18s, box-shadow 0.18s;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .achievements-arrow:hover {
@@ -1714,7 +1704,7 @@ h1 {
   background: #3976ff;
   border-radius: 2rem;
   width: 95%;
-  max-width: 1600px;
+  max-width: 1140px;
   min-height: 180px;
   display: flex;
   align-items: center;
