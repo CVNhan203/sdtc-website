@@ -12,8 +12,8 @@
         <img src="@/assets/logo.png" alt="Logo" class="logo" />
         <h2>SDTC Admin</h2>
       </div>
-      <!-- Tổng quan Dashboard -->
-      <div class="nav-group">
+      <!-- Tổng quan Dashboard chỉ hiển thị cho admin -->
+      <div class="nav-group" v-if="userRole === 'admin'">
         <div class="nav-item" :class="{ active: isDashboardActive }">
           <router-link to="/admin/dashboard" class="nav-item-content" active-class="active">
             <i class="fas fa-tachometer-alt"></i>
@@ -21,7 +21,8 @@
           </router-link>
         </div>
       </div>
-      <div class="nav-group">
+      <!-- Quản lý Dịch vụ chỉ hiển thị cho admin -->
+      <div class="nav-group" v-if="userRole === 'admin'">
         <div class="nav-item" :class="{ active: isServiceMenuActive }" @click="toggleServiceMenu">
           <div class="nav-item-content">
             <i class="fas fa-cogs"></i>
@@ -47,6 +48,7 @@
         </div>
       </div>
 
+      <!-- Quản lý Tin tức hiển thị cho mọi role -->
       <div class="nav-group">
         <div class="nav-item" :class="{ active: isNewsMenuActive }" @click="toggleNewsMenu">
           <div class="nav-item-content">
@@ -73,7 +75,8 @@
         </div>
       </div>
 
-      <div class="nav-group">
+      <!-- Quản lý Đơn hàng chỉ hiển thị cho admin -->
+      <div class="nav-group" v-if="userRole === 'admin'">
         <div class="nav-item" :class="{ active: isOrderMenuActive }" @click="toggleOrderMenu">
           <div class="nav-item-content">
             <i class="fas fa-shopping-cart"></i>
@@ -98,7 +101,8 @@
         </div>
       </div>
 
-      <div class="nav-group">
+      <!-- Quản lý Thanh toán chỉ hiển thị cho admin -->
+      <div class="nav-group" v-if="userRole === 'admin'">
         <div class="nav-item" :class="{ active: isPaymentMenuActive }" @click="togglePaymentMenu">
           <div class="nav-item-content">
             <i class="fas fa-credit-card"></i>
@@ -128,6 +132,10 @@
       </div>
 
       <div class="sidebar-footer">
+        <div class="user-role">
+          <i class="fas fa-user-tag"></i>
+          <span>{{ userRoleDisplay }}</span>
+        </div>
         <button class="logout-btn" @click="handleLogout">
           <i class="fas fa-sign-out-alt"></i>
           <span>Đăng xuất</span>
@@ -172,35 +180,26 @@ export default {
       isOrderMenuOpen: false,
       isPaymentMenuOpen: false,
       deletedServicesCount: 0,
+      userRole: 'admin', // Mặc định là admin
       // deletedNewsCount: 0,
     }
   },
-  // async created() {
-  //   // Kiểm tra xác thực khi component được tạo
-  //   if (!authService.isAuthenticated()) {
-  //     this.$router.push('/admin')
-  //     return
-  //   }
-
-  //   // Load số lượng dịch vụ và tin tức đã xóa
-  //   await this.loadDeletedServicesCount()
-  //   await this.loadDeletedNewsCount()
-
-  //   // Listen for updates to deleted items count using mitt
-  //   emitter.on('update-deleted-services-count', this.loadDeletedServicesCount)
-  //   emitter.on('update-deleted-news-count', this.loadDeletedNewsCount)
-
-  //   // Handle screen resize
-  //   window.addEventListener('resize', this.handleResize)
-  //   this.handleResize()
-  // },
-  // beforeUnmount() {
-  //   // Remove event listeners
-  //   emitter.off('update-deleted-services-count', this.loadDeletedServicesCount)
-  //   emitter.off('update-deleted-news-count', this.loadDeletedNewsCount)
-  //   // Remove resize event listener
-  //   window.removeEventListener('resize', this.handleResize)
-  // },
+  created() {
+    // Kiểm tra xác thực và lấy thông tin role của người dùng
+    if (authService.isAuthenticated()) {
+      const userInfo = authService.getAdminInfo();
+      if (userInfo && userInfo.role) {
+        this.userRole = userInfo.role;
+      }
+      
+      // Nếu role là staff, tự động redirect đến phần tin tức nếu không ở đó
+      if (this.userRole === 'staff' && !this.$route.path.includes('/admin/tin-tuc')) {
+        this.$router.push('/admin/tin-tuc/danh-sach');
+      }
+    } else {
+      this.$router.push('/admin');
+    }
+  },
   computed: {
     currentPageTitle() {
       const routeMap = {
@@ -228,6 +227,12 @@ export default {
     isPaymentMenuActive() {
       return this.$route.path.includes('/admin/thanh-toan')
     },
+    isDashboardActive() {
+      return this.$route.path === '/admin/dashboard'
+    },
+    userRoleDisplay() {
+      return this.userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên'
+    }
   },
   methods: {
     toggleSidebar() {
@@ -251,74 +256,24 @@ export default {
     togglePaymentMenu() {
       this.isPaymentMenuOpen = !this.isPaymentMenuOpen
     },
-    async handleLogout() {
-      try {
-        // Xóa thông tin đăng nhập
-        authService.logout()
-
-        // Chuyển về trang đăng nhập
-        await this.$router.push('/admin')
-      } catch (error) {
-        console.error('Logout error:', error)
-      }
-    },
-    async loadDeletedServicesCount() {
-      try {
-        const deletedServicesInfo = JSON.parse(localStorage.getItem('deletedServicesInfo') || '[]')
-        this.deletedServicesCount = deletedServicesInfo.filter(
-          (service) => service.isDeleted
-        ).length
-      } catch (error) {
-        console.error('Error loading deleted services count:', error)
-      }
-    },
-    async loadDeletedNewsCount() {
-      try {
-        const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
-        this.deletedNewsCount = deletedNewsInfo.filter((news) => news.isDeleted).length
-      } catch (error) {
-        console.error('Error loading deleted news count:', error)
-      }
-    },
-    handleResize() {
-      // Set appropriate sidebar state based on screen size
-      if (window.innerWidth <= 768) {
-        // On mobile, keep sidebar visible
-        this.isSidebarCollapsed = false
-        this.isSidebarOpen = false
-      } else {
-        // On desktop, reset sidebar open state
-        this.isSidebarOpen = false
-      }
-    },
     closeMobileMenu() {
       this.isSidebarOpen = false
     },
-  },
-  mounted() {
-    // Handle resize events
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize()
-  },
-  watch: {
-    $route(to) {
-      if (to.path.includes('/admin/dich-vu')) {
-        this.isServiceMenuOpen = true
-        this.loadDeletedServicesCount()
-      }
-      if (to.path.includes('/admin/tin-tuc')) {
-        this.isNewsMenuOpen = true
-        this.loadDeletedNewsCount()
-      }
-      if (to.path.includes('/admin/don-hang')) {
-        this.isOrderMenuOpen = true
-      }
-      if (to.path.includes('/admin/thanh-toan')) {
-        this.isPaymentMenuOpen = true
-      }
+    handleLogout() {
+      authService.logout()
+      this.$router.push('/admin')
     },
   },
-}
+  watch: {
+    // Theo dõi thay đổi route để cập nhật menu khi chuyển trang
+    '$route.path'(newPath) {
+      // Nếu là staff và cố gắng truy cập các trang khác ngoài tin tức, chuyển về tin tức
+      if (this.userRole === 'staff' && !newPath.includes('/admin/tin-tuc')) {
+        this.$router.push('/admin/tin-tuc/danh-sach');
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -709,5 +664,22 @@ export default {
   .top-header {
     padding-left: 1rem;
   }
+}
+
+/* Thêm style cho hiển thị role */
+.user-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.user-role i {
+  font-size: 1rem;
 }
 </style>

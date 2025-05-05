@@ -735,6 +735,7 @@ td {
    15. TÙY CHỈNH THANH CUỘN
    ================================================== */
 /* Tùy chỉnh thanh cuộn */
+/* thanh cuộn có thể kéo để thay đổi kích cỡ. */
 .table-container::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar {
   width: 6px;
@@ -742,13 +743,15 @@ td {
 }
 
 /* Track của thanh cuộn */
-.table-container::-webkit-scrollbar-track,
+/* không gian trống bên dưới thanh tiến trình. */
+.table-container::-webkit-scrollbar-track, 
 .modal-content::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
 /* Thumb của thanh cuộn */
+/* phần tử cuộn có thể kéo để thay đổi kích cỡ. */
 .table-container::-webkit-scrollbar-thumb,
 .modal-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
@@ -756,6 +759,7 @@ td {
 }
 
 /* Hiệu ứng hover cho thanh cuộn */
+/* khi di chuột qua thanh cuộn. */
 .table-container::-webkit-scrollbar-thumb:hover,
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
