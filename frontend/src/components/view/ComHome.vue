@@ -1,9 +1,9 @@
 <template>
-  <!-- Section đầu trang -->
+  <!---------------------------------------- Section đầu trang ---------------------------------------->
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
-        <!-- Nội dung bên trái -->
+        <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <!-- Nội dung chính ở giữa  -->
+        <!---------------------------------------- Nội dung chính ở giữa  ---------------------------------------->
         <div class="main-content">
           <p class="subtitle">Designing With Us</p>
           <h1>
@@ -37,7 +37,7 @@
           </p>
         </div>
 
-        <!-- Nội dung bên phải -->
+        <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
           <h3>Khách hàng tin tưởng</h3>
           <div class="avatar-group">
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <!-- Dịch vụ -->
+      <!---------------------------------------- Dịch vụ ---------------------------------------->
       <div class="wrapper">
         <div class="services">
           <span>UI/UX Design</span>
@@ -88,14 +88,14 @@
       </div>
 
       <div class="abc">
-        <!-- Link mạng xã hội -->
+        <!---------------------------------------- Link mạng xã hội ---------------------------------------->
         <div class="social-links">
           <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
           <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
           <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
         </div>
-        <!-- Logo đối tác -->
+        <!---------------------------------------- Logo đối tác ---------------------------------------->
         <div class="partners">
           <h3>Đối tác tin cậy</h3>
           <div class="partner-logos">
@@ -108,10 +108,10 @@
     </div>
   </section>
 
-  <!-- Section Hợp tác -->
+  <!---------------------------------------- Section Hợp tác ---------------------------------------->
   <section class="cooperation-section">
     <div class="cooperation-container">
-      <!-- Phần bên trái Sếp -->
+      <!---------------------------------------- Phần bên trái Sếp ---------------------------------------->
       <div class="cooperation-banner">
         <div class="banner-content">
           <p class="subtitle-1">Hợp tác phát triển</p>
@@ -124,7 +124,7 @@
           class="banner-image"
         />
       </div>
-      <!-- Phần bên phải - khách hàng tin tưởng -->
+      <!---------------------------------------- Phần bên phải - khách hàng tin tưởng ---------------------------------------->
       <div class="cooperation-info">
         <div class="trust-header">
           <h2>Khách hàng<br />tin tưởng</h2>
@@ -148,7 +148,7 @@
     </div>
   </section>
 
-  <!-- Section Timeline -->
+  <!---------------------------------------- Section Timeline ---------------------------------------->
   <section class="commit-timeline-section">
     <div class="timeline-container">
       <div class="timeline-content">
@@ -233,40 +233,42 @@
     </div>
   </section>
 
-  <!-- Section Sự tin tưởng của khách hàng -->
+  <!---------------------------------------- Section Sự tin tưởng của khách hàng ---------------------------------------->
   <section class="customer-trust-section">
     <div class="customer-trust-container">
       <!-- Left: Images & Badge -->
-      <div class="customer-trust-visual">
-        <div class="circle-group">
-          <div class="circle circle-lg">
-            <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+      <div class="circle-layout">
+        <div class="circle image image-main">
+          <img src="@/assets/sdtc-image/trang-chu/people/image - 13.png" alt="Khách hàng" />
+        </div>
+        <div class="circle badge-center">
+          <div class="badge-text">
+            <strong>200+</strong><br />
+            Khách hàng<br />
+            hài lòng
           </div>
-          <div class="circle circle-md">
-            <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
-          </div>
-          <div class="circle circle-sm">
-            <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
-          </div>
-          <div class="circle-badge">
-            <span>200+<br />Khách hàng<br />hài lòng</span>
-          </div>
+        </div>
+        <div class="circle image image-left">
+          <img src="@/assets/sdtc-image/trang-chu/people/image21.png" alt="Khách hàng" />
+        </div>
+        <div class="circle image image-bottom">
+          <img src="@/assets/sdtc-image/trang-chu/people/image20.png" alt="Khách hàng" />
         </div>
       </div>
       <!-- Right: Text -->
-      <div class="customer-trust-content">
-        <p class="trust-label">Về chúng tôi</p>
-        <h2 class="trust-title">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
-        <p class="trust-desc">
+      <div class="intro-section">
+        <p class="subheading">Về chúng tôi</p>
+        <h2 class="main-heading">Sự tin tưởng của khách hàng ngày càng vững chắc</h2>
+        <p class="description">
           Chúng tôi không ngừng nỗ lực để mang đến giải pháp tốt nhất, được khách hàng tin tưởng
           theo thời gian.
         </p>
-        <button class="trust-btn">Bắt đầu ngay</button>
+        <button class="cta-button">Bắt đầu ngay</button>
       </div>
     </div>
   </section>
 
-<!-- Section Thành công vượt bậc  -->
+<!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
 <section class="successfull">
   <div class="successfull-content">
     <p>Dự án</p>
@@ -305,7 +307,7 @@
     <button class="cta-button">Khám phá dự án của chúng tôi</button>
 </section>
 
-<!-- Section Nguồn cảm hứng -->
+<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
 <section class="inspiration-section">
   <div class="inspiration-header">
     <div>
@@ -317,12 +319,15 @@
     </div>
     <button class="inspiration-btn">Xem dự án</button>
   </div>
+
   <div class="inspiration-carousel-group">
+    <!-- trên  -->
     <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" class="carousel-row">
       <Slide v-for="(img, idx) in inspirationImagesTop" :key="idx">
         <img :src="img" class="carousel-img" />
       </Slide>
     </Carousel>
+    <!-- dưới  -->
     <Carousel :itemsToShow="4" :wrapAround="true" :autoplay="5000" :dir="'rtl'" class="carousel-row carousel-row-bottom">
       <Slide v-for="(img, idx) in inspirationImagesBottom" :key="idx">
         <img :src="img" class="carousel-img" />
@@ -331,7 +336,7 @@
   </div>
 </section>
 
-<!-- Section Thành tựu nổi bật -->
+<!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
 <section class="achievements">
   <div class="achievements-header">
     <p class="achievements-label">Những gì khách hàng nhận xét</p>
@@ -377,7 +382,7 @@
   </div>
 </section>
 
-<!-- Section bạn đồng hành -->
+<!---------------------------------------- Section bạn đồng hành ---------------------------------------->
 <section class="companion-section">
   <div class="companion-content">
     <div class="companion-text">
@@ -1127,7 +1132,7 @@ h1 {
 
 .customer-trust-container {
   max-width: 1200px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1135,7 +1140,7 @@ h1 {
   min-height: 348px;
 }
 
-.customer-trust-visual {
+/* .customer-trust-visual {
   flex: 1.2;
   display: flex;
   align-items: center;
@@ -1196,9 +1201,9 @@ h1 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+} */
 
-.circle-badge {
+/* .circle-badge {
   position: absolute;
   left: 60px;
   top: 120px;
@@ -1270,7 +1275,119 @@ h1 {
 .trust-btn:hover {
   background: #1746a2;
   box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
-} 
+}  */
+
+.circle-layout {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+}
+
+/* Base circle style */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Vị trí ảnh lớn bên phải */
+.image-main {
+  width: 230px;
+  height: 230px;
+  top: 26px;
+  left: 251px;
+  z-index: 1;
+}
+
+/* Vị trí ảnh trung bình bên trái */
+.image-left {
+  width: 220px;
+  height: 220px;
+  top: 90px;
+  left: -19px;
+  z-index: 2;
+}
+
+/* Vị trí badge xanh nằm chính giữa */
+.badge-center {
+  width: 160px;
+  height: 160px;
+  top: 140px;
+  left: 160px;
+  background-color: #0057ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 3;
+  border: #ffffff solid 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Vị trí ảnh nhỏ ở dưới cùng */
+.image-bottom {
+  width: 120px;
+  height: 120px;
+  top: 270px;
+  left: 180px;
+  z-index: 4;
+}
+
+.intro-section {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: left;
+  padding: 40px 20px;
+}
+
+.subheading {
+  color: #a0aec0; /* màu xám nhạt */
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.main-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.description {
+  font-size: 16px;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.cta-button {
+  padding: 12px 24px;
+  background: linear-gradient(90deg, #0057ff, #3c8bff);
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 87, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  box-shadow: 0 12px 28px rgba(0, 87, 255, 0.35);
+  transform: translateY(-2px);
+}
 
 /*-------------------------------------- Section Thành công vượt bậc -------------------------------------- */
 .successfull {
