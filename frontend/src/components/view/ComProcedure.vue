@@ -157,58 +157,26 @@ export default {
 }
 
 /* Responsive Styles */
-@media screen and (max-width: 1200px) {
-  .procedure-container {
-    padding: 2rem 5rem;
-  }
-
-  .main-title {
-    font-size: 1.8em;
-    margin-bottom: 35px;
-  }
-
-  .step-item {
-    padding: 18px;
-  }
-
-  .step-icon {
-    width: 90px;
-    height: 90px;
-  }
-
-  .step-content h3 {
-    font-size: 1.4em;
-  }
-}
-
+/* Responsive Styles - KHÔNG thay đổi màu nền, border-radius gốc */
 @media screen and (max-width: 1024px) {
   .procedure-container {
-    padding: 2rem 3rem;
+    padding: 1.8rem 2rem;
   }
-
   .main-title {
-    font-size: 1.7em;
-    margin-bottom: 30px;
+    font-size: 1.4em;
   }
-
-  .procedure-steps {
-    gap: 25px;
-  }
-
   .step-item {
-    padding: 15px;
+    padding: 16px;
+    /* Giữ nguyên background và border-radius */
   }
-
   .step-icon {
-    width: 80px;
-    height: 80px;
-    margin-right: 15px;
+    width: 70px;
+    height: 70px;
+    margin-right: 16px;
   }
-
   .step-content h3 {
-    font-size: 1.3em;
+    font-size: 1.1em;
   }
-
   .step-content p {
     font-size: 0.95em;
   }
@@ -216,125 +184,28 @@ export default {
 
 @media screen and (max-width: 768px) {
   .procedure-container {
-    padding: 1.5rem 2rem;
+    padding: 1.2rem 0.5rem;
   }
-
-  .main-title {
-    font-size: 1.5em;
-    margin-bottom: 25px;
-  }
-
   .procedure-steps {
-    gap: 20px;
+    gap: 16px;
   }
-
   .step-item {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 20px;
+    padding: 14px;
+    /* Giữ nguyên background và border-radius */
   }
-
   .step-icon {
-    width: 70px;
-    height: 70px;
     margin-right: 0;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
-
   .step-content h3 {
-    font-size: 1.2em;
-    margin-bottom: 8px;
+    font-size: 1em;
   }
-
   .step-content p {
     font-size: 0.9em;
   }
 }
 
-@media screen and (max-width: 480px) {
-  .procedure-container {
-    padding: 1rem;
-  }
-
-  .main-title {
-    font-size: 1.3em;
-    margin-bottom: 20px;
-  }
-
-  .procedure-steps {
-    gap: 15px;
-  }
-
-  .step-item {
-    padding: 15px;
-    border-radius: 1.5rem;
-  }
-
-  .step-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 12px;
-  }
-
-  .step-content h3 {
-    font-size: 1.1em;
-    margin-bottom: 6px;
-  }
-
-  .step-content p {
-    font-size: 0.85em;
-    line-height: 1.5;
-  }
-}
-
-/* Animation and Hover Effects */
-.step-item {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.step-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.step-icon img {
-  transition: transform 0.3s ease;
-}
-
-.step-item:hover .step-icon img {
-  transform: scale(1.1);
-}
-
-/* Improve touch targets for mobile */
-@media screen and (max-width: 768px) {
-  .step-item {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .step-item:active {
-    transform: scale(0.98);
-  }
-}
-
-/* Fix for long text content */
-.step-content p {
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  hyphens: auto;
-}
-
-/* Improve readability on different screens */
-@media screen and (min-width: 769px) {
-  .step-content p {
-    max-width: 800px;
-  }
-}
-
-/* Add smooth scrolling for better UX */
-.procedure-container {
-  scroll-behavior: smooth;
-}
 </style>
