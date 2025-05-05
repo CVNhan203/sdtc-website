@@ -327,59 +327,262 @@ export default {
   overflow: hidden;
 }
 
-/* Hiển thị khi không tìm thấy kết quả tìm kiếm */
-.no-results {
-  text-align: center;
-  margin-top: 100px;
-  padding: 40px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-}
 
-/* Thông báo không tìm thấy kết quả */
-.no-results p {
-  font-size: 18px;
-  color: #6c757d;
-  margin-bottom: 20px;
-}
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .news-container {
+    max-width: 1140px;
+    padding: 15px;
 
-/* Nút xóa tìm kiếm */
-.clear-search-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-/* Hiệu ứng hover cho nút xóa tìm kiếm */
-.clear-search-btn:hover {
-  background-color: #0056b3;
-}
-
-/* Responsive cho màn hình nhỏ (điện thoại) */
-@media (max-width: 768px) {
-  .news-grid {
-    grid-template-columns: 1fr;
   }
-  
+
   .news-header {
+    width: 100%;
+    height: 280px;
+  }
+
+  .news-title {
+    font-size: 60px;
+    line-height: 60px;
+  }
+
+  .search-wrapper {
+    max-width: 500px;
+  }
+
+  .news-grid {
+    gap: 25px;
+    margin-top: 70px;
+  }
+
+  .news-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .news-image {
+    width: 100%;
     height: 250px;
   }
-  
+}
+
+@media screen and (max-width: 1024px) {
+  .news-container {
+    max-width: 960px;
+  }
+
+  .news-header {
+    height: 260px;
+  }
+
   .news-title {
-    font-size: 50px;
+    font-size: 55px;
+    line-height: 55px;
   }
-  
+
+  .search-wrapper {
+    max-width: 450px;
+  }
+
   .search-bar {
-    padding: 20px 15px;
+    padding: 25px 15px;
   }
-  
+
+  .search-bar input {
+    font-size: 18px;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 60px;
+  }
+
+  .news-card {
+    height: auto;
+  }
+
+  .news-image {
+    height: 220px;
+  }
+
+  .news-content {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .news-container {
+    max-width: 720px;
+    padding: 10px;
+  }
+
+  .news-header {
+    height: 220px;
+    border-radius: 15px;
+  }
+
+  .news-title {
+    font-size: 45px;
+    line-height: 45px;
+  }
+
+  .search-wrapper {
+    max-width: 400px;
+    transform: translate(-50%, 30%);
+  }
+
+  .search-bar {
+    padding: 20px 12px;
+  }
+
   .search-bar input {
     font-size: 16px;
   }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 50px;
+  }
+
+  .news-card {
+    width: 100%;
+  }
+
+  .news-image {
+    height: 200px;
+  }
+
+  .news-card-title {
+    font-size: 16px;
+  }
+
+  .news-excerpt {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .news-container {
+    padding: 8px;
+  }
+
+  .news-header {
+    height: 180px;
+    border-radius: 10px;
+  }
+
+  .news-title {
+    font-size: 35px;
+    line-height: 35px;
+  }
+
+  .search-wrapper {
+    max-width: 90%;
+    transform: translate(-50%, 25%);
+  }
+
+  .search-bar {
+    padding: 15px 10px;
+  }
+
+  .search-bar input {
+    font-size: 14px;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .news-grid {
+    gap: 15px;
+    margin-top: 40px;
+  }
+
+  .news-image {
+    height: 180px;
+    border-radius: 15px;
+  }
+
+  .news-content {
+    padding: 12px;
+  }
+
+  .news-category {
+    font-size: 12px;
+  }
+
+  .news-card-title {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .news-date {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .news-excerpt {
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+}
+
+/* Animation and Hover Effects */
+.news-card {
+  transition: all 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.news-image {
+  transition: all 0.3s ease;
+}
+
+/* Improve touch targets for mobile */
+@media screen and (max-width: 768px) {
+  .news-card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .news-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Fix for long text content */
+.news-card-title {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Add smooth scrolling for better UX */
+.news-container {
+  scroll-behavior: smooth;
+}
+
+/* Improve search bar accessibility */
+.search-bar input {
+  width: 100%;
+  background: transparent;
+}
+
+.search-bar input::placeholder {
+  color: #999;
+  opacity: 0.8;
+}
+
+/* Add focus styles for better accessibility */
+.search-bar input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 </style>
