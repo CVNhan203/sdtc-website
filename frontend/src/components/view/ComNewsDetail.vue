@@ -14,10 +14,10 @@
         <h1 class="news-title">{{ currentNews.title }}</h1>
         
         <div class="news-meta">
-          <span>{{ currentNews.date }}</span>
-          <span>By {{ currentNews.author }}</span>
-          <span>{{ currentNews.views }} lượt xem</span>
-          <span>{{ currentNews.shares }} chia sẻ</span>
+          <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ currentNews.date }}</span>
+          <span class="meta-item"><i class="far fa-user"></i> {{ currentNews.author }}</span>
+          <span class="meta-item"><i class="far fa-eye"></i> {{ currentNews.views }} lượt xem</span>
+          <span class="meta-item"><i class="far fa-share-square"></i> {{ currentNews.shares }} chia sẻ</span>
         </div>
 
         <div class="news-image">
@@ -26,7 +26,7 @@
 
         <div class="news-content">
           <p class="content-paragraph">{{ currentNews.excerpt }}</p>
-        </div>
+        </div>        
       </div>
 
       <!-- Sidebar -->
@@ -54,13 +54,23 @@
                 <img :src="post.image" :alt="post.title">
               </div>
               <div class="post-info">
-                <div class="post-date">{{ post.date }}</div>
+                <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>
                 <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="post-navigation">
+      <button @click="goToPreviousPost" class="nav-button prev-button">
+        <i class="fas fa-arrow-left"></i> Bài viết trước
+      </button>
+      <button @click="goToNextPost" class="nav-button next-button">
+        Bài viết sau <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -113,42 +123,60 @@ export default {
           title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
           date: '15/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI'
+          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         },
         {
           id: 5,
           title: 'FPT muốn tiên phong phát triển Data Center',
           date: '14/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.'
+          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         },
         {
           id: 6,
           title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
           date: '13/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.'
+          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         },
         {
           id: 7,
           title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
           date: '15/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI'
+          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         },
         {
           id: 8,
           title: 'FPT muốn tiên phong phát triển Data Center',
           date: '14/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.'
+          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         },
         {
           id: 9,
           title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
           date: '13/03/2024',
           image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.'
+          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
+          author: 'Admin',
+          views: 68,
+          shares: 85
         }
     ])
 
@@ -175,6 +203,30 @@ export default {
       router.push(`/tin-tuc/${news.id}`)
     }
 
+    const goToPreviousPost = () => {
+      const currentId = Number(route.params.id)
+      const sortedNews = [...allNews.value].sort((a, b) => a.id - b.id)
+      const currentIndex = sortedNews.findIndex(news => news.id === currentId)
+      
+      if (currentIndex > 0) {
+        // Có bài viết trước
+        const prevNews = sortedNews[currentIndex - 1]
+        router.push(`/tin-tuc/${prevNews.id}`)
+      }
+    }
+
+    const goToNextPost = () => {
+      const currentId = Number(route.params.id)
+      const sortedNews = [...allNews.value].sort((a, b) => a.id - b.id)
+      const currentIndex = sortedNews.findIndex(news => news.id === currentId)
+      
+      if (currentIndex !== -1 && currentIndex < sortedNews.length - 1) {
+        // Có bài viết sau
+        const nextNews = sortedNews[currentIndex + 1]
+        router.push(`/tin-tuc/${nextNews.id}`)
+      }
+    }
+
     onMounted(() => {
       loadCurrentNews()
     })
@@ -183,7 +235,9 @@ export default {
       searchQuery,
       currentNews,
       filteredNews,
-      goToNewsDetail
+      goToNewsDetail,
+      goToPreviousPost,
+      goToNextPost
     }
   }
 }
@@ -213,21 +267,25 @@ export default {
   justify-content: center;
   width: 24px;
   height: 24px;
-  background: #004AAD;
   border-radius: 50%;
+  border: 1px solid #000000;
 }
 
 .back-icon i {
-  color: white;
+  color: #000000;
   font-size: 12px;
 }
 
 .back-link:hover {
-  color: #004AAD;
+  color: #000000;
 }
 
 .back-link:hover .back-icon {
-  background: #003380;
+  background: #004AAD;
+}
+
+.back-link:hover .back-icon i {
+  color: white;
 }
 
 .news-content-wrapper {
@@ -254,6 +312,17 @@ export default {
   color: #666;
   font-size: 14px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.meta-item i {
+  color: #004AAD;
 }
 
 .news-image {
@@ -276,6 +345,47 @@ export default {
   margin-bottom: 16px;
 }
 
+/* Post Navigation */
+.post-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 50px;
+  background-color: rgba(237, 246, 255, 1);
+  color: rgba(0, 74, 173, 1);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-button:hover {
+  background-color: rgba(0, 74, 173, 0.1);
+}
+
+.prev-button {
+  padding-left: 20px;
+}
+
+.next-button {
+  padding-right: 20px;
+}
+
+.nav-button i {
+  margin: 0 8px;
+}
+
 /* Sidebar Styles */
 .sidebar {
   width: 360px;
@@ -291,54 +401,79 @@ export default {
   width: 100%;
   height: 44px;
   padding: 0 44px 0 16px;
-  border: 1px solid #e0e0e0;
+  border: none;
   border-radius: 8px;
   font-size: 14px;
-  background: #fff;
+  background: #4285f4;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #004AAD;
+  background: #3367d6;
 }
 
 .search-button {
   position: absolute;
-  right: 0;
-  top: 0;
-  width: 44px;
-  height: 44px;
+  right: 4px;
+  top: 4px;
+  width: 36px;
+  height: 36px;
   border: none;
+  border-radius: 50%;
   background: transparent;
-  color: #999;
+  color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.recent-posts {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
 .recent-posts h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #000;
+  color: #262f5a;
   margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .posts-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background-color: #fff;
 }
 
 .post-item {
   display: flex;
   gap: 12px;
   cursor: pointer;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .post-image {
-  width: 80px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
   border-radius: 4px;
   overflow: hidden;
@@ -356,9 +491,16 @@ export default {
 }
 
 .post-date {
-  color: #004AAD;
-  font-size: 14px;
+  color: #159eec;
+  font-size: 12px;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.post-date i {
+  font-size: 12px;
 }
 
 .post-excerpt {
@@ -394,320 +536,15 @@ export default {
     width: 70px;
     height: 50px;
   }
-}
-
-/* Responsive Styles */
-@media screen and (max-width: 1200px) {
-  .news-detail-container {
-    max-width: 1140px;
-    padding: 18px;
-  }
-
-  .news-content-wrapper {
-    gap: 30px;
-  }
-
-  .news-title {
-    font-size: 28px;
-  }
-
+  
   .news-meta {
     gap: 12px;
-    font-size: 13px;
   }
-
-  .sidebar {
-    width: 320px;
-  }
-
-  .post-image {
-    width: 75px;
-    height: 55px;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .news-detail-container {
-    max-width: 960px;
-    padding: 16px;
-  }
-
-  .news-content-wrapper {
-    gap: 25px;
-  }
-
-  .news-title {
-    font-size: 26px;
-  }
-
-  .news-meta {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .news-image {
-    margin-bottom: 20px;
-  }
-
-  .content-paragraph {
-    font-size: 15px;
-  }
-
-  .sidebar {
-    width: 100%;
-    margin-top: 30px;
-  }
-
-  .search-container {
-    max-width: 500px;
-    margin: 0 auto 20px;
-  }
-
-  .posts-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .post-item {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-  }
-
-  .post-item:hover {
-    transform: translateY(-2px);
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .news-detail-container {
-    padding: 15px;
-  }
-
-  .back-link {
-    margin-bottom: 20px;
-    font-size: 13px;
-  }
-
-  .back-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .news-title {
-    font-size: 22px;
-    margin-bottom: 12px;
-  }
-
-  .news-meta {
-    font-size: 12px;
-    margin-bottom: 20px;
-  }
-
-  .news-image {
-    margin-bottom: 18px;
-  }
-
-  .content-paragraph {
+  
+  .nav-button {
     font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .search-container {
-    margin-bottom: 18px;
-  }
-
-  .search-input {
-    height: 40px;
-    font-size: 13px;
-  }
-
-  .search-button {
-    width: 40px;
-    height: 40px;
-  }
-
-  .recent-posts h2 {
-    font-size: 16px;
-    margin-bottom: 14px;
-  }
-
-  .posts-list {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .post-item {
-    padding: 8px;
-  }
-
-  .post-image {
-    width: 65px;
-    height: 45px;
-  }
-
-  .post-date {
-    font-size: 12px;
-  }
-
-  .post-excerpt {
-    font-size: 13px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .news-detail-container {
-    padding: 12px;
-  }
-
-  .back-link {
-    margin-bottom: 16px;
-    font-size: 12px;
-  }
-
-  .back-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .news-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  .news-meta {
-    font-size: 11px;
-    margin-bottom: 16px;
-  }
-
-  .news-image {
-    margin-bottom: 16px;
-  }
-
-  .content-paragraph {
-    font-size: 13px;
-    line-height: 1.4;
-  }
-
-  .search-container {
-    margin-bottom: 16px;
-  }
-
-  .search-input {
-    height: 38px;
-    font-size: 12px;
-    padding: 0 38px 0 12px;
-  }
-
-  .search-button {
-    width: 38px;
-    height: 38px;
-  }
-
-  .recent-posts h2 {
-    font-size: 15px;
-    margin-bottom: 12px;
-  }
-
-  .posts-list {
-    gap: 12px;
-  }
-
-  .post-item {
-    padding: 6px;
-  }
-
-  .post-image {
-    width: 60px;
-    height: 40px;
-  }
-
-  .post-date {
-    font-size: 11px;
-  }
-
-  .post-excerpt {
-    font-size: 12px;
-  }
-}
-
-/* Animation and Hover Effects */
-.back-link {
-  transition: all 0.3s ease;
-}
-
-.post-item {
-  transition: all 0.3s ease;
-}
-
-.search-input {
-  transition: all 0.3s ease;
-}
-
-/* Improve touch targets for mobile */
-@media screen and (max-width: 768px) {
-  .back-link,
-  .post-item,
-  .search-button {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .post-item:active {
-    transform: scale(0.98);
-  }
-}
-
-/* Add smooth scrolling for better UX */
-.news-detail-container {
-  scroll-behavior: smooth;
-}
-
-/* Improve accessibility */
-.search-input:focus {
-  box-shadow: 0 0 0 2px rgba(0, 74, 173, 0.2);
-}
-
-.post-item:focus-within {
-  outline: 2px solid #004AAD;
-  outline-offset: 2px;
-}
-
-/* Loading state styles */
-.news-image img {
-  transition: opacity 0.3s ease;
-}
-
-.news-image img.loading {
-  opacity: 0.7;
-}
-
-/* Improve text readability */
-.content-paragraph {
-  max-width: 65ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Add responsive image handling */
-.news-image img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Improve meta information display */
-.news-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-@media screen and (max-width: 480px) {
-  .news-meta {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 10px 16px;
   }
 }
 </style>
+

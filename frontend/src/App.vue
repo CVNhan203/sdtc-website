@@ -13,6 +13,7 @@
 
    <!-- Footer shown only for non-admin routes -->
    <Footer v-if="!isAdminRoute" />
+  
 </div>
 </template>
 
@@ -22,6 +23,7 @@ import Header from "./components/view/ComHeader.vue";
 import Footer from "./components/view/ComFooter.vue";
 
 export default {
+
  name: 'App',
  components: {
    Header,
@@ -33,6 +35,7 @@ export default {
      return this.$route.path.startsWith('/admin')
    }
  }
+
 }
 </script>
 
@@ -45,6 +48,7 @@ body {
 
 .html{
  font-size: 10px;
+
 }
 
 * {
@@ -71,6 +75,8 @@ main {
 main.admin-view {
  padding-top: 0; /* Không cần padding-top cho trang admin vì không có header cố định */
 }
+
+
 
 
 </style>
