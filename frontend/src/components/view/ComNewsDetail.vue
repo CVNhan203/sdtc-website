@@ -1,7 +1,7 @@
 <template>
   <div class="news-detail-container">
     <!-- Back button -->
-    <div class="back-link" @click="$router.push('/tin-tuc')">
+    <div class="back-link" @click="$router.push('/news')">
       <div class="back-icon">
         <i class="fas fa-arrow-left"></i>
       </div>
@@ -31,33 +31,31 @@
 
       <!-- Sidebar -->
       <div class="sidebar">
-        <div class="sidebar-inner">
-          <div class="search-container">
-            <input 
-              type="text" 
-              class="search-input"
-              placeholder="Tìm kiếm bài viết"
-              v-model="searchQuery"
-            >
-            <button class="search-button">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
+        <div class="search-container">
+          <input 
+            type="text" 
+            class="search-input"
+            placeholder="Tìm kiếm bài viết"
+            v-model="searchQuery"
+          >
+          <button class="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
 
-          <div class="recent-posts">
-            <h2>Bài viết gần đây</h2>
-            <div class="posts-list">
-              <div v-for="(post, index) in filteredNews" 
-                   :key="index"
-                   class="post-item"
-                   @click="goToNewsDetail(post)">
-                <div class="post-image">
-                  <img :src="post.image" :alt="post.title">
-                </div>
-                <div class="post-info">
-                  <div class="post-date">{{ post.date }}</div>
-                  <div class="post-excerpt">{{ post.title }}</div>
-                </div>
+        <div class="recent-posts">
+          <h2>Bài viết gần đây</h2>
+          <div class="posts-list">
+            <div v-for="(post, index) in filteredNews" 
+                 :key="index"
+                 class="post-item"
+                 @click="goToNewsDetail(post)">
+              <div class="post-image">
+                <img :src="post.image" :alt="post.title">
+              </div>
+              <div class="post-info">
+                <div class="post-date">{{ post.date }}</div>
+                <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
           </div>
@@ -196,7 +194,6 @@ export default {
   max-width: 1240px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Roboto', sans-serif;
 }
 
 .back-link {
@@ -207,6 +204,7 @@ export default {
   font-size: 14px;
   margin-bottom: 24px;
   cursor: pointer;
+  font-family: Roboto;
 }
 
 .back-icon {
@@ -235,7 +233,6 @@ export default {
 .news-content-wrapper {
   display: flex;
   gap: 40px;
-  background-color: #fff;
 }
 
 .main-content {
@@ -283,9 +280,6 @@ export default {
 .sidebar {
   width: 360px;
   flex-shrink: 0;
-}
-
-.sidebar-inner {
   background-color: #fff;
 }
 
@@ -342,6 +336,9 @@ export default {
   flex-direction: column;
   gap: 16px;
   background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .post-item {
@@ -350,7 +347,6 @@ export default {
   cursor: pointer;
   padding-bottom: 12px;
   border-bottom: 1px solid #f0f0f0;
-  background-color: #fff;
 }
 
 .post-item:last-child {

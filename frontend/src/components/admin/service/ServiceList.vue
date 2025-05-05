@@ -560,7 +560,7 @@ export default {
 
 <style scoped>
 /* Import the admin styles */
-@import "@/styles/admin.css";
+/* @import "@/styles/admin.css"; */
 
 /* Component specific overrides */
 .service-list {

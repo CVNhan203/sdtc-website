@@ -25,11 +25,6 @@ import Advise from '@/components/view/ComAdvise.vue'
 import AdminDashboardHome from '../components/admin/AdminDashboardHome.vue'
 // @ - Alias cho thư mục src, đại diện cho thư mục src trong Vue CLI, giúp viết đường dẫn nhanh gọn hơn
 // Còn .. là cách viết đường dẫn tương đối, cách viết mặc định của javascript, chỉ ra thư mục cha của thư mục hiện tại
-import Home from "@/components/view/ComHome.vue";
-import Procedure from "@/components/view/ComProcedure.vue";
-import Team from "@/components/view/ComTeam.vue";
-import Advise from "@/components/view/ComAdvise.vue";
-
 
 const routes = [
   // Public routes
@@ -62,48 +57,16 @@ const routes = [
     path: '/tin-tuc',
     name: 'ComNews',
     component: ComNews,
-    path: '/',
-    name: 'Home',
-    component: Home,
-  },
-  // Trang quy trình
-  {
-      path: "/procedure",
-      name: "Procedure",
-      component: Procedure,
-  },
-  // Trang đội ngũ
-  {
-      path: "/team",
-      name: "Team",
-      component: Team,
-  },
-  // Trang bảng giá
-  {
-      path: "/price-list",
-      name: "PriceList",
-      component: ComPriceList,
-  },
-  {
-    path: '/news',
-    name: 'News',
-    component: ComNews,
   },
   {
     path: '/tin-tuc/:id',
     name: 'ComNewsDetail',
     component: ComNewsDetail,
-    path: '/news/:id',
-    name: 'NewsDetail',
-    component: ComNewsDetail
   },
   {
     path: '/bang-gia',
     name: 'ComPriceList',
     component: ComPriceList,
-    path: "/advise",
-    name: "Advise",
-    component: Advise,
   },
   {
     path: '/advise',
@@ -111,7 +74,6 @@ const routes = [
     component: Advise,
   },
   // Admin login route
-  
   {
     path: '/admin',
     name: 'Admin',
