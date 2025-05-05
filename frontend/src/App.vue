@@ -71,4 +71,6 @@ main {
 main.admin-view {
  padding-top: 0; /* Không cần padding-top cho trang admin vì không có header cố định */
 }
+
+
 </style>
