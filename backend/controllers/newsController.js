@@ -14,6 +14,12 @@ exports.getNews = asyncHandler(async (req, res) => {
   } = req.query;
   const query = type ? { type } : {};
   query.isDeleted = false;
+
+  // Nếu là staff, chỉ lấy bài viết của mình
+  if (req.user && req.user.role === 'staff') {
+    query.author = req.user.fullName;
+  }
+
   const skip = (Number(page) - 1) * Number(limit);
 
   // Kiểm tra trường sắp xếp hợp lệ
@@ -68,7 +74,7 @@ exports.getNewsById = asyncHandler(async (req, res) => {
 // Tạo bài viết mới
 
 exports.createNews = asyncHandler(async (req, res) => {
-  const { title, summary, content, image, type, author } = req.body;
+  const { title, summary, content, image, type } = req.body;
 
   // Kiểm tra các trường bắt buộc (đơn giản)
   if (!title || !summary || !content || !type) {
@@ -76,7 +82,9 @@ exports.createNews = asyncHandler(async (req, res) => {
     throw new Error("Vui lòng điền đầy đủ thông tin bắt buộc");
   }
 
-  // Mongoose sẽ xử lý validation chi tiết (độ dài, định dạng...)
+  // Lấy author từ user đăng nhập
+  const author = req.user ? req.user.fullName : "Admin";
+
   try {
     const news = await News.create({
       title,
@@ -87,7 +95,7 @@ exports.createNews = asyncHandler(async (req, res) => {
       publishedDate: new Date(),
       views: 0,
       like: 0,
-      author: author || "Admin",
+      author,
     });
 
     res.status(201).json({
@@ -96,7 +104,6 @@ exports.createNews = asyncHandler(async (req, res) => {
       message: "Tạo bài viết thành công",
     });
   } catch (error) {
-    // Xử lý lỗi validation từ Mongoose
     if (error.name === "ValidationError") {
       res.status(400);
       const messages = Object.values(error.errors).map((err) => err.message);
@@ -117,42 +124,50 @@ exports.updateNews = asyncHandler(async (req, res) => {
     throw new Error("Không có dữ liệu để cập nhật");
   }
 
-  try {
-    const news = await News.findByIdAndUpdate(
+  let news;
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndUpdate(
+      { _id: newsId, author: req.user.fullName },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).lean();
+  } else {
+    news = await News.findByIdAndUpdate(
       newsId,
       { $set: updateData },
       { new: true, runValidators: true }
     ).lean();
-
-    if (!news) {
-      res.status(404);
-      throw new Error("Không tìm thấy bài viết");
-    }
-
-    res.status(200).json({
-      success: true,
-      data: news,
-      message: "Cập nhật bài viết thành công",
-    });
-  } catch (error) {
-    // Xử lý lỗi validation từ Mongoose
-    if (error.name === "ValidationError") {
-      res.status(400);
-      const messages = Object.values(error.errors).map((err) => err.message);
-      throw new Error(messages.join(", "));
-    }
-    throw error;
   }
+
+  if (!news) {
+    res.status(404);
+    throw new Error("Không tìm thấy bài viết");
+  }
+
+  res.status(200).json({
+    success: true,
+    data: news,
+    message: "Cập nhật bài viết thành công",
+  });
 });
 
 // Xóa bài viết (đánh dấu là đã xóa)
 
 exports.deleteNews = asyncHandler(async (req, res) => {
-  const news = await News.findByIdAndUpdate(
-    req.params.id,
-    { $set: { isDeleted: true } },
-    { new: true }
-  );
+  let news;
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndUpdate(
+      { _id: req.params.id, author: req.user.fullName },
+      { $set: { isDeleted: true } },
+      { new: true }
+    );
+  } else {
+    news = await News.findByIdAndUpdate(
+      req.params.id,
+      { $set: { isDeleted: true } },
+      { new: true }
+    );
+  }
 
   if (!news) {
     res.status(404);
@@ -168,11 +183,11 @@ exports.deleteNews = asyncHandler(async (req, res) => {
 // Xóa nhiều bài viết (đánh dấu là đã xóa)
 
 exports.deleteNewsMany = asyncHandler(async (req, res) => {
-  const { ids } = req.body;
-
-  if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    res.status(400);
-    throw new Error("Vui lòng cung cấp danh sách ID bài viết để xóa");
+  let { ids } = req.body;
+  if (req.user && req.user.role === 'staff') {
+    // Lấy các bài viết thuộc staff
+    const ownNews = await News.find({ _id: { $in: ids }, author: req.user.fullName });
+    ids = ownNews.map(n => n._id);
   }
 
   const result = await News.updateMany(
@@ -189,8 +204,4 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
-
 });
-
-
-
