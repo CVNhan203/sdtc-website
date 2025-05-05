@@ -46,8 +46,7 @@
             <tr>
               <th>ID</th>
               <th>Ảnh</th>
-              <th>Tiêu đề</th>
-              <th class="responsive-hide">Tóm tắt</th>
+              <th style="max-width: 250px;">Tiêu đề</th>
               <th>Loại</th>
               <th class="responsive-hide">Tác giả</th>
               <th>Thao tác</th>
@@ -73,10 +72,7 @@
                   </div>
                 </div>
               </td>
-              <td class="truncate-text">{{ news.title }}</td>
-              <td class="content-cell responsive-hide">
-                {{ formatDescription(news.summary) }}
-              </td>
+              <td class="truncate-text" style="max-width: 250px;">{{ news.title }}</td>
               <td class="type-cell">{{ formatType(news.type) }}</td>
               <td class="responsive-hide">{{ news.author }}</td>
               <!-- Các nút thao tác trên từng tin tức -->
@@ -783,6 +779,15 @@ export default {
 /* Icon hiển thị khi không có ảnh */
 .no-image i {
   font-size: 1.5rem;
+}
+
+/* Kiểu dáng cho tiêu đề bị cắt ngắn */
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px; /* Giới hạn chiều rộng tối đa */
+  padding: 0 10px;
 }
 
 /* Kiểu dáng ảnh trong phần xem chi tiết */

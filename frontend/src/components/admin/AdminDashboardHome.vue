@@ -7,44 +7,26 @@
       <h2>Tổng quan hệ thống</h2>
       <div v-if="loading">Đang tải dữ liệu...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3>Đơn hàng</h3>
-            <p class="stat-number">{{ stats.orders }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Thanh toán</h3>
-            <p class="stat-number">{{ stats.payments }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Dịch vụ</h3>
-            <p class="stat-number">{{ stats.services }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Tin tức</h3>
-            <p class="stat-number">{{ stats.news }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Lịch đặt</h3>
-            <p class="stat-number">{{ stats.bookings }}</p>
-          </div>
+      <div v-else class="stats-grid">
+        <div class="stat-card">
+          <h3>Đơn hàng</h3>
+          <p class="stat-number">{{ stats.orders }}</p>
         </div>
-
-        <div class="charts-row">
-          <div class="chart-section">
-            <h3>Biểu đồ phân bố</h3>
-            <div class="chart-wrapper">
-              <canvas id="stats-chart" ref="pieChart" height="250" width="250"></canvas>
-            </div>
-          </div>
-          
-          <div class="chart-section">
-            <h3>So sánh số lượng</h3>
-            <div class="chart-wrapper">
-              <canvas id="bar-chart" ref="barChart" height="250" width="250"></canvas>
-            </div>
-          </div>
+        <div class="stat-card">
+          <h3>Thanh toán</h3>
+          <p class="stat-number">{{ stats.payments }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Dịch vụ</h3>
+          <p class="stat-number">{{ stats.services }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Tin tức</h3>
+          <p class="stat-number">{{ stats.news }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Lịch đặt</h3>
+          <p class="stat-number">{{ stats.bookings }}</p>
         </div>
       </div>
     </div>
@@ -52,7 +34,7 @@
 </template>
 
 <script>
-import api from '@/api/config';
+import api from '@/api/config'
 
 export default {
   name: 'AdminDashboardHome',
@@ -67,15 +49,10 @@ export default {
       },
       loading: true,
       error: '',
-    };
+    }
   },
   mounted() {
     this.fetchDashboardStats()
-  },
-  updated() {
-    if (!this.loading && !this.error) {
-      this.renderCharts();
-    }
   },
   methods: {
     async fetchDashboardStats() {
@@ -95,7 +72,7 @@ export default {
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -130,4 +107,4 @@ export default {
   color: red;
   margin-top: 16px;
 }
-</style> 
+</style>

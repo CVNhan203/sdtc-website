@@ -1,7 +1,9 @@
 <template>
     <div class="price-list-container">
+      <!-- Phần header cho bảng giá -->
       <div class="price-list-header">
         <h2 class="pricce-list">Bảng giá dịch vụ</h2>
+        <!-- Tab chuyển đổi giữa các loại dịch vụ -->
         <div class="tab-buttons">
           <button 
             :class="{ active: activeTab === 'Website' }"
@@ -24,14 +26,15 @@
         </div>
       </div>
       
+      <!-- Hiển thị card dịch vụ -->
       <div class="price-cards">
         <div v-for="(service, index) in filteredServices" :key="index" class="price-card">
-          <!-- Icon section -->
+          <!-- Icon dịch vụ -->
           <div class="card-icon">
             <img :src="service.icon" :alt="service.title">
           </div>
   
-          <!-- Header section with title and price -->
+          <!-- Header của card: tiêu đề và giá -->
           <div class="card-header">
             <h3>{{ service.title }}</h3>
             <div class="price">{{ service.price }}đ</div>
@@ -39,7 +42,7 @@
           
           <button class="btn-detail">Bắt đầu</button>
           
-          <!-- Features section -->
+          <!-- Danh sách tính năng của dịch vụ -->
           <div class="features-container">
             <ul class="features">
               <li v-for="(feature, fIndex) in service.features" :key="fIndex">
@@ -62,7 +65,9 @@
     name: 'ComPriceList',
     data() {
       return {
+        // Tab đang chọn, mặc định là Website
         activeTab: 'Website',
+        // Danh sách dịch vụ phân loại theo type
         services: [
           // Website Services
           {
@@ -450,11 +455,13 @@
       }
     },
     computed: {
+      // Lọc dịch vụ theo tab đang chọn
       filteredServices() {
         return this.services.filter(service => service.type === this.activeTab)
       }
     },
     methods: {
+      // Phương thức chuyển đổi tab
       switchTab(tab) {
         this.activeTab = tab;
       }
@@ -504,7 +511,6 @@
   }
   
   .tab-buttons button {
-    padding: 8px 24px;
     border: none;
     border-radius: 22px;
     background: transparent;
