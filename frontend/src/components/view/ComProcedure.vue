@@ -156,15 +156,56 @@ export default {
   margin: 0;
 }
 
-@media (max-width: 768px) {
+/* Responsive Styles */
+/* Responsive Styles - KHÔNG thay đổi màu nền, border-radius gốc */
+@media screen and (max-width: 1024px) {
+  .procedure-container {
+    padding: 1.8rem 2rem;
+  }
+  .main-title {
+    font-size: 1.4em;
+  }
+  .step-item {
+    padding: 16px;
+    /* Giữ nguyên background và border-radius */
+  }
+  .step-icon {
+    width: 70px;
+    height: 70px;
+    margin-right: 16px;
+  }
+  .step-content h3 {
+    font-size: 1.1em;
+  }
+  .step-content p {
+    font-size: 0.95em;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .procedure-container {
+    padding: 1.2rem 0.5rem;
+  }
+  .procedure-steps {
+    gap: 16px;
+  }
   .step-item {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 14px;
+    /* Giữ nguyên background và border-radius */
   }
-
   .step-icon {
-    margin: 0 0 20px 0;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .step-content h3 {
+    font-size: 1em;
+  }
+  .step-content p {
+    font-size: 0.9em;
   }
 }
+
 </style>
