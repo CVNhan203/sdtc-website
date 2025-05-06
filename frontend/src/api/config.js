@@ -30,7 +30,7 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminInfo');
-            window.location.href = '/admin';
+            window.location.href = '/admin/dashboard';
         }
         return Promise.reject(error);
     }

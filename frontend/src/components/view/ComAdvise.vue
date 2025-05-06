@@ -144,9 +144,217 @@ textarea {
   background-color: #3557a0;
 }
 
-@media (max-width: 768px) {
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .contact-container {
+    max-width: 1140px;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .info-content p {
+    font-size: 0.95rem;
+  }
+
+  .map-container {
+    height: 280px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .contact-container {
+    max-width: 960px;
+    padding: 1.2rem;
+    gap: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-content p {
+    font-size: 0.9rem;
+  }
+
+  .map-container {
+    height: 250px;
+  }
+
+  input,
+  textarea {
+    padding: 0.45rem;
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    padding: 0.45rem 1.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .advise-background {
+    padding: 1.5rem 0;
+  }
+
   .contact-container {
     flex-direction: column;
+    padding: 1rem;
+    gap: 2rem;
   }
+
+  .contact-info,
+  .contact-form {
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    text-align: center;
+  }
+
+  .info-content {
+    text-align: center;
+  }
+
+  .info-content p {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .map-container {
+    height: 220px;
+    margin-top: 0.8rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.8rem;
+  }
+
+  input,
+  textarea {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 0.4rem 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .advise-background {
+    padding: 1rem 0;
+  }
+
+  .contact-container {
+    padding: 0.8rem;
+    gap: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .info-content p {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .map-container {
+    height: 200px;
+    margin-top: 0.6rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.6rem;
+  }
+
+  input,
+  textarea {
+    padding: 0.35rem;
+    font-size: 0.8rem;
+    border-radius: 3px;
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+
+  .submit-btn {
+    padding: 0.35rem 1.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Animation and Hover Effects */
+.submit-btn {
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input,
+textarea {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #4c70ba;
+  box-shadow: 0 0 0 2px rgba(76, 112, 186, 0.2);
+}
+
+/* Improve touch targets for mobile */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  .submit-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .submit-btn:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Add smooth scrolling for better UX */
+.advise-background {
+  scroll-behavior: smooth;
+}
+
+/* Improve form accessibility */
+.form-group {
+  position: relative;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+  opacity: 0.8;
+}
+
+/* Add focus styles for better accessibility */
+input:focus::placeholder,
+textarea:focus::placeholder {
+  opacity: 0.6;
 }
 </style>
