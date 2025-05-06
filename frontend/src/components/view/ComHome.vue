@@ -393,6 +393,7 @@
 </section>
 </template>
 
+<!-- đây là script -->
 <script>
 import { Carousel, Slide } from 'vue3-carousel'
 export default {
