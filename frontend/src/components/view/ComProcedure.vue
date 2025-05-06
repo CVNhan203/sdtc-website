@@ -23,7 +23,10 @@
           </p>
         </div>
       </div>
-
+        <!-- SVG Divider Icon -->
+      <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
       <!-- Step 2 -->
       <div class="step-item">
         <div class="step-icon">
@@ -45,6 +48,11 @@
         </div>
       </div>
 
+       <!-- SVG Divider Icon -->
+       <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
+
       <!-- Step 3 -->
       <div class="step-item">
         <div class="step-icon">
@@ -63,6 +71,10 @@
         </div>
       </div>
 
+       <!-- SVG Divider Icon -->
+       <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
       <!-- Step 4 -->
       <div class="step-item">
         <div class="step-icon">
@@ -116,7 +128,7 @@ export default {
 .procedure-steps {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 10px;
 }
 
 .step-item {
@@ -129,8 +141,8 @@ export default {
 
 .step-icon {
   flex-shrink: 0;
-  width: 100px;
-  height: 100px;
+  width: 250px;
+  height: 250px;
   margin-right: 20px;
 }
 
@@ -145,15 +157,28 @@ export default {
 }
 
 .step-content h3 {
-  color: #333;
+  color: #5D5D5D;
   margin-bottom: 10px;
   font-size: 1.5em;
 }
 
 .step-content p {
-  color: #666;
-  line-height: 1.6;
+  color: #5D5D5D;
+  line-height: 1.7;
+  width: 100%;
+  max-width: 1020px;
   margin: 0;
+}
+
+.step-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.step-divider img {
+  height: 60px;
+  width: auto;
 }
 
 /* Responsive Styles */
@@ -168,17 +193,22 @@ export default {
   .step-item {
     padding: 16px;
     /* Giữ nguyên background và border-radius */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
   .step-icon {
-    width: 70px;
-    height: 70px;
-    margin-right: 16px;
+    width: 120px;
+    height: 120px;
+    margin-right: 0;
+    margin-bottom: 12px;
   }
   .step-content h3 {
     font-size: 1.1em;
   }
   .step-content p {
     font-size: 0.95em;
+    max-width: 100%;
   }
 }
 
@@ -188,6 +218,8 @@ export default {
   }
   .procedure-steps {
     gap: 16px;
+    /* Allow horizontal scroll if needed */
+    overflow-x: auto;
   }
   .step-item {
     flex-direction: column;
@@ -197,6 +229,8 @@ export default {
     /* Giữ nguyên background và border-radius */
   }
   .step-icon {
+    width: 70px;
+    height: 70px;
     margin-right: 0;
     margin-bottom: 10px;
   }
@@ -205,6 +239,7 @@ export default {
   }
   .step-content p {
     font-size: 0.9em;
+    max-width: 100%;
   }
 }
 

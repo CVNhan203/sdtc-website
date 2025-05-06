@@ -22,6 +22,9 @@
           <li><router-link to="/price-list" @click="closeMenu">Bảng Giá</router-link></li>
           <li><router-link to="/news" @click="closeMenu">Tin Tức</router-link></li>
         </ul>
+        <div v-if="isMenuOpen" class="advise-btn mobile">
+          <router-link to="/advise" class="btn" @click="closeMenu">Đặt lịch tư vấn</router-link>
+        </div>
       </nav>
       <!-- Nút đặt lịch tư vấn -->
       <div class="advise-btn">
@@ -60,7 +63,6 @@ export default {
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header-container {
