@@ -83,77 +83,166 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: 2rem 0;
+  padding: 3rem 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  scroll-behavior: smooth;
 }
 
 .contact-container {
   display: flex;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 2.5rem;
+  padding: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .contact-info,
 .contact-form {
   flex: 1;
+  min-width: 0;
 }
 
 .section-title {
   color: #0066cc;
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: left;
 }
 
 .info-content p {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.info-content a {
+  color: #0066cc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.info-content a:hover {
+  color: #004c99;
 }
 
 .map-container {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   width: 100%;
+  height: 350px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  position: relative;
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #4c70ba;
+  box-shadow: 0 0 0 3px rgba(76, 112, 186, 0.2);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+  opacity: 0.8;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  opacity: 0.6;
 }
 
 textarea {
   resize: vertical;
+  min-height: 120px;
 }
 
 .submit-btn {
-  background-color: #4c70ba;
+  background: linear-gradient(90deg, #4c70ba, #3557a0);
   color: white;
-  padding: 0.5rem 2rem;
+  padding: 0.75rem 2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
 }
 
 .submit-btn:hover {
-  background-color: #3557a0;
+  background: linear-gradient(90deg, #3557a0, #2a4682);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
 }
 
 /* Responsive Styles */
-@media screen and (max-width: 1200px) {
+
+/* Large Desktop: <= 1400px */
+@media screen and (max-width: 1400px) {
   .contact-container {
-    max-width: 1140px;
+    max-width: 1100px;
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .map-container {
+    height: 320px;
+  }
+}
+
+/* Tablet: <= 1024px */
+@media screen and (max-width: 1024px) {
+  .advise-background {
+    padding: 2rem 0;
+  }
+
+  .contact-container {
+    max-width: 900px;
     padding: 1.5rem;
     gap: 1.5rem;
   }
 
   .section-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin-bottom: 1.2rem;
   }
 
@@ -164,40 +253,20 @@ textarea {
   .map-container {
     height: 280px;
   }
-}
-
-@media screen and (max-width: 1024px) {
-  .contact-container {
-    max-width: 960px;
-    padding: 1.2rem;
-    gap: 1.2rem;
-  }
-
-  .section-title {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-  }
-
-  .info-content p {
-    font-size: 0.9rem;
-  }
-
-  .map-container {
-    height: 250px;
-  }
 
   input,
   textarea {
-    padding: 0.45rem;
-    font-size: 0.9rem;
+    padding: 0.65rem;
+    font-size: 0.95rem;
   }
 
   .submit-btn {
-    padding: 0.45rem 1.8rem;
-    font-size: 0.9rem;
+    padding: 0.65rem 1.8rem;
+    font-size: 0.95rem;
   }
 }
 
+/* Mobile: <= 768px */
 @media screen and (max-width: 768px) {
   .advise-background {
     padding: 1.5rem 0;
@@ -205,8 +274,10 @@ textarea {
 
   .contact-container {
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.2rem;
     gap: 2rem;
+    max-width: 100%;
+    border-radius: 0.75rem;
   }
 
   .contact-info,
@@ -215,8 +286,8 @@ textarea {
   }
 
   .section-title {
-    font-size: 1.2rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
     text-align: center;
   }
 
@@ -225,12 +296,60 @@ textarea {
   }
 
   .info-content p {
-    font-size: 0.85rem;
-    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
   }
 
   .map-container {
-    height: 220px;
+    height: 250px;
+    margin-top: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  input,
+  textarea {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  .submit-btn {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile: <= 480px */
+@media screen and (max-width: 480px) {
+  .advise-background {
+    padding: 1rem 0;
+  }
+
+  .contact-container {
+    padding: 1rem;
+    gap: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .info-content p {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .map-container {
+    height: 200px;
     margin-top: 0.8rem;
   }
 
@@ -240,55 +359,9 @@ textarea {
 
   input,
   textarea {
-    padding: 0.4rem;
+    padding: 0.5rem;
     font-size: 0.85rem;
-  }
-
-  textarea {
-    min-height: 100px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 0.4rem 1.5rem;
-    font-size: 0.85rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .advise-background {
-    padding: 1rem 0;
-  }
-
-  .contact-container {
-    padding: 0.8rem;
-    gap: 1.5rem;
-  }
-
-  .section-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .info-content p {
-    font-size: 0.8rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .map-container {
-    height: 200px;
-    margin-top: 0.6rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.6rem;
-  }
-
-  input,
-  textarea {
-    padding: 0.35rem;
-    font-size: 0.8rem;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   textarea {
@@ -296,65 +369,36 @@ textarea {
   }
 
   .submit-btn {
-    padding: 0.35rem 1.2rem;
-    font-size: 0.8rem;
+    padding: 0.5rem;
+    font-size: 0.85rem;
   }
 }
 
-/* Animation and Hover Effects */
-.submit-btn {
-  transition: all 0.3s ease;
-}
-
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
+/* Accessibility and Touch Improvements */
 input,
-textarea {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+textarea,
+.submit-btn {
+  -webkit-tap-highlight-color: transparent;
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: #4c70ba;
-  box-shadow: 0 0 0 2px rgba(76, 112, 186, 0.2);
 }
 
-/* Improve touch targets for mobile */
-@media screen and (max-width: 768px) {
-  input,
-  textarea,
-  .submit-btn {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .submit-btn:active {
-    transform: scale(0.98);
-  }
+.submit-btn:focus {
+  outline: 2px solid #4c70ba;
+  outline-offset: 2px;
 }
 
-/* Add smooth scrolling for better UX */
-.advise-background {
+/* Ensure smooth scrolling */
+html {
   scroll-behavior: smooth;
 }
 
 /* Improve form accessibility */
-.form-group {
-  position: relative;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #999;
-  opacity: 0.8;
-}
-
-/* Add focus styles for better accessibility */
-input:focus::placeholder,
-textarea:focus::placeholder {
-  opacity: 0.6;
+.form-group label {
+  position: absolute;
+  left: -9999px;
 }
 </style>
