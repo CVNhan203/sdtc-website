@@ -36,10 +36,6 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Thống kê dashboard
 exports.getDashboardStats = asyncHandler(async (req, res) => {
-<<<<<<< HEAD
-=======
-
->>>>>>> 2fd7caca581ae5c94ef85499cf0a2df5b2367458
   const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount, adminCount] =
     await Promise.all([
       Order.countDocuments(),
@@ -165,10 +161,6 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       services: serviceCount,
       news: newsCount,
       bookings: bookingsCount,
-<<<<<<< HEAD
-=======
-
->>>>>>> 2fd7caca581ae5c94ef85499cf0a2df5b2367458
       admins: adminCount,
     },
   });
@@ -216,7 +208,3 @@ exports.deleteStaff = asyncHandler(async (req, res) => {
   if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
   res.json({ success: true, message: 'Đã ẩn staff thành công' });
 });
-<<<<<<< HEAD
-
-=======
->>>>>>> 2fd7caca581ae5c94ef85499cf0a2df5b2367458
