@@ -81,12 +81,12 @@
       <!---------------------------------------- Dịch vụ ---------------------------------------->
       <div class="wrapper">
         <div class="services">
-          <span>UI/UX Design</span>
-          <span>Prototype</span>
-          <span>Web Design</span>
-          <span>Landing Page</span>
-          <span>Mobile Design</span>
-          <span>Development</span>
+          <span>● UI/UX Design</span>
+          <span>● Prototype</span>
+          <span>● Web Design</span>
+          <span>● Landing Page</span>
+          <span>● Mobile Design</span>
+          <span>● Development</span>
         </div>
         <router-link to="/bang-gia"><button class="cta-button">Bắt đầu dự án</button></router-link>
       </div>
@@ -380,7 +380,7 @@
 </Slide>
     </Carousel>
     <button class="achievements-arrow right" @click="nextAchievement">
-      <span>&#8594;</span>
+      <span>→</span>
     </button>
   </div>
 </section>
@@ -455,23 +455,19 @@ export default {
   },
 }
 const inspirationImagesTop = [
-  require('@/assets/sdtc-image/trang-chu/carousel/image.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-2.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-3.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-4.png'),
   require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-6.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-7.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-10.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-12.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-11.png'),
 ]
 
 const inspirationImagesBottom = [
+  require('@/assets/sdtc-image/trang-chu/carousel/image-8.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-11.png'),
   require('@/assets/sdtc-image/trang-chu/carousel/image.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-2.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-3.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-4.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-6.png'),
-  require('@/assets/sdtc-image/trang-chu/carousel/image-7.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-10.png'),
+  require('@/assets/sdtc-image/trang-chu/carousel/image-11.png'),
 ]
 </script>
 
@@ -1130,143 +1126,6 @@ h1 {
   min-height: 21.75rem; /* 348px */
 }
 
-/* .customer-trust-visual {
-  flex: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 480px;
-  padding: 32px 0 32px 0;
-}
-
-.circle-group {
-  position: relative;
-  width: 440px;
-  height: 347px;
-}
-
-.circle {
-  position: absolute;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-.circle-lg {
-  width: 292px;
-  height: 332px;
-  left: 80px;
-  top: 0;
-  z-index: 2;
-}
-.circle-lg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.circle-md {
-  width: 210px;
-  height: 218px;
-  left: 0;
-  top: 80px;
-  z-index: 1;
-  border: 4px solid #fff;
-}
-.circle-md img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.circle-sm {
-  width: 120px;
-  height: 120px;
-  left: 180px;
-  top: 180px;
-  z-index: 3;
-  border: 4px solid #fff;
-}
-.circle-sm img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-} */
-
-/* .circle-badge {
-  position: absolute;
-  left: 60px;
-  top: 120px;
-  width: 120px;
-  height: 120px;
-  background: #2563eb;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 4;
-  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.12);
-  border: 6px solid #fff;
-  text-align: center;
-}
-.circle-badge span {
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.5px;
-  display: block;
-}
-
-.customer-trust-content {
-  flex: 1.1;
-  padding: 48px 0 48px 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.trust-label {
-  color: #a7abb6;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.trust-title {
-  font-size: 2.1rem;
-  font-weight: 700;
-  color: #555;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.trust-desc {
-  color: #a7abb6;
-  font-size: 1.08rem;
-  line-height: 1.7;
-  max-width: 520px;
-  margin-bottom: 2rem;
-}
-
-.trust-btn {
-  background: #265FF3;
-  color: #fff;
-  border: none;
-  padding: 0.8rem 2.2rem;
-  border-radius: 24px;
-  font-size: 1.08rem;
-  font-weight: 500;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    box-shadow 0.2s;
-}
-.trust-btn:hover {
-  background: #1746a2;
-  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
-}  */
-
 .circle-layout {
   position: relative;
   width: 31.25rem; /* 500px */
@@ -1743,9 +1602,6 @@ h1 {
 .achievements-arrow.right {
   order: 2;
 }
-
-
-
 /*-------------------------------------- Bạn đồng hành --------------------------------------*/
 .companion-section {
   width: 100%;
@@ -1798,6 +1654,584 @@ h1 {
 .companion-btn:hover {
   background: #e6edff;
   color: #1746a2;
+}
+
+/* Responsive styles for ComHome */
+
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+  /* Hero Section */
+  .hero-section {
+    padding: 1.5rem;
+  }
+
+  .home-container {
+    max-width: 100%;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .stats-card,
+  .trust-card {
+    width: 100%;
+    max-width: 20rem;
+    height: auto;
+    top: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  .icon-above-card {
+    display: block;
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    z-index: 2;
+  }
+  
+  .main-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .services {
+    gap: 0.5rem;
+  }
+
+  .services span {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .abc {
+    padding: 2rem;
+  }
+
+  .partner-logos {
+    gap: 2rem;
+  }
+
+  /* Cooperation Section */
+  .cooperation-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .cooperation-banner {
+    width: 100%;
+    height: auto;
+    padding: 1.5rem;
+  }
+
+  .banner-image {
+    width: 8rem;
+  }
+
+  .cooperation-info {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+
+  .stats-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stat-item {
+    min-width: 100%;
+    text-align: center;
+  }
+
+  /* Timeline Section */
+  .commit-timeline-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .commit-content {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .commit-timeline {
+    padding: 2rem 1rem;
+  }
+
+  .timeline-labels {
+    font-size: 0.8rem;
+  }
+
+  .timeline-task {
+    padding: 0.5rem 1rem;
+    font-size: 0.6rem;
+  }
+
+  .timeline-task .avatars img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* Customer Trust Section */
+  .customer-trust-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .circle-layout {
+    width: 20rem;
+    height: 20rem;
+  }
+
+  .image-main {
+    width: 10rem;
+    height: 10rem;
+    top: 1rem;
+    left: 10rem;
+  }
+
+  .image-left {
+    width: 9rem;
+    height: 9rem;
+    top: 3rem;
+    left: -1rem;
+  }
+
+  .badge-center {
+    width: 7rem;
+    height: 7rem;
+    top: 6rem;
+    left: 6.5rem;
+    font-size: 0.8rem;
+  }
+
+  .image-bottom {
+    width: 5rem;
+    height: 5rem;
+    top: 12rem;
+    left: 7.5rem;
+  }
+
+  .intro-section {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  /* Successfull Section */
+  .projects-group-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-card.large {
+    min-height: 25rem;
+    min-width: 100%;
+  }
+
+  .project-card.small {
+    min-height: 15rem;
+  }
+
+  /* Inspiration Section */
+  .inspiration-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .inspiration-btn {
+    margin-top: 1rem;
+  }
+
+  .marquee-img {
+    height: 150px;
+    margin-right: 16px;
+  }
+
+  /* Achievements Section */
+  .achievement-content {
+    font-size: 1.2rem;
+  }
+
+  .big-quote-svg {
+    left: -100px; /* Điều chỉnh vị trí quote để tránh đè */
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Companion Section */
+  .companion-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .companion-btn {
+    margin-top: 1rem;
+  }
+}
+
+/* Mobile: < 768px */
+@media (max-width: 768px) {
+  /* Hero Section */
+  .hero-section {
+    padding: 1rem;
+  }
+
+  .content-wrapper {
+    gap: 1.5rem;
+  }
+
+  .stats-card {
+    padding: 0.8rem;
+  }
+
+  .main-content {
+    padding: 1rem 0;
+  }
+
+  .main-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .main-content .subtitle,
+  .main-content .description {
+    font-size: 0.9rem;
+  }
+
+  .wrapper {
+    margin-top: 1rem;
+  }
+
+  .services {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .services span {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cta-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .social-links {
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .social-link {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .partner-logos {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .partner-logos img {
+    height: 2rem;
+  }
+
+  /* Cooperation Section */
+  .cooperation-banner {
+    padding: 1rem;
+  }
+
+  .banner-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .banner-content .subtitle-1,
+  .banner-content .description-1 {
+    font-size: 0.8rem;
+  }
+
+  .banner-image {
+    width: 6rem;
+  }
+
+  .cooperation-info {
+    padding: 1rem;
+  }
+
+  .trust-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .trust-description {
+    font-size: 0.9rem;
+  }
+
+  .stat-item h3 {
+    font-size: 2rem;
+  }
+
+  .start-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Timeline Section */
+  .commit-title {
+    font-size: 1.5rem;
+  }
+
+  .commit-desc {
+    font-size: 0.9rem;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .timeline-labels {
+    grid-template-columns: repeat(6, 1fr); /* Giảm số cột để phù hợp màn hình nhỏ */
+    font-size: 0.7rem;
+  }
+
+  .timeline-lines {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .timeline-tasks {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .timeline-task {
+    height: 3rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .timeline-task .percent {
+    padding: 0.1rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .timeline-task .task-name {
+    font-size: 0.6rem;
+  }
+
+  .timeline-task .avatars img {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  /* Customer Trust Section */
+  .circle-layout {
+    width: 15rem;
+    height: 15rem;
+  }
+
+  .image-main {
+    width: 7rem;
+    height: 7rem;
+    top: 0.5rem;
+    left: 7.5rem;
+  }
+
+  .image-left {
+    width: 6rem;
+    height: 6rem;
+    top: 2rem;
+    left: -0.5rem;
+  }
+
+  .badge-center {
+    width: 5rem;
+    height: 5rem;
+    top: 4.5rem;
+    left: 5rem;
+    font-size: 0.7rem;
+  }
+
+  .image-bottom {
+    width: 3.5rem;
+    height: 3.5rem;
+    top: 9rem;
+    left: 5.5rem;
+  }
+
+  .main-heading {
+    font-size: 1.4rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  /* Successfull Section */
+  .successfull-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 1.2rem;
+  }
+
+  .project-overlay p {
+    font-size: 0.9rem;
+  }
+
+  .custom-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Inspiration Section */
+  .inspiration-title {
+    font-size: 1.8rem;
+  }
+
+  .inspiration-desc {
+    font-size: 0.9rem;
+  }
+
+  .marquee-img {
+    height: 100px;
+    margin-right: 12px;
+  }
+
+  /* Achievements Section */
+  .achievements-title {
+    font-size: 1.8rem;
+  }
+
+  .achievements-desc {
+    font-size: 0.9rem;
+  }
+
+  .achievement-content {
+    font-size: 1rem;
+  }
+
+  .author-name {
+    font-size: 1rem;
+  }
+
+  .author-role {
+    font-size: 0.8rem;
+  }
+
+  .achievements-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+
+  .big-quote-svg {
+    left: -50px;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Companion Section */
+  .companion-text h2 {
+    font-size: 1.5rem;
+  }
+
+  .companion-text p {
+    font-size: 0.9rem;
+  }
+
+  .companion-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile: < 480px */
+@media (max-width: 480px) {
+  /* Hero Section */
+  .main-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .stats-card {
+    padding: 0.6rem;
+  }
+
+  .wave-svg {
+    height: 4rem;
+  }
+
+  .stats-info {
+    font-size: 0.8rem;
+  }
+
+  /* Cooperation Section */
+  .banner-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .cooperation-info {
+    padding: 0.8rem;
+  }
+
+  /* Timeline Section */
+  .timeline-labels {
+    font-size: 0.6rem;
+  }
+
+  .timeline-task {
+    height: 2.5rem;
+  }
+
+  .timeline-task .percent {
+    font-size: 0.7rem;
+  }
+
+  /* Customer Trust Section */
+  .circle-layout {
+    width: 12rem;
+    height: 12rem;
+  }
+
+  .image-main {
+    width: 5.5rem;
+    height: 5.5rem;
+    left: 6rem;
+  }
+
+  .image-left {
+    width: 4.5rem;
+    height: 4.5rem;
+    top: 1.5rem;
+    left: -0.3rem;
+  }
+
+  .badge-center {
+    width: 4rem;
+    height: 4rem;
+    top: 3.5rem;
+    left: 4rem;
+    font-size: 0.6rem;
+  }
+
+  .image-bottom {
+    width: 2.5rem;
+    height: 2.5rem;
+    top: 7rem;
+    left: 4.5rem;
+  }
+
+  /* Successfull Section */
+  .project-card.large {
+    min-height: 20rem;
+  }
+
+  .project-card.small {
+    min-height: 12rem;
+  }
 }
 </style>
 
