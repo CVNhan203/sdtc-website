@@ -441,10 +441,6 @@ export default {
   padding: 1rem 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #fff !important;
-  text-decoration: none;
-  border: none;
-  background: none;
 }
 
 .sidebar-collapsed .nav-item {
@@ -469,10 +465,16 @@ export default {
   color: #fff;
 }
 
+.nav-item a{
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  background: none;
+}
+
 .nav-item span {
   white-space: nowrap;
   transition: opacity 0.3s ease;
-  color: #fff;
 }
 
 .nav-item:hover {
