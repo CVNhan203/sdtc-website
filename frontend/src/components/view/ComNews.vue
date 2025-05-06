@@ -27,12 +27,12 @@
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
     <div v-else class="news-grid">
       <div v-for="(news, index) in filteredNews" :key="index" class="news-card" @click="goToNewsDetail(news)">
-        <img :src="news.image" :alt="news.title" class="news-image">
+        <img :src="news.imageUrl" :alt="news.title" class="news-image">
         <div class="news-content">
           <p class="news-category">Công nghệ</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
-          <p class="news-date">{{ news.date }}</p>
-          <p class="news-excerpt">{{ news.excerpt }}</p>
+   
+          <p class="news-excerpt">{{ news.summary }}</p>
         </div>
       </div>
     </div>
@@ -41,127 +41,46 @@
 
 <script>
 import { useRouter } from 'vue-router'
+import newsService from '@/api/news/newsService'
 
 export default {
   name: 'ComNews',
   setup() {
-    // Sử dụng router để điều hướng đến trang chi tiết tin tức
     const router = useRouter()
     return { router }
   },
   data() {
     return {
-      // Biến lưu từ khóa tìm kiếm
       searchQuery: '',
-      // Mảng chứa tất cả các tin tức có sẵn
-      // Dữ liệu mẫu - trong thực tế sẽ được lấy từ API
-      allNewsItems: [
-        {
-          id: 1,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
-        
-        },
-        {
-          id: 2,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
-       
-        },
-        {
-          id: 3,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
-       
-        
-        },
-        {
-          id: 4,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI'
-        },
-        {
-          id: 5,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.'
-        },
-        {
-          id: 6,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.'
-        },
-        {
-          id: 7,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI'
-        },
-        {
-          id: 8,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.'
-        },
-        {
-          id: 9,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.'
-        }
-      ]
+      allNewsItems: [],
+      error: ''
+    }
+  },
+  async mounted() {
+    try {
+      const { data } = await newsService.getNews()
+      this.allNewsItems = data
+    } catch (e) {
+      this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
     }
   },
   computed: {
-    // Thuộc tính tính toán để lọc tin tức theo từ khóa tìm kiếm
     filteredNews() {
-      // Nếu không có từ khóa tìm kiếm, trả về tất cả tin tức
-      if (!this.searchQuery) {
-        return this.allNewsItems;
-      }
-      
-      // Chuyển từ khóa tìm kiếm thành chữ thường và loại bỏ khoảng trắng thừa
-      const searchTerm = this.searchQuery.toLowerCase().trim();
-      // Lọc tin tức dựa trên tiêu đề hoặc mô tả chứa từ khóa tìm kiếm
-      return this.allNewsItems.filter(news => {
-        return news.title.toLowerCase().includes(searchTerm) || 
-               news.excerpt.toLowerCase().includes(searchTerm);
-      });
+      if (!this.searchQuery) return this.allNewsItems
+      const searchTerm = this.searchQuery.toLowerCase().trim()
+      return this.allNewsItems.filter(news =>
+        news.title.toLowerCase().includes(searchTerm) ||
+        (news.summary && news.summary.toLowerCase().includes(searchTerm))
+      )
     }
   },
   methods: {
-    // Xử lý sự kiện khi người dùng nhập vào ô tìm kiếm
-    handleSearch() {
-      // Chức năng tìm kiếm đã được triển khai qua computed property filteredNews
-      console.log('Đang tìm kiếm:', this.searchQuery);
-    },
-    
-    // Xóa từ khóa tìm kiếm, hiển thị lại tất cả tin tức
-    clearSearch() {
-      this.searchQuery = '';
-    },
-    
-    // Chuyển hướng đến trang chi tiết tin tức khi người dùng click vào một bài viết
+    handleSearch() {},
+    clearSearch() { this.searchQuery = '' },
     goToNewsDetail(news) {
-      this.router.push({
-        path: `/tin-tuc/${news.id}`,
-        query: {
-          title: news.title,
-          // Các thông tin khác có thể được truyền qua query params
-          // date: news.date,
-          // image: news.image,
-          // excerpt: news.excerpt,
-          // author: news.author,
-          // views: news.views,
-          // shares: news.shares
-        }
-      })
-    }
+      this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
+    },
+   
   }
 }
 </script>
