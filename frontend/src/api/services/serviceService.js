@@ -2,10 +2,14 @@ import api from '../config';
 
 const serviceService = {
     // Lấy danh sách dịch vụ
-    async getServices() {
+    async getServices(params) {
         try {
-            const response = await api.get('/services');
-            return response.data.data || []; // Lấy data từ response
+            const response = await api.get('/services', { params });
+            return {
+                data: response.data.data || [],
+                pagination: response.data.pagination || null,
+                message: response.data.message || ''
+            };
         } catch (error) {
             console.error('Error fetching services:', error);
             throw error;
@@ -47,7 +51,7 @@ const serviceService = {
                     'Content-Type': 'application/json'
                 }
             });
-            return response.data.data;
+            return response.data;
         } catch (error) {
             console.error('Error updating service:', error);
             throw error;

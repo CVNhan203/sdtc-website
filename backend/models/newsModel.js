@@ -58,4 +58,16 @@ const newsSchema = new mongoose.Schema({
   },
 });
 
+// Virtual field để trả về URL ảnh đầy đủ cho frontend
+newsSchema.virtual('imageUrl').get(function() {
+  if (!this.image) return '';
+  // Nếu đã là URL tuyệt đối thì trả về luôn
+  if (this.image.startsWith('http')) return this.image;
+  // Nếu là đường dẫn tương đối, trả về dạng /uploads/news/abc.jpg
+  return `/uploads/${this.image.replace(/^uploads[\\/]/, '')}`;
+});
+
+newsSchema.set('toJSON', { virtuals: true });
+newsSchema.set('toObject', { virtuals: true });
+
 module.exports = mongoose.model("News", newsSchema);

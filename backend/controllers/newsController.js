@@ -34,11 +34,25 @@ exports.getNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ]);
 
+  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  const newsWithImageUrl = news.map(n => {
+    let imageUrl = '';
+    if (n.image) {
+      if (n.image.startsWith('http')) {
+        imageUrl = n.image;
+      } else {
+        const host = req.protocol + '://' + req.get('host');
+        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/');
+      }
+    }
+    return { ...n, imageUrl };
+  });
+
   const totalPages = Math.ceil(total / Number(limit));
 
   res.status(200).json({
     success: true,
-    data: news,
+    data: newsWithImageUrl,
     pagination: {
       total,
       totalPages,
@@ -63,9 +77,21 @@ exports.getNewsById = asyncHandler(async (req, res) => {
     throw new Error("Không tìm thấy bài viết");
   }
 
+  // Tự thêm trường imageUrl vào object trả về (URL tuyệt đối)
+  let imageUrl = '';
+  if (news.image) {
+    if (news.image.startsWith('http')) {
+      imageUrl = news.image;
+    } else {
+      const host = req.protocol + '://' + req.get('host');
+      imageUrl = host + '/' + news.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/');
+    }
+  }
+  const newsWithImageUrl = { ...news, imageUrl };
+
   res.status(200).json({
     success: true,
-    data: news,
+    data: newsWithImageUrl,
     message: "Lấy chi tiết bài viết thành công",
   });
 });
@@ -204,11 +230,7 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
-<<<<<<< HEAD
 });
 
 
 
-=======
-});
->>>>>>> 2fd7caca581ae5c94ef85499cf0a2df5b2367458

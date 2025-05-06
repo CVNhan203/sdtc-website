@@ -13,12 +13,6 @@ const {
 const adminOrStaffMiddleware = require("../middleware/adminOrStaffMiddleware");
 const authMiddleware = require("../middleware/authMiddleware");
 
-// Route upload ảnh
-router.post("/upload", upload.single("image"), (req, res) => {
-  // Trả về đường dẫn file ảnh vừa upload
-  res.json({ imagePath: req.file.path });
-});
-
 // Lấy danh sách bài viết (công khai)
 router.get("/", getNews);
 

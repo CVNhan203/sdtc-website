@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import bookingService from '@/api/booking/bookingService'
+
 export default {
   name: 'ComAdvise',
   data() {
@@ -65,13 +67,23 @@ export default {
         service: '',
         notes: '',
       },
+      success: '',
+      error: ''
     }
   },
   methods: {
-    submitForm() {
-      // Handle form submission here
-      console.log('Form submitted:', this.form)
-      // You can add API call here to send the form data to your backend
+    async submitForm() {
+      try {
+        // Gửi dữ liệu form lên backend (ví dụ: bookingService hoặc API liên hệ riêng)
+        await bookingService.createBooking(this.form)
+        this.success = 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm.'
+        this.error = ''
+        // Reset form nếu muốn
+        this.form = { name: '', phone: '', email: '', service: '', notes: '' }
+      } catch (e) {
+        this.error = 'Gửi liên hệ thất bại. Vui lòng thử lại.'
+        this.success = ''
+      }
     },
   },
 }
