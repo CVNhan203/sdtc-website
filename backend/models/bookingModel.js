@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bookingSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: [true, "Họ và tên là bắt buộc"],
+    required: [true, "Vui lòng nhập họ và tên"],
     trim: true,
     minlength: [5, "Họ và tên phải có ít nhất 3 ký tự"],
     maxlength: [50, "Họ và tên không được vượt quá 50 ký tự"],
@@ -11,7 +11,7 @@ const bookingSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: [true, "Số điện thoại là bắt buộc"],
+    required: [true, "Vui lòng nhập số điện thoại"],
     trim: true,
     validate: {
       validator: function (v) {
@@ -24,7 +24,7 @@ const bookingSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, "Email là bắt buộc"],
+    required: [true, "Vui lòng nhập email"],
     trim: true,
     lowercase: true,
     match: [
@@ -34,7 +34,7 @@ const bookingSchema = new mongoose.Schema({
   },
   service: {
     type: String,
-    required: [true, "Tên dịch vụ là bắt buộc"],
+    required: [true, "Vui lòng nhập tên dịch vụ"],
     trim: true,
     minlength: [3, "Tên dịch vụ phải có ít nhất 3 ký tự"],
     maxlength: [50, "Tên dịch vụ không được vượt quá 50 ký tự"],

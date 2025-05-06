@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const adminSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: [true, "Tên đầy đủ là bắt buộc"],
+    required: [true, "Vui lòng nhập tên đầy đủ"],
     unique: true,
     trim: true,
     minlength: [3, "Tên phải có ít nhất 3 ký tự"],
@@ -13,7 +13,7 @@ const adminSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, "Email là bắt buộc"],
+    required: [true, "Vui lòng nhập email"],
     unique: [true, "Email đã được sử dụng"],
     trim: true,
     lowercase: true,
@@ -24,7 +24,7 @@ const adminSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Mật khẩu là bắt buộc"],
+    required: [true, "Vui lòng nhập mật khẩu"],
     minlength: [8, "Mật khẩu phải có ít nhất 8 ký tự"],
     validate: {
       validator: function (value) {
