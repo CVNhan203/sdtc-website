@@ -4,7 +4,7 @@ const paymentService = {
   // Lấy danh sách thanh toán
   async getPayments() {
     try {
-      const response = await api.get('/api/payments');
+      const response = await api.get('/payments');
       return response.data;
     } catch (error) {
       console.error('Error fetching payments:', error);
@@ -15,7 +15,7 @@ const paymentService = {
   // Tạo thanh toán mới
   async createPayment(paymentData) {
     try {
-      const response = await api.post('/api/payments/create', paymentData);
+      const response = await api.post('/payments/create', paymentData);
       return response.data;
     } catch (error) {
       console.error('Error creating payment:', error);
@@ -26,7 +26,7 @@ const paymentService = {
   // Xác nhận thanh toán
   async confirmPayment(paymentData) {
     try {
-      const response = await api.post('/api/payments/confirm', paymentData);
+      const response = await api.post('/payments/confirm', paymentData);
       return response.data;
     } catch (error) {
       console.error('Error confirming payment:', error);

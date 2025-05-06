@@ -28,14 +28,6 @@
               @input="handleSearch"
             />
           </div>
-
-          <!-- Dropdown lọc theo loại tin tức -->
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="tin-tuc">Tin tức</option>
-            <option value="su-kien">Sự kiện</option>
-            <option value="thong-bao">Thông báo</option>
-          </select>
         </div>
       </div>
 

@@ -24,21 +24,6 @@
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
             >
           </div>
-          
-          <select v-model="statusFilter" @change="applyFilters">
-            <option value="">Tất cả trạng thái</option>
-            <option value="pending">Chờ xử lý</option>
-            <option value="processing">Đang xử lý</option>
-            <option value="completed">Hoàn thành</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
-          
-          <select v-model="paymentFilter" @change="applyFilters">
-            <option value="">Tất cả TT thanh toán</option>
-            <option value="pending">Chờ thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-            <option value="failed">Thanh toán thất bại</option>
-          </select>
         </div>
       </div>
 

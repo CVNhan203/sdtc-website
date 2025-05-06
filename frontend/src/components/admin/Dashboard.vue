@@ -116,18 +116,6 @@
             <i class="fas fa-list"></i>
             <span>Danh sách thanh toán</span>
           </router-link>
-          <router-link
-            to="/admin/thanh-toan/phuong-thuc"
-            class="submenu-item"
-            active-class="active"
-          >
-            <i class="fas fa-money-bill"></i>
-            <span>Phương thức thanh toán</span>
-          </router-link>
-          <router-link to="/admin/thanh-toan/lich-su" class="submenu-item" active-class="active">
-            <i class="fas fa-history"></i>
-            <span>Lịch sử thanh toán</span>
-          </router-link>
         </div>
       </div>
 

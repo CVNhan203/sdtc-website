@@ -12,24 +12,7 @@
             @input="handleSearch"
           >
         </div>
-        
-        <select v-model="filterRole" @change="handleFilter">
-          <option value="">Tất cả vai trò</option>
-          <option value="admin">Quản trị viên</option>
-          <option value="staff">Nhân viên</option>
-        </select>
-
-        <select v-model="filterStatus" @change="handleFilter">
-          <option value="all">Tất cả trạng thái</option>
-          <option value="active">Đang hoạt động</option>
-          <option value="deleted">Đã xóa</option>
-        </select>
       </div>
-
-      <router-link to="/admin/accounts/add" class="add-btn">
-        <i class="fas fa-plus"></i>
-        Thêm tài khoản
-      </router-link>
     </div>
 
     <!-- Loading state -->

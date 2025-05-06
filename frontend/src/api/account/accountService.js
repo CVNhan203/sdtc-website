@@ -3,6 +3,37 @@ import axios from 'axios';
 const API_URL = process.env.VUE_APP_API_URL || 'http://localhost:3000/api';
 
 const accountService = {
+  // Helper function để thực hiện request
+  async apiRequest(method, url, data = null, options = {}) {
+    try {
+      const headers = this.authHeader();
+      const config = {
+        method,
+        url: `${API_URL}${url}`,
+        headers,
+        ...options
+      };
+      
+      if (data && method !== 'get') {
+        config.data = data;
+      }
+      
+      const response = await axios(config);
+      return {
+        success: true,
+        data: response.data.data || response.data,
+        message: response.data.message
+      };
+    } catch (error) {
+      console.error(`Error in ${method.toUpperCase()} ${url}:`, error);
+      return {
+        success: false,
+        message: error.response?.data?.message || `Lỗi khi gọi ${url}`,
+        error
+      };
+    }
+  },
+
   // Đăng nhập admin
   async login(credentials) {
     try {
@@ -40,110 +71,32 @@ const accountService = {
 
   // Lấy danh sách tài khoản staff
   async getAccounts() {
-    try {
-      const response = await axios.get(`${API_URL}/admin/staffs`, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data.data || []
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể tải danh sách tài khoản'
-      };
-    }
+    return this.apiRequest('get', '/admin/staffs');
   },
 
   // Lấy chi tiết một tài khoản
   async getAccountById(id) {
-    try {
-      const response = await axios.get(`${API_URL}/admin/staffs/${id}`, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể tải thông tin tài khoản'
-      };
-    }
+    return this.apiRequest('get', `/admin/staffs/${id}`);
   },
 
   // Tạo tài khoản mới
   async createAccount(accountData) {
-    try {
-      const response = await axios.post(`${API_URL}/admin/staffs`, accountData, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể tạo tài khoản'
-      };
-    }
+    return this.apiRequest('post', '/admin/staffs', accountData);
   },
 
   // Cập nhật tài khoản
   async updateAccount(id, accountData) {
-    try {
-      const response = await axios.put(`${API_URL}/admin/staffs/${id}`, accountData, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể cập nhật tài khoản'
-      };
-    }
+    return this.apiRequest('put', `/admin/staffs/${id}`, accountData);
   },
 
   // Xóa tài khoản (soft delete)
   async deleteAccount(id) {
-    try {
-      const response = await axios.delete(`${API_URL}/admin/staffs/${id}`, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        message: response.data?.message || 'Đã chuyển tài khoản vào thùng rác'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể xóa tài khoản'
-      };
-    }
+    return this.apiRequest('delete', `/admin/staffs/${id}`);
   },
 
   // Lấy thống kê dashboard
   async getDashboardStats() {
-    try {
-      const response = await axios.get(`${API_URL}/admin/dashboard`, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Không thể tải thống kê'
-      };
-    }
+    return this.apiRequest('get', '/admin/dashboard');
   },
 
   // Header xác thực
@@ -260,113 +213,67 @@ const accountService = {
     }
   },
 
-  // Get deleted accounts
+  // Lấy danh sách tài khoản đã xóa - Tạm thời dùng filter trong frontend
   async getDeletedAccounts() {
     try {
-      console.log('Fetching deleted accounts...');
-      const headers = this.authHeader();
-      console.log('Auth headers:', headers);
-      
-      const response = await axios.get(`${API_URL}/admin/staffs/deleted`, {
-        headers: headers,
-        validateStatus: function (status) {
-          return status < 500; // 接受任何小于500的状态码
-        }
-      });
-      
-      console.log('Raw API response:', response);
-      
-      if (response.status === 200) {
+      // Sử dụng query parameter thay vì path parameter, để tránh lỗi ObjectId
+      const response = await this.apiRequest('get', '/admin/staffs');
+      if (response.success) {
+        // Lọc tài khoản đã xóa (isDeleted = true) trên frontend
+        const deletedAccounts = response.data.filter(account => account.isDeleted === true);
         return {
           success: true,
-          data: response.data.data || []
-        };
-      } else {
-        return {
-          success: false,
-          message: response.data?.message || 'Failed to load deleted accounts'
+          data: deletedAccounts
         };
       }
+      return response;
     } catch (error) {
-      console.error('Detailed error:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      
       return {
         success: false,
-        message: error.response?.data?.message || 'Could not load deleted accounts',
-        error: error
+        message: 'Không thể tải danh sách tài khoản đã xóa',
+        error
       };
     }
   },
 
-  // Restore account
+  // Khôi phục tài khoản
   async restoreAccount(id) {
-    try {
-      const response = await axios.patch(`${API_URL}/admin/staffs/restore/${id}`, {}, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        data: response.data,
-        message: 'Account restored successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Could not restore account'
-      };
-    }
+    return this.apiRequest('patch', `/admin/staffs/restore/${id}`, {});
   },
 
-  // Restore multiple accounts
+  // Khôi phục nhiều tài khoản
   async restoreAccounts(ids) {
     try {
       await Promise.all(ids.map(id => this.restoreAccount(id)));
       return {
         success: true,
-        message: 'Accounts restored successfully'
+        message: 'Đã khôi phục tài khoản thành công'
       };
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Could not restore accounts'
+        message: error.message || 'Không thể khôi phục tài khoản'
       };
     }
   },
 
-  // Permanent delete account
+  // Xóa vĩnh viễn tài khoản
   async permanentDeleteAccount(id) {
-    try {
-      await axios.delete(`${API_URL}/admin/staffs/${id}/permanent`, {
-        headers: this.authHeader()
-      });
-      return {
-        success: true,
-        message: 'Account permanently deleted'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Could not delete account'
-      };
-    }
+    return this.apiRequest('delete', `/admin/staffs/${id}/permanent`);
   },
 
-  // Permanent delete multiple accounts
+  // Xóa vĩnh viễn nhiều tài khoản
   async permanentDeleteAccounts(ids) {
     try {
       await Promise.all(ids.map(id => this.permanentDeleteAccount(id)));
       return {
         success: true,
-        message: 'Accounts permanently deleted'
+        message: 'Đã xóa vĩnh viễn tài khoản thành công'
       };
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Could not delete accounts'
+        message: error.message || 'Không thể xóa vĩnh viễn tài khoản'
       };
     }
   }
