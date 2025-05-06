@@ -646,23 +646,6 @@ h1 {
   margin-top: 2rem;
 }
 
-/* .cta-button {
-  width: 170px;
-  height: 60px;
-  background: #265ff3;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-} */
-
 .avatar-group {
   display: flex;
   margin: 1rem 0;
