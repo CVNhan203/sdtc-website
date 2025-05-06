@@ -19,7 +19,7 @@ const adminSchema = new mongoose.Schema({
     lowercase: true,
     match: [
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Vui lòng nhập email hợp lệ (ví dụ: sanhdepchoai@gmail.com)",
+      "Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)",
     ],
   },
   password: {

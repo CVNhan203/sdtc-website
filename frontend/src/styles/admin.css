@@ -1,56 +1,65 @@
-/* Admin Unified CSS Styles */
+/* ==================================================
+   ADMIN UNIFIED CSS STYLES - CÁC KIỂU CSS THỐNG NHẤT CHO TRANG ADMIN
+   ================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
+/* ==================================================
+   1. BIẾN MÀU SẮC VÀ THIẾT LẬP CƠ BẢN
+   ================================================== */
 :root {
-  /* Color variables */
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #f1f5f9;
-  --secondary-hover: #e2e8f0;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  --success-color: #10b981;
-  --success-hover: #059669;
+  /* Các biến màu sắc chính */
+  --primary-color: #3b82f6; /* Màu chính */
+  --primary-hover: #2563eb; /* Màu chính khi hover */
+  --secondary-color: #f1f5f9; /* Màu phụ */
+  --secondary-hover: #e2e8f0; /* Màu phụ khi hover */
+  --danger-color: #ef4444; /* Màu cảnh báo */
+  --danger-hover: #dc2626; /* Màu cảnh báo khi hover */
+  --success-color: #10b981; /* Màu thành công */
+  --success-hover: #059669; /* Màu thành công khi hover */
 
-  /* Text colors */
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
+  /* Màu chữ */
+  --text-primary: #1e293b; /* Màu chữ chính */
+  --text-secondary: #64748b; /* Màu chữ phụ */
+  --text-tertiary: #94a3b8; /* Màu chữ thứ ba */
 
-  /* Border colors */
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
+  /* Màu viền */
+  --border-color: #e2e8f0; /* Màu viền cơ bản */
+  --border-hover: #cbd5e1; /* Màu viền khi hover */
 
-  /* Background colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
+  /* Màu nền */
+  --bg-primary: #ffffff; /* Màu nền chính (trắng) */
+  --bg-secondary: #f8fafc; /* Màu nền phụ thứ nhất */
+  --bg-tertiary: #f1f5f9; /* Màu nền phụ thứ hai */
 
-  /* Spacing variables */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 0.75rem;
-  --spacing-md: 1.25rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 2.5rem;
+  /* Khoảng cách - spacing */
+  --spacing-xs: 0.5rem; /* Khoảng cách rất nhỏ */
+  --spacing-sm: 0.75rem; /* Khoảng cách nhỏ */
+  --spacing-md: 1.25rem; /* Khoảng cách vừa */
+  --spacing-lg: 2rem; /* Khoảng cách lớn */
+  --spacing-xl: 2.5rem; /* Khoảng cách rất lớn */
 
-  /* Border radius */
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
+  /* Bo góc - border radius */
+  --border-radius-sm: 6px; /* Bo góc nhỏ */
+  --border-radius-md: 10px; /* Bo góc vừa */
+  --border-radius-lg: 14px; /* Bo góc lớn */
 
-  /* Shadow */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Đổ bóng - shadow */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05); /* Đổ bóng nhỏ */
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05); /* Đổ bóng vừa */
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng lớn */
 
-  /* Font sizes */
-  --font-size-xs: 16px;
-  --font-size-sm: 18px;
-  --font-size-md: 20px;
-  --font-size-lg: 22px;
-  --font-size-xl: 24px;
+  /* Kích thước chữ */
+  --font-size-xs: 16px; /* Cỡ chữ rất nhỏ */
+  --font-size-sm: 18px; /* Cỡ chữ nhỏ */
+  --font-size-md: 20px; /* Cỡ chữ vừa */
+  --font-size-lg: 22px; /* Cỡ chữ lớn */
+  --font-size-xl: 24px; /* Cỡ chữ rất lớn */
 }
 
+/* ==================================================
+   2. RESET VÀ THIẾT LẬP CHUNG
+   ================================================== */
+/* Reset CSS cơ bản */
 * {
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
@@ -58,6 +67,7 @@
   padding: 0;
 }
 
+/* Định dạng chung cho body */
 body {
   font-size: var(--font-size-md);
   line-height: 1.6;
@@ -65,7 +75,10 @@ body {
   background-color: var(--bg-secondary);
 }
 
-/* Common Layout Styles */
+/* ==================================================
+   3. LAYOUT VÀ CONTAINER
+   ================================================== */
+/* Kiểu dáng chung cho layout */
 .admin-container {
   background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
@@ -76,7 +89,10 @@ body {
   margin-bottom: var(--spacing-lg);
 }
 
-/* Header Actions */
+/* ==================================================
+   4. THANH CÔNG CỤ VÀ HEADER
+   ================================================== */
+/* Kiểu dáng phần header và thanh công cụ */
 .actions-header {
   display: flex;
   justify-content: space-between;
@@ -87,6 +103,7 @@ body {
   width: 100%;
 }
 
+/* Phần tìm kiếm và bộ lọc */
 .search-filter {
   display: flex;
   gap: var(--spacing-md);
@@ -96,12 +113,14 @@ body {
   align-items: center;
 }
 
+/* Hộp tìm kiếm */
 .search-box {
   position: relative;
   width: 60%;
   max-width: 400px;
 }
 
+/* Icon trong hộp tìm kiếm */
 .search-box i {
   position: absolute;
   left: var(--spacing-md);
@@ -110,6 +129,7 @@ body {
   color: var(--text-secondary);
 }
 
+/* Input tìm kiếm */
 .search-box input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
@@ -119,17 +139,20 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Hiệu ứng khi focus vào ô tìm kiếm */
 .search-box input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Hộp bộ lọc */
 .filter-box {
   width: 35%;
   max-width: 250px;
 }
 
+/* Select dropdown trong bộ lọc */
 .filter-box select {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -141,13 +164,17 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Hiệu ứng khi focus vào select */
 .filter-box select:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Table Styles */
+/* ==================================================
+   5. BẢNG DỮ LIỆU
+   ================================================== */
+/* Kiểu dáng bảng dữ liệu */
 .table-container {
   margin-top: var(--spacing-md);
   overflow-x: auto;
@@ -155,12 +182,14 @@ body {
   border: 1px solid var(--border-color);
 }
 
+/* Bảng dữ liệu */
 table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
 
+/* Ô và header của bảng */
 th,
 td {
   padding: var(--spacing-md);
@@ -169,6 +198,7 @@ td {
   vertical-align: middle;
 }
 
+/* Header của bảng */
 th {
   background: var(--bg-secondary);
   font-weight: 700;
@@ -179,12 +209,16 @@ th {
   white-space: nowrap;
 }
 
+/* Ô dữ liệu trong bảng */
 td {
   font-size: var(--font-size-md);
   color: var(--text-primary);
 }
 
-/* Image Containers */
+/* ==================================================
+   6. HÌNH ẢNH VÀ MEDIA
+   ================================================== */
+/* Khung chứa hình ảnh */
 .image-container {
   width: 60px;
   height: 60px;
@@ -195,6 +229,7 @@ td {
   justify-content: center;
 }
 
+/* Hình ảnh trong bảng */
 .item-image {
   width: 100%;
   height: 100%;
@@ -204,10 +239,12 @@ td {
   transition: transform 0.3s ease;
 }
 
+/* Hiệu ứng hover cho hình ảnh */
 .item-image:hover {
   transform: scale(1.1);
 }
 
+/* Kiểu dáng khi không có hình ảnh */
 .no-image {
   width: 100%;
   height: 100%;
@@ -220,11 +257,15 @@ td {
   color: #94a3b8;
 }
 
+/* Icon trong khung không có ảnh */
 .no-image i {
   font-size: 1.5rem;
 }
 
-/* Actions Buttons */
+/* ==================================================
+   7. NÚT VÀ HÀNH ĐỘNG
+   ================================================== */
+/* Khu vực nút hành động */
 .actions {
   display: flex;
   gap: var(--spacing-sm);
@@ -232,6 +273,7 @@ td {
   align-items: center;
 }
 
+/* Nút icon */
 .icon-btn {
   width: 40px;
   height: 40px;
@@ -245,56 +287,70 @@ td {
   font-size: 20px;
 }
 
+/* Hiệu ứng hover cho nút icon */
 .icon-btn:hover {
   transform: translateY(-2px);
 }
 
+/* Nút thông tin chi tiết */
 .icon-btn.info {
   background: #e0f2fe;
   color: #0369a1;
 }
 
+/* Hiệu ứng hover cho nút thông tin */
 .icon-btn.info:hover {
   background: #bae6fd;
 }
 
+/* Nút chỉnh sửa */
 .icon-btn.edit {
   background: var(--secondary-color);
   color: var(--text-secondary);
 }
 
+/* Hiệu ứng hover cho nút chỉnh sửa */
 .icon-btn.edit:hover {
   background: #e2e8f0;
 }
 
+/* Nút xóa */
 .icon-btn.delete {
   background: #fee2e2;
   color: var(--danger-hover);
 }
 
+/* Hiệu ứng hover cho nút xóa */
 .icon-btn.delete:hover {
   background: #fecaca;
 }
 
+/* Nút khôi phục */
 .icon-btn.restore {
   background: #dcfce7;
   color: #166534;
 }
 
+/* Hiệu ứng hover cho nút khôi phục */
 .icon-btn.restore:hover {
   background: #bbf7d0;
 }
 
+/* Nút xóa vĩnh viễn */
 .icon-btn.permanent-delete {
   background: #fee2e2;
   color: #991b1b;
 }
 
+/* Hiệu ứng hover cho nút xóa vĩnh viễn */
 .icon-btn.permanent-delete:hover {
   background: #fecaca;
 }
 
-/* Modal Styles */
+/* ==================================================
+   8. MODAL VÀ POPUP
+   ================================================== */
+/* Kiểu dáng cửa sổ modal */
 .modal {
   position: fixed;
   top: 0;
@@ -310,6 +366,7 @@ td {
   animation: modalFadeIn 0.3s ease;
 }
 
+/* Hiệu ứng xuất hiện cho modal */
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -321,6 +378,7 @@ td {
   }
 }
 
+/* Nội dung của modal */
 .modal-content {
   background: white;
   border-radius: 12px;
@@ -331,6 +389,7 @@ td {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Phần header của modal */
 .modal-header {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #e2e8f0;
@@ -341,6 +400,7 @@ td {
   border-radius: 12px 12px 0 0;
 }
 
+/* Tiêu đề modal */
 .modal-header h3 {
   margin: 0;
   font-size: 22px;
@@ -348,6 +408,7 @@ td {
   font-weight: 600;
 }
 
+/* Nút đóng modal */
 .close-btn {
   width: 32px;
   height: 32px;
@@ -362,16 +423,21 @@ td {
   transition: all 0.3s ease;
 }
 
+/* Hiệu ứng hover cho nút đóng */
 .close-btn:hover {
   background: #e2e8f0;
   color: #1e293b;
 }
 
+/* Phần body của modal */
 .modal-body {
   padding: 2rem;
 }
 
-/* Detail Items */
+/* ==================================================
+   9. THÔNG TIN CHI TIẾT
+   ================================================== */
+/* Các mục thông tin chi tiết */
 .detail-item {
   margin-bottom: 1rem;
   display: grid;
@@ -379,6 +445,7 @@ td {
   gap: 1rem;
 }
 
+/* Nhãn cho mục thông tin */
 .detail-item label {
   font-weight: 700;
   color: #64748b;
@@ -388,17 +455,22 @@ td {
   justify-content: center;
 }
 
+/* Nội dung thông tin chi tiết */
 .detail-item p {
   margin: 0;
 }
 
-/* Form Elements */
+/* ==================================================
+   10. FORM VÀ INPUT
+   ================================================== */
+/* Nhóm form input */
 .form-group {
   margin-bottom: var(--spacing-lg);
   display: flex;
   flex-direction: column;
 }
 
+/* Nhãn cho input */
 .form-group label {
   display: block;
   margin-bottom: var(--spacing-sm);
@@ -407,6 +479,7 @@ td {
   text-align: left;
 }
 
+/* Các trường nhập liệu */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -418,6 +491,7 @@ td {
   transition: all 0.3s ease;
 }
 
+/* Hiệu ứng focus cho trường nhập liệu */
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -426,20 +500,13 @@ td {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Textareas */
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-.error-message {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-/* Form validation */
+/* Thông báo lỗi trong form */
 .form-group .error-message {
   background: transparent;
   color: #ef4444;
@@ -448,18 +515,20 @@ td {
   font-size: 0.875rem;
 }
 
+/* Trường nhập liệu có lỗi */
 .form-group input.error,
 .form-group select.error,
 .form-group textarea.error {
   border-color: #ef4444;
 }
 
+/* Dấu hiệu trường bắt buộc */
 .form-group .required {
   color: #ef4444;
   margin-left: 0.25rem;
 }
 
-/* Form Actions */
+/* Khu vực nút hành động trong form */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -467,6 +536,7 @@ td {
   margin-top: var(--spacing-xl);
 }
 
+/* Nút trong form */
 .form-actions button {
   padding: 1rem 1.75rem;
   border: none;
@@ -481,47 +551,46 @@ td {
   gap: var(--spacing-sm);
 }
 
+/* ==================================================
+   11. CÁC LOẠI NÚT HÀNH ĐỘNG
+   ================================================== */
+/* Nút hủy */
 .cancel-btn {
   background: var(--secondary-color);
   color: var(--text-secondary);
 }
 
+/* Hiệu ứng hover cho nút hủy */
 .cancel-btn:hover {
   background: var(--secondary-hover);
 }
 
+/* Nút gửi/xác nhận */
 .submit-btn {
   background: var(--primary-color);
   color: white;
 }
 
+/* Hiệu ứng hover cho nút gửi */
 .submit-btn:hover {
   background: var(--primary-hover);
 }
 
+/* Nút xóa */
 .delete-btn {
   background: var(--danger-color);
   color: white;
 }
 
+/* Hiệu ứng hover cho nút xóa */
 .delete-btn:hover {
   background: var(--danger-hover);
 }
-.badge {
-  position: absolute;
-  right: 10px;
-  background: var(--danger-color);
-  color: white;
-  font-size: 1 rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 9999px;
-  min-width: 18px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* Status Badges */
+
+/* ==================================================
+   12. NHÃN TRẠNG THÁI
+   ================================================== */
+/* Nhãn trạng thái */
 .status-badge {
   padding: 0.25rem 0.1rem;
   border-radius: 50px;
@@ -530,47 +599,58 @@ td {
   display: inline-block;
 }
 
+/* Trạng thái hoạt động */
 .status-badge.active {
   background: #dcfce7;
   color: #166534;
 }
 
+/* Trạng thái không hoạt động */
 .status-badge.inactive {
   background: #fee2e2;
   color: #991b1b;
 }
 
+/* Trạng thái đang chờ */
 .status-badge.pending {
   background: #fef3c7;
   color: #92400e;
 }
 
+/* Trạng thái đang xử lý */
 .status-badge.processing {
   background: #e0f2fe;
   color: #0369a1;
 }
 
+/* Trạng thái hoàn thành */
 .status-badge.completed {
   background: #dcfce7;
   color: #166534;
 }
 
+/* Trạng thái đã hủy */
 .status-badge.cancelled {
   background: #fee2e2;
   color: #991b1b;
 }
 
+/* Trạng thái đã thanh toán */
 .status-badge.paid {
   background: #dcfce7;
   color: #166534;
 }
 
+/* Trạng thái thất bại */
 .status-badge.failed {
   background: #fee2e2;
   color: #991b1b;
 }
 
-/* Warning Text */
+/* ==================================================
+   13. CẢNH BÁO VÀ THÔNG BÁO
+   ================================================== */
+/* Văn bản cảnh báo */
 .warning-text {
   color: #dc2626;
   background: #fee2e2;
@@ -584,17 +664,31 @@ td {
   border-left: 4px solid #dc2626;
 }
 
+/* Icon cảnh báo */
 .warning-text::before {
   content: '⚠️';
 }
 
-/* Loading & Error States */
+/* Thông báo lỗi */
+.error-message {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* ==================================================
+   14. TRẠNG THÁI LOADING VÀ LỖI
+   ================================================== */
+/* Trạng thái đang tải và lỗi */
 .loading-container,
 .error-container {
   text-align: center;
   padding: 2rem;
 }
 
+/* Hiệu ứng quay tải */
 .loading-spinner {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3b82f6;
@@ -605,6 +699,7 @@ td {
   margin: 0 auto 1rem;
 }
 
+/* Hiệu ứng quay cho spinner */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -614,11 +709,13 @@ td {
   }
 }
 
+/* Thông báo lỗi */
 .error-message {
   color: #dc2626;
   margin-bottom: 1rem;
 }
 
+/* Nút thử lại */
 .retry-btn {
   padding: 0.75rem 1.5rem;
   background: #3b82f6;
@@ -629,1602 +726,41 @@ td {
   transition: all 0.3s ease;
 }
 
+/* Hiệu ứng hover cho nút thử lại */
 .retry-btn:hover {
   background: #2563eb;
 }
 
-/* Custom Scrollbar */
+/* ==================================================
+   15. TÙY CHỈNH THANH CUỘN
+   ================================================== */
+/* Tùy chỉnh thanh cuộn */
+/* thanh cuộn có thể kéo để thay đổi kích cỡ. */
 .table-container::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.table-container::-webkit-scrollbar-track,
+/* Track của thanh cuộn */
+/* không gian trống bên dưới thanh tiến trình. */
+.table-container::-webkit-scrollbar-track, 
 .modal-content::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
+/* Thumb của thanh cuộn */
+/* phần tử cuộn có thể kéo để thay đổi kích cỡ. */
 .table-container::-webkit-scrollbar-thumb,
 .modal-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 
+/* Hiệu ứng hover cho thanh cuộn */
+/* khi di chuột qua thanh cuộn. */
 .table-container::-webkit-scrollbar-thumb:hover,
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-
-/* Responsive Design */
-@media (max-width: 1280px) {
-  .search-filter {
-    max-width: 100%;
-  }
-
-  /* Adjust table for larger tablets and small laptops */
-  .table-container {
-    overflow-x: auto;
-  }
-
-  /* Adjust grid layouts */
-  .detail-item {
-    grid-template-columns: 130px 1fr;
-  }
-
-  /* Content area padding adjustments */
-  .content-area {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 1024px) {
-  /* Adjust admin container padding */
-  .admin-container {
-    padding: 1.25rem;
-  }
-
-  /* Adjust modal width */
-  .modal-content {
-    max-width: 90%;
-  }
-
-  /* Header adjustments */
-  .top-header {
-    padding: 1rem 1.5rem;
-  }
-
-  .page-title {
-    font-size: 28px;
-  }
-
-  /* Sidebar width adjustments */
-  .sidebar {
-    width: 220px;
-  }
-
-  .sidebar-collapsed .sidebar {
-    width: 70px;
-  }
-
-  .sidebar-collapsed .main-content {
-    margin-left: 70px;
-  }
-}
-
-.search-filter select {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
-  background-color: white;
-  cursor: pointer;
-  min-width: 150px;
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-}
-
-.search-filter select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-filter select:hover {
-  border-color: var(--border-hover);
-}
-
-@media (max-width: 768px) {
-  .actions-header {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 10px;
-  }
-
-  .search-filter {
-    flex-wrap: nowrap;
-    min-width: fit-content;
-  }
-
-  .search-box {
-    width: 180px;
-    min-width: 120px;
-    flex-shrink: 1;
-  }
-
-  .search-filter select {
-    width: auto;
-    min-width: 120px;
-    flex-shrink: 0;
-  }
-
-  /* Adjust header padding to account for fixed toggle */
-  .top-header {
-    padding-left: 1rem;
-  }
-
-  /* Keep sidebar visible on larger mobile */
-  .sidebar {
-    transform: none !important;
-    width: 260px;
-    position: fixed;
-    height: 100%;
-    overflow-y: auto;
-  }
-
-  /* Content width adjustment */
-  .main-content {
-    width: calc(100% - 260px);
-    margin-left: 260px !important;
-  }
-}
-
-/* Hide sidebar on very small screens */
-@media (max-width: 576px) {
-  .sidebar {
-    transform: translateX(-100%) !important;
-    z-index: 1000;
-  }
-
-  .sidebar-open .sidebar {
-    transform: translateX(0) !important;
-  }
-
-  .main-content {
-    width: 100% !important;
-    margin-left: 0 !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-filter select {
-    min-width: 100px;
-    font-size: 0.8125rem;
-    padding: 0.5rem 0.75rem 0.5rem 0.5rem;
-    padding-right: 25px;
-    background-position: right 5px center;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Global dashboard layout fixes */
-  .dashboard-container {
-    overflow-x: hidden;
-  }
-
-  /* Improved mobile menu handling */
-  .mobile-overlay {
-    z-index: 999;
-  }
-
-  .sidebar {
-    z-index: 1000;
-    width: 100%;
-    transform: translateX(-100%);
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-  }
-
-  .sidebar-open .sidebar {
-    transform: translateX(0);
-  }
-
-  /* Content width fix for all pages */
-  .main-content {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0 !important;
-    padding: 0;
-  }
-
-  .sidebar-collapsed .main-content {
-    margin-left: 0 !important;
-  }
-
-  /* Common UI element fixes */
-  .actions-header {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .search-filter {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    width: auto;
-  }
-
-  .search-box {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Improved filter groups */
-  .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    width: auto;
-    margin-top: 0;
-  }
-
-  .filter-group select {
-    width: auto;
-    min-width: 120px;
-  }
-
-  /* Table overflow handling */
-  .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-bottom: 1rem;
-  }
-
-  table {
-    min-width: 100%;
-    white-space: nowrap;
-  }
-
-  th {
-    position: sticky;
-    top: 0;
-    background: var(--bg-secondary);
-    z-index: 1;
-  }
-
-  td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.875rem;
-  }
-
-  /* Modal improvements for mobile */
-  .modal-content {
-    width: 95%;
-    max-height: 90vh;
-    margin: 0 auto;
-  }
-
-  /* Form improvements */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .detail-item {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-  }
-
-  .detail-item label {
-    text-align: left;
-    margin-bottom: 0.25rem;
-    color: var(--text-secondary);
-  }
-
-  /* Fix action buttons spacing */
-  .form-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-
-  /* Service, News editing improvements */
-  .service-form .image-upload-container,
-  .news-form .image-upload-container {
-    padding: 1rem;
-  }
-
-  .image-preview {
-    width: 150px;
-    height: 150px;
-  }
-
-  /* Editor component fix for mobile */
-  .ql-editor {
-    min-height: 200px;
-    font-size: 0.95rem;
-  }
-
-  /* Admin profile handling */
-  .admin-profile {
-    padding: 0.375rem 0.75rem;
-  }
-
-  .admin-name {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Container adjustments */
-  .admin-container {
-    padding: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  /* Make content more compact */
-  .content-area {
-    padding: 0.75rem;
-  }
-
-  /* Single column filters on small devices */
-  .filter-group {
-    grid-template-columns: 1fr;
-  }
-
-  /* Table become more compact */
-  th,
-  td {
-    padding: 0.625rem 0.5rem;
-    font-size: 0.8125rem;
-  }
-
-  /* Status badges more compact */
-  .status-badge {
-    padding: 0.125rem 0.5rem;
-    font-size: 0.75rem;
-  }
-
-  /* Order ID and other long text handling */
-  .order-id,
-  .service-id,
-  .news-id {
-    max-width: 60px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  /* Action buttons better spacing */
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.375rem;
-  }
-
-  .icon-btn {
-    width: 30px;
-    height: 30px;
-  }
-
-  /* Form inputs larger touch targets */
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 0.75rem;
-    font-size: 1rem; /* Larger font for better touch */
-  }
-
-  /* Modal header more compact */
-  .modal-header {
-    padding: 0.75rem 1rem;
-  }
-
-  .modal-header h3 {
-    font-size: 1.125rem;
-  }
-
-  .modal-body {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Extreme optimization for tiny screens */
-  .admin-container,
-  .order-list,
-  .order-history,
-  .service-list,
-  .news-list,
-  .payment-list {
-    padding: 0.625rem;
-    border-radius: 6px;
-  }
-
-  .content-area {
-    padding: 0.5rem;
-  }
-
-  /* Header elements */
-  .page-title {
-    font-size: 1rem;
-  }
-
-  /* Even more compact tables */
-  th,
-  td {
-    padding: 0.5rem 0.375rem;
-    font-size: 0.75rem;
-  }
-
-  /* Simplified column display for critical data */
-  .table-meta-column {
-    display: none;
-  }
-
-  /* Super compact status badges */
-  .status-badge {
-    padding: 0.1rem 0.375rem;
-    font-size: 0.6875rem;
-  }
-
-  /* Better input fields */
-  .search-box input,
-  .form-group input,
-  .form-group select {
-    padding: 0.625rem;
-    font-size: 0.9375rem;
-  }
-
-  /* Full screen modals on tiny devices */
-  .modal-content {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    border-radius: 0;
-  }
-
-  /* Better detail viewing */
-  .detail-section h4 {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  /* Reduced action buttons for clarity */
-  .icon-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 0.75rem;
-  }
-
-  /* Fix specific components */
-  .news-content img,
-  .service-content img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-/* Common Class Fixes that apply to all admin components */
-.responsive-table {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.responsive-table table {
-  min-width: 800px;
-}
-
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 250px;
-}
-
-/* Fix all mobile layout issues for consistent UX */
-@media (max-width: 768px) {
-  .truncate-text {
-    max-width: 150px;
-  }
-
-  .responsive-hide {
-    display: none;
-  }
-
-  .responsive-width-full {
-    width: 100% !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .truncate-text {
-    max-width: 100px;
-  }
-}
-
-/* Print styles for reports */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-
-  .print-section,
-  .print-section * {
-    visibility: visible;
-  }
-
-  .print-section {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .table-container {
-    overflow: visible;
-    border: none;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    border: 1px solid #ddd;
-  }
-}
-/* span {
-  color: #ffffff;
-} */
-
-/* Image Upload Styles */
-.image-upload-container {
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 0.5rem;
-}
-
-.image-upload-container:hover {
-  border-color: #4299e1;
-}
-
-.image-preview {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  background-size: cover;
-  background-position: center;
-  border-radius: 8px;
-}
-
-.remove-image {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-button {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-button i {
-  font-size: 24px;
-  color: #718096;
-  margin-bottom: 8px;
-}
-
-.upload-button span {
-  display: block;
-  color: #718096;
-}
-
-.file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.upload-hint {
-  font-size: 0.875rem;
-  color: #718096;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Dashboard Layout */
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--bg-secondary);
-}
-
-/* Sidebar Styles */
-.sidebar {
-  width: 330px;
-  background: #2c3e50;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  z-index: 100;
-}
-
-.sidebar-collapsed .sidebar {
-  width: 80px;
-}
-
-.sidebar-header {
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-collapsed .sidebar-header {
-  justify-content: center;
-  padding: 1rem;
-}
-
-/* .logo {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-} */
-
-.sidebar-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-  white-space: nowrap;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-collapsed .sidebar-header h2 {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 1rem 0;
-  overflow-y: auto;
-}
-
-.nav-group {
-  margin-bottom: 0.5rem;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  /* cursor: pointer; */
-  /* transition: all 0.3s ease; */
-  /* color: #fff !important; */
-  /* text-decoration: none; */
-  /* border: none; */
-  /* background: none; */
-}
-
-.sidebar-collapsed .nav-item {
-  padding: 0.75rem;
-  justify-content: center;
-}
-
-.nav-item-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-  color: #fff;
-}
-
-.sidebar-collapsed .nav-item-content {
-  justify-content: center;
-}
-
-.nav-item i {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
-  color: #fff;
-}
-
-.nav-item span {
-  white-space: nowrap;
-  transition: opacity 0.3s ease;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
-  font-weight: 500;
-  color: #fff;
-}
-
-.nav-item.active .nav-item-content i,
-.nav-item:hover .nav-item-content i {
-  color: #fff;
-}
-
-.submenu {
-  margin: 10px 10px 10px 24px;
-  /* margin-left: 1rem;
-  padding-left: 1rem; */
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.sidebar-collapsed .submenu {
-  position: absolute;
-  left: 80px;
-  background: #34495e;
-  margin-left: 0;
-  padding: 0.5rem;
-  border-radius: 0 6px 6px 0;
-  min-width: 200px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  top: 0;
-  border-left: none;
-}
-
-.submenu-item {
-  display: flex;
-  align-items: center;
-  padding: 0.9rem 1.25rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  border-radius: 6px;
-  margin-bottom: 0.25rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.submenu-item i {
-  font-size: 1rem;
-  margin-right: 0.75rem;
-  width: 20px;
-  text-align: center;
-}
-
-.submenu-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.submenu-item.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  font-weight: 500;
-}
-
-.badge {
-  position: absolute;
-  right: 20px;
-  background: var(--danger-color);
-  color: white;
-  font-size: 15px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar-footer {
-  padding: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-collapsed .sidebar-footer {
-  padding: 1rem;
-}
-
-.logout-btn {
-  width: 100%;
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.sidebar-collapsed .logout-btn span {
-  display: none;
-}
-
-.logout-btn:hover {
-  background: var(--danger-color);
-}
-
-.logout-btn:active {
-  transform: translateY(1px);
-}
-
-/* Main Content Styles */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  transition: all 0.3s ease;
-  margin-left: 0;
-}
-
-.sidebar-collapsed .main-content {
-  margin-left: 80px;
-}
-
-.top-header {
-  background: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.menu-toggle {
-  display: none !important;
-  visibility: hidden;
-}
-
-.page-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.admin-profile {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 1rem;
-  background: var(--bg-secondary);
-  border-radius: 50px;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.admin-name {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.content-area {
-  padding: 2rem;
-  flex: 1;
-  overflow-y: auto;
-}
-
-/* Mobile Overlay */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-open .mobile-overlay {
-  display: block;
-  opacity: 1;
-}
-
-/* Login Page Styles */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem;
-}
-
-.login-form {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2.5rem;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
-  width: 100%;
-  max-width: 420px;
-  backdrop-filter: blur(10px);
-}
-
-.form-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.form-header h2 {
-  color: var(--text-primary);
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.form-header p {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-
-.input-container i {
-  position: absolute;
-  left: 1rem;
-  color: var(--text-tertiary);
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
-}
-
-.input-container.error-container i {
-  color: var(--danger-color);
-}
-
-.login-button {
-  width: 100%;
-  padding: 0.875rem;
-  background: linear-gradient(to right, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.login-button:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.login-button:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.loading-text {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Login page responsive styles */
-@media (max-width: 480px) {
-  .login-form {
-    padding: 1.5rem;
-    margin: 0.5rem;
-  }
-
-  .form-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .form-header p {
-    font-size: 0.875rem;
-  }
-
-  .login-button {
-    padding: 0.75rem;
-  }
-}
-
-/* Order Management Specific Styles */
-.order-list,
-.order-history {
-  width: 100%;
-}
-
-/* Filter Group Style */
-.filter-group {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.filter-group select {
-  min-width: 180px;
-  padding: 0.75rem var(--spacing-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-group select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Date formatting in tables */
-.date-cell {
-  min-width: 120px;
-}
-
-.date-time {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.date-part {
-  font-weight: 600;
-}
-
-.time-part {
-  font-size: var(--font-size-xs);
-  color: var(--text-secondary);
-}
-
-/* No data message */
-.no-data {
-  padding: var(--spacing-lg) !important;
-  text-align: center;
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-/* Order info modal */
-.detail-modal {
-  max-width: 700px;
-}
-
-.detail-section {
-  margin-bottom: var(--spacing-lg);
-}
-
-.detail-section h4 {
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-primary);
-}
-
-.date-time-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.notes {
-  background-color: var(--bg-secondary);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  white-space: pre-line;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
-}
-
-/* Order Responsive Styles */
-@media (max-width: 1280px) {
-  /* Adjustments for order tables */
-  .date-time {
-    min-width: 100px;
-  }
-}
-
-@media (max-width: 1024px) {
-  /* Table tweaks for orders */
-  .date-cell {
-    min-width: 100px;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Order management responsive */
-  .order-list .actions-header,
-  .order-history .actions-header {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .order-list .search-filter,
-  .order-history .search-filter {
-    flex-direction: row;
-    width: auto;
-  }
-
-  .order-list .filter-group,
-  .order-history .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-    width: auto;
-    margin-top: 0;
-  }
-
-  .order-list .filter-group select,
-  .order-history .filter-group select {
-    min-width: 130px;
-    width: auto;
-    padding: 0.625rem var(--spacing-sm);
-  }
-
-  /* Table scroll for mobile */
-  .order-list .table-container,
-  .order-history .table-container {
-    margin-top: var(--spacing-md);
-    overflow-x: auto;
-  }
-
-  /* Make sure headers stick */
-  .order-list th,
-  .order-history th {
-    position: sticky;
-    top: 0;
-    background: var(--bg-secondary);
-    z-index: 1;
-  }
-
-  /* Date formatter */
-  .date-time {
-    min-width: 80px;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Mobile optimizations for order pages */
-  .filter-group {
-    margin-top: 0;
-  }
-
-  /* Keep status selects in a row on mobile */
-  .order-list .filter-group,
-  .order-history .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .order-list .filter-group select,
-  .order-history .filter-group select {
-    min-width: 110px;
-    width: auto;
-  }
-
-  /* Order ID formatting */
-  .order-id {
-    font-size: var(--font-size-xs);
-    max-width: 80px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Modal adjustments for order details */
-  .detail-modal {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Deep mobile optimizations */
-  .order-list .search-box input,
-  .order-history .search-box input {
-    font-size: var(--font-size-xs);
-    padding: 0.625rem 0.75rem 0.625rem 2rem;
-  }
-
-  .filter-group select {
-    font-size: var(--font-size-xs);
-    padding: 0.5rem 0.75rem;
-  }
-
-  /* Make modals take up full screen on very small devices */
-  .detail-modal.modal-content {
-    border-radius: 0;
-    max-height: 100vh;
-    height: 100%;
-  }
-
-  /* Order history specific layout fixes */
-  .order-history .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 0;
-    width: auto;
-  }
-
-  .order-history .search-filter {
-    width: auto;
-    flex-direction: row;
-  }
-
-  .order-history .table-container {
-    margin-top: 1rem;
-  }
-}
-
-/* Mobile menu improvements */
-.sidebar-toggle-button {
-  display: none !important;
-  visibility: hidden;
-}
-
-@media (max-width: 768px) {
-  /* Adjust header padding to account for fixed toggle */
-  .top-header {
-    padding-left: 1rem;
-  }
-}
-
-@media (max-width: 380px) {
-  /* Super compact mode for ultra small screens */
-  .admin-container {
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .content-area {
-    padding: 0.375rem;
-  }
-
-  /* Extreme table cell optimization */
-  th,
-  td {
-    padding: 0.375rem;
-    font-size: 0.6875rem;
-  }
-
-  /* Even smaller action buttons */
-  .icon-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 0.625rem;
-  }
-
-  /* Optimize badges */
-  .status-badge {
-    padding: 0.0625rem 0.25rem;
-    font-size: 0.625rem;
-  }
-
-  /* Force horizontal scroll on tables to see all data */
-  .responsive-table {
-    overflow-x: scroll;
-  }
-
-  /* Force some critical elements to have minimum width */
-  .truncate-text {
-    max-width: 70px;
-  }
-
-  /* Optimized filter fields */
-  .filter-group select,
-  .search-box input {
-    font-size: 0.75rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  /* Better modal on tiny screens */
-  .modal-header h3 {
-    font-size: 0.9375rem;
-  }
-
-  .modal-body {
-    padding: 0.75rem;
-  }
-
-  /* Force single column in any case */
-  .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-}
-
-/* Fix all components to have consistent filter layout */
-.search-filter,
-.filter-group {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.filter-box,
-.filter-group {
-  margin-left: auto;
-}
-
-/* Ensure filters stay horizontal on mobile */
-@media (max-width: 768px) {
-  .search-filter,
-  .filter-group {
-    flex-direction: row !important;
-    width: auto !important;
-  }
-
-  .actions-header {
-    flex-direction: row !important;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .service-list .actions-header,
-  .news-list .actions-header,
-  .payment-list .actions-header {
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .service-list .search-filter,
-  .news-list .search-filter,
-  .payment-list .search-filter {
-    flex-direction: row !important;
-    width: auto !important;
-  }
-
-  .service-list .filter-group,
-  .news-list .filter-group,
-  .payment-list .filter-group {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0 !important;
-    width: auto !important;
-  }
-
-  .service-list .filter-group select,
-  .news-list .filter-group select,
-  .payment-list .filter-group select {
-    width: auto !important;
-    min-width: 120px !important;
-  }
-
-  /* Fix for the mobile view showing in the screenshot */
-  .search-box {
-    width: auto !important;
-    min-width: 150px !important;
-  }
-
-  .filter-group select {
-    width: auto !important;
-    min-width: unset !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .search-filter,
-  .filter-group {
-    flex-direction: row !important;
-    width: auto !important;
-  }
-
-  .service-list .filter-group select,
-  .news-list .filter-group select,
-  .payment-list .filter-group select {
-    min-width: 100px !important;
-  }
-
-  .search-box {
-    min-width: 130px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-filter,
-  .filter-group {
-    flex-direction: row !important;
-    width: auto !important;
-    gap: 0.375rem !important;
-  }
-
-  .service-list .filter-group select,
-  .news-list .filter-group select,
-  .payment-list .filter-group select {
-    min-width: 90px !important;
-    font-size: 0.75rem !important;
-    padding: 0.375rem 0.5rem !important;
-  }
-
-  .search-box {
-    min-width: 110px !important;
-  }
-}
-
-@media (max-width: 380px) {
-  .search-filter,
-  .filter-group {
-    flex-direction: row !important;
-    gap: 0.25rem !important;
-  }
-
-  .service-list .filter-group select,
-  .news-list .filter-group select,
-  .payment-list .filter-group select {
-    min-width: 80px !important;
-    font-size: 0.7rem !important;
-    padding: 0.25rem !important;
-  }
-
-  .search-box {
-    min-width: 100px !important;
-  }
-
-  .search-box input {
-    padding-left: 2rem !important;
-    font-size: 0.75rem !important;
-  }
-}
-
-/* Mobile media queries */
-@media (max-width: 768px) {
-  :root {
-    --font-size-xs: 15px;
-    --font-size-sm: 16px;
-    --font-size-md: 18px;
-    --font-size-lg: 20px;
-    --font-size-xl: 22px;
-  }
-
-  body {
-    font-size: var(--font-size-md);
-  }
-
-  .table-container {
-    overflow-x: auto;
-  }
-
-  table {
-    min-width: 800px;
-  }
-
-  .icon-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-
-  .page-title {
-    font-size: 24px;
-  }
-
-  .modal-header h3 {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 576px) {
-  :root {
-    --font-size-xs: 14px;
-    --font-size-sm: 15px;
-    --font-size-md: 16px;
-    --font-size-lg: 18px;
-    --font-size-xl: 20px;
-
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-  }
-
-  .form-actions button {
-    padding: 0.75rem 1.25rem;
-    min-width: 120px;
-  }
-
-  .page-title {
-    font-size: 22px;
-  }
-
-  .icon-btn {
-    width: 34px;
-    height: 34px;
-  }
-
-  .modal-body {
-    padding: 1.5rem;
-  }
-
-  .admin-container {
-    padding: 1rem;
-  }
 }

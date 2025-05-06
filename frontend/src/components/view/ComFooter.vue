@@ -236,25 +236,143 @@ export default {
   border-radius: 8px;
 }
 
-@media (max-width: 1200px) {
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .footer-container {
+    gap: 30px;
+    padding: 0 20px;
   }
 
-  .company-info {
-    grid-column: 1 / -1;
-    max-width: none;
+  .description {
+    font-size: 18px;
+  }
+
+  .policy-info a {
+    font-size: 18px;
   }
 }
 
-@media (max-width: 768px) {
-  .footer-content {
-    grid-template-columns: 1fr;
+@media screen and (max-width: 992px) {
+  .footer-container {
+    gap: 20px;
+  }
+
+  .company-info,
+  .contact-info,
+  .policy-info,
+  .map-container {
+    flex: 1 1 45%;
+    min-width: 300px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .social-links {
+    gap: 25px;
+  }
+
+  .social-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-footer {
+    padding: 30px 15px;
+  }
+
+  .footer-container {
+    gap: 15px;
+  }
+
+  .company-info,
+  .contact-info,
+  .policy-info,
+  .map-container {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .logo img {
+    width: 120px;
+  }
+
+  .description {
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .contact-item {
+    margin-bottom: 12px;
+  }
+
+  .policy-info a {
+    font-size: 15px;
   }
 
   .map-container iframe {
-    height: 250px;
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-footer {
+    padding: 20px 10px;
+  }
+
+  .footer-container {
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 100px;
+  }
+
+  .description {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .social-links {
+    gap: 20px;
+  }
+
+  .social-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .contact-item {
+    margin-bottom: 10px;
+  }
+
+  .policy-info a {
+    font-size: 14px;
+  }
+
+  .map-container iframe {
+    height: 160px;
   }
 }
 </style>

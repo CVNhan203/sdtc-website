@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import newsService from '@/api/news/newsService'
 import eventBus from '@/eventBus'
@@ -216,10 +216,12 @@ export default {
     const isSubmitting = ref(false)
     const showConfirmModal = ref(false)
     const originalData = ref(null)
+    const newsId = ref(null)
 
     // Computed properties
     const minDate = computed(() => {
       const today = new Date()
+      today.setMonth(today.getMonth() - 1) // Allow setting dates up to 1 month in the past
       return today.toISOString().split('T')[0]
     })
 
@@ -245,20 +247,30 @@ export default {
         formData.value.content?.trim() &&
         formData.value.type &&
         formData.value.author?.trim() &&
-        formData.value.publishedDate;
+        formData.value.publishedDate &&
+        (formData.value.image || imagePreview.value);
       
-      // Form hợp lệ khi có đầy đủ thông tin
-      return hasRequiredFields;
+      // Form hợp lệ khi có đầy đủ thông tin và không có lỗi
+      return hasRequiredFields && Object.keys(errors.value).length === 0;
     })
+
+    // Watch for route changes to reload data
+    watch(() => route.params.id, (newId) => {
+      if (newId && newId !== newsId.value) {
+        newsId.value = newId;
+        loadNews();
+      }
+    });
 
     // Methods
     const loadNews = async () => {
       try {
         console.log('Loading news data for ID:', route.params.id);
+        newsId.value = route.params.id;
         const response = await newsService.getNewsById(route.params.id)
         console.log('News data loaded:', response);
         
-        if (response.data) {
+        if (response && response.data) {
           const news = response.data
           
           // Initialize the form with the news data
@@ -289,6 +301,8 @@ export default {
           
           // Clear any existing errors
           errors.value = {}
+        } else {
+          throw new Error('Failed to load news data');
         }
       } catch (error) {
         console.error('Error loading news:', error)
@@ -336,6 +350,7 @@ export default {
       if (fileInput.value) {
         fileInput.value.value = ''
       }
+      errors.value.image = 'Vui lòng chọn ảnh cho tin tức'
     }
 
     const handleSubmit = async () => {
@@ -370,6 +385,7 @@ export default {
         // Nếu image là một chuỗi (đã có ảnh trước đó), sử dụng chuỗi đó
         if (typeof formData.value.image === 'string') {
           imageUrl = formData.value.image;
+          newsData.image = imageUrl;
         } 
         // Nếu có file ảnh mới, upload ảnh
         else if (formData.value.image instanceof File) {
@@ -382,11 +398,9 @@ export default {
             const uploadResponse = await newsService.uploadImage(imageFormData);
             console.log('Image upload response:', uploadResponse);
             
-            // Kiểm tra cấu trúc response để tránh lỗi
-            if (uploadResponse && uploadResponse.data && uploadResponse.data.imagePath) {
-              imageUrl = uploadResponse.data.imagePath;
-            } else if (uploadResponse && uploadResponse.imagePath) {
+            if (uploadResponse && uploadResponse.imagePath) {
               imageUrl = uploadResponse.imagePath;
+              newsData.image = imageUrl;
             } else {
               console.error('Invalid image upload response structure:', uploadResponse);
               eventBus.emit('show-toast', {
@@ -407,11 +421,6 @@ export default {
           }
         }
         
-        // Chỉ thêm trường image nếu có dữ liệu
-        if (imageUrl) {
-          newsData.image = imageUrl;
-        }
-
         console.log('Sending news data to update:', newsData);
         
         try {
@@ -419,18 +428,14 @@ export default {
           const response = await newsService.updateNews(route.params.id, newsData);
           console.log('Update response:', response);
 
-          if (response) {
-            // Hiển thị thông báo thành công
-            eventBus.emit('show-toast', {
-              type: 'success',
-              message: 'Tin tức đã được cập nhật thành công'
-            });
+          // Hiển thị thông báo thành công
+          eventBus.emit('show-toast', {
+            type: 'success',
+            message: 'Tin tức đã được cập nhật thành công'
+          });
             
-            // Chuyển về trang danh sách
-            router.push('/admin/tin-tuc/danh-sach');
-          } else {
-            throw new Error('Không nhận được phản hồi từ server');
-          }
+          // Chuyển về trang danh sách
+          router.push('/admin/tin-tuc/danh-sach');
         } catch (updateError) {
           console.error('Error updating news:', updateError);
           eventBus.emit('show-toast', {
@@ -486,6 +491,10 @@ export default {
 
       if (!formData.value.publishedDate) {
         newErrors.publishedDate = 'Vui lòng chọn ngày đăng'
+      }
+
+      if (!formData.value.image && !imagePreview.value) {
+        newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
       }
 
       errors.value = newErrors
