@@ -66,7 +66,11 @@
                 <img :src="post.imageUrl" :alt="post.title" />
               </div>
               <div class="post-info">
+<<<<<<< HEAD
                 <div class="post-date">{{ formatDate(post.publishedDate) }}</div>
+=======
+                <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>
+>>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
                 <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
@@ -75,16 +79,14 @@
       </div>
     </div>
 
-    <!-- Nút điều hướng giữa các bài viết -->
+    <!-- Navigation Buttons -->
     <div class="post-navigation">
-      <div class="navigation-container">
-        <button @click="goToPreviousPost" class="nav-button prev-button">
-          <i class="fas fa-arrow-left"></i> Bài viết trước
-        </button>
-        <button @click="goToNextPost" class="nav-button next-button">
-          Bài viết sau <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
+      <button @click="goToPreviousPost" class="nav-button prev-button">
+        <i class="fas fa-arrow-left"></i> Bài viết trước
+      </button>
+      <button @click="goToNextPost" class="nav-button next-button">
+        Bài viết sau <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -139,6 +141,10 @@ export default {
         router.push(`/tin-tuc/${prevNews._id || prevNews.id}`)
       }
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
     const goToNextPost = () => {
       const currentId = route.params.id
       const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
@@ -149,6 +155,7 @@ export default {
       }
     }
 
+<<<<<<< HEAD
     function formatDate(dateStr) {
       if (!dateStr) return ''
       const d = new Date(dateStr)
@@ -156,6 +163,11 @@ export default {
     }
 
     onMounted(loadData)
+=======
+    onMounted(() => {
+      loadCurrentNews()
+    })
+>>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 
     return {
       searchQuery,
@@ -252,14 +264,12 @@ export default {
   flex-wrap: wrap;
 }
 
-/* Mỗi mục trong thông tin meta */
 .meta-item {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-/* Icon trong thông tin meta */
 .meta-item i {
   color: #004aad;
 }
@@ -287,25 +297,20 @@ export default {
   margin-bottom: 16px;
 }
 
-/* Phần điều hướng giữa các bài viết */
+/* Post Navigation */
 .post-navigation {
-  margin-bottom: 30px;
-  padding-top: 20px;
-  width: 100%;
-}
-
-/* Container cho các nút điều hướng */
-.navigation-container {
   display: flex;
   justify-content: space-between;
-  max-width: 100%;
-  width: calc(100% - 400px);
+  margin-top: 40px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
 }
 
-/* Style cho nút điều hướng */
 .nav-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 12px 24px;
   border-radius: 50px;
   background-color: rgba(237, 246, 255, 1);
@@ -317,29 +322,21 @@ export default {
   font-weight: 500;
 }
 
-/* Hiệu ứng hover cho nút điều hướng */
 .nav-button:hover {
   background-color: rgba(0, 74, 173, 0.1);
 }
 
-/* Nút bài viết trước */
 .prev-button {
   padding-left: 20px;
-  margin-right: auto;
 }
 
-/* Nút bài viết sau */
 .next-button {
   padding-right: 20px;
-  margin-left: auto;
 }
-
-/* Icon trong nút điều hướng */
 .nav-button i {
   margin: 0 8px;
 }
-
-/* Style cho thanh bên phải */
+/* Sidebar Styles */
 .sidebar {
   width: 360px;
   flex-shrink: 0;
@@ -359,9 +356,17 @@ export default {
   border: none;
   border-radius: 8px;
   font-size: 14px;
+<<<<<<< HEAD
   background: #4184f7;
+=======
+  background: #4285f4;
+>>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Placeholder cho ô tìm kiếm */
@@ -392,7 +397,6 @@ export default {
   justify-content: center;
 }
 
-/* Container cho phần bài viết gần đây */
 .recent-posts {
   background-color: #fff;
   border-radius: 8px;
@@ -401,14 +405,17 @@ export default {
   border: 1px solid #e0e0e0;
 }
 
-/* Tiêu đề của phần bài viết gần đây */
 .recent-posts h2 {
   font-size: 18px;
-  font-weight: 700px;
+  font-weight: 600;
   color: #262f5a;
   margin-bottom: 16px;
   padding-bottom: 8px;
+<<<<<<< HEAD
   color: rgba(31, 43, 108, 1);
+=======
+  border-bottom: 1px solid #f0f0f0;
+>>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 }
 
 /* Danh sách các bài viết gần đây */
@@ -425,6 +432,12 @@ export default {
   gap: 12px;
   cursor: pointer;
   padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 /* Style cho item cuối cùng không có border dưới */
@@ -435,8 +448,8 @@ export default {
 
 /* Container cho hình ảnh trong danh sách bài viết */
 .post-image {
-  width: 90px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
   border-radius: 5px;
   overflow: hidden;
@@ -458,14 +471,13 @@ export default {
 /* Style cho ngày đăng bài viết */
 .post-date {
   color: #159eec;
-  font-size: 16px;
+  font-size: 12px;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-/* Icon trong ngày đăng */
 .post-date i {
   font-size: 12px;
 }

@@ -243,12 +243,25 @@ export default {
     padding: 0 20px;
   }
 
-  .description {
-    font-size: 18px;
+
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.95rem;
   }
 
-  .policy-info a {
-    font-size: 18px;
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 1.1rem;
+  }
+
+  .social-icon {
+    font-size: 1.2rem;
+  }
+
+  .contact-item i {
+    font-size: 0.95rem;
   }
 }
 
@@ -265,8 +278,16 @@ export default {
     min-width: 300px;
   }
 
-  .description {
-    font-size: 16px;
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.9rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 1.05rem;
   }
 
   .social-links {
@@ -276,7 +297,12 @@ export default {
   .social-icon {
     width: 35px;
     height: 35px;
-    font-size: 18px;
+    font-size: 1.15rem;
+  }
+
+  .contact-item i {
+    font-size: 0.9rem;
+
   }
 }
 
@@ -300,26 +326,29 @@ export default {
   .logo img {
     width: 120px;
   }
-
-  .description {
-    font-size: 15px;
-    margin-bottom: 20px;
+  
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.85rem;
   }
 
   .contact-info h3,
   .policy-info h3,
   .map-container h3 {
-    font-size: 16px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    font-size: 1rem;
   }
 
   .contact-item {
     margin-bottom: 12px;
   }
 
-  .policy-info a {
-    font-size: 15px;
+  .contact-item i {
+    font-size: 0.85rem;
+  }
+
+  .social-icon {
+    font-size: 1.1rem;
   }
 
   .map-container iframe {
@@ -340,9 +369,24 @@ export default {
     width: 100px;
   }
 
-  .description {
-    font-size: 14px;
-    margin-bottom: 15px;
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.8rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 0.95rem;
+  }
+
+  .contact-item {
+    margin-bottom: 10px;
+  }
+
+  .contact-item i {
+    font-size: 0.8rem;
   }
 
   .social-links {
@@ -352,23 +396,7 @@ export default {
   .social-icon {
     width: 30px;
     height: 30px;
-    font-size: 16px;
-  }
-
-  .contact-info h3,
-  .policy-info h3,
-  .map-container h3 {
-    font-size: 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-
-  .contact-item {
-    margin-bottom: 10px;
-  }
-
-  .policy-info a {
-    font-size: 14px;
+    font-size: 1rem;
   }
 
   .map-container iframe {
