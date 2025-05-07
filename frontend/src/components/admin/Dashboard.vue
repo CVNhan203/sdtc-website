@@ -101,20 +101,24 @@
         </div>
       </div>
 
-      <!-- Quản lý Thanh toán chỉ hiển thị cho admin -->
+      <!-- Quản lý Đặt lịch chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isPaymentMenuActive }" @click="togglePaymentMenu">
+        <div class="nav-item" :class="{ active: isBookingMenuActive }" @click="toggleBookingMenu">
           <div class="nav-item-content">
-            <i class="fas fa-credit-card"></i>
-            <span>Quản lý Thanh toán</span>
+            <i class="fas fa-calendar-check"></i>
+            <span>Quản lý Đặt lịch</span>
           </div>
-          <i class="fas" :class="isPaymentMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          <i class="fas" :class="isBookingMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
         </div>
 
-        <div class="submenu" v-show="isPaymentMenuOpen">
-          <router-link to="/admin/thanh-toan/danh-sach" class="submenu-item" active-class="active">
+        <div class="submenu" v-show="isBookingMenuOpen">
+          <router-link to="/admin/dat-lich/danh-sach" class="submenu-item" active-class="active">
             <i class="fas fa-list"></i>
-            <span>Danh sách thanh toán</span>
+            <span>Danh sách đặt lịch</span>
+          </router-link>
+          <router-link to="/admin/dat-lich/cho-xu-ly" class="submenu-item" active-class="active">
+            <i class="fas fa-clock"></i>
+            <span>Đặt lịch chờ xử lý</span>
           </router-link>
         </div>
       </div>
@@ -192,8 +196,8 @@ export default {
       isServiceMenuOpen: false,
       isNewsMenuOpen: false,
       isOrderMenuOpen: false,
-      isPaymentMenuOpen: false,
       isAccountMenuOpen: false,
+      isBookingMenuOpen: false,
       deletedServicesCount: 0,
       userRole: 'admin', // Mặc định là admin
       // deletedNewsCount: 0,
@@ -236,9 +240,9 @@ export default {
         'don-hang/danh-sach': 'Danh sách đơn hàng',
         'don-hang/cho-duyet': 'Đơn hàng chờ duyệt',
         'don-hang/lich-su': 'Lịch sử đơn hàng',
-        'thanh-toan/danh-sach': 'Danh sách thanh toán',
-        'thanh-toan/phuong-thuc': 'Phương thức thanh toán',
-        'thanh-toan/lich-su': 'Lịch sử thanh toán'
+        'thanh-toan/danh-sach': 'Quản lý thanh toán',
+        'dat-lich/danh-sach': 'Danh sách đặt lịch',
+        'dat-lich/cho-xu-ly': 'Đặt lịch chờ xử lý'
       };
 
       // Tìm route phù hợp
@@ -255,13 +259,13 @@ export default {
       return this.$route.path.includes('/admin/tin-tuc')
     },
     isOrderMenuActive() {
-      return this.$route.path.includes('/admin/don-hang')
-    },
-    isPaymentMenuActive() {
-      return this.$route.path.includes('/admin/thanh-toan')
+      return this.$route.path.includes('/admin/don-hang') || this.$route.path.includes('/admin/thanh-toan')
     },
     isAccountMenuActive() {
       return this.$route.path.includes('/admin/tai-khoan')
+    },
+    isBookingMenuActive() {
+      return this.$route.path.includes('/admin/dat-lich')
     },
     isDashboardActive() {
       return this.$route.path === '/admin/dashboard'
@@ -289,11 +293,11 @@ export default {
     toggleOrderMenu() {
       this.isOrderMenuOpen = !this.isOrderMenuOpen
     },
-    togglePaymentMenu() {
-      this.isPaymentMenuOpen = !this.isPaymentMenuOpen
-    },
     toggleAccountMenu() {
       this.isAccountMenuOpen = !this.isAccountMenuOpen
+    },
+    toggleBookingMenu() {
+      this.isBookingMenuOpen = !this.isBookingMenuOpen;
     },
     closeMobileMenu() {
       this.isSidebarOpen = false
@@ -374,6 +378,9 @@ export default {
   display: flex;
   min-height: 100vh;
   background-color: var(--bg-secondary);
+  /* Đảm bảo container chiếm toàn bộ viewport */
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Sidebar Styles */
@@ -385,6 +392,12 @@ export default {
   flex-direction: column;
   transition: all 0.3s ease;
   z-index: 100;
+  /* Luôn cố định khi cuộn */
+  position: sticky;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: hidden;
 }
 
 .sidebar-collapsed .sidebar {
@@ -599,9 +612,11 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  transition: all 0.3s ease;
+  /* Đảm bảo main-content chiếm toàn bộ chiều cao và cuộn độc lập */
+  height: 100vh;
+  overflow: hidden;
   margin-left: 0;
+  overflow-y: hidden;
 }
 
 .sidebar-collapsed .main-content {
@@ -615,6 +630,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  /* Luôn cố định trên cùng */
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .header-left {
@@ -655,6 +674,7 @@ export default {
   padding: 2rem;
   flex: 1;
   overflow-y: auto;
+  height: 0;
 }
 
 /* Mobile Overlay */
@@ -727,6 +747,19 @@ export default {
 /* Add new styles for account management */
 .nav-item i.fa-users-cog {
   color: #fff;
+}
+
+/* Khi hover vào sidebar, chỉ sidebar cuộn */
+.sidebar:hover {
+  overflow-y: auto;
+}
+.sidebar:hover ~ .main-content {
+  overflow-y: hidden;
+}
+
+/* Khi hover vào main-content, chỉ main-content cuộn */
+.main-content:hover {
+  overflow-y: auto;
 }
 
 </style>

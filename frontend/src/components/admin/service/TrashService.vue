@@ -12,13 +12,6 @@
               @input="handleSearch"
             >
           </div>
-          
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="web">Website</option>
-            <option value="app">Ứng dụng</option>
-            <option value="agency">Agency</option>
-          </select>
         </div>
         
         <button 
@@ -349,7 +342,7 @@ td:nth-child(1) {
 
 th:nth-child(2), 
 td:nth-child(2) {
-  width: 200px; /* ID */
+  width: 5%; /* ID */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

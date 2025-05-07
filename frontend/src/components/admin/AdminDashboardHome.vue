@@ -13,10 +13,6 @@
           <p class="stat-number">{{ stats.orders }}</p>
         </div>
         <div class="stat-card">
-          <h3>Thanh toán</h3>
-          <p class="stat-number">{{ stats.payments }}</p>
-        </div>
-        <div class="stat-card">
           <h3>Dịch vụ</h3>
           <p class="stat-number">{{ stats.services }}</p>
         </div>
@@ -42,7 +38,6 @@ export default {
     return {
       stats: {
         orders: 0,
-        payments: 0,
         services: 0,
         news: 0,
         bookings: 0,

@@ -857,7 +857,6 @@ export default {
 @import "@/styles/admin.css";
 
 /* Tùy chỉnh kiểu dáng cho ảnh tin tức */
-
 .image-container {
   width: 70px;
   height: 70px;
@@ -1225,5 +1224,80 @@ textarea:focus {
 
 .file-input {
   display: none;
+}
+
+/* Thêm styles mới cho actions */
+.actions-cell {
+  padding: 0.5rem !important;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.icon-btn i {
+  font-size: 14px;
+}
+
+.icon-btn.info {
+  background-color: #3498db;
+  color: white;
+}
+
+.icon-btn.info:hover {
+  background-color: #2980b9;
+}
+
+.icon-btn.edit {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.icon-btn.edit:hover {
+  background-color: #27ae60;
+}
+
+.icon-btn.delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.icon-btn.delete:hover {
+  background-color: #c0392b;
+}
+
+.icon-btn.restore {
+  background-color: #f1c40f;
+  color: white;
+}
+
+.icon-btn.restore:hover {
+  background-color: #f39c12;
+}
+
+.icon-btn.permanent-delete {
+  background-color: #c0392b;
+  color: white;
+}
+
+.icon-btn.permanent-delete:hover {
+  background-color: #962d22;
 }
 </style>

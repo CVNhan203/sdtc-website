@@ -334,18 +334,20 @@ export default {
 
     formatDate(date) {
       if (!date) return '';
-      
       try {
         const dateObj = new Date(date);
         if (isNaN(dateObj)) return '';
-        
-        return dateObj.toLocaleDateString('vi-VN', {
+        // Định dạng: dd/MM/yyyy - HH:mm
+        const datePart = dateObj.toLocaleDateString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit',
+          day: '2-digit'
+        });
+        const timePart = dateObj.toLocaleTimeString('vi-VN', {
           hour: '2-digit',
           minute: '2-digit'
-        }).replace(/,/g, ' -'); // Replace comma with dash between date and time
+        });
+        return `${datePart} - ${timePart}`;
       } catch (error) {
         console.error('Error formatting date:', error);
         return '';
@@ -626,6 +628,7 @@ export default {
 @import '@/styles/admin.css';
 
 /* Component specific overrides */
+
 .order-list {
   background: var(--bg-primary);
   border-radius: var(--border-radius-lg);
@@ -811,11 +814,7 @@ export default {
   text-align: center;
 }
 
-.actions {
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .icon-btn {
   display: inline-flex;

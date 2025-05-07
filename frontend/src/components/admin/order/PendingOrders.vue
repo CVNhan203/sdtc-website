@@ -19,7 +19,7 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã đơn hàng</th>
+              <!-- <th>Mã đơn hàng</th> -->
               <th>Tên khách hàng</th>
               <th>Số điện thoại</th>
               <th>Email</th>
@@ -31,7 +31,7 @@
           <tbody>
             <tr v-for="(order, index) in pendingOrders" :key="order._id">
               <td>{{ index + 1 }}</td>
-              <td>{{ order._id }}</td>
+              <!-- <td>{{ order._id }}</td> -->
               <td>{{ order.fullName }}</td>
               <td>{{ order.phone }}</td>
               <td>{{ order.email }}</td>
@@ -52,7 +52,7 @@
               </td>
             </tr>
             <tr v-if="pendingOrders.length === 0">
-              <td colspan="8" class="no-data">Không có đơn hàng nào chờ duyệt</td>
+              <td colspan="7" class="no-data">Không có đơn hàng nào chờ duyệt</td>
             </tr>
           </tbody>
         </table>
@@ -154,13 +154,24 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return new Date(date).toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      if (!date) return '';
+      try {
+        const dateObj = new Date(date);
+        if (isNaN(dateObj)) return '';
+        // Định dạng: dd/MM/yyyy - HH:mm
+        const datePart = dateObj.toLocaleDateString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        const timePart = dateObj.toLocaleTimeString('vi-VN', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        return `${datePart} - ${timePart}`;
+      } catch (error) {
+        return '';
+      }
     },
 
     async loadPendingOrders() {
@@ -257,7 +268,7 @@ td:nth-child(2) {
 
 th:nth-child(3), 
 td:nth-child(3) {
-  width: 150px; /* Tên khách hàng */
+  width: 130px; /* Tên khách hàng */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -270,7 +281,7 @@ td:nth-child(4) {
 
 th:nth-child(5), 
 td:nth-child(5) {
-  width: 180px; /* Email */
+  width: 150px; /* Email */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -283,18 +294,18 @@ td:nth-child(6) {
 
 th:nth-child(7), 
 td:nth-child(7) {
-  width: 120px; /* Ngày tạo */
+  width: 180px; /* Ngày tạo */
 }
 
 th:nth-child(8), 
 td:nth-child(8) {
-  width: 120px; /* Thao tác */
+  width: 140px; /* Thao tác */
   text-align: center;
 }
 
 .action-buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   justify-content: center;
   align-items: center;
 }

@@ -12,7 +12,6 @@ import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
 import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
 import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
-import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 import Home from '@/components/view/ComHome.vue'
@@ -25,7 +24,9 @@ import AdminDashboardHome from '../components/admin/AdminDashboardHome.vue'
 import AccountList from '../components/admin/account/AccountList.vue'
 import AddAccount from '../components/admin/account/AddAccount.vue'
 import EditAccount from '../components/admin/account/EditAccount.vue'
-import TrashAccount from '../components/admin/account/TrashAccount.vue'; // Import the TrashAccounts component
+import TrashAccount from '../components/admin/account/TrashAccount.vue'
+import BookingList from '@/components/admin/booking/BookingList.vue'
+import PendingBookings from '@/components/admin/booking/PendingBookings.vue'
 
 const routes = [
   // Public routes
@@ -148,12 +149,6 @@ const routes = [
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       { 
-        path: 'thanh-toan/danh-sach', 
-        name: 'AdminPaymentList', 
-        component: AdminPaymentList,
-        meta: { requiresAuth: true, requiresAdmin: true }
-      },
-      { 
         path: 'tai-khoan/danh-sach', 
         name: 'AccountList', 
         component: AccountList, 
@@ -175,6 +170,16 @@ const routes = [
         path: 'tai-khoan/thung-rac', 
         name: 'TrashAccount', 
         component: TrashAccount, 
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'dat-lich/danh-sach',
+        component: BookingList,
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'dat-lich/cho-xu-ly',
+        component: PendingBookings,
         meta: { requiresAuth: true, requiresAdmin: true }
       },
     ]
