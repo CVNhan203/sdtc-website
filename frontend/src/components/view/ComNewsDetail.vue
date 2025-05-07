@@ -12,36 +12,41 @@
       <!-- Nội dung chính của bài viết -->
       <div class="main-content">
         <h1 class="news-title">{{ currentNews.title }}</h1>
-        
+
         <!-- Thông tin meta của bài viết: ngày đăng, tác giả, lượt xem, chia sẻ -->
         <div class="news-meta">
-          <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ currentNews.date }}</span>
+          <span class="meta-item"
+            ><i class="far fa-calendar-alt"></i> {{ formatDate(currentNews.publishedDate) }}</span
+          >
           <span class="meta-item"><i class="far fa-user"></i> {{ currentNews.author }}</span>
           <span class="meta-item"><i class="far fa-eye"></i> {{ currentNews.views }} lượt xem</span>
-          <span class="meta-item"><i class="far fa-share-square"></i> {{ currentNews.shares }} chia sẻ</span>
+          <span class="meta-item"
+            ><i class="far fa-share-square"></i> {{ currentNews.shares || 0 }} chia sẻ</span
+          >
         </div>
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.image" :alt="currentNews.title">
+          <img :src="currentNews.imageUrl" :alt="currentNews.title" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
         <div class="news-content">
-          <p class="content-paragraph">{{ currentNews.excerpt }}</p>
-        </div>        
+          <p class="content-paragraph">{{ currentNews.summary }}</p>
+          <div v-html="currentNews.content"></div>
+        </div>
       </div>
 
       <!-- Thanh bên phải -->
       <div class="sidebar">
         <!-- Ô tìm kiếm bài viết -->
         <div class="search-container">
-          <input 
-            type="text" 
+          <input
+            type="text"
             class="search-input"
             placeholder="Tìm kiếm bài viết"
             v-model="searchQuery"
-          >
+          />
           <button class="search-button">
             <i class="fas fa-search"></i>
           </button>
@@ -51,15 +56,17 @@
         <div class="recent-posts">
           <h2>Bài viết gần đây</h2>
           <div class="posts-list">
-            <div v-for="(post, index) in filteredNews" 
-                 :key="index"
-                 class="post-item"
-                 @click="goToNewsDetail(post)">
+            <div
+              v-for="(post, index) in filteredNews"
+              :key="index"
+              class="post-item"
+              @click="goToNewsDetail(post)"
+            >
               <div class="post-image">
-                <img :src="post.image" :alt="post.title">
+                <img :src="post.imageUrl" :alt="post.title" />
               </div>
               <div class="post-info">
-                <div class="post-date">{{ post.date }}</div>
+                <div class="post-date">{{ formatDate(post.publishedDate) }}</div>
                 <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
@@ -85,182 +92,82 @@
 <script>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
+import newsService from '@/api/services/newsService'
 
 export default {
   name: 'ComNewsDetail',
   setup() {
-    // Sử dụng Vue Router để lấy thông tin route và điều hướng
     const route = useRoute()
     const router = useRouter()
-    
-    // Biến lưu từ khóa tìm kiếm
     const searchQuery = ref('')
-    
-    // Biến lưu thông tin bài viết hiện tại
     const currentNews = ref({})
-    
-    // Danh sách các bài viết (dữ liệu mẫu)
-    const allNews = ref([
-    {
-          id: 1,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          date: '15/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 2,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          date: '14/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 3,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          date: '13/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        
-        },
-        {
-          id: 4,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          date: '15/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 5,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          date: '14/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 6,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          date: '13/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 7,
-          title: 'Coca-Cola lợi phần ứng vì quảng cáo tạo bằng AI',
-          date: '15/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image1.png'),
-          excerpt: 'Coca-Cola đang đối mặt làn sóng phản đối trên mạng xã hội vì video quảng cáo Giáng sinh "vô hồn, thiếu tính sáng tạo" do dùng AI',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 8,
-          title: 'FPT muốn tiên phong phát triển Data Center',
-          date: '14/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image2.png'),
-          excerpt: 'FPT đặt mục tiêu đi đầu trong lĩnh vực trung tâm dữ liệu (Data Center), nhằm hỗ trợ doanh nghiệp tối ưu vận hành, tăng khả năng cạnh tranh.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        },
-        {
-          id: 9,
-          title: 'Trải nghiệm iPad Mini 7: Khó tìm tablet cỡ nhỏ tốt hơn',
-          date: '13/03/2024',
-          image: require('@/assets/sdtc-image/tin-tuc/image3.png'),
-          excerpt: 'Cấu hình không xuất sắc nhưng thiết kế gọn nhẹ, trải nghiệm mượt, hỗ trợ bút và Apple Intelligence khiến iPad Mini 7 là lựa chọn tablet cỡ nhỏ hàng đầu hiện tại.',
-          author: 'Admin',
-          views: 68,
-          shares: 85
-        }
-    ])
+    const allNews = ref([])
+    const error = ref('')
 
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
-      const currentId = Number(route.params.id)
-      const filtered = allNews.value.filter(news => news.id !== currentId)
+      const currentId = route.params.id
+      const filtered = allNews.value.filter((news) => (news._id || news.id) != currentId)
       if (!searchQuery.value) return filtered
       const query = searchQuery.value.toLowerCase()
-      return filtered.filter(news => 
-        news.title.toLowerCase().includes(query) ||
-        news.date.toLowerCase().includes(query)
-      )
+      return filtered.filter((news) => news.title.toLowerCase().includes(query))
     })
 
-    // Hàm tải thông tin bài viết hiện tại từ URL params
-    const loadCurrentNews = () => {
-      const id = Number(route.params.id)
-      const found = allNews.value.find(news => news.id === id)
-      if (found) {
-        currentNews.value = found
+    // Tải dữ liệu động
+    const loadData = async () => {
+      try {
+        // Lấy danh sách tin tức gần đây
+        const { data } = await newsService.getNews()
+        allNews.value = data
+        // Lấy chi tiết tin tức
+        const newsDetail = await newsService.getNewsById(route.params.id)
+        currentNews.value = newsDetail
+      } catch (e) {
+        error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
       }
     }
 
-    // Hàm điều hướng đến trang chi tiết bài viết khi click vào một bài viết
     const goToNewsDetail = (news) => {
-      router.push(`/tin-tuc/${news.id}`)
+      router.push(`/tin-tuc/${news._id || news.id}`)
     }
-
-    // Hàm chuyển đến bài viết trước đó
     const goToPreviousPost = () => {
-      const currentId = Number(route.params.id)
-      const sortedNews = [...allNews.value].sort((a, b) => a.id - b.id)
-      const currentIndex = sortedNews.findIndex(news => news.id === currentId)
-      
+      const currentId = route.params.id
+      const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
+      const currentIndex = sortedNews.findIndex((news) => (news._id || news.id) == currentId)
       if (currentIndex > 0) {
-        // Có bài viết trước
         const prevNews = sortedNews[currentIndex - 1]
-        router.push(`/tin-tuc/${prevNews.id}`)
+        router.push(`/tin-tuc/${prevNews._id || prevNews.id}`)
       }
     }
-
-    // Hàm chuyển đến bài viết tiếp theo
     const goToNextPost = () => {
-      const currentId = Number(route.params.id)
-      const sortedNews = [...allNews.value].sort((a, b) => a.id - b.id)
-      const currentIndex = sortedNews.findIndex(news => news.id === currentId)
-      
+      const currentId = route.params.id
+      const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
+      const currentIndex = sortedNews.findIndex((news) => (news._id || news.id) == currentId)
       if (currentIndex !== -1 && currentIndex < sortedNews.length - 1) {
-        // Có bài viết sau
         const nextNews = sortedNews[currentIndex + 1]
-        router.push(`/tin-tuc/${nextNews.id}`)
+        router.push(`/tin-tuc/${nextNews._id || nextNews.id}`)
       }
     }
 
-    // Khi component được tạo, tải thông tin bài viết hiện tại
-    onMounted(() => {
-      loadCurrentNews()
-    })
+    function formatDate(dateStr) {
+      if (!dateStr) return ''
+      const d = new Date(dateStr)
+      return d.toLocaleDateString('vi-VN')
+    }
 
-    // Trả về các biến và hàm để sử dụng trong template
+    onMounted(loadData)
+
     return {
       searchQuery,
       currentNews,
       filteredNews,
       goToNewsDetail,
       goToPreviousPost,
-      goToNextPost
+      goToNextPost,
+      error,
+      formatDate,
     }
-  }
+  },
 }
 </script>
 
@@ -307,7 +214,7 @@ export default {
 }
 
 .back-link:hover .back-icon {
-  background: #004AAD;
+  background: #004aad;
 }
 
 .back-link:hover .back-icon i {
@@ -354,7 +261,7 @@ export default {
 
 /* Icon trong thông tin meta */
 .meta-item i {
-  color: #004AAD;
+  color: #004aad;
 }
 
 /* Container cho ảnh bài viết */
@@ -452,7 +359,7 @@ export default {
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  background: #4184F7;
+  background: #4184f7;
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -502,7 +409,6 @@ export default {
   margin-bottom: 16px;
   padding-bottom: 8px;
   color: rgba(31, 43, 108, 1);
-  ;
 }
 
 /* Danh sách các bài viết gần đây */
@@ -584,7 +490,7 @@ export default {
   .sidebar {
     width: 100%;
   }
-  
+
   .navigation-container {
     width: 100%;
   }
@@ -604,15 +510,14 @@ export default {
     width: 70px;
     height: 50px;
   }
-  
+
   .news-meta {
     gap: 12px;
   }
-  
+
   .nav-button {
     font-size: 14px;
     padding: 10px 16px;
   }
 }
 </style>
-

@@ -45,7 +45,6 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       Booking.countDocuments(),
       Admin.countDocuments({ role: 'staff', isDeleted: { $ne: true } }),
     ]);
-  // Trả về đầy đủ dữ liệu
   res.json({
     success: true,
     data: {
@@ -100,3 +99,4 @@ exports.deleteStaff = asyncHandler(async (req, res) => {
   if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
   res.json({ success: true, message: 'Đã ẩn staff thành công' });
 });
+
