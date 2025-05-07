@@ -35,6 +35,15 @@
           <p class="content-paragraph">{{ currentNews.summary }}</p>
           <div v-html="currentNews.content"></div>
         </div>
+        <!-- Đưa post-navigation vào đây -->
+        <div class="post-navigation">
+          <button @click="goToPreviousPost" class="nav-button prev-button">
+            <i class="fas fa-arrow-left"></i> Bài viết trước
+          </button>
+          <button @click="goToNextPost" class="nav-button next-button">
+            Bài viết sau <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Thanh bên phải -->
@@ -74,22 +83,12 @@
         </div>
       </div>
     </div>
-
-    <!-- Navigation Buttons -->
-    <div class="post-navigation">
-      <button @click="goToPreviousPost" class="nav-button prev-button">
-        <i class="fas fa-arrow-left"></i> Bài viết trước
-      </button>
-      <button @click="goToNextPost" class="nav-button next-button">
-        Bài viết sau <i class="fas fa-arrow-right"></i>
-      </button>
-    </div>
   </div>
 </template>
 
 <script>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import newsService from '@/api/services/newsService'
 
 export default {
@@ -169,6 +168,11 @@ export default {
     }
 
     onMounted(() => {
+      loadData()
+    })
+
+    // Theo dõi sự thay đổi của route.params.id để load lại dữ liệu
+    watch(() => route.params.id, () => {
       loadData()
     })
 
@@ -252,7 +256,7 @@ export default {
 .news-title {
   font-size: 32px;
   font-weight: 700;
-  color: #000;
+  color: #1F2B6C;
   margin-bottom: 16px;
   line-height: 1.2;
 }
@@ -280,16 +284,21 @@ export default {
 /* Container cho ảnh bài viết */
 .news-image {
   width: 100%;
-  margin-bottom: 24px;
-  border-radius: 4px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Style cho ảnh bài viết */
 .news-image img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
+  display: block;
+  border-radius: 4px;
+  background: #f5f5f5;
 }
 
 /* Style cho đoạn văn bản */
@@ -298,6 +307,8 @@ export default {
   font-size: 16px;
   line-height: 1.6;
   margin-bottom: 16px;
+  text-align: justify;
+  word-break: break-word;
 }
 
 /* Post Navigation */
