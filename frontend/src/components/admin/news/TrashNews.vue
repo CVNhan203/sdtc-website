@@ -60,7 +60,7 @@
                 @change="toggleSelectAll"
               >
             </th>
-            <th>ID</th>
+            <th>STT</th>
             <th>Ảnh</th>
             <th>Tiêu đề</th>
             <th>Loại</th>
@@ -71,7 +71,7 @@
         </thead>
         <tbody>
           <!-- Hiển thị từng dòng tin tức -->
-          <tr v-for="news in filteredNews" :key="news._id">
+          <tr v-for="(news, index) in filteredNews" :key="news._id">
             <!-- Checkbox chọn từng dòng -->
             <td>
               <input 
@@ -80,7 +80,7 @@
                 @change="toggleSelect(news._id)"
               >
             </td>
-            <td :title="news._id">{{ truncateId(news._id) }}</td>
+            <td>{{ index + 1 }}</td>
             <!-- Ảnh đại diện tin tức -->
             <td>
               <div class="image-container">
@@ -388,201 +388,59 @@ export default {
 </script>
 
 <style scoped>
-/* Container chính cho thùng rác */
-.trash-news {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
+@import "@/styles/admin.css";
 
-/* Khu vực header chứa các công cụ */
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-/* Các hành động ở phần header */
-.actions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-/* Khu vực tìm kiếm và lọc */
-.search-filter {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-/* Hộp tìm kiếm */
-.search-box {
-  position: relative;
-  flex: 1;
-  max-width: 400px;
-}
-
-/* Icon trong hộp tìm kiếm */
-.search-box i {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
-}
-
-/* Input tìm kiếm */
-.search-box input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-/* Dropdown select */
-select {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  min-width: 160px;
-}
-
-/* Nút hành động hàng loạt */
-.bulk-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-/* Nút khôi phục hàng loạt */
-.bulk-action-btn.restore {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-/* Hiệu ứng hover cho nút khôi phục */
-.bulk-action-btn.restore:hover {
-  background: #bae6fd;
-}
-
-/* Nút xóa hàng loạt */
-.bulk-action-btn.delete {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* Hiệu ứng hover cho nút xóa */
-.bulk-action-btn.delete:hover {
-  background: #fecaca;
-}
-
-/* Container bảng dữ liệu */
-.table-container {
-  min-width: 100%;
-  overflow-x: auto;
-}
-
-/* Bảng dữ liệu */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  table-layout: fixed;
-  min-width: 950px;
-}
-
-/* Ô và header trong bảng */
-th, td {
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: middle;
-}
-
-/* Header của bảng */
-th {
-  background: #f8fafc;
-  font-weight: 500;
-  color: #475569;
-  text-align: center;
-}
-
-/* Cột checkbox */
+/* Component specific styles */
 th:nth-child(1), 
 td:nth-child(1) {
-  width: 50px;
+  width: 50px; /* Checkbox */
 }
 
-/* Cột ID */
 th:nth-child(2), 
 td:nth-child(2) {
-  width: 200px;
+  width: 200px; /* ID */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Cột ảnh */
 th:nth-child(3), 
 td:nth-child(3) {
-  width: 100px;
+  width: 100px; /* Ảnh */
 }
 
-/* Cột tiêu đề */
 th:nth-child(4), 
 td:nth-child(4) {
-  width: 150px;
+  width: 150px; /* Tiêu đề */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Cột loại */
 th:nth-child(5), 
 td:nth-child(5) {
-  width: 100px;
+  width: 100px; /* Loại */
 }
 
-/* Cột tác giả */
 th:nth-child(6), 
 td:nth-child(6) {
-  width: 120px;
+  width: 120px; /* Tác giả */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Cột ngày xóa */
 th:nth-child(7), 
 td:nth-child(7) {
-  width: 150px;
+  width: 150px; /* Ngày xóa */
 }
 
-/* Cột hành động */
 th:nth-child(8), 
 td:nth-child(8) {
-  width: 100px;
+  width: 100px; /* Thao tác */
   text-align: center;
 }
 
-/* Hình ảnh tin tức */
 .news-image {
   width: 50px;
   height: 50px;
@@ -592,7 +450,6 @@ td:nth-child(8) {
   display: block;
 }
 
-/* Container chứa hình ảnh */
 .image-container {
   display: flex;
   justify-content: center;
@@ -601,9 +458,8 @@ td:nth-child(8) {
   height: 100%;
 }
 
-/* Kiểu hiển thị khi không có ảnh */
 .no-image {
-  color: #a0aec0;
+  color: var(--text-tertiary);
   font-size: 12px;
   text-align: center;
   display: flex;
@@ -611,128 +467,74 @@ td:nth-child(8) {
   align-items: center;
 }
 
-/* Khu vực chứa các nút hành động */
-.actions {
+.bulk-action-btn {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-/* Nút icon */
-.icon-btn {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-/* Nút khôi phục */
+.bulk-action-btn.restore {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.bulk-action-btn.restore:hover {
+  background-color: var(--primary-hover);
+}
+
+.bulk-action-btn.delete {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.bulk-action-btn.delete:hover {
+  background-color: var(--danger-hover);
+}
+
 .icon-btn.restore {
-  background: #e0f2fe;
-  color: #0369a1;
+  background-color: #dcfce7;
+  color: #166534;
 }
 
-/* Hiệu ứng hover cho nút khôi phục */
 .icon-btn.restore:hover {
-  background: #bae6fd;
+  background-color: #bbf7d0;
 }
 
-/* Nút xóa */
 .icon-btn.delete {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: var(--danger-color);
+  color: white;
 }
 
-/* Hiệu ứng hover cho nút xóa */
 .icon-btn.delete:hover {
-  background: #fecaca;
+  background-color: var(--danger-hover);
 }
 
-/* Thông báo khi không có dữ liệu */
 .empty-message {
   text-align: center;
-  color: #64748b;
-  padding: 2rem;
+  color: var(--text-tertiary);
+  padding: var(--spacing-lg);
   font-style: italic;
 }
 
-/* Văn bản cảnh báo */
-.warning-text {
-  color: #dc2626;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: #fee2e2;
-  border-radius: 8px;
-  border-left: 4px solid #dc2626;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.action-column {
+  text-align: center;
 }
 
-/* Icon cảnh báo */
-.warning-text::before {
-  content: '⚠️';
-}
-
-/* Khu vực nút trong form */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-/* Các nút trong form */
-.form-actions button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
+th input[type="checkbox"],
+td input[type="checkbox"] {
+  margin: 0 auto;
+  display: block;
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 100px;
+  width: 18px;
+  height: 18px;
 }
 
-/* Nút hủy */
-.cancel-btn {
-  background: #f3f4f6;
-  color: #4b5563;
-}
-
-/* Hiệu ứng hover cho nút hủy */
-.cancel-btn:hover {
-  background: #e5e7eb;
-}
-
-/* Nút xác nhận/gửi */
-.submit-btn {
-  background: #3b82f6;
-  color: white;
-}
-
-/* Hiệu ứng hover cho nút xác nhận */
-.submit-btn:hover {
-  background: #2563eb;
-}
-
-/* Nút xóa */
-.delete-btn {
-  background: #ef4444;
-  color: white;
-}
-
-/* Hiệu ứng hover cho nút xóa */
-.delete-btn:hover {
-  background: #dc2626;
-}
-
-/* Responsive cho màn hình nhỏ */
 @media (max-width: 768px) {
   .header-actions {
     flex-direction: column;
@@ -747,105 +549,5 @@ td:nth-child(8) {
     width: 100%;
     justify-content: center;
   }
-}
-
-/* Kiểu dáng Modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-/* Nội dung của modal */
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: modalFadeIn 0.3s ease;
-}
-
-/* Hiệu ứng hiện modal */
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Phần header của modal */
-.modal-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Tiêu đề của modal */
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-  font-weight: 600;
-}
-
-/* Nút đóng modal */
-.close-btn {
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-/* Hiệu ứng hover cho nút đóng */
-.close-btn:hover {
-  background: #f3f4f6;
-  color: #1f2937;
-}
-
-/* Phần body của modal */
-.modal-body {
-  padding: 1.5rem;
-}
-
-/* Đoạn văn bản trong modal */
-.modal-body p {
-  margin: 0 0 1.5rem;
-  color: #4b5563;
-  line-height: 1.5;
-}
-
-/* Cột chứa các hành động */
-.action-column {
-  text-align: center;
-}
-
-/* Checkbox trong bảng */
-th input[type="checkbox"],
-td input[type="checkbox"] {
-  margin: 0 auto;
-  display: block;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
 }
 </style> 

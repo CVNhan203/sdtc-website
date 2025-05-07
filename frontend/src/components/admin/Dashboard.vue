@@ -146,10 +146,10 @@
       </div>
 
       <div class="sidebar-footer">
-        <div class="user-role">
+        <!-- <div class="user-role">
           <i class="fas fa-user-tag"></i>
           <span>{{ userRoleDisplay }}</span>
-        </div>
+        </div> -->
         <button class="logout-btn" @click="handleLogout">
           <i class="fas fa-sign-out-alt"></i>
           <span>Đăng xuất</span>
@@ -266,9 +266,9 @@ export default {
     isDashboardActive() {
       return this.$route.path === '/admin/dashboard'
     },
-    userRoleDisplay() {
-      return this.userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên'
-    }
+    // userRoleDisplay() {
+    //   return this.userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên'
+    // }
   },
   methods: {
     toggleSidebar() {

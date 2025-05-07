@@ -134,41 +134,11 @@ export default {
       }
     }
   },
-  created() {
-    // Nếu đã đăng nhập thì chuyển về dashboard
-    if (authService.isAuthenticated()) {
-      this.$router.push('/admin/dashboard');
-    }
-  }
 }
 </script>
 
 <style scoped>
-/* CSS Variables */
-:root {
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #f1f5f9;
-  --secondary-hover: #e2e8f0;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  --success-color: #10b981;
-  --success-hover: #059669;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+@import "@/styles/admin.css";
 
 /* Login Page Styles */
 .login-container {
@@ -332,10 +302,6 @@ export default {
 
   .form-header p {
     font-size: 0.875rem;
-  }
-
-  .login-button {
-    padding: 0.75rem;
   }
 }
 </style>

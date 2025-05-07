@@ -267,7 +267,6 @@ td {
    ================================================== */
 /* Khu vực nút hành động */
 .actions {
-  display: flex;
   gap: var(--spacing-sm);
   justify-content: center;
   align-items: center;
@@ -593,7 +592,6 @@ td {
 /* Nhãn trạng thái */
 .status-badge {
   padding: 0.25rem 0.1rem;
-  border-radius: 50px;
   font-size: 1rem;
   font-weight: 1000px;
   display: inline-block;

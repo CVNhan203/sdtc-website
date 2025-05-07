@@ -32,7 +32,7 @@
       <table class="accounts-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>STT</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Vai trò</th>
@@ -41,8 +41,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="account in filteredAccounts" :key="account._id" :class="{ 'deleted': account.isDeleted }">
-            <td :title="account._id">{{ truncateId(account._id) }}</td>
+          <tr v-for="(account, index) in filteredAccounts" :key="account._id" :class="{ 'deleted': account.isDeleted }">
+            <td>{{ index + 1 }}</td>
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
             <td>
@@ -138,7 +138,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import accountService from '@/api/account/accountService';
+import accountService from '@/api/services/accountService';
 import eventBus from '@/eventBus';
 
 export default {
@@ -294,18 +294,16 @@ export default {
             type: 'success',
             message: 'Đã xóa tài khoản thành công'
           });
-          await loadAccounts();
+          showDeleteModal.value = false;
+          loadAccounts(); // Reload the accounts list
         } else {
-          throw new Error(response.message);
+          throw new Error(response.message || 'Không thể xóa tài khoản');
         }
       } catch (err) {
-        console.error('Error deleting account:', err);
         eventBus.emit('show-toast', {
           type: 'error',
-          message: err.message || 'Không thể xóa tài khoản'
+          message: err.message || 'Không thể xóa tài khoản. Vui lòng thử lại sau.'
         });
-      } finally {
-        showDeleteModal.value = false;
       }
     };
 
@@ -319,18 +317,16 @@ export default {
             type: 'success',
             message: 'Đã khôi phục tài khoản thành công'
           });
-          await loadAccounts();
+          showRestoreModal.value = false;
+          loadAccounts(); // Reload the accounts list
         } else {
-          throw new Error(response.message);
+          throw new Error(response.message || 'Không thể khôi phục tài khoản');
         }
       } catch (err) {
-        console.error('Error restoring account:', err);
         eventBus.emit('show-toast', {
           type: 'error',
-          message: err.message || 'Không thể khôi phục tài khoản'
+          message: err.message || 'Không thể khôi phục tài khoản. Vui lòng thử lại sau.'
         });
-      } finally {
-        showRestoreModal.value = false;
       }
     };
 
@@ -344,18 +340,16 @@ export default {
             type: 'success',
             message: 'Đã xóa vĩnh viễn tài khoản thành công'
           });
-          await loadAccounts();
+          showDeletePermanentModal.value = false;
+          loadAccounts(); // Reload the accounts list
         } else {
-          throw new Error(response.message);
+          throw new Error(response.message || 'Không thể xóa vĩnh viễn tài khoản');
         }
       } catch (err) {
-        console.error('Error permanently deleting account:', err);
         eventBus.emit('show-toast', {
           type: 'error',
-          message: err.message || 'Không thể xóa vĩnh viễn tài khoản'
+          message: err.message || 'Không thể xóa vĩnh viễn tài khoản. Vui lòng thử lại sau.'
         });
-      } finally {
-        showDeletePermanentModal.value = false;
       }
     };
 
@@ -415,7 +409,7 @@ export default {
 <style scoped>
 @import "@/styles/admin.css";
 
-/* Additional styles specific to account list */
+/* Component specific styles */
 .role-badge {
   padding: 6px 12px;
   border-radius: 20px;
@@ -434,29 +428,6 @@ export default {
   color: #7e22ce;
 }
 
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.status-badge.active {
-  background-color: #dcfce7;
-  color: #15803d;
-}
-
-.status-badge.inactive {
-  background-color: #fee2e2;
-  color: #dc2626;
-}
-
-.status-badge.deleted {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
 .icon-btn.activate {
   background-color: #10b981;
   color: white;
@@ -473,12 +444,6 @@ export default {
 
 .icon-btn.deactivate:hover {
   background-color: #dc2626;
-}
-
-.warning-text {
-  color: #dc2626;
-  font-weight: 500;
-  margin-top: 0.5rem;
 }
 
 /* Responsive styles */

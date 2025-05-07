@@ -23,7 +23,7 @@
       </div>
 
       <div class="form-container">
-        <form @submit.prevent="handleSubmit" class="account-form">
+        <form @submit.prevent="handleSubmit" class="account-form" novalidate>
           <!-- Full Name -->
           <div class="form-group">
             <label for="fullName">Họ tên <span class="required">*</span></label>
@@ -32,7 +32,6 @@
               id="fullName"
               v-model="formData.fullName"
               :class="{ 'error': errors.fullName }"
-              required
             />
             <span class="error-message" v-if="errors.fullName">{{ errors.fullName }}</span>
           </div>
@@ -45,7 +44,6 @@
               id="email"
               v-model="formData.email"
               :class="{ 'error': errors.email }"
-              required
             />
             <span class="error-message" v-if="errors.email">{{ errors.email }}</span>
           </div>
@@ -91,7 +89,6 @@
               id="role"
               v-model="formData.role"
               :class="{ 'error': errors.role }"
-              required
             >
               <option value="">Chọn vai trò</option>
               <option value="admin">Quản trị viên</option>
@@ -136,7 +133,7 @@
 <script>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import accountService from '@/api/account/accountService';
+import accountService from '@/api/services/accountService';
 import eventBus from '@/eventBus';
 
 export default {
@@ -181,10 +178,10 @@ export default {
           const account = response.data;
           formData.fullName = account.fullName;
           formData.email = account.email;
-          formData.role = account.role;
-          formData.status = account.status === 'active';
+          formData.role = 'staff'; // Luôn là staff theo adminController
+          formData.status = !account.isDeleted; // status được biểu diễn qua isDeleted
         } else {
-          throw new Error(response.message);
+          throw new Error(response.message || 'Không thể tải thông tin tài khoản');
         }
       } catch (err) {
         console.error('Error loading account:', err);
@@ -199,26 +196,37 @@ export default {
       // Reset errors
       Object.keys(errors).forEach(key => errors[key] = '');
 
-      // Validate full name
+      // Validate fullName
       if (!formData.fullName.trim()) {
         errors.fullName = 'Vui lòng nhập họ tên';
+        isValid = false;
+      } else if (formData.fullName.trim().length < 3) {
+        errors.fullName = 'Họ tên phải có ít nhất 3 ký tự';
+        isValid = false;
+      } else if (formData.fullName.trim().length > 50) {
+        errors.fullName = 'Họ tên không được vượt quá 50 ký tự';
+        isValid = false;
+      } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(formData.fullName.trim())) {
+        errors.fullName = 'Họ tên chỉ được chứa chữ cái và khoảng trắng';
         isValid = false;
       }
 
       // Validate email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!formData.email.trim()) {
         errors.email = 'Vui lòng nhập email';
         isValid = false;
-      } else if (!emailRegex.test(formData.email)) {
-        errors.email = 'Email không hợp lệ';
+      } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email.trim())) {
+        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)';
         isValid = false;
       }
 
       // Validate password only if provided
       if (formData.password) {
-        if (formData.password.length < 6) {
-          errors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+        if (formData.password.length < 8) {
+          errors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+          isValid = false;
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(formData.password)) {
+          errors.password = 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&)';
           isValid = false;
         }
 
@@ -235,13 +243,28 @@ export default {
       if (!formData.role) {
         errors.role = 'Vui lòng chọn vai trò';
         isValid = false;
+      } else if (!['admin', 'staff'].includes(formData.role)) {
+        errors.role = 'Vai trò không hợp lệ';
+        isValid = false;
       }
 
       return isValid;
     };
 
     const handleSubmit = async () => {
+      // Trim input fields
+      formData.fullName = formData.fullName.trim();
+      formData.email = formData.email.trim();
+      
       if (!validateForm()) {
+        const firstErrorField = Object.keys(errors).find(key => errors[key]);
+        if (firstErrorField) {
+          const element = document.getElementById(firstErrorField);
+          if (element) {
+            element.focus();
+          }
+        }
+        
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Vui lòng kiểm tra lại thông tin nhập'
@@ -252,9 +275,8 @@ export default {
       isSubmitting.value = true;
       try {
         const accountData = {
-          fullName: formData.fullName.trim(),
-          email: formData.email.trim().toLowerCase(),
-          role: formData.role,
+          fullName: formData.fullName,
+          email: formData.email,
           isDeleted: !formData.status
         };
 
@@ -329,11 +351,7 @@ export default {
 <style scoped>
 @import "@/styles/admin.css";
 
-.edit-account {
-  padding: 24px;
-}
-
-/* Reuse the same styles as AddAccount.vue */
+/* Component specific styles */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -355,69 +373,6 @@ export default {
 
 .back-btn:hover {
   background-color: #e5e7eb;
-}
-
-.form-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-}
-
-.account-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.required {
-  color: #dc2626;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-input.error,
-select.error {
-  border-color: #dc2626;
-}
-
-.error-message {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-top: 4px;
-}
-
-.password-input {
-  position: relative;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
 }
 
 .toggle-switch {
@@ -466,59 +421,22 @@ input[type="checkbox"]:checked + .switch-label::after {
   color: #6b7280;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
+.password-input {
+  position: relative;
 }
 
-.cancel-btn,
-.submit-btn {
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cancel-btn {
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
-}
-
-.cancel-btn:hover {
-  background-color: #e5e7eb;
-}
-
-.submit-btn {
-  background-color: #2563eb;
-  color: white;
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background-color: #1d4ed8;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.fa-spinner {
-  margin-right: 8px;
+  cursor: pointer;
+  color: #6b7280;
 }
 
 /* Loading state */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px;
-}
-
 .loading-spinner {
   border: 4px solid #f3f4f6;
   border-top: 4px solid #2563eb;
@@ -526,55 +444,10 @@ input[type="checkbox"]:checked + .switch-label::after {
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin-bottom: 16px;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/* Error state */
-.error-container {
-  text-align: center;
-  padding: 48px;
-}
-
-.error-message {
-  color: #dc2626;
-  margin-bottom: 16px;
-}
-
-.retry-btn {
-  padding: 8px 16px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.retry-btn:hover {
-  background-color: #1d4ed8;
-}
-
-@media (max-width: 768px) {
-  .edit-account {
-    padding: 16px;
-  }
-
-  .form-container {
-    padding: 16px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-  }
 }
 </style> 

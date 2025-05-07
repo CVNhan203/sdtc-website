@@ -54,7 +54,7 @@
                 @change="toggleSelectAll"
               >
             </th>
-            <th>ID</th>
+            <th>STT</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Ngày xóa</th>
@@ -62,7 +62,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="account in filteredAccounts" :key="account._id">
+          <tr v-for="(account, index) in filteredAccounts" :key="account._id">
             <td>
               <input 
                 type="checkbox" 
@@ -70,7 +70,7 @@
                 @change="toggleSelect(account._id)"
               >
             </td>
-            <td>{{ truncateId(account._id) }}</td>
+            <td>{{ index + 1 }}</td>
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
             <td>{{ formatDate(account.deletedAt || account.updatedAt) }}</td>
@@ -114,8 +114,11 @@
         <div class="modal-body">
           <p>Bạn có chắc chắn muốn khôi phục {{ selectedAccounts.length > 1 ? 'những' : '' }} tài khoản đã chọn không?</p>
           <div class="form-actions">
-            <button class="cancel-btn" @click="showRestoreModal = false">Hủy</button>
-            <button class="submit-btn" @click="handleRestore">Khôi phục</button>
+            <button class="cancel-btn" @click="showRestoreModal = false" :disabled="loading">Hủy</button>
+            <button class="submit-btn" @click="handleRestore" :disabled="loading">
+              <i class="fas fa-spinner fa-spin" v-if="loading"></i>
+              Khôi phục
+            </button>
           </div>
         </div>
       </div>
@@ -134,8 +137,11 @@
           <p class="warning-text">Cảnh báo: Hành động này không thể hoàn tác!</p>
           <p>Bạn có chắc chắn muốn xóa vĩnh viễn {{ selectedAccounts.length > 1 ? 'những' : '' }} tài khoản đã chọn không?</p>
           <div class="form-actions">
-            <button class="cancel-btn" @click="showDeleteModal = false">Hủy</button>
-            <button class="delete-btn" @click="handleDelete">Xóa vĩnh viễn</button>
+            <button class="cancel-btn" @click="showDeleteModal = false" :disabled="loading">Hủy</button>
+            <button class="delete-btn" @click="handleDelete" :disabled="loading">
+              <i class="fas fa-spinner fa-spin" v-if="loading"></i>
+              Xóa vĩnh viễn
+            </button>
           </div>
         </div>
       </div>
@@ -145,7 +151,7 @@
 
 <script>
 import eventBus from '@/eventBus';
-import accountService from '@/api/account/accountService';
+import accountService from '@/api/services/accountService';
 
 export default {
   name: 'AdminTrashAccounts',
@@ -181,11 +187,12 @@ export default {
         this.loading = true;
         this.error = null; // Reset error state
         
-        // Sử dụng accountService đã cập nhật
+        // Sử dụng phương thức có sẵn để lấy tài khoản đã xóa
         const response = await accountService.getDeletedAccounts();
         
         if (response.success) {
-          this.accounts = Array.isArray(response.data) ? response.data : [];
+          // Gán trực tiếp dữ liệu đã được lọc từ service
+          this.accounts = response.data || [];
           console.log('Tài khoản đã xóa:', this.accounts);
         } else {
           throw new Error(response.message || 'Không thể tải danh sách tài khoản đã xóa');
@@ -274,6 +281,17 @@ export default {
     async handleDelete() {
       try {
         this.loading = true;
+        
+        // Hiển thị thông báo xác nhận nếu xóa nhiều tài khoản
+        if (this.selectedAccounts.length > 1) {
+          const confirmed = confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn ${this.selectedAccounts.length} tài khoản đã chọn không? Hành động này không thể hoàn tác!`);
+          if (!confirmed) {
+            this.loading = false;
+            this.showDeleteModal = false;
+            return;
+          }
+        }
+        
         const response = await accountService.permanentDeleteAccounts(this.selectedAccounts);
         
         if (response.success) {
@@ -328,269 +346,37 @@ export default {
 </script>
 
 <style scoped>
-.trash-accounts {
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+@import "@/styles/admin.css";
 
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.search-filter {
-  display: flex;
-  gap: 1rem;
-}
-
-.search-box {
-  position: relative;
-}
-
-.search-box i {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #666;
-}
-
-.search-box input {
-  padding: 8px 8px 8px 35px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 250px;
-}
-
+/* Component specific styles */
 .bulk-action-btn {
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 500;
-}
-
-.bulk-action-btn.restore {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.bulk-action-btn.delete {
-  background-color: #ef4444;
-  color: white;
-}
-
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-container {
-  padding: 16px;
-  background-color: #fee2e2;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.error-message {
-  color: #b91c1c;
-  margin-bottom: 10px;
-}
-
-.retry-btn {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.table-container {
-  margin-top: 20px;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-th {
-  background-color: #f8fafc;
-  font-weight: 500;
-  color: #475569;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.icon-btn {
-  padding: 6px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .icon-btn.restore {
-  background-color: #3b82f6;
-  color: white;
+  background-color: #dcfce7;
+  color: #166534;
 }
 
-.icon-btn.delete {
-  background-color: #ef4444;
-  color: white;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 8px;
-  min-width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.modal-header {
-  padding: 16px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #666;
-}
-
-.modal-body {
-  padding: 16px;
-}
-
-.warning-text {
-  color: #ef4444;
-  font-weight: 500;
-  margin-bottom: 16px;
-  padding: 8px 16px;
-  background-color: #fee2e2;
-  border-radius: 4px;
-  border-left: 4px solid #ef4444;
-}
-
-.form-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.cancel-btn {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  background-color: #f9fafb;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.submit-btn {
-  padding: 8px 16px;
-  border: none;
-  background-color: #3b82f6;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.delete-btn {
-  padding: 8px 16px;
-  border: none;
-  background-color: #ef4444;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
+.icon-btn.restore:hover {
+  background-color: #bbf7d0;
 }
 
 .empty-message {
   text-align: center;
-  color: #666;
-  padding: 20px;
+  color: var(--text-tertiary);
+  padding: var(--spacing-lg);
   font-style: italic;
 }
 
 @media (max-width: 768px) {
-  .search-filter {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .search-box input {
-    width: 100%;
-  }
-  
   .header-actions {
     flex-direction: column;
     align-items: flex-start;

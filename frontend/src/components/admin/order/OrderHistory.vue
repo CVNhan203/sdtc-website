@@ -24,20 +24,6 @@
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
             >
           </div>
-          
-          <select v-model="statusFilter" @change="applyFilters">
-            <option value="">Tất cả trạng thái</option>
-            <option value="processing">Đang xử lý</option>
-            <option value="completed">Hoàn thành</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
-          
-          <select v-model="paymentFilter" @change="applyFilters">
-            <option value="">Tất cả TT thanh toán</option>
-            <option value="pending">Chờ thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-            <option value="failed">Thanh toán thất bại</option>
-          </select>
         </div>
       </div>
 
@@ -161,7 +147,7 @@
 </template>
 
 <script>
-import orderService from '@/api/order/orderService'
+import orderService from '@/api/services/orderService'
 import eventBus from '@/eventBus'
 
 export default {
@@ -287,14 +273,14 @@ export default {
 
 <style scoped>
 /* Import the admin styles */
-/* @import '@/styles/admin.css'; */
+@import '@/styles/admin.css';
 
 /* Component specific overrides */
 .order-history {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
   width: 100%;
 }
 
@@ -312,8 +298,8 @@ export default {
 /* Custom media queries for extreme mobile cases */
 @media (max-width: 480px) {
   .order-history {
-    padding: 1rem;
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
   }
   
   .filter-group {

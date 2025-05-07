@@ -194,7 +194,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import paymentService from '@/api/payment/paymentService';
+import paymentService from '@/api/services/paymentService';
 import eventBus from '@/eventBus';
 
 export default {

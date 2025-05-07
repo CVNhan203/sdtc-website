@@ -47,10 +47,17 @@ const serviceService = {
                     'Content-Type': 'application/json'
                 }
             });
-            return response.data.data;
+            
+            if (!response.data.success) {
+                throw new Error(response.data.message || 'Không thể cập nhật dịch vụ');
+            }
+            
+            return response.data;
         } catch (error) {
             console.error('Error updating service:', error);
-            throw error;
+            throw error.response?.data?.message 
+                ? new Error(error.response.data.message)
+                : new Error('Không thể cập nhật dịch vụ');
         }
     },
 
@@ -68,11 +75,26 @@ const serviceService = {
     // Upload ảnh dịch vụ
     async uploadImage(formData) {
         try {
-            const response = await api.post('/services/upload', formData);
+            const response = await api.post('/services/upload', formData, {
+                headers: {
+                    // Không cần set Content-Type khi upload file,
+                    // để browser tự động set với boundary đúng
+                },
+                maxContentLength: 5 * 1024 * 1024, // 5MB
+                maxBodyLength: 5 * 1024 * 1024
+            });
+            
+            if (!response.data || !response.data.imagePath) {
+                throw new Error('Không nhận được đường dẫn ảnh từ server');
+            }
+            
             return response.data;
         } catch (error) {
             console.error('Error uploading image:', error);
-            throw error;
+            if (error.response?.status === 413) {
+                throw new Error('Kích thước file quá lớn, vui lòng chọn file nhỏ hơn 5MB');
+            }
+            throw new Error(error.response?.data?.message || 'Không thể tải ảnh lên');
         }
     }
 };

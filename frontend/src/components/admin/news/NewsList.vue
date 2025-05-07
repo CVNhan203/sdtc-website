@@ -36,19 +36,21 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Ảnh</th>
-              <th style="max-width: 250px;">Tiêu đề</th>
-              <th>Loại</th>
-              <th class="responsive-hide">Tác giả</th>
-              <th>Thao tác</th>
+              <th style="width: 5%">STT</th>
+              <th style="width: 15%">Ảnh</th>
+              <th style="width: 25%">Tiêu đề</th>
+              <th style="width: 10%">Loại</th>
+              <th style="width: 15%">Tác giả</th>
+              <th style="width: 10%">Ngày đăng</th>
+              <th style="width: 10%">Lượt xem</th>
+              <th style="width: 10%">Thao tác</th>
             </tr>
           </thead>
 
           <tbody>
             <!-- Hiển thị từng dòng tin tức -->
-            <tr v-for="news in filteredNews" :key="news._id">
-              <td class="news-id">{{ news._id }}</td>
+            <tr v-for="(news, index) in filteredNews" :key="news._id">
+              <td class="text-center">{{ index + 1 }}</td>
               <!-- Ảnh đại diện tin tức -->
               <td>
                 <div class="image-container">
@@ -64,18 +66,20 @@
                   </div>
                 </div>
               </td>
-              <td class="truncate-text" style="max-width: 250px;">{{ news.title }}</td>
-              <td class="type-cell">{{ formatType(news.type) }}</td>
-              <td class="responsive-hide">{{ news.author }}</td>
+              <td class="truncate-text">{{ news.title }}</td>
+              <td class="text-center">{{ formatType(news.type) }}</td>
+              <td class="text-center">{{ news.author }}</td>
+              <td class="text-center">{{ formatDate(news.publishedDate) }}</td>
+              <td class="text-center">{{ news.view }}</td>
               <!-- Các nút thao tác trên từng tin tức -->
               <td class="actions-cell">
                 <div class="actions">
                   <!-- Nút xem chi tiết -->
-                  <button class="icon-btn info" @click="showDetails(news)">
+                  <button class="icon-btn info" @click="showDetails(news)" title="Xem chi tiết">
                     <i class="fas fa-info-circle"></i>
                   </button>
                   <!-- Nút chỉnh sửa -->
-                  <button class="icon-btn edit" @click="openEditModal(news)">
+                  <button class="icon-btn edit" @click="openEditModal(news)" title="Chỉnh sửa">
                     <i class="fas fa-edit"></i>
                   </button>
                   <!-- Nút xóa tạm thời (chuyển vào thùng rác) -->
@@ -128,52 +132,52 @@
               <p>{{ selectedNews._id }}</p>
             </div>
             <div class="detail-item">
-              <label>Ảnh:</label>
-              <img
-                v-if="selectedNews.image"
-                :src="getImageUrl(selectedNews.image)"
-                alt="News image"
-                class="detail-image"
-              />
-              <span v-else class="no-image">No image</span>
-            </div>
-            <div class="detail-item">
               <label>Tiêu đề:</label>
               <p>{{ selectedNews.title }}</p>
             </div>
             <div class="detail-item">
+              <label>Ảnh:</label>
+              <div class="detail-image-container">
+                <img
+                  v-if="selectedNews.image"
+                  :src="getImageUrl(selectedNews.image)"
+                  alt="News image"
+                  class="detail-image"
+                />
+                <div v-else class="no-image">
+                  <i class="fas fa-image"></i>
+                </div>
+              </div>
+            </div>
+            <div class="detail-item">
+              <label>Nội dung chi tiết:</label>
+              <div class="content-wrapper">
+                <p>{{ selectedNews.content }}</p>
+              </div>
+            </div>
+            <div class="detail-item">
               <label>Tóm tắt:</label>
-              <p>{{ selectedNews.summary }}</p>
+              <div class="summary-wrapper">
+                <p>{{ selectedNews.summary }}</p>
+              </div>
             </div>
             <div class="detail-item">
-              <label>Nội dung:</label>
-              <p>{{ selectedNews.content }}</p>
-            </div>
-            <div class="detail-item">
-              <label>Loại:</label>
+              <label>Phân loại:</label>
               <p>{{ formatType(selectedNews.type) }}</p>
-            </div>
-            <div class="detail-item">
-              <label>Tác giả:</label>
-              <p>{{ selectedNews.author }}</p>
             </div>
             <div class="detail-item">
               <label>Ngày đăng:</label>
               <p>{{ formatDate(selectedNews.publishedDate) }}</p>
             </div>
             <div class="detail-item">
-              <label>Trạng thái:</label>
-              <p>
-                <span
-                  :class="[
-                    'status-badge',
-                    selectedNews.isDeleted ? 'inactive' : 'active',
-                  ]"
-                >
-                  {{ selectedNews.isDeleted ? "Đã xóa" : "Đã đăng" }}
-                </span>
-              </p>
+              <label>Tác giả:</label>
+              <p>{{ selectedNews.author }}</p>
             </div>
+            <div class="detail-item">
+              <label>Lượt xem:</label>
+              <p>{{ selectedNews.view }}</p>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -188,88 +192,88 @@
             </button>
           </div>
           <div class="modal-body">
-            <!-- Form nhập/sửa thông tin tin tức -->
-            <form @submit.prevent="handleSubmit">
+            <form @submit.prevent="handleSubmit" class="account-form" novalidate>
+              <!-- Tiêu đề -->
               <div class="form-group">
                 <label>Tiêu đề</label>
-                <input type="text" v-model="formData.title" required />
+                <input 
+                  type="text" 
+                  v-model="formData.title"
+                  placeholder="Nhập tiêu đề tin tức"
+                />
               </div>
-              <div class="form-group">
-                <label>Tóm tắt</label>
-                <textarea
-                  v-model="formData.summary"
-                  required
-                  rows="3"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label>Nội dung chi tiết</label>
-                <textarea
-                  v-model="formData.content"
-                  required
-                  rows="6"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label>Phân loại</label>
-                <select v-model="formData.type" required>
-                  <option value="">Chọn phân loại</option>
-                  <option value="tin-tuc">Tin tức</option>
-                  <option value="su-kien">Sự kiện</option>
-                  <option value="thong-bao">Thông báo</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Tác giả</label>
-                <input type="text" v-model="formData.author" required />
-              </div>
-              <div class="form-group">
-                <label>Ngày đăng</label>
-                <input type="date" v-model="formData.publishedDate" required />
-              </div>
+
+              <!-- Ảnh -->
               <div class="form-group">
                 <label>Ảnh</label>
-                <div class="image-upload">
-                  <!-- Input chọn file ảnh -->
-                  <input
+                <div class="image-upload-container" @click="$refs.imageInput.click()">
+                  <input 
                     type="file"
-                    accept="image/*"
+                    ref="imageInput"
+                    class="file-input"
                     @change="handleImageUpload"
+                    accept="image/*"
                   />
-                  <!-- Hiển thị xem trước ảnh đã chọn -->
-                  <div v-if="imagePreview" class="image-preview">
+                  <div v-if="!imagePreview" class="upload-placeholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Click để tải ảnh lên</span>
+                    <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+                  </div>
+                  <div v-else class="image-preview">
                     <img :src="imagePreview" alt="Preview" />
-                    <button
-                      type="button"
-                      class="remove-image"
-                      @click="imagePreview = null"
-                    >
+                    <button type="button" class="remove-image" @click.stop="removeImage">
                       <i class="fas fa-times"></i>
                     </button>
                   </div>
-                  <!-- Hiển thị thanh tiến trình khi đang tải ảnh lên -->
-                  <div
-                    v-if="uploadProgress > 0 && uploadProgress < 100"
-                    class="upload-progress"
-                  >
-                    <div
-                      class="progress-bar"
-                      :style="{ width: `${uploadProgress}%` }"
-                    ></div>
-                  </div>
                 </div>
               </div>
-              <!-- Các nút hành động form -->
+
+              
+
+              <!-- Phân loại -->
+              <div class="form-group">
+                <label>Phân loại</label>
+                <input 
+                  type="text" 
+                  v-model="formData.type"
+                  placeholder="Nhập phân loại tin tức"
+                />
+              </div>
+
+              <!-- Ngày đăng -->
+              <div class="form-group">
+                <label>Ngày đăng</label>
+                <input 
+                  type="date" 
+                  v-model="formData.publishedDate"
+                />
+              </div>
+
+              <!-- Mô tả ngắn -->
+              <div class="form-group">
+                <label>Tóm tắt</label>
+                <textarea 
+                  v-model="formData.summary"
+                  rows="2"
+                  placeholder="Nhập tóm tắt"
+                ></textarea>
+              </div>
+              <!-- Nội dung -->
+              <div class="form-group">
+                <label>Nội dung</label>
+                <textarea 
+                  v-model="formData.content"
+                  rows="6"
+                  placeholder="Nhập nội dung tin tức"
+                ></textarea>
+              </div>
+
               <div class="form-actions">
-                <button
-                  type="button"
-                  class="cancel-btn"
-                  @click="showFormModal = false"
-                >
-                  Hủy
+                <button type="button" class="cancel-btn" @click="showFormModal = false">
+                  <i class="fas fa-times"></i> Hủy
                 </button>
                 <button type="submit" class="submit-btn">
-                  {{ isEditing ? "Cập nhật" : "Thêm mới" }}
+                  <i class="fas fa-save"></i> {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
                 </button>
               </div>
             </form>
@@ -370,9 +374,8 @@
 
 <script>
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
-import newsService from "@/api/news/newsService";
+import newsService from "@/api/services/newsService";
 import eventBus from "@/eventBus";
-import { useRouter } from "vue-router";
 
 export default {
   name: "NewsList",
@@ -388,14 +391,14 @@ export default {
     const showPermanentDeleteModal = ref(false); // Điều khiển hiển thị modal xóa vĩnh viễn
     const selectedNews = ref({}); // Tin tức được chọn để thao tác
     const formData = ref({
-      title: "",
-      summary: "",
-      content: "",
+      _id: '',
+      title: '',
+      summary: '',
+      content: '',
       image: null,
-      type: "",
-      author: "",
-      publishedDate: "",
-      isDeleted: false,
+      type: '',
+      publishedDate: new Date().toISOString().split('T')[0],
+      isDeleted: false
     }); // Dữ liệu form
     const imagePreview = ref(null); // URL xem trước ảnh
     const uploadProgress = ref(0); // Tiến trình tải ảnh
@@ -404,7 +407,6 @@ export default {
     const isEditing = ref(false); // Trạng thái đang chỉnh sửa hay thêm mới
     const baseImageUrl = ref("http://localhost:3000"); // URL cơ sở cho hình ảnh
     const imageLoadError = ref({}); // Lưu các lỗi khi tải hình ảnh
-    const router = useRouter(); // Router để điều hướng
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -467,7 +469,19 @@ export default {
 
     // Mở modal chỉnh sửa tin tức (chuyển hướng đến trang chỉnh sửa)
     const openEditModal = (news) => {
-      router.push(`/admin/tin-tuc/chinh-sua/${news._id}`);
+      isEditing.value = true;
+      formData.value = {
+        _id: news._id,
+        title: news.title,
+        summary: news.summary,
+        content: news.content,
+        image: news.image,
+        type: news.type,
+        publishedDate: news.publishedDate ? new Date(news.publishedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        isDeleted: news.isDeleted
+      };
+      imagePreview.value = getImageUrl(news.image);
+      showFormModal.value = true;
     };
 
     // Hiển thị modal xác nhận xóa tạm thời
@@ -558,8 +572,35 @@ export default {
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       if (file) {
+        // Kiểm tra kích thước file (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Kích thước file không được vượt quá 5MB');
+          if (this.$refs.imageInput) {
+            this.$refs.imageInput.value = '';
+          }
+          return;
+        }
+
+        // Kiểm tra định dạng file
+        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+          alert('Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF');
+          if (this.$refs.imageInput) {
+            this.$refs.imageInput.value = '';
+          }
+          return;
+        }
+
         formData.value.image = file;
         imagePreview.value = URL.createObjectURL(file);
+      }
+    };
+
+    // Xử lý xóa ảnh
+    const removeImage = () => {
+      formData.value.image = null;
+      imagePreview.value = null;
+      if (this.$refs.imageInput) {
+        this.$refs.imageInput.value = '';
       }
     };
 
@@ -595,52 +636,143 @@ export default {
     const openAddModal = () => {
       isEditing.value = false;
       formData.value = {
-        title: "",
-        summary: "",
-        content: "",
+        _id: '',
+        title: '',
+        summary: '',
+        content: '',
         image: null,
-        type: "",
-        publishedDate: new Date().toISOString().split("T")[0],
-        author: "",
-        view: 0,
-        like: 0,
-        isDeleted: false,
+        type: '',
+        publishedDate: new Date().toISOString().split('T')[0],
+        isDeleted: false
       };
       imagePreview.value = null;
       uploadProgress.value = 0;
       showFormModal.value = true;
     };
 
-    // Xử lý gửi form thêm/chỉnh sửa tin tức
+    // Validate form data
+    const validateForm = () => {
+      const errors = {};
+      let isValid = true;
+
+      // Only check if required fields are filled
+      if (!formData.value.title?.trim()) {
+        errors.title = 'Tiêu đề không được để trống';
+        isValid = false;
+      }
+
+      if (!formData.value.summary?.trim()) {
+        errors.summary = 'Tóm tắt không được để trống';
+        isValid = false;
+      }
+
+      if (!formData.value.type?.trim()) {
+        errors.type = 'Phân loại không được để trống';
+        isValid = false;
+      }
+
+      if (!formData.value.publishedDate) {
+        errors.publishedDate = 'Ngày đăng không được để trống';
+        isValid = false;
+      }
+
+      if (!formData.value.content?.trim()) {
+        errors.content = 'Nội dung không được để trống';
+        isValid = false;
+      }
+
+      // Validate image for new news
+      if (!isEditing.value && !formData.value.image) {
+        errors.image = 'Vui lòng chọn ảnh cho tin tức';
+        isValid = false;
+      }
+
+      // If not valid, show error messages
+      if (!isValid) {
+        const errorMessages = Object.values(errors).join('\n');
+        alert('Vui lòng kiểm tra lại các thông tin sau:\n' + errorMessages);
+      }
+
+      error.value = errors;
+      return isValid;
+    };
+
     const handleSubmit = async () => {
+      // Basic trimming
+      formData.value.title = formData.value.title?.trim() || '';
+      formData.value.summary = formData.value.summary?.trim() || '';
+      formData.value.content = formData.value.content?.trim() || '';
+      formData.value.type = formData.value.type?.trim() || '';
+      
+      if (!validateForm()) {
+        return;
+      }
+
       try {
-        if (isEditing.value) {
-          await newsService.updateNews(selectedNews.value._id, formData.value);
-        } else {
-          await newsService.createNews(formData.value);
+        let imageUrl = null;
+        if (formData.value.image instanceof File) {
+          const imageFormData = new FormData();
+          imageFormData.append('image', formData.value.image);
+          
+          try {
+            const uploadResponse = await newsService.uploadImage(imageFormData);
+            if (uploadResponse && uploadResponse.imagePath) {
+              imageUrl = uploadResponse.imagePath;
+            } else {
+              throw new Error('Không nhận được đường dẫn ảnh');
+            }
+          } catch (uploadError) {
+            console.error('Error uploading image:', uploadError);
+            alert('Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định'));
+            return;
+          }
         }
+
+        const newsData = {
+          title: formData.value.title,
+          summary: formData.value.summary,
+          content: formData.value.content,
+          type: formData.value.type,
+          publishedDate: formData.value.publishedDate,
+          isDeleted: formData.value.isDeleted
+        };
+
+        if (imageUrl) {
+          newsData.image = imageUrl;
+        } else if (formData.value.image) {
+          newsData.image = formData.value.image;
+        }
+
+        if (isEditing.value) {
+          await newsService.updateNews(formData.value._id, newsData);
+          alert('Cập nhật tin tức thành công!');
+        } else {
+          await newsService.createNews(newsData);
+          alert('Thêm tin tức mới thành công!');
+        }
+
         await loadNews();
         showFormModal.value = false;
-        imagePreview.value = null;
-        uploadProgress.value = 0;
-      } catch (err) {
-        console.error("Error:", err);
-        error.value = isEditing.value
-          ? "Không thể cập nhật tin tức. Vui lòng thử lại sau."
-          : "Không thể tạo tin tức mới. Vui lòng thử lại sau.";
+        resetForm();
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra: ' + (error.message || 'Không thể xử lý yêu cầu'));
       }
     };
 
-    // Xử lý xóa tin tức
-    const handleDelete = async () => {
-      try {
-        await newsService.deleteNews(selectedNews.value._id);
-        await loadNews();
-        showSoftDeleteModal.value = false;
-      } catch (err) {
-        console.error("Error:", err);
-        error.value = "Không thể xóa tin tức. Vui lòng thử lại sau.";
-      }
+    const resetForm = () => {
+      formData.value = {
+        _id: '',
+        title: '',
+        summary: '',
+        content: '',
+        image: null,
+        type: '',
+        publishedDate: new Date().toISOString().split('T')[0],
+        isDeleted: false
+      };
+      imagePreview.value = null;
+      error.value = null;
     };
 
     // Xử lý lỗi khi tải hình ảnh
@@ -706,13 +838,13 @@ export default {
       handleRestore,
       handlePermanentDelete,
       handleImageUpload,
+      removeImage,
       getImageUrl,
       formatDate,
       formatType,
       formatDescription,
       openAddModal,
       handleSubmit,
-      handleDelete,
       imageLoadError,
       handleImageError,
     };
@@ -794,20 +926,23 @@ export default {
 
 /* Vùng xem trước ảnh trong form */
 .image-preview {
-  margin-top: var(--spacing-sm);
   position: relative;
-  width: 200px;
-  height: 150px;
+  max-width: 100%;
+  width: 350px;
+  height: 350px;
+  margin: 0 auto;
   border-radius: var(--border-radius-md);
   overflow: hidden;
   border: 2px solid var(--border-color);
+  background-color: #f8f9fa;
 }
 
 /* Ảnh xem trước trong form */
 .image-preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 /* Nút xóa ảnh xem trước */
@@ -848,5 +983,247 @@ export default {
   height: 100%;
   background-color: var(--primary-color);
   transition: width 0.3s ease;
+}
+
+/* Thêm styles cho detail view */
+.detail-item {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.detail-item label {
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.detail-item p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.detail-image-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem 0;
+}
+
+.detail-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.content-wrapper, .summary-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.summary-wrapper {
+  max-height: 150px;
+  background: var(--bg-tertiary);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.image-upload-container {
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.image-upload-container:hover {
+  border-color: #4299e1;
+  background-color: rgba(66, 153, 225, 0.05);
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #718096;
+}
+
+.upload-placeholder i {
+  font-size: 2rem;
+  color: #4299e1;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: #a0aec0;
+  margin-top: 0.5rem;
+}
+
+.image-preview {
+  position: relative;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.remove-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.remove-image:hover {
+  background: #e53e3e;
+  border-color: #e53e3e;
+  color: white;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+
+.cancel-btn {
+  background: #edf2f7;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.submit-btn {
+  background: #4299e1;
+  color: white;
+  border: none;
+}
+
+.cancel-btn:hover {
+  background: #e2e8f0;
+}
+
+.submit-btn:hover {
+  background: #3182ce;
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.file-input {
+  display: none;
 }
 </style>

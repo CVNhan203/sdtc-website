@@ -1,16 +1,12 @@
-import axios from 'axios';
-
-const API_URL = process.env.VUE_APP_API_URL || 'http://localhost:3000/api';
+import api from '../config';
 
 const accountService = {
   // Helper function để thực hiện request
   async apiRequest(method, url, data = null, options = {}) {
     try {
-      const headers = this.authHeader();
       const config = {
         method,
-        url: `${API_URL}${url}`,
-        headers,
+        url,
         ...options
       };
       
@@ -18,7 +14,7 @@ const accountService = {
         config.data = data;
       }
       
-      const response = await axios(config);
+      const response = await api(config);
       return {
         success: true,
         data: response.data.data || response.data,
@@ -37,7 +33,7 @@ const accountService = {
   // Đăng nhập admin
   async login(credentials) {
     try {
-      const response = await axios.post(`${API_URL}/admin/login`, credentials);
+      const response = await api.post(`/admin/login`, credentials);
       if (response.data.success) {
         // Lưu token và thông tin admin
         localStorage.setItem('adminToken', response.data.token);
@@ -99,12 +95,6 @@ const accountService = {
     return this.apiRequest('get', '/admin/dashboard');
   },
 
-  // Header xác thực
-  authHeader() {
-    const token = localStorage.getItem('adminToken');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  },
-
   // Kiểm tra role admin
   isAdmin() {
     const adminInfo = this.getAdminInfo();
@@ -120,7 +110,7 @@ const accountService = {
   // Get all roles
   async getAccountRoles() {
     try {
-      const response = await axios.get(`${API_URL}/roles`);
+      const response = await api.get(`/roles`);
       return {
         success: true,
         data: response.data
@@ -136,7 +126,7 @@ const accountService = {
   // Create new role
   async createAccountRole(roleData) {
     try {
-      const response = await axios.post(`${API_URL}/roles`, roleData);
+      const response = await api.post(`/roles`, roleData);
       return {
         success: true,
         data: response.data
@@ -152,7 +142,7 @@ const accountService = {
   // Update role
   async updateAccountRoles(id, roleData) {
     try {
-      const response = await axios.put(`${API_URL}/roles/${id}`, roleData);
+      const response = await api.put(`/roles/${id}`, roleData);
       return {
         success: true,
         data: response.data
@@ -168,7 +158,7 @@ const accountService = {
   // Delete role
   async deleteAccountRole(id) {
     try {
-      const response = await axios.delete(`${API_URL}/roles/${id}`);
+      const response = await api.delete(`/roles/${id}`);
       return {
         success: true,
         data: response.data
@@ -184,7 +174,7 @@ const accountService = {
   // Get role permissions
   async getRolePermissions() {
     try {
-      const response = await axios.get(`${API_URL}/roles/permissions`);
+      const response = await api.get(`/roles/permissions`);
       return {
         success: true,
         data: response.data
@@ -200,7 +190,7 @@ const accountService = {
   // Update account's roles
   async updateAccountRoleAssignment(accountId, roles) {
     try {
-      const response = await axios.put(`${API_URL}/accounts/${accountId}/roles`, { roles });
+      const response = await api.put(`/accounts/${accountId}/roles`, { roles });
       return {
         success: true,
         data: response.data
@@ -213,41 +203,52 @@ const accountService = {
     }
   },
 
-  // Lấy danh sách tài khoản đã xóa - Tạm thời dùng filter trong frontend
+  // Lấy danh sách tài khoản đã xóa
   async getDeletedAccounts() {
     try {
-      // Sử dụng query parameter thay vì path parameter, để tránh lỗi ObjectId
-      const response = await this.apiRequest('get', '/admin/staffs');
-      if (response.success) {
-        // Lọc tài khoản đã xóa (isDeleted = true) trên frontend
-        const deletedAccounts = response.data.filter(account => account.isDeleted === true);
-        return {
-          success: true,
-          data: deletedAccounts
-        };
-      }
-      return response;
+      // Gọi API trực tiếp đến MongoDB để lấy tài khoản đã xóa
+      const response = await api.get('/admin/deleted-staffs', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      
+      return {
+        success: true,
+        data: response.data.data || [],
+        message: 'Lấy danh sách tài khoản đã xóa thành công'
+      };
     } catch (error) {
+      console.error('Error getting deleted accounts:', error);
       return {
         success: false,
-        message: 'Không thể tải danh sách tài khoản đã xóa',
-        error
+        message: error.response?.data?.message || 'Không thể lấy danh sách tài khoản đã xóa',
+        data: []
       };
     }
   },
 
-  // Khôi phục tài khoản
+  // Khôi phục tài khoản (đặt isDeleted = false)
   async restoreAccount(id) {
-    return this.apiRequest('patch', `/admin/staffs/restore/${id}`, {});
+    return this.apiRequest('put', `/admin/staffs/${id}`, { isDeleted: false });
   },
 
   // Khôi phục nhiều tài khoản
   async restoreAccounts(ids) {
     try {
-      await Promise.all(ids.map(id => this.restoreAccount(id)));
+      const results = await Promise.all(ids.map(id => this.restoreAccount(id)));
+      const failedCount = results.filter(r => !r.success).length;
+      
+      if (failedCount > 0) {
+        return {
+          success: false,
+          message: `Không thể khôi phục ${failedCount} tài khoản`
+        };
+      }
+      
       return {
         success: true,
-        message: 'Đã khôi phục tài khoản thành công'
+        message: `Đã khôi phục ${ids.length} tài khoản thành công`
       };
     } catch (error) {
       return {
@@ -259,18 +260,49 @@ const accountService = {
 
   // Xóa vĩnh viễn tài khoản
   async permanentDeleteAccount(id) {
-    return this.apiRequest('delete', `/admin/staffs/${id}/permanent`);
+    try {
+      // Sử dụng endpoint xóa thông thường với parameter permanent=true
+      const response = await api.delete(`/admin/staffs/${id}?permanent=true`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        }
+      });
+      
+      return {
+        success: response.data.success,
+        message: response.data.message || 'Đã xóa vĩnh viễn tài khoản thành công'
+      };
+    } catch (error) {
+      console.error('Error permanently deleting account:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Không thể xóa vĩnh viễn tài khoản'
+      };
+    }
   },
 
   // Xóa vĩnh viễn nhiều tài khoản
   async permanentDeleteAccounts(ids) {
     try {
-      await Promise.all(ids.map(id => this.permanentDeleteAccount(id)));
+      // Xử lý từng ID một
+      const results = await Promise.all(ids.map(id => this.permanentDeleteAccount(id)));
+      
+      // Kiểm tra kết quả
+      const failedCount = results.filter(result => !result.success).length;
+      
+      if (failedCount > 0) {
+        return {
+          success: false,
+          message: `Không thể xóa vĩnh viễn ${failedCount}/${ids.length} tài khoản`
+        };
+      }
+      
       return {
         success: true,
-        message: 'Đã xóa vĩnh viễn tài khoản thành công'
+        message: `Đã xóa vĩnh viễn ${ids.length} tài khoản thành công`
       };
     } catch (error) {
+      console.error('Error permanently deleting multiple accounts:', error);
       return {
         success: false,
         message: error.message || 'Không thể xóa vĩnh viễn tài khoản'
@@ -279,4 +311,4 @@ const accountService = {
   }
 };
 
-export default accountService;
+export default accountService; 

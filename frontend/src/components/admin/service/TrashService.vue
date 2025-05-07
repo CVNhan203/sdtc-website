@@ -52,7 +52,7 @@
                 @change="toggleSelectAll"
               >
             </th>
-            <th>ID</th>
+            <th>STT</th>
             <th>Ảnh</th>
             <th>Tiêu đề</th>
             <th>Giá</th>
@@ -62,7 +62,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="service in filteredServices" :key="service._id">
+          <tr v-for="(service, index) in filteredServices" :key="service._id">
             <td>
               <input 
                 type="checkbox" 
@@ -70,7 +70,7 @@
                 @change="toggleSelect(service._id)"
               >
             </td>
-            <td :title="service._id">{{ truncateId(service._id) }}</td>
+            <td>{{ index + 1 }}</td>
             <td>
               <div class="image-container">
                 <img 
@@ -339,140 +339,9 @@ export default {
 </script>
 
 <style scoped>
-.trash-service {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
+@import "@/styles/admin.css";
 
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.actions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.search-filter {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.search-box {
-  position: relative;
-  flex: 1;
-  max-width: 400px;
-}
-
-.search-box i {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-.select-box {
-  position: relative;
-  flex: 1;
-  max-width: 200px;
-}
-
-.select-box select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-select {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  min-width: 160px;
-}
-
-.bulk-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.bulk-action-btn.restore {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.bulk-action-btn.restore:hover {
-  background: #bae6fd;
-}
-
-.bulk-action-btn.delete {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.bulk-action-btn.delete:hover {
-  background: #fecaca;
-}
-
-.table-container {
-  min-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  table-layout: fixed;
-  min-width: 950px;
-}
-
-th, td {
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: middle;
-}
-
-th {
-  background: #f8fafc;
-  font-weight: 500;
-  color: #475569;
-  text-align: center;
-}
-
+/* Component specific styles */
 th:nth-child(1), 
 td:nth-child(1) {
   width: 50px; /* Checkbox */
@@ -541,7 +410,7 @@ td:nth-child(8) {
 }
 
 .no-image {
-  color: #a0aec0;
+  color: var(--text-tertiary);
   font-size: 12px;
   text-align: center;
   display: flex;
@@ -549,108 +418,72 @@ td:nth-child(8) {
   align-items: center;
 }
 
-.actions {
+.bulk-action-btn {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.icon-btn {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
+.bulk-action-btn.restore {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.bulk-action-btn.restore:hover {
+  background-color: var(--primary-hover);
+}
+
+.bulk-action-btn.delete {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.bulk-action-btn.delete:hover {
+  background-color: var(--danger-hover);
+}
+
 .icon-btn.restore {
-  background: #e0f2fe;
-  color: #0369a1;
+  background-color: #dcfce7;
+  color: #166534;
 }
 
 .icon-btn.restore:hover {
-  background: #bae6fd;
+  background-color: #bbf7d0;
 }
 
 .icon-btn.delete {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: var(--danger-color);
+  color: white;
 }
 
 .icon-btn.delete:hover {
-  background: #fecaca;
+  background-color: var(--danger-hover);
 }
 
 .empty-message {
   text-align: center;
-  color: #64748b;
-  padding: 2rem;
+  color: var(--text-tertiary);
+  padding: var(--spacing-lg);
   font-style: italic;
 }
 
-.warning-text {
-  color: #dc2626;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: #fee2e2;
-  border-radius: 8px;
-  border-left: 4px solid #dc2626;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.action-column {
+  text-align: center;
 }
 
-.warning-text::before {
-  content: '⚠️';
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.form-actions button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
+th input[type="checkbox"],
+td input[type="checkbox"] {
+  margin: 0 auto;
+  display: block;
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 100px;
-}
-
-.cancel-btn {
-  background: #f3f4f6;
-  color: #4b5563;
-}
-
-.cancel-btn:hover {
-  background: #e5e7eb;
-}
-
-.submit-btn {
-  background: #3b82f6;
-  color: white;
-}
-
-.submit-btn:hover {
-  background: #2563eb;
-}
-
-.delete-btn {
-  background: #ef4444;
-  color: white;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 768px) {
@@ -667,95 +500,5 @@ td:nth-child(8) {
     width: 100%;
     justify-content: center;
   }
-}
-
-/* Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.modal-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.close-btn:hover {
-  background: #f3f4f6;
-  color: #1f2937;
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.modal-body p {
-  margin: 0 0 1.5rem;
-  color: #4b5563;
-  line-height: 1.5;
-}
-
-.action-column {
-  text-align: center;
-}
-
-th input[type="checkbox"],
-td input[type="checkbox"] {
-  margin: 0 auto;
-  display: block;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
 }
 </style> 

@@ -64,6 +64,12 @@ exports.getStaffs = asyncHandler(async (req, res) => {
   res.json({ success: true, data: staffs });
 });
 
+// Lấy danh sách staff đã xóa mềm
+exports.getDeletedStaffs = asyncHandler(async (req, res) => {
+  const deletedStaffs = await Admin.find({ role: 'staff', isDeleted: true }).select('-password');
+  res.json({ success: true, data: deletedStaffs });
+});
+
 // Tạo staff
 exports.createStaff = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -92,6 +98,17 @@ exports.updateStaff = asyncHandler(async (req, res) => {
 //Xóa staff (đánh dấu là đã xóa)
 exports.deleteStaff = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  // Kiểm tra xem có yêu cầu xóa vĩnh viễn hay không
+  const { permanent } = req.query;
+
+  if (permanent === 'true') {
+    // Xóa vĩnh viễn
+    const staff = await Admin.findOneAndDelete({ _id: id, role: 'staff' });
+    if (!staff) return res.status(404).json({ success: false, message: 'Không tìm thấy staff' });
+    return res.json({ success: true, message: 'Đã xóa vĩnh viễn staff thành công' });
+  }
+
+  // Xóa mềm
   const staff = await Admin.findOneAndUpdate(
     { _id: id, role: 'staff' },
     { $set: { isDeleted: true } },

@@ -1,15 +1,7 @@
 <template>
   <div class="add-account">
-    <div class="page-header">
-      <h2>Thêm tài khoản mới</h2>
-      <button class="back-btn" @click="$router.back()">
-        <i class="fas fa-arrow-left"></i>
-        Quay lại
-      </button>
-    </div>
-
     <div class="form-container">
-      <form @submit.prevent="handleSubmit" class="account-form">
+      <form @submit.prevent="handleSubmit" class="account-form" novalidate>
         <!-- Full Name -->
         <div class="form-group">
           <label for="fullName">Họ tên <span class="required">*</span></label>
@@ -18,7 +10,6 @@
             id="fullName"
             v-model="formData.fullName"
             :class="{ 'error': errors.fullName }"
-            required
           />
           <span class="error-message" v-if="errors.fullName">{{ errors.fullName }}</span>
         </div>
@@ -31,7 +22,6 @@
             id="email"
             v-model="formData.email"
             :class="{ 'error': errors.email }"
-            required
           />
           <span class="error-message" v-if="errors.email">{{ errors.email }}</span>
         </div>
@@ -45,7 +35,6 @@
               id="password"
               v-model="formData.password"
               :class="{ 'error': errors.password }"
-              required
             />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
               <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
@@ -63,7 +52,6 @@
               id="confirmPassword"
               v-model="formData.confirmPassword"
               :class="{ 'error': errors.confirmPassword }"
-              required
             />
             <button type="button" class="toggle-password" @click="showConfirmPassword = !showConfirmPassword">
               <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
@@ -79,7 +67,6 @@
             id="role"
             v-model="formData.role"
             :class="{ 'error': errors.role }"
-            required
           >
             <option value="">Chọn vai trò</option>
             <option value="admin">Quản trị viên</option>
@@ -123,7 +110,7 @@
 <script>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import accountService from '@/api/account/accountService';
+import accountService from '@/api/services/accountService';
 import eventBus from '@/eventBus';
 
 export default {
@@ -157,42 +144,43 @@ export default {
       // Reset errors
       Object.keys(errors).forEach(key => errors[key] = '');
 
-      // Validate full name
+      // Validate fullName
       if (!formData.fullName.trim()) {
         errors.fullName = 'Vui lòng nhập họ tên';
         isValid = false;
-      } else if (formData.fullName.length < 3) {
+      } else if (formData.fullName.trim().length < 3) {
         errors.fullName = 'Họ tên phải có ít nhất 3 ký tự';
         isValid = false;
-      } else if (formData.fullName.length > 50) {
+      } else if (formData.fullName.trim().length > 50) {
         errors.fullName = 'Họ tên không được vượt quá 50 ký tự';
         isValid = false;
-      } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(formData.fullName)) {
+      } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(formData.fullName.trim())) {
         errors.fullName = 'Họ tên chỉ được chứa chữ cái và khoảng trắng';
         isValid = false;
       }
 
       // Validate email
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!formData.email.trim()) {
         errors.email = 'Vui lòng nhập email';
         isValid = false;
-      } else if (!emailRegex.test(formData.email)) {
-        errors.email = 'Email không hợp lệ';
+      } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email.trim())) {
+        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)';
         isValid = false;
       }
 
       // Validate password
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if (!formData.password) {
         errors.password = 'Vui lòng nhập mật khẩu';
         isValid = false;
-      } else if (!passwordRegex.test(formData.password)) {
-        errors.password = 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt';
+      } else if (formData.password.length < 8) {
+        errors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+        isValid = false;
+      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/.test(formData.password)) {
+        errors.password = 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&)';
         isValid = false;
       }
 
-      // Validate confirm password
+      // Validate confirmPassword
       if (!formData.confirmPassword) {
         errors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
         isValid = false;
@@ -205,13 +193,28 @@ export default {
       if (!formData.role) {
         errors.role = 'Vui lòng chọn vai trò';
         isValid = false;
+      } else if (!['admin', 'staff'].includes(formData.role)) {
+        errors.role = 'Vai trò không hợp lệ';
+        isValid = false;
       }
 
       return isValid;
     };
 
     const handleSubmit = async () => {
+      // Trim input fields to handle leading/trailing spaces
+      formData.fullName = formData.fullName.trim();
+      formData.email = formData.email.trim();
+      
       if (!validateForm()) {
+        const firstErrorField = Object.keys(errors).find(key => errors[key]);
+        if (firstErrorField) {
+          const element = document.getElementById(firstErrorField);
+          if (element) {
+            element.focus();
+          }
+        }
+        
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Vui lòng kiểm tra lại thông tin nhập'
@@ -222,8 +225,8 @@ export default {
       isSubmitting.value = true;
       try {
         const accountData = {
-          fullName: formData.fullName.trim(),
-          email: formData.email.trim().toLowerCase(),
+          fullName: formData.fullName,
+          email: formData.email.toLowerCase(),
           password: formData.password,
           role: formData.role,
           isDeleted: !formData.status
@@ -254,8 +257,10 @@ export default {
           if (error.response.data.errors) {
             const backendErrors = error.response.data.errors;
             Object.keys(backendErrors).forEach(key => {
-              if (errors[key]) {
-                errors[key] = backendErrors[key];
+              if (errors[key] !== undefined) {
+                errors[key] = Array.isArray(backendErrors[key]) 
+                  ? backendErrors[key][0] 
+                  : backendErrors[key];
               }
             });
           }
@@ -287,96 +292,7 @@ export default {
 <style scoped>
 @import "@/styles/admin.css";
 
-.add-account {
-  padding: 24px;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: #f3f4f6;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.back-btn:hover {
-  background-color: #e5e7eb;
-}
-
-.form-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-}
-
-.account-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.required {
-  color: #dc2626;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-input.error,
-select.error {
-  border-color: #dc2626;
-}
-
-.error-message {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-top: 4px;
-}
-
-.password-input {
-  position: relative;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-}
-
+/* Component specific styles */
 .toggle-switch {
   display: flex;
   align-items: center;
@@ -423,66 +339,18 @@ input[type="checkbox"]:checked + .switch-label::after {
   color: #6b7280;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
+.password-input {
+  position: relative;
 }
 
-.cancel-btn,
-.submit-btn {
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cancel-btn {
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
-}
-
-.cancel-btn:hover {
-  background-color: #e5e7eb;
-}
-
-.submit-btn {
-  background-color: #2563eb;
-  color: white;
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background-color: #1d4ed8;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.fa-spinner {
-  margin-right: 8px;
-}
-
-@media (max-width: 768px) {
-  .add-account {
-    padding: 16px;
-  }
-
-  .form-container {
-    padding: 16px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-  }
+  cursor: pointer;
+  color: #6b7280;
 }
 </style> 

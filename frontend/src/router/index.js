@@ -14,7 +14,6 @@ import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
 import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
 import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
-import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 import Home from '@/components/view/ComHome.vue'
 import Procedure from '@/components/view/ComProcedure.vue'
@@ -104,12 +103,6 @@ const routes = [
         path: 'dich-vu/thung-rac', 
         name: 'AdminTrashService', 
         component: AdminTrashService,
-        meta: { requiresAuth: true, requiresAdmin: true }
-      },
-      { 
-        path: 'dich-vu/chinh-sua/:id', 
-        name: 'AdminEditService', 
-        component: AdminEditService, 
         meta: { requiresAuth: true, requiresAdmin: true }
       },
       { 
