@@ -1,77 +1,115 @@
 <template>
   <div class="advise-background">
-  <div class="contact-container">
-    <div class="contact-info">
-      <h2 class="section-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
-      <div class="info-content">
-        <p>Địa chỉ: 194 đường số 7, Khu dân cư Trung Sơn, xã Bình Hưng, huyện Bình Chánh, TPHCM.</p>
-        <p>Điện thoại: 0931 494 389</p>
-        <p>Email: congngherongbien@gmail.com</p>
-        <p>Website: <a href="https://sdtc.vn" target="_blank">https://sdtc.vn</a></p>
-        <div class="map-container">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3547.410174818486!2d106.68744887451673!3d10.733260859989516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fbaee249739%3A0x4485210532f2e667!2zMTk0IMSQLiBz4buRIDcsIEtodSBkw6JuIGPGsCBUcnVuZyBTxqFuLCBCw6xuaCBDaMOhbmgsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e1!3m2!1svi!2s!4v1745833490448!5m2!1svi!2s"
-            width="100%"
-            height="300"
-            style="border: 0"
-            allowfullscreen=""
-            loading="lazy"
-          >
-          </iframe>
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2 class="section-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+        <div class="info-content">
+          <p>
+            Địa chỉ: 194 đường số 7, Khu dân cư Trung Sơn, xã Bình Hưng, huyện Bình Chánh, TPHCM.
+          </p>
+          <p>Điện thoại: 0931 494 389</p>
+          <p>Email: congngherongbien@gmail.com</p>
+          <p>Website: <a href="https://sdtc.vn" target="_blank">https://sdtc.vn</a></p>
+          <div class="map-container">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3547.410174818486!2d106.68744887451673!3d10.733260859989516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fbaee249739%3A0x4485210532f2e667!2zMTk0IMSQLiBz4buRIDcsIEtodSBkw6JuIGPGsCBUcnVuZyBTxqFuLCBCw6xuaCBDaMOhbmgsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e1!3m2!1svi!2s!4v1745833490448!5m2!1svi!2s"
+              width="100%"
+              height="300"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+            >
+            </iframe>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="contact-form">
-      <h2 class="section-title">LIÊN HỆ BÁO GIÁ</h2>
-      <form @submit.prevent="submitForm">
-        <div class="form-group">
-          <input type="text" v-model="form.name" placeholder="Danh xưng (*)" required />
+      <div class="contact-form">
+        <h2 class="section-title">LIÊN HỆ TƯ VẤN</h2>
+        <form @submit.prevent="submitForm">
+          <div class="form-group">
+            <input type="text" v-model="form.fullName" placeholder="Họ tên (*)" />
+          </div>
+          <div class="form-group">
+            <input type="tel" v-model="form.phone" placeholder="Số điện thoại (*)" />
+          </div>
+          <div class="form-group">
+            <input type="email" v-model="form.email" placeholder="Địa chỉ email" />
+          </div>
+          <div class="form-group">
+            <input type="text" v-model="form.service" placeholder="Dịch vụ cần tư vấn (*)" />
+          </div>
+          <div class="form-group">
+            <textarea v-model="form.note" placeholder="Ghi chú" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="submit-btn" :disabled="loading">
+              <span v-if="loading">Đang gửi...</span>
+              <span v-else>Xác nhận</span>
+            </button>
+          </div>
+        </form>
+        <div v-if="success" class="success-message">{{ success }}</div>
+        <div v-if="errorList.length" class="error-message">
+          {{ errorList[0] }}
         </div>
-        <div class="form-group">
-          <input type="tel" v-model="form.phone" placeholder="Số điện thoại (*)" required />
-        </div>
-        <div class="form-group">
-          <input type="email" v-model="form.email" placeholder="Địa chỉ email" required />
-        </div>
-        <div class="form-group">
-          <input
-            type="text"
-            v-model="form.service"
-            placeholder="Sản phẩm, dịch vụ cần marketing... (*)"
-          />
-        </div>
-        <div class="form-group">
-          <textarea v-model="form.notes" placeholder="Ghi chú" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <button type="submit" class="submit-btn">Xác nhận</button>
-        </div>
-      </form>
+        <div v-else-if="error" class="error-message">{{ error }}</div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import bookingService from '@/api/services/bookingService'
+
 export default {
   name: 'ComAdvise',
   data() {
     return {
       form: {
-        name: '',
+        fullName: '',
         phone: '',
         email: '',
         service: '',
-        notes: '',
+        note: '',
       },
+      success: '',
+      error: '',
+      errorList: [],
+      loading: false,
     }
   },
   methods: {
-    submitForm() {
-      // Handle form submission here
-      console.log('Form submitted:', this.form)
-      // You can add API call here to send the form data to your backend
+    async submitForm() {
+      this.loading = true
+      this.error = ''
+      this.success = ''
+      this.errorList = []
+      try {
+        await bookingService.createBooking(this.form)
+        this.success = 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm.'
+        this.form = { fullName: '', phone: '', email: '', service: '', note: '' }
+        setTimeout(() => {
+          this.success = ''
+        }, 3000)
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.message) {
+          this.errorList = e.response.data.message
+            .split(/,|\n|\r|\r\n|<br>|<br\s*\/?>/i)
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0)
+          setTimeout(() => {
+            this.errorList = []
+          }, 3000)
+        } else {
+          this.error = 'Gửi liên hệ thất bại. Vui lòng thử lại.'
+          setTimeout(() => {
+            this.error = ''
+          }, 3000)
+        }
+      } finally {
+        this.loading = false
+      }
     },
   },
 }
@@ -313,7 +351,9 @@ textarea {
 
 input,
 textarea {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 input:focus,
@@ -356,5 +396,16 @@ textarea::placeholder {
 input:focus::placeholder,
 textarea:focus::placeholder {
   opacity: 0.6;
+}
+
+.success-message {
+  color: #2ecc40;
+  margin-top: 10px;
+  font-weight: bold;
+}
+.error-message {
+  color: #ff4136;
+  margin-top: 10px;
+  font-weight: bold;
 }
 </style>

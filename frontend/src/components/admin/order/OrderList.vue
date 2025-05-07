@@ -18,11 +18,11 @@
         <div class="search-filter">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input 
-              type="text" 
-              v-model="searchQuery" 
+            <input
+              type="text"
+              v-model="searchQuery"
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
-            >
+            />
           </div>
         </div>
       </div>
@@ -60,18 +60,10 @@
                 </span>
               </td>
               <td class="actions">
-                <button 
-                  class="icon-btn info" 
-                  @click="showDetails(order)"
-                  title="Xem chi tiết"
-                >
+                <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
                 </button>
-                <button 
-                  class="icon-btn edit" 
-                  @click="openEditModal(order)"
-                  title="Chỉnh sửa"
-                >
+                <button class="icon-btn edit" @click="openEditModal(order)" title="Chỉnh sửa">
                   <i class="fas fa-edit"></i>
                 </button>
               </td>
@@ -154,13 +146,18 @@
             <form @submit.prevent="handleSubmit" class="edit-form">
               <!-- Thông tin đơn hàng -->
               <div class="form-section">
-                <h4 class="section-title"><i class="fas fa-info-circle"></i> Thông tin đơn hàng: {{ selectedOrder._id }}</h4>
+                <h4 class="section-title">
+                  <i class="fas fa-info-circle"></i> Thông tin đơn hàng: {{ selectedOrder._id }}
+                </h4>
                 <div class="order-info">
                   <p><strong>Khách hàng:</strong> {{ selectedOrder.fullName }}</p>
                   <p><strong>Dịch vụ:</strong> {{ selectedOrder.serviceType }}</p>
                   <p><strong>Email:</strong> {{ selectedOrder.email }}</p>
                   <p><strong>SĐT:</strong> {{ selectedOrder.phone }}</p>
-                  <p><strong>Phương thức thanh toán:</strong> {{ getPaymentMethodText(selectedOrder.paymentMethod) }}</p>
+                  <p>
+                    <strong>Phương thức thanh toán:</strong>
+                    {{ getPaymentMethodText(selectedOrder.paymentMethod) }}
+                  </p>
                 </div>
               </div>
 
@@ -169,10 +166,10 @@
                 <h4 class="section-title"><i class="fas fa-tasks"></i> Cập nhật trạng thái</h4>
                 <div class="form-group">
                   <label>Trạng thái đơn hàng: <span class="required">*</span></label>
-                  <select 
-                    v-model="formData.orderStatus" 
+                  <select
+                    v-model="formData.orderStatus"
                     required
-                    :class="{ 'error': formErrors.orderStatus }"
+                    :class="{ error: formErrors.orderStatus }"
                   >
                     <option value="">Chọn trạng thái</option>
                     <option value="pending">Trạng Thái</option>
@@ -180,7 +177,9 @@
                     <option value="completed">Hoàn Thành</option>
                     <option value="cancelled">Đã hủy</option>
                   </select>
-                  <span class="error-message" v-if="formErrors.orderStatus">{{ formErrors.orderStatus }}</span>
+                  <span class="error-message" v-if="formErrors.orderStatus">{{
+                    formErrors.orderStatus
+                  }}</span>
                 </div>
               </div>
 
@@ -189,36 +188,44 @@
                 <h4 class="section-title"><i class="fas fa-money-bill-wave"></i> Thanh toán</h4>
                 <div class="form-group">
                   <label>Trạng thái thanh toán: <span class="required">*</span></label>
-                  <select 
-                    v-model="formData.paymentStatus" 
+                  <select
+                    v-model="formData.paymentStatus"
                     required
-                    :class="{ 'error': formErrors.paymentStatus }"
+                    :class="{ error: formErrors.paymentStatus }"
                   >
                     <option value="">Chọn trạng thái thanh toán</option>
                     <option value="pending">Chờ thanh toán</option>
                     <option value="paid">Đã thanh toán</option>
                     <option value="failed">Thanh toán thất bại</option>
                   </select>
-                  <span class="error-message" v-if="formErrors.paymentStatus">{{ formErrors.paymentStatus }}</span>
+                  <span class="error-message" v-if="formErrors.paymentStatus">{{
+                    formErrors.paymentStatus
+                  }}</span>
                 </div>
 
                 <div class="form-group">
                   <label>Số tiền thanh toán:</label>
                   <div class="input-with-icon">
-                    <input 
-                      type="number" 
-                      v-model="formData.paidAmount" 
+                    <input
+                      type="number"
+                      v-model="formData.paidAmount"
                       placeholder="Nhập số tiền đã thanh toán"
                       min="0"
                       step="1000"
-                      :class="{ 'error': formErrors.paidAmount }"
+                      :class="{ error: formErrors.paidAmount }"
                       :disabled="formData.paymentStatus !== 'paid'"
                     />
                     <span class="input-icon">VNĐ</span>
                   </div>
-                  <span class="error-message" v-if="formErrors.paidAmount">{{ formErrors.paidAmount }}</span>
-                  <p class="help-text" v-if="formData.paymentStatus === 'paid'">Vui lòng nhập số tiền khi trạng thái là "Đã thanh toán"</p>
-                  <p class="help-text" v-else>Số tiền chỉ được nhập khi trạng thái là "Đã thanh toán"</p>
+                  <span class="error-message" v-if="formErrors.paidAmount">{{
+                    formErrors.paidAmount
+                  }}</span>
+                  <p class="help-text" v-if="formData.paymentStatus === 'paid'">
+                    Vui lòng nhập số tiền khi trạng thái là "Đã thanh toán"
+                  </p>
+                  <p class="help-text" v-else>
+                    Số tiền chỉ được nhập khi trạng thái là "Đã thanh toán"
+                  </p>
                 </div>
               </div>
 
@@ -226,12 +233,12 @@
                 <button type="button" class="cancel-btn" @click="closeEditModal">
                   <i class="fas fa-times"></i> Hủy
                 </button>
-                <button 
-                  type="submit" 
-                  class="submit-btn" 
+                <button
+                  type="submit"
+                  class="submit-btn"
                   :disabled="submitLoading || !formData.orderStatus"
                 >
-                  <i class="fas" :class="submitLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i> 
+                  <i class="fas" :class="submitLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
                   {{ submitLoading ? 'Đang xử lý...' : 'Cập nhật trạng thái' }}
                 </button>
               </div>
@@ -264,71 +271,72 @@ export default {
       formData: {
         orderStatus: 'pending',
         paymentStatus: 'pending',
-        paidAmount: 0
+        paidAmount: 0,
       },
       formErrors: {
         orderStatus: '',
         paymentStatus: '',
-        paidAmount: ''
+        paidAmount: '',
       },
       loading: false,
       submitLoading: false,
-      error: null
+      error: null,
     }
   },
   computed: {
     filteredOrders() {
       // Make sure orders is an array before trying to filter
       if (!this.orders || !Array.isArray(this.orders)) {
-        return [];
+        return []
       }
-      
-      let result = [...this.orders];
-      
+
+      let result = [...this.orders]
+
       // Search filter
       if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        result = result.filter(order => 
-          (order._id && order._id.toLowerCase().includes(query)) ||
-          (order.fullName && order.fullName.toLowerCase().includes(query)) ||
-          (order.phone && order.phone.includes(query)) ||
-          (order.email && order.email.toLowerCase().includes(query))
-        );
+        const query = this.searchQuery.toLowerCase()
+        result = result.filter(
+          (order) =>
+            (order._id && order._id.toLowerCase().includes(query)) ||
+            (order.fullName && order.fullName.toLowerCase().includes(query)) ||
+            (order.phone && order.phone.includes(query)) ||
+            (order.email && order.email.toLowerCase().includes(query))
+        )
       }
-      
+
       // Status filter
       if (this.statusFilter) {
-        result = result.filter(order => order.orderStatus === this.statusFilter);
+        result = result.filter((order) => order.orderStatus === this.statusFilter)
       }
-      
+
       // Payment status filter
       if (this.paymentFilter) {
-        result = result.filter(order => order.paymentStatus === this.paymentFilter);
+        result = result.filter((order) => order.paymentStatus === this.paymentFilter)
       }
-      
-      return result;
+
+      return result
     },
     isFormValid() {
       // Implement form validation logic here
-      return true; // Placeholder, actual implementation needed
-    }
+      return true // Placeholder, actual implementation needed
+    },
   },
   methods: {
     applyFilters() {
       // This method exists to enable dynamic filtering on change events
-      console.log('Filters applied: Status -', this.statusFilter, 'Payment -', this.paymentFilter);
+      console.log('Filters applied: Status -', this.statusFilter, 'Payment -', this.paymentFilter)
     },
-    
+
     formatOrderId(id) {
-      if (!id) return '';
+      if (!id) return ''
       // Display only the last 6 characters for better readability
-      return id.length > 6 ? id.substring(id.length - 6) : id;
+      return id.length > 6 ? id.substring(id.length - 6) : id
     },
-    
+
     formatCurrency(amount) {
       return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
-        currency: 'VND'
+        currency: 'VND',
       }).format(amount)
     },
 
@@ -349,8 +357,8 @@ export default {
         });
         return `${datePart} - ${timePart}`;
       } catch (error) {
-        console.error('Error formatting date:', error);
-        return '';
+        console.error('Error formatting date:', error)
+        return ''
       }
     },
 
@@ -359,39 +367,39 @@ export default {
         pending: 'Trạng Thái',
         processing: 'Đang Triển Khai',
         completed: 'Hoàn Thành',
-        cancelled: 'Đã hủy'
+        cancelled: 'Đã hủy',
       }
       return statusMap[status] || status
     },
 
     getOrderStatusClass(status) {
-      return status || 'pending';
+      return status || 'pending'
     },
 
     getPaymentStatusText(status) {
       const statusMap = {
         pending: 'Chờ thanh toán',
         paid: 'Đã thanh toán',
-        failed: 'Thanh toán thất bại'
+        failed: 'Thanh toán thất bại',
       }
       return statusMap[status] || status
     },
-    
+
     getPaymentStatusClass(status) {
       const classMap = {
         pending: 'warning',
         paid: 'success',
-        failed: 'danger'
+        failed: 'danger',
       }
       return classMap[status] || 'default'
     },
-    
+
     getPaymentMethodText(method) {
       const methodMap = {
-        'VNPAY': 'VNPay',
-        'COD': 'Tiền mặt',
-        'BANK_TRANSFER': 'Chuyển khoản',
-        'MOMO': 'Ví MoMo'
+        VNPAY: 'VNPay',
+        COD: 'Tiền mặt',
+        BANK_TRANSFER: 'Chuyển khoản',
+        MOMO: 'Ví MoMo',
       }
       return methodMap[method] || method
     },
@@ -409,7 +417,7 @@ export default {
         this.orders = [] // Ensure orders is an array even after an error
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải danh sách đơn hàng'
+          message: 'Không thể tải danh sách đơn hàng',
         })
       } finally {
         this.loading = false
@@ -435,7 +443,7 @@ export default {
         this.services = []
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải danh sách dịch vụ'
+          message: 'Không thể tải danh sách dịch vụ',
         })
       }
     },
@@ -448,21 +456,21 @@ export default {
         this.formData = {
           orderStatus: order.orderStatus || 'pending',
           paymentStatus: order.paymentStatus || 'pending',
-          paidAmount: order.paidAmount || 0
+          paidAmount: order.paidAmount || 0,
         }
-        
+
         this.showFormModal = true
       } catch (error) {
         console.error('Error opening edit modal:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi mở form chỉnh sửa'
+          message: 'Có lỗi xảy ra khi mở form chỉnh sửa',
         })
       } finally {
         this.loading = false
       }
     },
-    
+
     openEditModalFromDetails() {
       this.showDetailsModal = false
       this.openEditModal(this.selectedOrder)
@@ -473,12 +481,12 @@ export default {
       this.formData = {
         orderStatus: 'pending',
         paymentStatus: 'pending',
-        paidAmount: 0
+        paidAmount: 0,
       }
       this.formErrors = {
         orderStatus: '',
         paymentStatus: '',
-        paidAmount: ''
+        paidAmount: '',
       }
       this.submitLoading = false
     },
@@ -514,7 +522,7 @@ export default {
       if (!this.validateForm()) {
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Vui lòng kiểm tra lại thông tin nhập'
+          message: 'Vui lòng kiểm tra lại thông tin nhập',
         })
         return
       }
@@ -529,13 +537,13 @@ export default {
 
       try {
         this.submitLoading = true
-        
+
         const updateData = {
           orderStatus: this.formData.orderStatus,
           paymentStatus: this.formData.paymentStatus,
-          paidAmount: this.formData.paymentStatus === 'paid' ? this.formData.paidAmount : 0
+          paidAmount: this.formData.paymentStatus === 'paid' ? this.formData.paidAmount : 0,
         }
-        
+
         await orderService.updateOrderStatus(this.selectedOrder._id, updateData)
 
         // Reload orders to get fresh data
@@ -543,13 +551,13 @@ export default {
         this.showFormModal = false
         eventBus.emit('show-toast', {
           type: 'success',
-          message: 'Cập nhật trạng thái đơn hàng thành công'
+          message: 'Cập nhật trạng thái đơn hàng thành công',
         })
       } catch (error) {
         console.error('Error updating order:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng'
+          message: 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng',
         })
       } finally {
         this.submitLoading = false
@@ -557,35 +565,35 @@ export default {
     },
 
     formatDatePart(date) {
-      if (!date) return '';
+      if (!date) return ''
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
-        
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
+
         return dateObj.toLocaleDateString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit'
-        });
+          day: '2-digit',
+        })
       } catch (error) {
-        console.error('Error formatting date part:', error);
-        return '';
+        console.error('Error formatting date part:', error)
+        return ''
       }
     },
 
     formatTimePart(date) {
-      if (!date) return '';
+      if (!date) return ''
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
-        
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
+
         return dateObj.toLocaleTimeString('vi-VN', {
           hour: '2-digit',
-          minute: '2-digit'
-        });
+          minute: '2-digit',
+        })
       } catch (error) {
-        console.error('Error formatting time part:', error);
-        return '';
+        console.error('Error formatting time part:', error)
+        return ''
       }
     },
 
@@ -605,21 +613,18 @@ export default {
       if (newVal !== 'paid') {
         this.formData.paidAmount = 0
       }
-    }
+    },
   },
   async created() {
     try {
       this.loading = true
-      await Promise.all([
-        this.loadOrders(),
-        this.loadServices()
-      ])
+      await Promise.all([this.loadOrders(), this.loadServices()])
     } catch (error) {
       console.error('Error initializing component:', error)
     } finally {
       this.loading = false
     }
-  }
+  },
 }
 </script>
 
@@ -1083,11 +1088,11 @@ export default {
   .form-row {
     flex-direction: column;
   }
-  
+
   .form-section {
     padding: 1rem;
   }
-  
+
   .modal-content {
     width: 95%;
     max-height: 90vh;
