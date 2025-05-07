@@ -95,6 +95,15 @@ import newsService from '@/api/services/newsService'
 export default {
   name: 'ComNewsDetail',
   setup() {
+    const formatDate = (date) => {
+      if (!date) return ''
+      return new Date(date).toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }
+
     const route = useRoute()
     const router = useRouter()
     const searchQuery = ref('')
@@ -116,13 +125,25 @@ export default {
       try {
         // Lấy danh sách tin tức gần đây
         const { data } = await newsService.getNews()
-        allNews.value = data
+        allNews.value = data.map(news => ({
+          ...news,
+          imageUrl: getImageUrl(news.image)
+        }))
         // Lấy chi tiết tin tức
         const newsDetail = await newsService.getNewsById(route.params.id)
-        currentNews.value = newsDetail
+        currentNews.value = {
+          ...newsDetail,
+          imageUrl: getImageUrl(newsDetail.image)
+        }
       } catch (e) {
         error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
       }
+    }
+
+    const getImageUrl = (image) => {
+      if (!image) return ''
+      if (image.startsWith('http')) return image
+      return `http://localhost:3000/${image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')}`
     }
 
     const goToNewsDetail = (news) => {
@@ -148,7 +169,7 @@ export default {
     }
 
     onMounted(() => {
-      loadCurrentNews()
+      loadData()
     })
 
     return {
