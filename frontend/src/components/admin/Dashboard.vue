@@ -116,26 +116,40 @@
             <i class="fas fa-list"></i>
             <span>Danh sách thanh toán</span>
           </router-link>
-          <router-link
-            to="/admin/thanh-toan/phuong-thuc"
-            class="submenu-item"
-            active-class="active"
-          >
-            <i class="fas fa-money-bill"></i>
-            <span>Phương thức thanh toán</span>
+        </div>
+      </div>
+
+      <!-- Thêm mục Quản lý Tài khoản chỉ hiển thị cho admin -->
+      <div class="nav-group" v-if="userRole === 'admin'">
+        <div class="nav-item" :class="{ active: isAccountMenuActive }" @click="toggleAccountMenu">
+          <div class="nav-item-content">
+            <i class="fas fa-users-cog"></i>
+            <span>Quản lý Tài khoản</span>
+          </div>
+          <i class="fas" :class="isAccountMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </div>
+
+        <div class="submenu" v-show="isAccountMenuOpen">
+          <router-link to="/admin/tai-khoan/danh-sach" class="submenu-item" active-class="active">
+            <i class="fas fa-list"></i>
+            <span>Danh sách tài khoản</span>
           </router-link>
-          <router-link to="/admin/thanh-toan/lich-su" class="submenu-item" active-class="active">
-            <i class="fas fa-history"></i>
-            <span>Lịch sử thanh toán</span>
+          <router-link to="/admin/tai-khoan/them-moi" class="submenu-item" active-class="active">
+            <i class="fas fa-user-plus"></i>
+            <span>Thêm tài khoản mới</span>
+          </router-link>
+          <router-link to="/admin/tai-khoan/thung-rac" class="submenu-item" active-class="active">
+            <i class="fas fa-trash-alt"></i>
+            <span>Thùng rác</span>
           </router-link>
         </div>
       </div>
 
       <div class="sidebar-footer">
-        <div class="user-role">
+        <!-- <div class="user-role">
           <i class="fas fa-user-tag"></i>
           <span>{{ userRoleDisplay }}</span>
-        </div>
+        </div> -->
         <button class="logout-btn" @click="handleLogout">
           <i class="fas fa-sign-out-alt"></i>
           <span>Đăng xuất</span>
@@ -179,6 +193,7 @@ export default {
       isNewsMenuOpen: false,
       isOrderMenuOpen: false,
       isPaymentMenuOpen: false,
+      isAccountMenuOpen: false,
       deletedServicesCount: 0,
       userRole: 'admin', // Mặc định là admin
       // deletedNewsCount: 0,
@@ -202,18 +217,36 @@ export default {
   },
   computed: {
     currentPageTitle() {
-      const routeMap = {
-        'danh-sach': 'Danh sách dịch vụ',
-        'them-moi': 'Thêm dịch vụ mới',
-        'tin-tuc': 'Quản lý Tin tức',
-        'don-hang': 'Quản lý Đơn hàng',
-        'thanh-toan': 'Quản lý Thanh toán',
-        'cho-duyet': 'Đơn hàng chờ duyệt',
-        'lich-su': 'Lịch sử',
-        'phuong-thuc': 'Phương thức thanh toán',
+      const path = this.$route.path;
+      
+      // Xử lý các trường hợp đặc biệt trước
+      if (path.includes('/admin/tai-khoan')) {
+        if (path.includes('/danh-sach')) return 'Danh sách tài khoản';
+        if (path.includes('/them-moi')) return 'Thêm tài khoản mới';
+        return 'Quản lý Tài khoản';
       }
-      const path = this.$route.path.split('/').pop()
-      return routeMap[path] || 'Dashboard'
+
+      // Xử lý các route khác
+      const routeMap = {
+        'dashboard': 'Dashboard',
+        'dich-vu/danh-sach': 'Danh sách dịch vụ',
+        'dich-vu/them-moi': 'Thêm dịch vụ mới',
+        'tin-tuc/danh-sach': 'Danh sách tin tức',
+        'tin-tuc/them-moi': 'Thêm tin tức mới',
+        'don-hang/danh-sach': 'Danh sách đơn hàng',
+        'don-hang/cho-duyet': 'Đơn hàng chờ duyệt',
+        'don-hang/lich-su': 'Lịch sử đơn hàng',
+        'thanh-toan/danh-sach': 'Danh sách thanh toán',
+        'thanh-toan/phuong-thuc': 'Phương thức thanh toán',
+        'thanh-toan/lich-su': 'Lịch sử thanh toán'
+      };
+
+      // Tìm route phù hợp
+      for (const [key, value] of Object.entries(routeMap)) {
+        if (path.includes(key)) return value;
+      }
+
+      return 'Dashboard';
     },
     isServiceMenuActive() {
       return this.$route.path.includes('/admin/dich-vu')
@@ -227,12 +260,15 @@ export default {
     isPaymentMenuActive() {
       return this.$route.path.includes('/admin/thanh-toan')
     },
+    isAccountMenuActive() {
+      return this.$route.path.includes('/admin/tai-khoan')
+    },
     isDashboardActive() {
       return this.$route.path === '/admin/dashboard'
     },
-    userRoleDisplay() {
-      return this.userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên'
-    }
+    // userRoleDisplay() {
+    //   return this.userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên'
+    // }
   },
   methods: {
     toggleSidebar() {
@@ -255,6 +291,9 @@ export default {
     },
     togglePaymentMenu() {
       this.isPaymentMenuOpen = !this.isPaymentMenuOpen
+    },
+    toggleAccountMenu() {
+      this.isAccountMenuOpen = !this.isAccountMenuOpen
     },
     closeMobileMenu() {
       this.isSidebarOpen = false
@@ -402,10 +441,6 @@ export default {
   padding: 1rem 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #fff !important;
-  text-decoration: none;
-  border: none;
-  background: none;
 }
 
 .sidebar-collapsed .nav-item {
@@ -430,10 +465,16 @@ export default {
   color: #fff;
 }
 
+.nav-item a{
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  background: none;
+}
+
 .nav-item span {
   white-space: nowrap;
   transition: opacity 0.3s ease;
-  color: #fff;
 }
 
 .nav-item:hover {
@@ -682,4 +723,10 @@ export default {
 .user-role i {
   font-size: 1rem;
 }
+
+/* Add new styles for account management */
+.nav-item i.fa-users-cog {
+  color: #fff;
+}
+
 </style>
