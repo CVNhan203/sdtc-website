@@ -168,7 +168,8 @@
           </p>
         </div>
         <div class="commit-timeline">
-          <section class="timeline-section">
+
+         <div class="timeline">
             <div class="timeline-header">
               <h2>Timeline</h2>
               <div class="legend">
@@ -233,7 +234,7 @@
                 </div>
               </div>
             </div>
-          </section>
+          </div>
         </div>
       </div>
     </div>
@@ -925,13 +926,13 @@ h1 {
 }
 
 .commit-timeline {
-  flex: 1.2;
+  flex: 1.55;
   min-width: 6%;
   padding: 3rem 3rem 3rem 0; /* 48px 48px 48px 0 */
   display: flex;
 }
 
-.timeline-section {
+.timeline {
   width: 100%;
   background: transparent;
   box-shadow: none;
@@ -1668,45 +1669,60 @@ h1 {
 @media (max-width: 1024px) {
   /* Hero Section */
   .hero-section {
-    padding: 1.5rem;
-  }
-
-  .home-container {
-    max-width: 100%;
-    padding: 0 1rem;
+    padding: 2rem; /* Tăng padding để có không gian thoáng hơn */
   }
 
   .content-wrapper {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem; /* Tăng gap giữa các phần tử */
     align-items: center;
+    padding: 0 1rem; /* Thêm padding ngang */
   }
 
   .stats-card,
   .trust-card {
     width: 100%;
-    max-width: 18rem;
+    max-width: 22rem; /* Tăng max-width để card rộng hơn */
     height: auto;
     margin: 0;
     position: static;
-    padding: 1rem;
+    padding: 1.5rem; /* Tăng padding */
   }
 
-
   .main-content {
-    padding: 1.5rem 0;
+    padding: 2rem 0;
+    max-width: 90%; /* Giới hạn chiều rộng nội dung */
   }
 
   .main-content h1 {
-    font-size: 1.6rem;
+    font-size: 2rem; /* Tăng font size */
     line-height: 1.4;
+    margin-bottom: 1.5rem;
   }
-
   .main-content .subtitle,
   .main-content .description {
     font-size: 0.9rem;
   }
 
+  .icon-above-card {
+    width: 2rem; /* Giảm kích thước icon */
+    height: 2rem;
+    position: absolute;
+    z-index: 3; /* Đảm bảo icon nằm trên card */
+  }
+
+  .icon-left {
+    top: -2rem; /* Đặt phía trên stats-card */
+    left: 18rem; /* Căn trái với khoảng cách nhỏ */
+  }
+
+  .icon-right {
+    top: 27rem; /* Đặt phía trên trust-card */
+    right: 25rem; /* Căn phải với khoảng cách nhỏ */
+  }
+  .avatar-group {
+    justify-content: center;
+  }
   .services {
     gap: 0.5rem;
     justify-content: center;
@@ -2432,8 +2448,8 @@ h1 {
     font-size: 0.85rem;
   }
   .icon-above-card {
-    width: 1.5rem; /* Giảm kích thước icon */
-    height: 1.5rem;
+    width: 2rem; /* Giảm kích thước icon */
+    height: 2rem;
     position: absolute;
     z-index: 3; /* Đảm bảo icon nằm trên card */
   }
@@ -2444,7 +2460,7 @@ h1 {
   }
 
   .icon-right {
-    top: 22.5rem; /* Đặt phía trên trust-card */
+    top: 24rem; /* Đặt phía trên trust-card */
     right: 10rem; /* Căn phải với khoảng cách nhỏ */
   }
 
@@ -2569,21 +2585,20 @@ h1 {
   }
 
   .commit-content {
-    padding: 1rem;
-    text-align: center;
+    padding: 0;
   }
 
   .commit-title {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
 
   .commit-desc {
     font-size: 0.9rem;
-    max-width: 100%;
+    max-width: 80%;
   }
 
   .commit-timeline {
-    padding: 1rem;
+    padding: 0;
   }
 
   .timeline-labels {
@@ -2593,7 +2608,7 @@ h1 {
 
   .timeline-lines,
   .timeline-tasks {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
 
   .timeline-task {
@@ -2603,15 +2618,27 @@ h1 {
     position: relative; /* Chuyển sang relative để tránh chồng lấn */
     margin-bottom: 0.5rem;
   }
-
-  .timeline-task .percent {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
+  .legend {
+    font-size: 0.6rem;
   }
 
+  .timeline-task.done{
+    width: 6rem;
+  }
+
+  .timeline-task .percent {
+    font-size: 0.5rem;
+    padding: 0.1rem 0.2rem;
+  }
+  .timeline-task .task-name {
+    font-size: 0.5rem;
+  }
   .timeline-task .avatars img {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  .timeline-task .progress{
+    width: 6rem;
   }
   /* Customer Trust Section */
   .circle-layout {
