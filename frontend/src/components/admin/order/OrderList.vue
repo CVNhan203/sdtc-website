@@ -59,7 +59,7 @@
                   {{ getStatusText(order.orderStatus) }}
                 </span>
               </td>
-              <td class="actions">
+              <td class="actions" style="height: 120px !important">
                 <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
                 </button>
