@@ -1,79 +1,79 @@
-import api from '../config';
+import api from '../config'
+
+// Sử dụng localStorage để lưu trữ dữ liệu thanh toán
+const PAYMENTS_STORAGE_KEY = 'payments_data'
+
+// Hàm lấy dữ liệu từ localStorage
+const getStoredPayments = () => {
+  const storedData = localStorage.getItem(PAYMENTS_STORAGE_KEY)
+  return storedData ? JSON.parse(storedData) : []
+}
+
+// Hàm lưu dữ liệu vào localStorage
+const storePayments = (data) => {
+  localStorage.setItem(PAYMENTS_STORAGE_KEY, JSON.stringify(data))
+}
 
 const paymentService = {
-  // Lấy danh sách payment
-  async getPayments(params) {
+  // Lấy danh sách thanh toán từ localStorage
+  async getPayments() {
     try {
-      const response = await api.get('/payments', { params });
+      // Backend không có route GET /payments
+      // Trả về dữ liệu đã lưu trong localStorage
+      const payments = getStoredPayments()
       return {
-        data: response.data.data || [],
-        pagination: response.data.pagination || null,
-        message: response.data.message || ''
-      };
+        success: true,
+        data: payments,
+        message: 'Lấy danh sách thanh toán thành công',
+      }
     } catch (error) {
-      console.error('Error fetching payments:', error);
-      throw error;
+      console.error('Error fetching payments:', error)
+      throw error
     }
   },
 
-  // Lấy chi tiết payment
-  async getPaymentById(id) {
+  // Tạo thanh toán mới
+  async createPayment(paymentData) {
     try {
-      const response = await api.get(`/payments/${id}`);
-      return response.data.data;
+      const response = await api.post('/payments/create', paymentData)
+
+      // Nếu tạo thành công, thêm vào localStorage
+      if (response.data.success) {
+        const payments = getStoredPayments()
+        payments.push(response.data.data)
+        storePayments(payments)
+      }
+
+      return response.data
     } catch (error) {
-      console.error('Error fetching payment details:', error);
-      throw error;
+      console.error('Error creating payment:', error)
+      throw error
     }
   },
 
-  // Tạo payment mới
-  async createPayment(data) {
+  // Xác nhận thanh toán
+  async confirmPayment(paymentData) {
     try {
-      const response = await api.post('/payments', JSON.stringify(data), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return response.data;
+      const response = await api.post('/payments/confirm', paymentData)
+
+      // Nếu cập nhật thành công, cập nhật trong localStorage
+      if (response.data.success) {
+        const payments = getStoredPayments()
+        const updatedPayments = payments.map((payment) => {
+          if (payment.orderId === paymentData.orderId && payment.method === paymentData.method) {
+            return { ...payment, status: paymentData.status }
+          }
+          return payment
+        })
+        storePayments(updatedPayments)
+      }
+
+      return response.data
     } catch (error) {
-      console.error('Error creating payment:', error);
-      throw error;
+      console.error('Error confirming payment:', error)
+      throw error
     }
   },
+}
 
-  // Cập nhật payment
-  async updatePayment(id, data) {
-    try {
-      const response = await api.put(`/payments/${id}`, JSON.stringify(data), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error updating payment:', error);
-      throw error;
-    }
-  },
-
-  // Xóa payment
-  async deletePayment(id) {
-    try {
-      const response = await api.delete(`/payments/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error deleting payment:', error);
-      throw error;
-    }
-  },
-
-  // Upload ảnh payment (nếu có)
-  async uploadImage(formData) {
-    try {
-      const response = await api.post('/payments/upload', formData);
-      return response.data;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  }
-};
-
-export default paymentService; 
+export default paymentService

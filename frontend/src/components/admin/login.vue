@@ -12,7 +12,7 @@
             type="email"
             id="email"
             v-model="credentials.email"
-            :class="{ 'error': emailError }"
+            :class="{ error: emailError }"
             @input="validateEmail"
             placeholder="Nhập email của bạn"
             required
@@ -27,7 +27,7 @@
               :type="showPassword ? 'text' : 'password'"
               id="password"
               v-model="credentials.password"
-              :class="{ 'error': passwordError }"
+              :class="{ error: passwordError }"
               @input="validatePassword"
               placeholder="Nhập mật khẩu"
               required
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import authService from '@/api/services/authService';
+import authService from '@/api/services/authService'
 
 export default {
   name: 'AdminLogin',
@@ -61,22 +61,24 @@ export default {
     return {
       credentials: {
         email: '',
-        password: ''
+        password: '',
       },
       emailError: '',
       passwordError: '',
       loginMessage: null,
       isLoading: false,
-      showPassword: false
+      showPassword: false,
     }
   },
   computed: {
     isFormValid() {
-      return this.credentials.email && 
-             this.credentials.password && 
-             !this.emailError && 
-             !this.passwordError
-    }
+      return (
+        this.credentials.email &&
+        this.credentials.password &&
+        !this.emailError &&
+        !this.passwordError
+      )
+    },
   },
   methods: {
     validateEmail() {
@@ -101,45 +103,45 @@ export default {
       this.loginMessage = null
     },
     async handleSubmit() {
-      if (!this.isFormValid || this.isLoading) return;
+      if (!this.isFormValid || this.isLoading) return
 
-      this.isLoading = true;
-      this.loginMessage = null;
-      
+      this.isLoading = true
+      this.loginMessage = null
+
       try {
-        const result = await authService.login(this.credentials);
-        
+        const result = await authService.login(this.credentials)
+
         if (result.success) {
           this.loginMessage = {
             type: 'success',
-            text: 'Đăng nhập thành công! Đang chuyển hướng...'
-          };
-          
+            text: 'Đăng nhập thành công! Đang chuyển hướng...',
+          }
+
           // Chuyển hướng ngay lập tức
-          await this.$router.push('/admin/dashboard');
+          await this.$router.push('/admin/dashboard')
         } else {
           this.loginMessage = {
             type: 'error',
-            text: result.message || 'Email hoặc mật khẩu không chính xác'
-          };
+            text: result.message || 'Email hoặc mật khẩu không chính xác',
+          }
         }
       } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error:', error)
         this.loginMessage = {
           type: 'error',
-          text: 'Có lỗi xảy ra, vui lòng thử lại'
-        };
+          text: 'Có lỗi xảy ra, vui lòng thử lại',
+        }
       } finally {
-        this.isLoading = false;
+        this.isLoading = false
       }
-    }
+    },
   },
   created() {
     // Nếu đã đăng nhập thì chuyển về dashboard
     if (authService.isAuthenticated()) {
-      this.$router.push('/admin/dashboard');
+      this.$router.push('/admin/dashboard')
     }
-  }
+  },
 }
 </script>
 

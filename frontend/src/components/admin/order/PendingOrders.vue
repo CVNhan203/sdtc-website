@@ -234,94 +234,14 @@ export default {
 </script>
 
 <style scoped>
+@import '@/styles/admin.css';
+
+/* Component specific styles */
 .pending-orders {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 0;
-}
-
-.loading-spinner {
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.error-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 0;
-}
-
-.error-message {
-  color: #dc2626;
-  margin-bottom: 1rem;
-}
-
-.retry-btn {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.retry-btn:hover {
-  background: #2563eb;
-}
-
-.table-container {
-  min-width: 100%;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  table-layout: fixed;
-  min-width: 950px;
-}
-
-th,
-td {
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #e2e8f0;
-  vertical-align: middle;
-}
-
-th {
-  background: #f8fafc;
-  font-weight: 500;
-  color: #475569;
-  text-align: center;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
 }
 
 /* Column widths */
@@ -375,37 +295,11 @@ td:nth-child(8) {
   text-align: center;
 }
 
-.actions {
-  padding: 0.5rem;
-  text-align: center;
-}
-
 .action-buttons {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
-}
-
-.icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.icon-btn.info {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.icon-btn.info:hover {
-  background: #bae6fd;
 }
 
 .icon-btn.approve {
@@ -428,92 +322,16 @@ td:nth-child(8) {
 
 .no-data {
   text-align: center;
-  color: #6b7280;
+  color: var(--text-tertiary);
   font-style: italic;
   padding: 2rem 0;
 }
 
-/* Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: modalFadeIn 0.3s ease;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.modal-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 1;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #6b7280;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.close-btn:hover {
-  background: #f3f4f6;
-  color: #1f2937;
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
+/* Modal specific overrides */
 .detail-section {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .detail-section:last-child {
@@ -524,7 +342,7 @@ td:nth-child(8) {
 
 .detail-section h4 {
   font-size: 1.1rem;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-top: 0;
   margin-bottom: 1rem;
 }
@@ -582,21 +400,21 @@ td:nth-child(8) {
 }
 
 .submit-btn.approve {
-  background: #10b981;
+  background: var(--success-color);
   color: white;
 }
 
 .submit-btn.approve:hover {
-  background: #059669;
+  background: var(--success-hover);
 }
 
 .submit-btn.reject {
-  background: #ef4444;
+  background: var(--danger-color);
   color: white;
 }
 
 .submit-btn.reject:hover {
-  background: #dc2626;
+  background: var(--danger-hover);
 }
 
 .submit-btn:disabled {
