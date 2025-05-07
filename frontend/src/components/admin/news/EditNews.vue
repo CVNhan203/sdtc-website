@@ -1,39 +1,46 @@
 <template>
   <div class="edit-news">
     <div class="form-container">
-      <form @submit.prevent="handleSubmit" :class="{ 'submitting': isSubmitting }" novalidate>
+      <form @submit.prevent="handleSubmit" :class="{ submitting: isSubmitting }" novalidate>
         <!-- Thông báo lỗi chung -->
         <div v-if="error" class="error-alert">
           <i class="fas fa-exclamation-circle"></i>
           {{ error }}
         </div>
-        
+
         <!-- Thông báo thành công -->
         <div v-if="successMessage" class="success-alert">
           <i class="fas fa-check-circle"></i>
           {{ successMessage }}
         </div>
-      
+
         <!-- Trạng thái tải -->
         <div v-if="uploadStatus" class="status-alert">
           <i class="fas fa-spinner fa-spin" v-if="uploadStatus.includes('Đang')"></i>
           <i class="fas fa-check" v-else></i>
           {{ uploadStatus }}
         </div>
-      
+
         <!-- Tiêu đề -->
         <div class="form-group">
           <label>Tiêu đề <span class="required">*</span></label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             name="title"
             v-model.trim="formData.title"
-            :class="{ 'error': errors.title }"
+            :class="{ error: errors.title }"
             :disabled="isSubmitting"
             placeholder="Nhập tiêu đề tin tức"
-          >
+          />
           <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
-          <span class="character-count" :class="{ 'error': formData.title.length > 200 || formData.title.length < 10 && formData.title.length > 0 }">
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.title.length > 200 ||
+                (formData.title.length < 10 && formData.title.length > 0),
+            }"
+          >
             {{ formData.title.length }}/200 (Tối thiểu 10 ký tự)
           </span>
         </div>
@@ -43,17 +50,17 @@
           <!-- Phân loại -->
           <div class="form-group">
             <label>Phân loại <span class="required">*</span></label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               name="type"
               v-model.trim="formData.type"
-              :class="{ 'error': errors.type }"
+              :class="{ error: errors.type }"
               :disabled="isSubmitting"
               placeholder="Nhập phân loại tin tức"
               maxlength="50"
-            >
+            />
             <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
-            <span class="character-count" :class="{ 'error': formData.type.length > 50 }">
+            <span class="character-count" :class="{ error: formData.type.length > 50 }">
               {{ formData.type.length }}/50
             </span>
           </div>
@@ -61,47 +68,55 @@
           <!-- Ngày đăng -->
           <div class="form-group">
             <label>Ngày đăng <span class="required">*</span></label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               name="publishedDate"
               v-model="formData.publishedDate"
-              :class="{ 'error': errors.publishedDate }"
+              :class="{ error: errors.publishedDate }"
               :disabled="isSubmitting"
               :min="minDate"
-            >
-            <span class="error-message" v-if="errors.publishedDate">{{ errors.publishedDate }}</span>
+            />
+            <span class="error-message" v-if="errors.publishedDate">{{
+              errors.publishedDate
+            }}</span>
           </div>
         </div>
 
         <!-- Ảnh -->
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
-          <div class="image-upload-container" @click="triggerFileInput" :class="{ 'error-border': errors.image }">
-            <input 
-              type="file" 
+          <div
+            class="image-upload-container"
+            @click="triggerFileInput"
+            :class="{ 'error-border': errors.image }"
+          >
+            <input
+              type="file"
               name="image"
               class="file-input"
-              @change="handleImageChange" 
+              @change="handleImageChange"
               accept="image/*"
               ref="fileInput"
               :disabled="isSubmitting"
-            >
+            />
             <div v-if="!imagePreview && !formData.image" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
               <p class="upload-hint">Kích thước tối thiểu: 300x200px, tối đa 2000x2000px</p>
             </div>
-            <div 
-              v-if="imagePreview || formData.image" 
-              class="image-preview"
-            >
-              <img 
-                :src="imagePreview || getImageUrl(formData.image)" 
+            <div v-if="imagePreview || formData.image" class="image-preview">
+              <img
+                :src="imagePreview || getImageUrl(formData.image)"
                 alt="Preview"
                 class="preview-img"
               />
-              <button type="button" @click.stop="removeImage" class="remove-image" :disabled="isSubmitting">
+              <button
+                type="button"
+                @click.stop="removeImage"
+                class="remove-image"
+                :disabled="isSubmitting"
+              >
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -112,16 +127,23 @@
         <!-- Tóm tắt -->
         <div class="form-group">
           <label>Tóm tắt <span class="required">*</span></label>
-          <textarea 
+          <textarea
             name="summary"
             v-model.trim="formData.summary"
-            :class="{ 'error': errors.summary }"
+            :class="{ error: errors.summary }"
             :disabled="isSubmitting"
             rows="3"
             placeholder="Nhập tóm tắt nội dung"
           ></textarea>
           <span class="error-message" v-if="errors.summary">{{ errors.summary }}</span>
-          <span class="character-count" :class="{ 'error': formData.summary.length > 500 || formData.summary.length < 20 && formData.summary.length > 0 }">
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.summary.length > 500 ||
+                (formData.summary.length < 20 && formData.summary.length > 0),
+            }"
+          >
             {{ formData.summary.length }}/500 (Tối thiểu 20 ký tự)
           </span>
         </div>
@@ -129,16 +151,23 @@
         <!-- Nội dung chi tiết -->
         <div class="form-group content-section">
           <label>Nội dung chi tiết <span class="required">*</span></label>
-          <textarea 
+          <textarea
             name="content"
             v-model.trim="formData.content"
-            :class="{ 'error': errors.content }"
+            :class="{ error: errors.content }"
             :disabled="isSubmitting"
             rows="6"
             placeholder="Nhập nội dung chi tiết"
           ></textarea>
           <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
-          <span class="character-count" :class="{ 'error': formData.content.length > 5000 || formData.content.length < 100 && formData.content.length > 0 }">
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.content.length > 5000 ||
+                (formData.content.length < 100 && formData.content.length > 0),
+            }"
+          >
             {{ formData.content.length }}/5000 (Tối thiểu 100 ký tự)
           </span>
         </div>
@@ -146,37 +175,40 @@
         <!-- Tác giả -->
         <div class="form-group">
           <label>Tác giả</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             name="author"
             v-model.trim="formData.author"
-            :class="{ 'error': errors.author }"
+            :class="{ error: errors.author }"
             :disabled="isSubmitting"
             placeholder="Nhập tên tác giả (mặc định: Admin)"
             maxlength="50"
-          >
+          />
           <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
-          <span class="character-count" :class="{ 'error': formData.author.length > 50 || formData.author.length < 3 && formData.author.length > 0 }">
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.author.length > 50 ||
+                (formData.author.length < 3 && formData.author.length > 0),
+            }"
+          >
             {{ formData.author.length }}/50 (Tối thiểu 3 ký tự)
           </span>
         </div>
 
         <!-- Form Actions -->
         <div class="form-actions">
-          <router-link 
-            to="/admin/tin-tuc/danh-sach" 
+          <router-link
+            to="/admin/tin-tuc/danh-sach"
             class="cancel-btn"
-            :class="{ 'disabled': isSubmitting }"
+            :class="{ disabled: isSubmitting }"
             v-if="!hasChanges || !isSubmitting"
           >
             <i class="fas fa-times"></i>
             Hủy
           </router-link>
-          <button 
-            type="submit" 
-            class="submit-btn" 
-            :disabled="isSubmitting || !isFormValid"
-          >
+          <button type="submit" class="submit-btn" :disabled="isSubmitting || !isFormValid">
             <i class="fas" :class="isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'"></i>
             {{ isSubmitting ? 'Đang lưu...' : 'Cập nhật tin tức' }}
           </button>
@@ -232,9 +264,9 @@ export default {
       author: 'Admin',
       view: 0,
       like: 0,
-      isDeleted: false
+      isDeleted: false,
     }
-    
+
     const formData = ref({ ...initialFormData })
     const imagePreview = ref(null)
     const errors = ref({})
@@ -256,21 +288,21 @@ export default {
 
     const hasChanges = computed(() => {
       if (!originalData.value) return false
-      
+
       // Check if image has changed
       if (formData.value.image instanceof File) {
         return true // If a new file is selected, there are changes
       }
-      
+
       // Check text fields
-      return ['title', 'summary', 'content', 'type', 'publishedDate', 'author'].some(field => {
-        return formData.value[field]?.toString() !== originalData.value[field]?.toString();
-      });
+      return ['title', 'summary', 'content', 'type', 'publishedDate', 'author'].some((field) => {
+        return formData.value[field]?.toString() !== originalData.value[field]?.toString()
+      })
     })
 
     const isFormValid = computed(() => {
       // Kiểm tra dữ liệu hợp lệ dựa trên model
-      const hasRequiredFields = 
+      const hasRequiredFields =
         formData.value.title?.trim().length >= 10 &&
         formData.value.title.trim().length <= 200 &&
         formData.value.summary?.trim().length >= 20 &&
@@ -279,38 +311,41 @@ export default {
         formData.value.content.trim().length <= 5000 &&
         formData.value.type?.trim() &&
         formData.value.publishedDate &&
-        (formData.value.image || imagePreview.value);
-      
-      // Kiểm tra tác giả nếu được cung cấp  
-      const authorValid = !formData.value.author || (
-        formData.value.author.trim().length >= 3 &&
-        formData.value.author.trim().length <= 50 &&
-        /^[a-zA-ZÀ-ỹ\s]+$/.test(formData.value.author.trim())
-      );
-      
+        (formData.value.image || imagePreview.value)
+
+      // Kiểm tra tác giả nếu được cung cấp
+      const authorValid =
+        !formData.value.author ||
+        (formData.value.author.trim().length >= 3 &&
+          formData.value.author.trim().length <= 50 &&
+          /^[a-zA-ZÀ-ỹ\s]+$/.test(formData.value.author.trim()))
+
       // Form hợp lệ khi có đầy đủ thông tin và không có lỗi
-      return hasRequiredFields && authorValid && Object.keys(errors.value).length === 0;
+      return hasRequiredFields && authorValid && Object.keys(errors.value).length === 0
     })
 
     // Watch for route changes to reload data
-    watch(() => route.params.id, (newId) => {
-      if (newId && newId !== newsId.value) {
-        newsId.value = newId;
-        loadNews();
+    watch(
+      () => route.params.id,
+      (newId) => {
+        if (newId && newId !== newsId.value) {
+          newsId.value = newId
+          loadNews()
+        }
       }
-    });
+    )
 
     // Methods
     const loadNews = async () => {
       try {
-        console.log('Loading news data for ID:', route.params.id);
-        newsId.value = route.params.id;
+        console.log('Loading news data for ID:', route.params.id)
+        newsId.value = route.params.id
         const response = await newsService.getNewsById(route.params.id)
-        console.log('News data loaded:', response);
-        
+        console.log('News data loaded:', response)
+
         if (response && response.data) {
           const news = response.data
-          
+
           // Initialize the form with the news data
           formData.value = {
             title: news.title || '',
@@ -318,120 +353,120 @@ export default {
             content: news.content || '',
             image: news.image || null,
             type: news.type || '',
-            publishedDate: news.publishedDate 
-              ? new Date(news.publishedDate).toISOString().split('T')[0] 
+            publishedDate: news.publishedDate
+              ? new Date(news.publishedDate).toISOString().split('T')[0]
               : new Date().toISOString().split('T')[0],
             author: news.author || 'Admin',
             view: news.view || 0,
             like: news.like || 0,
-            isDeleted: news.isDeleted || false
+            isDeleted: news.isDeleted || false,
           }
-          
+
           // Save original data for comparison
           originalData.value = { ...formData.value }
-          console.log('Form data initialized:', formData.value);
-          
+          console.log('Form data initialized:', formData.value)
+
           // Create image preview if needed
           if (news.image) {
             imagePreview.value = null // Reset preview first
             formData.value.image = news.image
           }
-          
+
           // Clear any existing errors
           errors.value = {}
           error.value = null
           successMessage.value = null
         } else {
-          throw new Error('Failed to load news data');
+          throw new Error('Failed to load news data')
         }
       } catch (error) {
         console.error('Error loading news:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải thông tin tin tức. Vui lòng thử lại.'
+          message: 'Không thể tải thông tin tin tức. Vui lòng thử lại.',
         })
       }
     }
 
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return null;
-      if (imagePath.startsWith('http')) return imagePath;
-      
+      if (!imagePath) return null
+      if (imagePath.startsWith('http')) return imagePath
+
       // Clean the path by removing any leading slashes
-      const cleanPath = imagePath.replace(/^[/\\]+/, '');
-      console.log('Formatted image path:', `http://localhost:3000/${cleanPath}`);
-      return `http://localhost:3000/${cleanPath}`;
+      const cleanPath = imagePath.replace(/^[/\\]+/, '')
+      console.log('Formatted image path:', `http://localhost:3000/${cleanPath}`)
+      return `http://localhost:3000/${cleanPath}`
     }
 
     const handleImageChange = (event) => {
       const file = event.target.files[0]
-      if (!file) return;
+      if (!file) return
 
       // Clear previous errors
-      delete errors.value.image;
-      
+      delete errors.value.image
+
       // Check file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        errors.value.image = 'Kích thước ảnh không được vượt quá 5MB';
+        errors.value.image = 'Kích thước ảnh không được vượt quá 5MB'
         if (fileInput.value) {
-          fileInput.value.value = '';
+          fileInput.value.value = ''
         }
-        return;
+        return
       }
 
       // Check file type
       if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-        errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF';
+        errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
         if (fileInput.value) {
-          fileInput.value.value = '';
+          fileInput.value.value = ''
         }
-        return;
+        return
       }
 
       // Check image dimensions
-      const img = new Image();
+      const img = new Image()
       img.onload = () => {
-        URL.revokeObjectURL(img.src);
-        
+        URL.revokeObjectURL(img.src)
+
         // Check min dimensions
         if (img.width < 300 || img.height < 200) {
-          errors.value.image = 'Kích thước ảnh quá nhỏ (tối thiểu 300x200 pixels)';
+          errors.value.image = 'Kích thước ảnh quá nhỏ (tối thiểu 300x200 pixels)'
           if (fileInput.value) {
-            fileInput.value.value = '';
+            fileInput.value.value = ''
           }
-          formData.value.image = null;
-          imagePreview.value = null;
-          return;
+          formData.value.image = null
+          imagePreview.value = null
+          return
         }
-        
+
         // Check max dimensions
         if (img.width > 2000 || img.height > 2000) {
-          errors.value.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)';
+          errors.value.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
           if (fileInput.value) {
-            fileInput.value.value = '';
+            fileInput.value.value = ''
           }
-          formData.value.image = null;
-          imagePreview.value = null;
-          return;
+          formData.value.image = null
+          imagePreview.value = null
+          return
         }
-      };
-      
+      }
+
       img.onerror = () => {
-        URL.revokeObjectURL(img.src);
-        errors.value.image = 'File không phải là ảnh hợp lệ';
+        URL.revokeObjectURL(img.src)
+        errors.value.image = 'File không phải là ảnh hợp lệ'
         if (fileInput.value) {
-          fileInput.value.value = '';
+          fileInput.value.value = ''
         }
-        formData.value.image = null;
-        imagePreview.value = null;
-      };
-      
-      img.src = URL.createObjectURL(file);
+        formData.value.image = null
+        imagePreview.value = null
+      }
+
+      img.src = URL.createObjectURL(file)
 
       // Set image data if passes validation
-      formData.value.image = file;
-      imagePreview.value = URL.createObjectURL(file);
-      console.log('New image selected:', file.name, file.type, file.size);
+      formData.value.image = file
+      imagePreview.value = URL.createObjectURL(file)
+      console.log('New image selected:', file.name, file.type, file.size)
     }
 
     const removeImage = (e) => {
@@ -445,30 +480,30 @@ export default {
     }
 
     const handleSubmit = async () => {
-      error.value = null;
-      successMessage.value = null;
-      uploadStatus.value = '';
-      
+      error.value = null
+      successMessage.value = null
+      uploadStatus.value = ''
+
       if (!validateForm()) {
         // Focus on the first error field
-        const firstErrorField = Object.keys(errors.value)[0];
-        const element = document.querySelector(`[name="${firstErrorField}"]`);
+        const firstErrorField = Object.keys(errors.value)[0]
+        const element = document.querySelector(`[name="${firstErrorField}"]`)
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          setTimeout(() => element.focus(), 500);
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          setTimeout(() => element.focus(), 500)
         }
-        
+
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Vui lòng kiểm tra lại thông tin nhập vào'
-        });
-        return;
+          message: 'Vui lòng kiểm tra lại thông tin nhập vào',
+        })
+        return
       }
 
       try {
-        isSubmitting.value = true;
-        console.log('Submitting form with data:', formData.value);
-        
+        isSubmitting.value = true
+        console.log('Submitting form with data:', formData.value)
+
         // Tạo đối tượng dữ liệu để gửi lên server
         const newsData = {
           title: formData.value.title.trim(),
@@ -479,107 +514,110 @@ export default {
           view: formData.value.view,
           like: formData.value.like,
           isDeleted: formData.value.isDeleted,
-          author: formData.value.author.trim() || 'Admin'
-        };
-        
+          author: formData.value.author.trim() || 'Admin',
+        }
+
         // Xử lý ảnh
-        let imageUrl = null;
-        
+        let imageUrl = null
+
         // Kiểm tra nếu có file ảnh mới
         if (formData.value.image instanceof File) {
-          console.log('Uploading new image file:', formData.value.image.name);
-          uploadStatus.value = 'Đang tải ảnh lên...';
-          const imageFormData = new FormData();
-          imageFormData.append('image', formData.value.image);
-          
+          console.log('Uploading new image file:', formData.value.image.name)
+          uploadStatus.value = 'Đang tải ảnh lên...'
+          const imageFormData = new FormData()
+          imageFormData.append('image', formData.value.image)
+
           try {
-            const uploadResponse = await newsService.uploadImage(imageFormData);
-            console.log('Image upload response:', uploadResponse);
-            
+            const uploadResponse = await newsService.uploadImage(imageFormData)
+            console.log('Image upload response:', uploadResponse)
+
             if (uploadResponse && uploadResponse.imagePath) {
-              imageUrl = uploadResponse.imagePath;
-              newsData.image = imageUrl;
-              console.log('New image path:', imageUrl);
-              uploadStatus.value = 'Ảnh đã được tải lên thành công';
+              imageUrl = uploadResponse.imagePath
+              newsData.image = imageUrl
+              console.log('New image path:', imageUrl)
+              uploadStatus.value = 'Ảnh đã được tải lên thành công'
             } else {
-              throw new Error('Invalid image upload response structure');
+              throw new Error('Invalid image upload response structure')
             }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError);
+            console.error('Error uploading image:', uploadError)
             eventBus.emit('show-toast', {
               type: 'error',
-              message: 'Không thể tải lên hình ảnh. Vui lòng thử lại.'
-            });
-            error.value = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định');
-            isSubmitting.value = false;
-            return;
+              message: 'Không thể tải lên hình ảnh. Vui lòng thử lại.',
+            })
+            error.value = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
+            isSubmitting.value = false
+            return
           }
-        } 
+        }
         // Nếu là ảnh đã có sẵn
         else if (typeof formData.value.image === 'string' && formData.value.image) {
-          console.log('Using existing image path:', formData.value.image);
-          imageUrl = formData.value.image;
-          newsData.image = imageUrl;
+          console.log('Using existing image path:', formData.value.image)
+          imageUrl = formData.value.image
+          newsData.image = imageUrl
         }
         // Trường hợp không có ảnh
         else {
-          console.log('No image provided');
+          console.log('No image provided')
           eventBus.emit('show-toast', {
             type: 'error',
-            message: 'Vui lòng chọn ảnh cho tin tức'
-          });
-          error.value = 'Vui lòng chọn ảnh cho tin tức';
-          isSubmitting.value = false;
-          return;
+            message: 'Vui lòng chọn ảnh cho tin tức',
+          })
+          error.value = 'Vui lòng chọn ảnh cho tin tức'
+          isSubmitting.value = false
+          return
         }
-        
-        console.log('Sending news data to update:', newsData);
-        uploadStatus.value = 'Đang cập nhật tin tức...';
-        
+
+        console.log('Sending news data to update:', newsData)
+        uploadStatus.value = 'Đang cập nhật tin tức...'
+
         try {
           // Gọi API cập nhật tin tức
-          const response = await newsService.updateNews(route.params.id, newsData);
-          console.log('Update response:', response);
+          const response = await newsService.updateNews(route.params.id, newsData)
+          console.log('Update response:', response)
 
           // Hiển thị thông báo thành công
-          successMessage.value = 'Tin tức đã được cập nhật thành công';
+          successMessage.value = 'Tin tức đã được cập nhật thành công'
           eventBus.emit('show-toast', {
             type: 'success',
-            message: successMessage.value
-          });
-            
+            message: successMessage.value,
+          })
+
           // Chuyển về trang danh sách sau một khoảng thời gian ngắn
           setTimeout(() => {
-            router.push('/admin/tin-tuc/danh-sach');
-          }, 1500);
+            router.push('/admin/tin-tuc/danh-sach')
+          }, 1500)
         } catch (updateError) {
-          console.error('Error updating news:', updateError);
-          
+          console.error('Error updating news:', updateError)
+
           // Xử lý lỗi validation từ server
           if (updateError.response?.data?.errors) {
-            const serverErrors = updateError.response.data.errors;
-            Object.keys(serverErrors).forEach(key => {
-              errors.value[key] = serverErrors[key];
-            });
-            error.value = 'Vui lòng kiểm tra lại thông tin nhập vào';
+            const serverErrors = updateError.response.data.errors
+            Object.keys(serverErrors).forEach((key) => {
+              errors.value[key] = serverErrors[key]
+            })
+            error.value = 'Vui lòng kiểm tra lại thông tin nhập vào'
           } else {
-            error.value = updateError.response?.data?.message || updateError.message || 'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.';
+            error.value =
+              updateError.response?.data?.message ||
+              updateError.message ||
+              'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.'
           }
-          
+
           eventBus.emit('show-toast', {
             type: 'error',
-            message: error.value
-          });
+            message: error.value,
+          })
         }
       } catch (error) {
-        console.error('Uncaught error in form submission:', error);
+        console.error('Uncaught error in form submission:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: error.message || 'Có lỗi xảy ra. Vui lòng thử lại.'
-        });
+          message: error.message || 'Có lỗi xảy ra. Vui lòng thử lại.',
+        })
       } finally {
-        isSubmitting.value = false;
-        uploadStatus.value = '';
+        isSubmitting.value = false
+        uploadStatus.value = ''
       }
     }
 
@@ -589,82 +627,82 @@ export default {
     }
 
     const validateForm = () => {
-      console.log('Validating form data:', formData.value);
-      const newErrors = {};
+      console.log('Validating form data:', formData.value)
+      const newErrors = {}
 
       // Validate tiêu đề (title)
       if (!formData.value.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống';
+        newErrors.title = 'Tiêu đề không được để trống'
       } else if (formData.value.title.trim().length < 10) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 10 ký tự';
+        newErrors.title = 'Tiêu đề phải có ít nhất 10 ký tự'
       } else if (formData.value.title.trim().length > 200) {
-        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
       }
 
       // Validate tóm tắt (summary)
       if (!formData.value.summary?.trim()) {
-        newErrors.summary = 'Tóm tắt không được để trống';
+        newErrors.summary = 'Tóm tắt không được để trống'
       } else if (formData.value.summary.trim().length < 20) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự';
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
       } else if (formData.value.summary.trim().length > 500) {
-        newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự';
+        newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }
 
       // Validate nội dung (content)
       if (!formData.value.content?.trim()) {
-        newErrors.content = 'Nội dung không được để trống';
+        newErrors.content = 'Nội dung không được để trống'
       } else if (formData.value.content.trim().length < 100) {
-        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự';
+        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự'
       } else if (formData.value.content.trim().length > 5000) {
-        newErrors.content = 'Nội dung không được vượt quá 5000 ký tự';
+        newErrors.content = 'Nội dung không được vượt quá 5000 ký tự'
       }
 
       // Validate loại (type)
       if (!formData.value.type?.trim()) {
-        newErrors.type = 'Phân loại không được để trống';
+        newErrors.type = 'Phân loại không được để trống'
       } else if (formData.value.type.trim().length > 50) {
-        newErrors.type = 'Phân loại không được vượt quá 50 ký tự';
+        newErrors.type = 'Phân loại không được vượt quá 50 ký tự'
       }
 
       // Validate ngày đăng (publishedDate)
       if (!formData.value.publishedDate) {
-        newErrors.publishedDate = 'Vui lòng chọn ngày đăng';
+        newErrors.publishedDate = 'Vui lòng chọn ngày đăng'
       } else {
-        const publishDate = new Date(formData.value.publishedDate);
-        const minDate = new Date();
-        minDate.setMonth(minDate.getMonth() - 1);
-        
+        const publishDate = new Date(formData.value.publishedDate)
+        const minDate = new Date()
+        minDate.setMonth(minDate.getMonth() - 1)
+
         if (publishDate < minDate) {
-          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng trước';
+          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng trước'
         }
-        
-        const today = new Date();
-        today.setMonth(today.getMonth() + 1);
+
+        const today = new Date()
+        today.setMonth(today.getMonth() + 1)
         if (publishDate > today) {
-          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng tới';
+          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng tới'
         }
       }
 
       // Validate ảnh (image)
       if (!formData.value.image && !imagePreview.value) {
-        newErrors.image = 'Vui lòng chọn ảnh cho tin tức';
+        newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
       }
 
       // Validate tác giả (author) nếu có
       if (formData.value.author && formData.value.author.trim() !== '') {
         if (formData.value.author.trim().length < 3) {
-          newErrors.author = 'Tên tác giả phải có ít nhất 3 ký tự';
+          newErrors.author = 'Tên tác giả phải có ít nhất 3 ký tự'
         } else if (formData.value.author.trim().length > 50) {
-          newErrors.author = 'Tên tác giả không được vượt quá 50 ký tự';
+          newErrors.author = 'Tên tác giả không được vượt quá 50 ký tự'
         } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(formData.value.author.trim())) {
-          newErrors.author = 'Tên tác giả chỉ được chứa chữ cái và khoảng trắng';
+          newErrors.author = 'Tên tác giả chỉ được chứa chữ cái và khoảng trắng'
         }
       }
 
-      errors.value = newErrors;
-      const isValid = Object.keys(newErrors).length === 0;
-      console.log('Form validation result:', isValid, newErrors);
-      return isValid;
+      errors.value = newErrors
+      const isValid = Object.keys(newErrors).length === 0
+      console.log('Form validation result:', isValid, newErrors)
+      return isValid
     }
 
     const formatFileSize = (bytes) => {
@@ -683,7 +721,7 @@ export default {
 
     // Load news data when component mounts
     onMounted(() => {
-      console.log('EditNews component mounted - loading news with ID:', route.params.id);
+      console.log('EditNews component mounted - loading news with ID:', route.params.id)
       loadNews()
     })
 
@@ -706,14 +744,14 @@ export default {
       triggerFileInput,
       error,
       successMessage,
-      uploadStatus
+      uploadStatus,
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 /* Component-specific styles that aren't in admin.css */
 .edit-news {
@@ -842,7 +880,7 @@ export default {
     grid-template-columns: 1fr;
     padding: 24px;
   }
-  
+
   .info-section {
     grid-template-columns: 1fr;
   }
@@ -853,9 +891,9 @@ export default {
     min-height: 180px;
     padding: 16px;
   }
-  
+
   .preview-img {
     max-height: 160px;
   }
 }
-</style> 
+</style>

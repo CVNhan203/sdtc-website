@@ -18,11 +18,11 @@
         <div class="search-filter">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input 
-              type="text" 
-              v-model="searchQuery" 
+            <input
+              type="text"
+              v-model="searchQuery"
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
-            >
+            />
           </div>
         </div>
       </div>
@@ -161,32 +161,33 @@ export default {
       selectedOrder: {},
       showDetailsModal: false,
       loading: false,
-      error: null
+      error: null,
     }
   },
   computed: {
     filteredOrders() {
-      let filtered = this.orders.filter(order => order.orderStatus !== 'pending')
+      let filtered = this.orders.filter((order) => order.orderStatus !== 'pending')
 
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase()
-        filtered = filtered.filter(order => 
-          order._id.toLowerCase().includes(query) ||
-          order.fullName.toLowerCase().includes(query) ||
-          order.phone.includes(query)
+        filtered = filtered.filter(
+          (order) =>
+            order._id.toLowerCase().includes(query) ||
+            order.fullName.toLowerCase().includes(query) ||
+            order.phone.includes(query)
         )
       }
 
       if (this.statusFilter) {
-        filtered = filtered.filter(order => order.orderStatus === this.statusFilter)
+        filtered = filtered.filter((order) => order.orderStatus === this.statusFilter)
       }
 
       if (this.paymentFilter) {
-        filtered = filtered.filter(order => order.paymentStatus === this.paymentFilter)
+        filtered = filtered.filter((order) => order.paymentStatus === this.paymentFilter)
       }
 
       return filtered
-    }
+    },
   },
   methods: {
     formatDate(date) {
@@ -195,7 +196,7 @@ export default {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     },
 
@@ -203,14 +204,14 @@ export default {
       return new Date(date).toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: '2-digit',
-        day: '2-digit'
+        day: '2-digit',
       })
     },
 
     formatTimePart(date) {
       return new Date(date).toLocaleTimeString('vi-VN', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     },
 
@@ -219,7 +220,7 @@ export default {
         pending: 'Chờ xử lý',
         processing: 'Đang xử lý',
         completed: 'Hoàn thành',
-        cancelled: 'Đã hủy'
+        cancelled: 'Đã hủy',
       }
       return statusMap[status] || status
     },
@@ -228,7 +229,7 @@ export default {
       const statusMap = {
         pending: 'Chờ thanh toán',
         paid: 'Đã thanh toán',
-        failed: 'Thanh toán thất bại'
+        failed: 'Thanh toán thất bại',
       }
       return statusMap[status] || status
     },
@@ -243,7 +244,7 @@ export default {
         this.error = 'Không thể tải lịch sử đơn hàng'
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải lịch sử đơn hàng'
+          message: 'Không thể tải lịch sử đơn hàng',
         })
       } finally {
         this.loading = false
@@ -256,18 +257,18 @@ export default {
     },
 
     formatOrderId(id) {
-      if (!id) return '';
+      if (!id) return ''
       // Display only the last 6 characters for better readability
-      return id.length > 6 ? id.substring(id.length - 6) : id;
+      return id.length > 6 ? id.substring(id.length - 6) : id
     },
 
     applyFilters() {
       // Implementation of applyFilters method
-    }
+    },
   },
   created() {
     this.loadOrderHistory()
-  }
+  },
 }
 </script>
 
@@ -301,13 +302,13 @@ export default {
     padding: var(--spacing-md);
     border-radius: var(--border-radius-md);
   }
-  
+
   .filter-group {
     margin-top: 0.75rem;
   }
-  
+
   .search-box input {
     font-size: 0.875rem;
   }
 }
-</style> 
+</style>

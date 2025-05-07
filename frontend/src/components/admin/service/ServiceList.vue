@@ -149,7 +149,7 @@
             <i class="fas fa-check-circle"></i>
             {{ successMessage }}
           </div>
-          
+
           <!-- Error message -->
           <div v-if="submitError" class="error-alert">
             <i class="fas fa-exclamation-circle"></i>
@@ -162,16 +162,16 @@
             <i class="fas fa-check" v-else></i>
             {{ uploadStatus }}
           </div>
-        
+
           <form @submit.prevent="handleSubmit" novalidate>
             <!-- Tiêu đề -->
             <div class="form-group">
               <label>Tiêu đề <span class="required">*</span></label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="title"
                 v-model="formData.title"
-                :class="{ 'error': errors.title }"
+                :class="{ error: errors.title }"
                 :disabled="submitLoading"
                 placeholder="Nhập tiêu đề dịch vụ"
               />
@@ -186,10 +186,10 @@
               <!-- Loại dịch vụ -->
               <div class="form-group">
                 <label>Loại dịch vụ <span class="required">*</span></label>
-                <select 
+                <select
                   name="type"
                   v-model="formData.type"
-                  :class="{ 'error': errors.type }"
+                  :class="{ error: errors.type }"
                   :disabled="submitLoading"
                 >
                   <option value="">Chọn loại dịch vụ</option>
@@ -203,11 +203,11 @@
               <!-- Giá -->
               <div class="form-group">
                 <label>Giá <span class="required">*</span></label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="price"
                   v-model="formData.price"
-                  :class="{ 'error': errors.price }"
+                  :class="{ error: errors.price }"
                   :disabled="submitLoading"
                   placeholder="Nhập giá dịch vụ"
                   min="0"
@@ -219,8 +219,12 @@
             <!-- Ảnh -->
             <div class="form-group">
               <label>Ảnh <span v-if="!isEditing" class="required">*</span></label>
-              <div class="image-upload-container" @click="$refs.imageInput.click()" :class="{ 'error-border': errors.image }">
-                <input 
+              <div
+                class="image-upload-container"
+                @click="$refs.imageInput.click()"
+                :class="{ 'error-border': errors.image }"
+              >
+                <input
                   type="file"
                   name="image"
                   ref="imageInput"
@@ -248,25 +252,32 @@
             <!-- Mô tả -->
             <div class="form-group">
               <label>Mô tả <span class="required">*</span></label>
-              <textarea 
+              <textarea
                 name="description"
                 v-model="formData.description"
-                :class="{ 'error': errors.description }"
+                :class="{ error: errors.description }"
                 :disabled="submitLoading"
                 rows="4"
                 placeholder="Nhập mô tả dịch vụ"
               ></textarea>
               <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
-              <small class="form-help-text">Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small>
+              <small class="form-help-text"
+                >Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small
+              >
             </div>
 
             <div class="form-actions">
-              <button type="button" class="cancel-btn" @click="showFormModal = false" :disabled="submitLoading">
+              <button
+                type="button"
+                class="cancel-btn"
+                @click="showFormModal = false"
+                :disabled="submitLoading"
+              >
                 <i class="fas fa-times"></i> Hủy
               </button>
               <button type="submit" class="submit-btn" :disabled="submitLoading">
                 <i class="fas" :class="submitLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
-                {{ submitLoading ? 'Đang xử lý...' : (isEditing ? 'Cập nhật' : 'Thêm mới') }}
+                {{ submitLoading ? 'Đang xử lý...' : isEditing ? 'Cập nhật' : 'Thêm mới' }}
               </button>
             </div>
           </form>
@@ -362,7 +373,7 @@ export default {
         price: 0,
         description: '',
         status: true,
-        type: ''
+        type: '',
       },
       imagePreview: null,
       isEditing: false,
@@ -373,7 +384,7 @@ export default {
       submitError: null,
       uploadStatus: '',
       successMessage: '',
-      errors: {}
+      errors: {},
     }
   },
   computed: {
@@ -435,26 +446,26 @@ export default {
         price: 0,
         description: '',
         status: true,
-        type: ''
+        type: '',
       }
       this.imagePreview = null
       this.showFormModal = true
     },
     openEditModal(service) {
-      this.isEditing = true;
+      this.isEditing = true
       this.formData = {
         _id: service._id,
         title: service.title,
         price: service.price,
-        description: Array.isArray(service.description) 
+        description: Array.isArray(service.description)
           ? service.description.join('\n')
           : service.description,
         image: service.image,
         status: !service.isDeleted,
-        type: service.type
-      };
-      this.imagePreview = this.getImageUrl(service.image);
-      this.showFormModal = true;
+        type: service.type,
+      }
+      this.imagePreview = this.getImageUrl(service.image)
+      this.showFormModal = true
     },
     confirmSoftDelete(service) {
       this.selectedService = service
@@ -475,10 +486,10 @@ export default {
         const response = await serviceService.getServices()
         // Lấy danh sách đã xóa từ localStorage
         const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
+        // Lấy mảng dịch vụ từ response.data
+        const servicesArr = Array.isArray(response.data) ? response.data : []
         // Lọc bỏ các service đã xóa
-        this.services = Array.isArray(response)
-          ? response.filter((service) => !deletedServices.includes(service._id))
-          : []
+        this.services = servicesArr.filter((service) => !deletedServices.includes(service._id))
       } catch (error) {
         console.error('Error loading services:', error)
         this.error = 'Không thể tải danh sách dịch vụ'
@@ -488,77 +499,82 @@ export default {
       }
     },
     validateForm() {
-      let isValid = true;
-      let errors = {};
+      let isValid = true
+      let errors = {}
 
       // Tiêu đề validation
       if (!this.formData.title?.trim()) {
-        errors.title = 'Tiêu đề không được để trống';
-        isValid = false;
+        errors.title = 'Tiêu đề không được để trống'
+        isValid = false
       } else if (this.formData.title.trim().length < 3) {
-        errors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
-        isValid = false;
+        errors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
+        isValid = false
       } else if (this.formData.title.trim().length > 100) {
-        errors.title = 'Tiêu đề không được vượt quá 100 ký tự';
-        isValid = false;
+        errors.title = 'Tiêu đề không được vượt quá 100 ký tự'
+        isValid = false
       } else if (!/^[a-zA-Z0-9\sÀ-ỹ[\]{}()!@#$%^&*,.?-]+$/.test(this.formData.title.trim())) {
-        errors.title = 'Tiêu đề chứa ký tự không hợp lệ';
-        isValid = false;
+        errors.title = 'Tiêu đề chứa ký tự không hợp lệ'
+        isValid = false
       }
 
       // Loại dịch vụ validation
       if (!this.formData.type) {
-        errors.type = 'Vui lòng chọn loại dịch vụ';
-        isValid = false;
+        errors.type = 'Vui lòng chọn loại dịch vụ'
+        isValid = false
       } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        errors.type = 'Loại dịch vụ không hợp lệ';
-        isValid = false;
+        errors.type = 'Loại dịch vụ không hợp lệ'
+        isValid = false
       }
 
       // Giá validation
-      if (this.formData.price === undefined || this.formData.price === null || this.formData.price === '') {
-        errors.price = 'Giá dịch vụ không được để trống';
-        isValid = false;
+      if (
+        this.formData.price === undefined ||
+        this.formData.price === null ||
+        this.formData.price === ''
+      ) {
+        errors.price = 'Giá dịch vụ không được để trống'
+        isValid = false
       } else {
-        const priceValue = Number(this.formData.price);
+        const priceValue = Number(this.formData.price)
         if (isNaN(priceValue)) {
-          errors.price = 'Giá dịch vụ phải là một số';
-          isValid = false;
+          errors.price = 'Giá dịch vụ phải là một số'
+          isValid = false
         } else if (priceValue <= 0) {
-          errors.price = 'Giá dịch vụ phải lớn hơn 0';
-          isValid = false;
+          errors.price = 'Giá dịch vụ phải lớn hơn 0'
+          isValid = false
         } else if (priceValue > 1000000000) {
-          errors.price = 'Giá dịch vụ quá lớn';
-          isValid = false;
+          errors.price = 'Giá dịch vụ quá lớn'
+          isValid = false
         }
       }
 
       // Mô tả validation
-      const description = typeof this.formData.description === 'string' 
-        ? this.formData.description 
-        : Array.isArray(this.formData.description) 
-          ? this.formData.description.join('\n') 
-          : '';
+      const description =
+        typeof this.formData.description === 'string'
+          ? this.formData.description
+          : Array.isArray(this.formData.description)
+            ? this.formData.description.join('\n')
+            : ''
 
       if (!description.trim()) {
-        errors.description = 'Mô tả không được để trống';
-        isValid = false;
+        errors.description = 'Mô tả không được để trống'
+        isValid = false
       } else {
-        const lines = description.split('\n').filter(line => line.trim());
+        const lines = description.split('\n').filter((line) => line.trim())
         if (lines.length === 0) {
-          errors.description = 'Mô tả không được để trống';
-          isValid = false;
+          errors.description = 'Mô tả không được để trống'
+          isValid = false
         } else {
           for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
+            const line = lines[i].trim()
             if (line.length < 10) {
-              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`;
-              isValid = false;
-              break;
+              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`
+              isValid = false
+              break
             } else if (line.length > 500) {
-              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`;
-              isValid = false;
-              break;
+              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`
+              isValid = false
+              break
             }
           }
         }
@@ -566,150 +582,153 @@ export default {
 
       // Ảnh validation - Chỉ kiểm tra khi thêm mới
       if (!this.isEditing && !this.formData.image && !this.imagePreview) {
-        errors.image = 'Vui lòng tải lên ảnh cho dịch vụ';
-        isValid = false;
+        errors.image = 'Vui lòng tải lên ảnh cho dịch vụ'
+        isValid = false
       }
 
-      this.errors = errors;
-      
+      this.errors = errors
+
       if (!isValid) {
         // Display error message
-        const errorMessages = Object.values(errors).join('\n');
-        alert('Vui lòng sửa các lỗi sau:\n' + errorMessages);
+        const errorMessages = Object.values(errors).join('\n')
+        alert('Vui lòng sửa các lỗi sau:\n' + errorMessages)
       }
 
-      return isValid;
+      return isValid
     },
     async handleSubmit() {
       // Basic trimming
       if (typeof this.formData.title === 'string') {
-        this.formData.title = this.formData.title.trim();
+        this.formData.title = this.formData.title.trim()
       }
-      
+
       if (typeof this.formData.description === 'string') {
-        this.formData.description = this.formData.description.trim();
+        this.formData.description = this.formData.description.trim()
       } else if (Array.isArray(this.formData.description)) {
-        this.formData.description = this.formData.description.map(item => item.trim()).filter(item => item);
+        this.formData.description = this.formData.description
+          .map((item) => item.trim())
+          .filter((item) => item)
       }
-      
+
       if (!this.validateForm()) {
         // Focus on the first field with an error
-        const errorFields = Object.keys(this.errors);
+        const errorFields = Object.keys(this.errors)
         if (errorFields.length > 0) {
-          const firstErrorField = errorFields[0];
-          const element = document.querySelector(`[name="${firstErrorField}"]`);
+          const firstErrorField = errorFields[0]
+          const element = document.querySelector(`[name="${firstErrorField}"]`)
           if (element) {
-            element.focus();
+            element.focus()
           }
         }
-        return;
+        return
       }
 
       try {
-        this.submitLoading = true;
-        this.submitError = null;
-        
-        let imageUrl = null;
+        this.submitLoading = true
+        this.submitError = null
+
+        let imageUrl = null
         if (this.formData.image instanceof File) {
-          const imageFormData = new FormData();
-          imageFormData.append('image', this.formData.image);
-          
+          const imageFormData = new FormData()
+          imageFormData.append('image', this.formData.image)
+
           try {
-            this.uploadStatus = 'Đang tải ảnh lên...';
-            const uploadResponse = await serviceService.uploadImage(imageFormData);
+            this.uploadStatus = 'Đang tải ảnh lên...'
+            const uploadResponse = await serviceService.uploadImage(imageFormData)
             if (uploadResponse && uploadResponse.imagePath) {
-              imageUrl = uploadResponse.imagePath;
-              this.uploadStatus = 'Tải ảnh thành công!';
+              imageUrl = uploadResponse.imagePath
+              this.uploadStatus = 'Tải ảnh thành công!'
             } else {
-              throw new Error('Không nhận được đường dẫn ảnh');
+              throw new Error('Không nhận được đường dẫn ảnh')
             }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError);
-            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định');
-            this.submitLoading = false;
-            return;
+            console.error('Error uploading image:', uploadError)
+            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
+            this.submitLoading = false
+            return
           }
         }
 
         // Prepare service data according to backend model
-        this.uploadStatus = 'Đang xử lý...';
+        this.uploadStatus = 'Đang xử lý...'
         const serviceData = {
           title: this.formData.title,
-          description: Array.isArray(this.formData.description) 
-            ? this.formData.description 
-            : this.formData.description.split('\n').filter(line => line.trim()),
+          description: Array.isArray(this.formData.description)
+            ? this.formData.description
+            : this.formData.description.split('\n').filter((line) => line.trim()),
           price: Number(this.formData.price),
           status: this.formData.status,
-          type: this.formData.type
-        };
+          type: this.formData.type,
+        }
 
         if (imageUrl) {
-          serviceData.image = imageUrl;
+          serviceData.image = imageUrl
         } else if (this.formData.image && typeof this.formData.image === 'string') {
-          serviceData.image = this.formData.image;
+          serviceData.image = this.formData.image
         }
 
         if (this.isEditing) {
-          await serviceService.updateService(this.formData._id, serviceData);
-          this.successMessage = 'Cập nhật dịch vụ thành công!';
+          await serviceService.updateService(this.formData._id, serviceData)
+          this.successMessage = 'Cập nhật dịch vụ thành công!'
         } else {
-          await serviceService.createService(serviceData);
-          this.successMessage = 'Thêm dịch vụ mới thành công!';
+          await serviceService.createService(serviceData)
+          this.successMessage = 'Thêm dịch vụ mới thành công!'
         }
 
         // Success handling
         setTimeout(() => {
-          this.loadServices();
-          this.showFormModal = false;
-          this.resetForm();
-        }, 1000);
+          this.loadServices()
+          this.showFormModal = false
+          this.resetForm()
+        }, 1000)
       } catch (error) {
-        console.error('Error:', error);
-        
+        console.error('Error:', error)
+
         // Handle validation errors from backend
         if (error.response?.data?.errors) {
-          const backendErrors = error.response.data.errors;
-          
+          const backendErrors = error.response.data.errors
+
           // Map backend errors to form fields
           const errorMapping = {
-            'title': 'title',
-            'description': 'description', 
-            'price': 'price',
-            'type': 'type',
-            'image': 'image'
-          };
-          
+            title: 'title',
+            description: 'description',
+            price: 'price',
+            type: 'type',
+            image: 'image',
+          }
+
           // Reset all errors first
-          this.errors = {};
-          
+          this.errors = {}
+
           // Map backend errors to frontend error fields
           Object.entries(backendErrors).forEach(([field, message]) => {
-            const frontendField = errorMapping[field] || field;
-            this.errors[frontendField] = Array.isArray(message) ? message[0] : message;
-          });
-          
+            const frontendField = errorMapping[field] || field
+            this.errors[frontendField] = Array.isArray(message) ? message[0] : message
+          })
+
           // Show validation message
-          this.submitError = 'Vui lòng kiểm tra lại thông tin nhập';
-          
+          this.submitError = 'Vui lòng kiểm tra lại thông tin nhập'
+
           // Scroll to the first error field
           this.$nextTick(() => {
-            const errorFields = Object.keys(this.errors);
+            const errorFields = Object.keys(this.errors)
             if (errorFields.length > 0) {
-              const firstErrorField = errorFields[0];
-              const element = document.querySelector(`[name="${firstErrorField}"]`);
+              const firstErrorField = errorFields[0]
+              const element = document.querySelector(`[name="${firstErrorField}"]`)
               if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => element.focus(), 500);
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                setTimeout(() => element.focus(), 500)
               }
             }
-          });
+          })
         } else {
           // General error message
-          this.submitError = error.response?.data?.message || error.message || 'Có lỗi xảy ra. Vui lòng thử lại!';
+          this.submitError =
+            error.response?.data?.message || error.message || 'Có lỗi xảy ra. Vui lòng thử lại!'
         }
       } finally {
-        this.submitLoading = false;
-        this.uploadStatus = '';
+        this.submitLoading = false
+        this.uploadStatus = ''
       }
     },
     async handleSoftDelete() {
@@ -765,81 +784,81 @@ export default {
       }
     },
     handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+      const file = event.target.files[0]
+      if (!file) return
 
       // Reset image error
-      delete this.errors.image;
-      
+      delete this.errors.image
+
       // Check file size (5MB limit)
-      const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+      const maxFileSize = 5 * 1024 * 1024 // 5MB in bytes
       if (file.size > maxFileSize) {
-        this.errors.image = `Kích thước file không được vượt quá 5MB`;
+        this.errors.image = `Kích thước file không được vượt quá 5MB`
         if (this.$refs.imageInput) {
-          this.$refs.imageInput.value = '';
+          this.$refs.imageInput.value = ''
         }
-        return;
+        return
       }
 
       // Check file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
       if (!allowedTypes.includes(file.type)) {
-        this.errors.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF';
+        this.errors.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
         if (this.$refs.imageInput) {
-          this.$refs.imageInput.value = '';
+          this.$refs.imageInput.value = ''
         }
-        return;
+        return
       }
 
       // Check image dimensions (create a temporary image to check)
-      const img = new Image();
+      const img = new Image()
       img.onload = () => {
-        URL.revokeObjectURL(img.src);
-        
+        URL.revokeObjectURL(img.src)
+
         // Minimum dimensions check
         if (img.width < 200 || img.height < 200) {
-          this.errors.image = 'Kích thước ảnh quá nhỏ (tối thiểu 200x200 pixels)';
+          this.errors.image = 'Kích thước ảnh quá nhỏ (tối thiểu 200x200 pixels)'
           if (this.$refs.imageInput) {
-            this.$refs.imageInput.value = '';
+            this.$refs.imageInput.value = ''
           }
-          this.formData.image = null;
-          this.imagePreview = null;
-          return;
+          this.formData.image = null
+          this.imagePreview = null
+          return
         }
-        
+
         // Maximum dimensions check
         if (img.width > 2000 || img.height > 2000) {
-          this.errors.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)';
+          this.errors.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
           if (this.$refs.imageInput) {
-            this.$refs.imageInput.value = '';
+            this.$refs.imageInput.value = ''
           }
-          this.formData.image = null;
-          this.imagePreview = null;
-          return;
+          this.formData.image = null
+          this.imagePreview = null
+          return
         }
-      };
-      
+      }
+
       img.onerror = () => {
-        URL.revokeObjectURL(img.src);
-        this.errors.image = 'File không phải là ảnh hợp lệ';
+        URL.revokeObjectURL(img.src)
+        this.errors.image = 'File không phải là ảnh hợp lệ'
         if (this.$refs.imageInput) {
-          this.$refs.imageInput.value = '';
+          this.$refs.imageInput.value = ''
         }
-        this.formData.image = null;
-        this.imagePreview = null;
-      };
-      
-      img.src = URL.createObjectURL(file);
-      
+        this.formData.image = null
+        this.imagePreview = null
+      }
+
+      img.src = URL.createObjectURL(file)
+
       // Set image preview and data
-      this.formData.image = file;
-      this.imagePreview = URL.createObjectURL(file);
+      this.formData.image = file
+      this.imagePreview = URL.createObjectURL(file)
     },
     removeImage() {
-      this.formData.image = null;
-      this.imagePreview = null;
+      this.formData.image = null
+      this.imagePreview = null
       if (this.$refs.imageInput) {
-        this.$refs.imageInput.value = '';
+        this.$refs.imageInput.value = ''
       }
     },
     getImageUrl(imagePath) {
@@ -855,16 +874,16 @@ export default {
         price: 0,
         description: '',
         type: '',
-        status: true
-      };
-      this.imagePreview = null;
-      this.isEditing = false;
-      this.errors = {};
-      this.submitError = null;
-      this.successMessage = '';
-      this.uploadStatus = '';
+        status: true,
+      }
+      this.imagePreview = null
+      this.isEditing = false
+      this.errors = {}
+      this.submitError = null
+      this.successMessage = ''
+      this.uploadStatus = ''
       if (this.$refs.imageInput) {
-        this.$refs.imageInput.value = '';
+        this.$refs.imageInput.value = ''
       }
     },
   },
@@ -888,14 +907,14 @@ export default {
 
 <style scoped>
 /* Import the admin styles */
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
-select{
+select {
   padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    min-width: 160px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 160px;
 }
 /* Component specific overrides */
 .service-list {
@@ -991,8 +1010,8 @@ select{
   margin-bottom: 1.5rem;
 }
 
-input[type="text"],
-input[type="number"],
+input[type='text'],
+input[type='number'],
 select,
 textarea {
   border: 1px solid #e2e8f0;

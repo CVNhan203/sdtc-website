@@ -1,12 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const upload = require("../middleware/uploadImage");
-
-// Route upload ảnh riêng
-router.post("/upload", upload.single("image"), (req, res) => {
-  //Trả về đường dẫn của ảnh
-  res.json({ imagePath: req.file.path });
-});
+const express = require('express')
+const router = express.Router()
+const upload = require('../middleware/uploadImage')
 
 const {
   getServices,
@@ -14,17 +8,17 @@ const {
   createService,
   updateService,
   deleteService,
-} = require("../controllers/serviceController");
-const adminMiddleware = require("../middleware/adminMiddleware");
-const authMiddleware = require("../middleware/authMiddleware");
+} = require('../controllers/serviceController')
+const adminMiddleware = require('../middleware/adminMiddleware')
+const authMiddleware = require('../middleware/authMiddleware')
 
 // Routes công khai
-router.get("/", getServices);
-router.get("/:id", getServiceById);
+router.get('/', getServices)
+router.get('/:id', getServiceById)
 
 // Routes yêu cầu quyền admin
-router.post("/", authMiddleware, adminMiddleware, createService);
-router.put("/:id", authMiddleware, adminMiddleware, updateService);
-router.delete("/:id", authMiddleware, adminMiddleware, deleteService);
+router.post('/', authMiddleware, adminMiddleware, createService)
+router.put('/:id', authMiddleware, adminMiddleware, updateService)
+router.delete('/:id', authMiddleware, adminMiddleware, deleteService)
 
-module.exports = router;
+module.exports = router

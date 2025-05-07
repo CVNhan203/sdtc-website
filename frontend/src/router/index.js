@@ -75,78 +75,78 @@ const routes = [
     name: 'Advise',
     component: Advise,
   },
-  // Admin routes
+  // Admin login route
   {
     path: '/admin',
     name: 'Admin',
     component: AdminDashboard,
     meta: { requiresAuth: true },
     children: [
-      { 
-        path: 'dashboard', 
-        name: 'AdminDashboardHome', 
+      {
+        path: 'dashboard',
+        name: 'AdminDashboardHome',
         component: AdminDashboardHome,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
-      { 
-        path: 'dich-vu/danh-sach', 
-        name: 'AdminServiceList', 
+      {
+        path: 'dich-vu/danh-sach',
+        name: 'AdminServiceList',
         component: AdminServiceList,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'dich-vu/them-moi', 
-        name: 'AdminInsertService', 
+      {
+        path: 'dich-vu/them-moi',
+        name: 'AdminInsertService',
         component: AdminInsertService,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'dich-vu/thung-rac', 
-        name: 'AdminTrashService', 
+      {
+        path: 'dich-vu/thung-rac',
+        name: 'AdminTrashService',
         component: AdminTrashService,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'tin-tuc/danh-sach', 
-        name: 'AdminNewsList', 
+      {
+        path: 'tin-tuc/danh-sach',
+        name: 'AdminNewsList',
         component: AdminNewsList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
-      { 
-        path: 'tin-tuc/them-moi', 
-        name: 'AdminInsertNews', 
+      {
+        path: 'tin-tuc/them-moi',
+        name: 'AdminInsertNews',
         component: AdminInsertNews,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
-      { 
-        path: 'tin-tuc/chinh-sua/:id', 
-        name: 'AdminEditNews', 
-        component: AdminEditNews, 
-        meta: { requiresAuth: true }
+      {
+        path: 'tin-tuc/chinh-sua/:id',
+        name: 'AdminEditNews',
+        component: AdminEditNews,
+        meta: { requiresAuth: true },
       },
-      { 
-        path: 'tin-tuc/thung-rac', 
-        name: 'AdminTrashNews', 
-        component: AdminTrashNews, 
-        meta: { requiresAuth: true }
+      {
+        path: 'tin-tuc/thung-rac',
+        name: 'AdminTrashNews',
+        component: AdminTrashNews,
+        meta: { requiresAuth: true },
       },
-      { 
-        path: 'don-hang/danh-sach', 
-        name: 'AdminOrderList', 
+      {
+        path: 'don-hang/danh-sach',
+        name: 'AdminOrderList',
         component: AdminOrderList,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'don-hang/cho-duyet', 
-        name: 'AdminPendingOrders', 
+      {
+        path: 'don-hang/cho-duyet',
+        name: 'AdminPendingOrders',
         component: AdminPendingOrders,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'don-hang/lich-su', 
-        name: 'AdminOrderHistory', 
+      {
+        path: 'don-hang/lich-su',
+        name: 'AdminOrderHistory',
         component: AdminOrderHistory,
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
       { 
         path: 'tai-khoan/danh-sach', 
@@ -154,23 +154,23 @@ const routes = [
         component: AccountList, 
         meta: { requiresAuth: true, requiresAdmin: true }
       },
-      { 
-        path: 'tai-khoan/them-moi', 
-        name: 'AddAccount', 
-        component: AddAccount, 
-        meta: { requiresAuth: true, requiresAdmin: true }
+      {
+        path: 'tai-khoan/them-moi',
+        name: 'AddAccount',
+        component: AddAccount,
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'tai-khoan/chinh-sua/:id', 
-        name: 'EditAccount', 
-        component: EditAccount, 
-        meta: { requiresAuth: true, requiresAdmin: true }
+      {
+        path: 'tai-khoan/chinh-sua/:id',
+        name: 'EditAccount',
+        component: EditAccount,
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
-      { 
-        path: 'tai-khoan/thung-rac', 
-        name: 'TrashAccount', 
-        component: TrashAccount, 
-        meta: { requiresAuth: true, requiresAdmin: true }
+      {
+        path: 'tai-khoan/thung-rac',
+        name: 'TrashAccount',
+        component: TrashAccount,
+        meta: { requiresAuth: true, requiresAdmin: true },
       },
       {
         path: 'dat-lich/danh-sach',
@@ -195,50 +195,53 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
+    // Nếu có vị trí scroll đã lưu (như khi nhấn nút back/forward)
     if (savedPosition) {
-      return savedPosition;
+      return savedPosition
     } else {
-      return { top: 0 };
+      // Mặc định scroll lên đầu trang
+      return { top: 0 }
     }
-  }
+  },
 })
 
 // Route guard
 router.beforeEach((to, from, next) => {
   // Check authentication for admin routes
   if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
-    const token = localStorage.getItem('adminToken');
+    const token = localStorage.getItem('adminToken')
     if (!token) {
-      return next('/admin/login');
+      return next('/admin/login')
     }
-    
+
     // Check role permissions
-    const adminInfoString = localStorage.getItem('adminInfo');
+    const adminInfoString = localStorage.getItem('adminInfo')
     if (adminInfoString) {
       try {
-        const adminInfo = JSON.parse(adminInfoString);
-        const isStaff = adminInfo.role === 'staff';
-        
+        const adminInfo = JSON.parse(adminInfoString)
+        const isStaff = adminInfo.role === 'staff'
+
         // If staff trying to access admin-only routes
         if (isStaff && to.meta.requiresAdmin) {
-          console.log('Staff attempting to access admin-only area');
-          return next('/admin/tin-tuc/danh-sach');
+          console.log('Staff attempting to access admin-only area')
+          return next('/admin/tin-tuc/danh-sach')
         }
 
         // If staff trying to access non-news routes
         if (isStaff && !to.path.includes('/admin/tin-tuc')) {
-          console.log('Staff redirected to news section');
-          return next('/admin/tin-tuc/danh-sach');
+          console.log('Staff redirected to news section')
+          return next('/admin/tin-tuc/danh-sach')
         }
       } catch (error) {
-        console.error('Error parsing admin info:', error);
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminInfo');
-        return next('/admin/login');
+        console.error('Error parsing admin info:', error)
+        // Nếu có lỗi khi parse JSON, logout để đăng nhập lại
+        localStorage.removeItem('adminToken')
+        localStorage.removeItem('adminInfo')
+        return next('/admin/login')
       }
     }
   }
-  next();
-});
+  next()
+})
 
 export default router

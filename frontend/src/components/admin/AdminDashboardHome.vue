@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .admin-dashboard-home {
   padding: var(--spacing-xl);

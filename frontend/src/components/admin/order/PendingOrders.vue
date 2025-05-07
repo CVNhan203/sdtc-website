@@ -114,18 +114,20 @@
           </div>
           <div class="modal-body">
             <p>
-              {{ confirmAction === 'approve' 
-                ? 'Bạn có chắc chắn muốn duyệt đơn hàng này?' 
-                : 'Bạn có chắc chắn muốn từ chối đơn hàng này?' }}
+              {{
+                confirmAction === 'approve'
+                  ? 'Bạn có chắc chắn muốn duyệt đơn hàng này?'
+                  : 'Bạn có chắc chắn muốn từ chối đơn hàng này?'
+              }}
             </p>
             <div class="form-actions">
               <button class="cancel-btn" @click="showConfirmModal = false">Hủy</button>
-              <button 
+              <button
                 :class="['submit-btn', confirmAction === 'approve' ? 'approve' : 'reject']"
                 @click="handleConfirmAction"
                 :disabled="loading"
               >
-                {{ loading ? 'Đang xử lý...' : (confirmAction === 'approve' ? 'Duyệt' : 'Từ chối') }}
+                {{ loading ? 'Đang xử lý...' : confirmAction === 'approve' ? 'Duyệt' : 'Từ chối' }}
               </button>
             </div>
           </div>
@@ -149,7 +151,7 @@ export default {
       showConfirmModal: false,
       confirmAction: null,
       loading: false,
-      error: null
+      error: null,
     }
   },
   methods: {
@@ -178,13 +180,13 @@ export default {
       try {
         this.loading = true
         const response = await orderService.getOrders()
-        this.pendingOrders = response.data.filter(order => order.orderStatus === 'pending')
+        this.pendingOrders = response.data.filter((order) => order.orderStatus === 'pending')
       } catch (error) {
         console.error('Error loading pending orders:', error)
         this.error = 'Không thể tải danh sách đơn hàng chờ duyệt'
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải danh sách đơn hàng chờ duyệt'
+          message: 'Không thể tải danh sách đơn hàng chờ duyệt',
         })
       } finally {
         this.loading = false
@@ -213,31 +215,32 @@ export default {
         this.loading = true
         await orderService.updateOrderStatus(this.selectedOrder._id, {
           orderStatus: this.confirmAction === 'approve' ? 'processing' : 'cancelled',
-          paymentStatus: this.selectedOrder.paymentStatus
+          paymentStatus: this.selectedOrder.paymentStatus,
         })
 
         await this.loadPendingOrders()
         this.showConfirmModal = false
         eventBus.emit('show-toast', {
           type: 'success',
-          message: this.confirmAction === 'approve' 
-            ? 'Đã duyệt đơn hàng thành công'
-            : 'Đã từ chối đơn hàng'
+          message:
+            this.confirmAction === 'approve'
+              ? 'Đã duyệt đơn hàng thành công'
+              : 'Đã từ chối đơn hàng',
         })
       } catch (error) {
         console.error('Error:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi xử lý đơn hàng'
+          message: 'Có lỗi xảy ra khi xử lý đơn hàng',
         })
       } finally {
         this.loading = false
       }
-    }
+    },
   },
   created() {
     this.loadPendingOrders()
-  }
+  },
 }
 </script>
 
@@ -253,12 +256,12 @@ export default {
 }
 
 /* Column widths */
-th:nth-child(1), 
+th:nth-child(1),
 td:nth-child(1) {
   width: 60px; /* STT */
 }
 
-th:nth-child(2), 
+th:nth-child(2),
 td:nth-child(2) {
   width: 200px; /* Mã đơn hàng */
   white-space: nowrap;
@@ -266,7 +269,7 @@ td:nth-child(2) {
   text-overflow: ellipsis;
 }
 
-th:nth-child(3), 
+th:nth-child(3),
 td:nth-child(3) {
   width: 130px; /* Tên khách hàng */
   white-space: nowrap;
@@ -274,12 +277,12 @@ td:nth-child(3) {
   text-overflow: ellipsis;
 }
 
-th:nth-child(4), 
+th:nth-child(4),
 td:nth-child(4) {
   width: 120px; /* Số điện thoại */
 }
 
-th:nth-child(5), 
+th:nth-child(5),
 td:nth-child(5) {
   width: 150px; /* Email */
   white-space: nowrap;
@@ -287,17 +290,17 @@ td:nth-child(5) {
   text-overflow: ellipsis;
 }
 
-th:nth-child(6), 
+th:nth-child(6),
 td:nth-child(6) {
   width: 150px; /* Phương thức thanh toán */
 }
 
-th:nth-child(7), 
+th:nth-child(7),
 td:nth-child(7) {
   width: 180px; /* Ngày tạo */
 }
 
-th:nth-child(8), 
+th:nth-child(8),
 td:nth-child(8) {
   width: 140px; /* Thao tác */
   text-align: center;
@@ -439,4 +442,4 @@ td:nth-child(8) {
     width: 100%;
   }
 }
-</style> 
+</style>
