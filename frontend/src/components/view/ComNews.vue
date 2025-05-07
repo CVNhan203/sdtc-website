@@ -8,12 +8,7 @@
       <div class="search-wrapper">
         <div class="search-bar">
           <i class="fas fa-search search-icon"></i>
-          <input 
-            type="text" 
-            v-model="searchQuery" 
-            placeholder="Tin tức"
-            @input="handleSearch"
-          >
+          <input type="text" v-model="searchQuery" placeholder="Tin tức" @input="handleSearch" />
         </div>
       </div>
     </div>
@@ -26,12 +21,17 @@
 
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
     <div v-else class="news-grid">
-      <div v-for="(news, index) in filteredNews" :key="index" class="news-card" @click="goToNewsDetail(news)">
-        <img :src="news.imageUrl" :alt="news.title" class="news-image">
+      <div
+        v-for="(news, index) in filteredNews"
+        :key="index"
+        class="news-card"
+        @click="goToNewsDetail(news)"
+      >
+        <img :src="news.imageUrl" :alt="news.title" class="news-image" />
         <div class="news-content">
           <p class="news-category">Công nghệ</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
-   
+
           <p class="news-excerpt">{{ news.summary }}</p>
         </div>
       </div>
@@ -41,7 +41,7 @@
 
 <script>
 import { useRouter } from 'vue-router'
-import newsService from '@/api/news/newsService'
+import newsService from '@/api/services/newsService'
 
 export default {
   name: 'ComNews',
@@ -53,7 +53,7 @@ export default {
     return {
       searchQuery: '',
       allNewsItems: [],
-      error: ''
+      error: '',
     }
   },
   async mounted() {
@@ -68,20 +68,22 @@ export default {
     filteredNews() {
       if (!this.searchQuery) return this.allNewsItems
       const searchTerm = this.searchQuery.toLowerCase().trim()
-      return this.allNewsItems.filter(news =>
-        news.title.toLowerCase().includes(searchTerm) ||
-        (news.summary && news.summary.toLowerCase().includes(searchTerm))
+      return this.allNewsItems.filter(
+        (news) =>
+          news.title.toLowerCase().includes(searchTerm) ||
+          (news.summary && news.summary.toLowerCase().includes(searchTerm))
       )
-    }
+    },
   },
   methods: {
     handleSearch() {},
-    clearSearch() { this.searchQuery = '' },
+    clearSearch() {
+      this.searchQuery = ''
+    },
     goToNewsDetail(news) {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
-   
-  }
+  },
 }
 </script>
 
@@ -105,13 +107,13 @@ export default {
   top: 184;
   left: 356;
   border-radius: 20px;
-  
+
   text-align: center;
   background-image: url('@/assets/sdtc-image/brsearch.png');
 }
 
 /* Tiêu đề "Tin tức" hiển thị trên header */
-.news-title{
+.news-title {
   color: rgba(255, 255, 255, 1);
   font-family: Roboto;
   font-weight: 190px;
@@ -134,44 +136,44 @@ export default {
   bottom: 0;
   transform: translate(-50%, 35%);
 }
-    
+
 /* Thanh tìm kiếm với hiệu ứng bóng đổ */
 .search-bar {
-    background: rgba(255, 255, 255, 1);
-    border-radius: 20px;
-    padding-top: 33px;
-    padding-right: 17px;
-    padding-bottom: 33px;
-    padding-left: 17px;
-    gap: 23px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 20px;
+  padding-top: 33px;
+  padding-right: 17px;
+  padding-bottom: 33px;
+  padding-left: 17px;
+  gap: 23px;
 
-    display: flex;
-    align-items: center;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 /* Icon kính lúp trong thanh tìm kiếm */
 .search-icon {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
 }
 
 /* Ô input cho thanh tìm kiếm */
 .search-bar input {
-    border: none;
-    font-size: 20px;
-    outline: none;
-    padding-left: 10px;
-    font-family: Roboto;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    width: 100%;
+  border: none;
+  font-size: 20px;
+  outline: none;
+  padding-left: 10px;
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  width: 100%;
 }
 
 /* Grid layout hiển thị các bài viết tin tức */
@@ -220,7 +222,7 @@ export default {
 
 /* Tiêu đề bài viết trong card */
 .news-card-title {
-  color: #004AAD;
+  color: #004aad;
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -246,13 +248,11 @@ export default {
   overflow: hidden;
 }
 
-
 /* Responsive Styles */
 @media screen and (max-width: 1200px) {
   .news-container {
     max-width: 1140px;
     padding: 15px;
-
   }
 
   .news-header {

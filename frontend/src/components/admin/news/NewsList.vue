@@ -46,7 +46,7 @@
             <tr>
               <th>ID</th>
               <th>Ảnh</th>
-              <th style="max-width: 250px;">Tiêu đề</th>
+              <th style="max-width: 250px">Tiêu đề</th>
               <th>Loại</th>
               <th class="responsive-hide">Tác giả</th>
               <th>Thao tác</th>
@@ -72,7 +72,7 @@
                   </div>
                 </div>
               </td>
-              <td class="truncate-text" style="max-width: 250px;">{{ news.title }}</td>
+              <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
               <td class="type-cell">{{ formatType(news.type) }}</td>
               <td class="responsive-hide">{{ news.author }}</td>
               <!-- Các nút thao tác trên từng tin tức -->
@@ -172,13 +172,8 @@
             <div class="detail-item">
               <label>Trạng thái:</label>
               <p>
-                <span
-                  :class="[
-                    'status-badge',
-                    selectedNews.isDeleted ? 'inactive' : 'active',
-                  ]"
-                >
-                  {{ selectedNews.isDeleted ? "Đã xóa" : "Đã đăng" }}
+                <span :class="['status-badge', selectedNews.isDeleted ? 'inactive' : 'active']">
+                  {{ selectedNews.isDeleted ? 'Đã xóa' : 'Đã đăng' }}
                 </span>
               </p>
             </div>
@@ -190,7 +185,7 @@
       <div class="modal" v-if="showFormModal">
         <div class="modal-content">
           <div class="modal-header">
-            <h3>{{ isEditing ? "Chỉnh sửa tin tức" : "Thêm tin tức mới" }}</h3>
+            <h3>{{ isEditing ? 'Chỉnh sửa tin tức' : 'Thêm tin tức mới' }}</h3>
             <button class="close-btn" @click="showFormModal = false">
               <i class="fas fa-times"></i>
             </button>
@@ -204,19 +199,11 @@
               </div>
               <div class="form-group">
                 <label>Tóm tắt</label>
-                <textarea
-                  v-model="formData.summary"
-                  required
-                  rows="3"
-                ></textarea>
+                <textarea v-model="formData.summary" required rows="3"></textarea>
               </div>
               <div class="form-group">
                 <label>Nội dung chi tiết</label>
-                <textarea
-                  v-model="formData.content"
-                  required
-                  rows="6"
-                ></textarea>
+                <textarea v-model="formData.content" required rows="6"></textarea>
               </div>
               <div class="form-group">
                 <label>Phân loại</label>
@@ -239,45 +226,25 @@
                 <label>Ảnh</label>
                 <div class="image-upload">
                   <!-- Input chọn file ảnh -->
-                  <input
-                    type="file"
-                    accept="image/*"
-                    @change="handleImageUpload"
-                  />
+                  <input type="file" accept="image/*" @change="handleImageUpload" />
                   <!-- Hiển thị xem trước ảnh đã chọn -->
                   <div v-if="imagePreview" class="image-preview">
                     <img :src="imagePreview" alt="Preview" />
-                    <button
-                      type="button"
-                      class="remove-image"
-                      @click="imagePreview = null"
-                    >
+                    <button type="button" class="remove-image" @click="imagePreview = null">
                       <i class="fas fa-times"></i>
                     </button>
                   </div>
                   <!-- Hiển thị thanh tiến trình khi đang tải ảnh lên -->
-                  <div
-                    v-if="uploadProgress > 0 && uploadProgress < 100"
-                    class="upload-progress"
-                  >
-                    <div
-                      class="progress-bar"
-                      :style="{ width: `${uploadProgress}%` }"
-                    ></div>
+                  <div v-if="uploadProgress > 0 && uploadProgress < 100" class="upload-progress">
+                    <div class="progress-bar" :style="{ width: `${uploadProgress}%` }"></div>
                   </div>
                 </div>
               </div>
               <!-- Các nút hành động form -->
               <div class="form-actions">
-                <button
-                  type="button"
-                  class="cancel-btn"
-                  @click="showFormModal = false"
-                >
-                  Hủy
-                </button>
+                <button type="button" class="cancel-btn" @click="showFormModal = false">Hủy</button>
                 <button type="submit" class="submit-btn">
-                  {{ isEditing ? "Cập nhật" : "Thêm mới" }}
+                  {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
                 </button>
               </div>
             </form>
@@ -296,16 +263,11 @@
           </div>
           <div class="modal-body">
             <p>
-              Bạn có chắc chắn muốn chuyển tin tức "{{ selectedNews.title }}"
-              vào thùng rác không?
+              Bạn có chắc chắn muốn chuyển tin tức "{{ selectedNews.title }}" vào thùng rác không?
             </p>
             <div class="form-actions">
-              <button class="cancel-btn" @click="showSoftDeleteModal = false">
-                Hủy
-              </button>
-              <button class="delete-btn" @click="handleSoftDelete">
-                Chuyển vào thùng rác
-              </button>
+              <button class="cancel-btn" @click="showSoftDeleteModal = false">Hủy</button>
+              <button class="delete-btn" @click="handleSoftDelete">Chuyển vào thùng rác</button>
             </div>
           </div>
         </div>
@@ -321,17 +283,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>
-              Bạn có chắc chắn muốn khôi phục tin tức "{{ selectedNews.title }}"
-              không?
-            </p>
+            <p>Bạn có chắc chắn muốn khôi phục tin tức "{{ selectedNews.title }}" không?</p>
             <div class="form-actions">
-              <button class="cancel-btn" @click="showRestoreModal = false">
-                Hủy
-              </button>
-              <button class="submit-btn" @click="handleRestore">
-                Khôi phục
-              </button>
+              <button class="cancel-btn" @click="showRestoreModal = false">Hủy</button>
+              <button class="submit-btn" @click="handleRestore">Khôi phục</button>
             </div>
           </div>
         </div>
@@ -347,25 +302,11 @@
             </button>
           </div>
           <div class="modal-body">
-            <p class="warning-text">
-              Cảnh báo: Hành động này không thể hoàn tác!
-            </p>
-            <p>
-              Bạn có chắc chắn muốn xóa vĩnh viễn tin tức "{{
-                selectedNews.title
-              }}" không?
-            </p>
+            <p class="warning-text">Cảnh báo: Hành động này không thể hoàn tác!</p>
+            <p>Bạn có chắc chắn muốn xóa vĩnh viễn tin tức "{{ selectedNews.title }}" không?</p>
             <div class="form-actions">
-              <button
-                class="cancel-btn"
-                @click="showPermanentDeleteModal = false"
-              >
-                Hủy
-              </button>
-              <button
-                class="permanent-delete-btn"
-                @click="handlePermanentDelete"
-              >
+              <button class="cancel-btn" @click="showPermanentDeleteModal = false">Hủy</button>
+              <button class="permanent-delete-btn" @click="handlePermanentDelete">
                 Xóa vĩnh viễn
               </button>
             </div>
@@ -377,313 +318,300 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, onBeforeUnmount } from "vue";
-import newsService from "@/api/news/newsService";
-import eventBus from "@/eventBus";
-import { useRouter } from "vue-router";
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import newsService from '@/api/services/newsService'
+import eventBus from '@/eventBus'
+import { useRouter } from 'vue-router'
 
 export default {
-  name: "NewsList",
+  name: 'NewsList',
   setup() {
     // Khai báo các biến phản ứng (reactive)
-    const news = ref([]); // Dữ liệu tin tức
-    const searchQuery = ref(""); // Chuỗi tìm kiếm
-    const filterType = ref(""); // Loại tin cần lọc
-    const showDetailsModal = ref(false); // Điều khiển hiển thị modal chi tiết
-    const showFormModal = ref(false); // Điều khiển hiển thị modal form
-    const showSoftDeleteModal = ref(false); // Điều khiển hiển thị modal xóa tạm thời
-    const showRestoreModal = ref(false); // Điều khiển hiển thị modal khôi phục
-    const showPermanentDeleteModal = ref(false); // Điều khiển hiển thị modal xóa vĩnh viễn
-    const selectedNews = ref({}); // Tin tức được chọn để thao tác
+    const news = ref([]) // Dữ liệu tin tức
+    const searchQuery = ref('') // Chuỗi tìm kiếm
+    const filterType = ref('') // Loại tin cần lọc
+    const showDetailsModal = ref(false) // Điều khiển hiển thị modal chi tiết
+    const showFormModal = ref(false) // Điều khiển hiển thị modal form
+    const showSoftDeleteModal = ref(false) // Điều khiển hiển thị modal xóa tạm thời
+    const showRestoreModal = ref(false) // Điều khiển hiển thị modal khôi phục
+    const showPermanentDeleteModal = ref(false) // Điều khiển hiển thị modal xóa vĩnh viễn
+    const selectedNews = ref({}) // Tin tức được chọn để thao tác
     const formData = ref({
-      title: "",
-      summary: "",
-      content: "",
+      title: '',
+      summary: '',
+      content: '',
       image: null,
-      type: "",
-      author: "",
-      publishedDate: "",
+      type: '',
+      author: '',
+      publishedDate: '',
       isDeleted: false,
-    }); // Dữ liệu form
-    const imagePreview = ref(null); // URL xem trước ảnh
-    const uploadProgress = ref(0); // Tiến trình tải ảnh
-    const loading = ref(false); // Trạng thái đang tải
-    const error = ref(null); // Thông báo lỗi nếu có
-    const isEditing = ref(false); // Trạng thái đang chỉnh sửa hay thêm mới
-    const baseImageUrl = ref("http://localhost:3000"); // URL cơ sở cho hình ảnh
-    const imageLoadError = ref({}); // Lưu các lỗi khi tải hình ảnh
-    const router = useRouter(); // Router để điều hướng
+    }) // Dữ liệu form
+    const imagePreview = ref(null) // URL xem trước ảnh
+    const uploadProgress = ref(0) // Tiến trình tải ảnh
+    const loading = ref(false) // Trạng thái đang tải
+    const error = ref(null) // Thông báo lỗi nếu có
+    const isEditing = ref(false) // Trạng thái đang chỉnh sửa hay thêm mới
+    const baseImageUrl = ref('http://localhost:3000') // URL cơ sở cho hình ảnh
+    const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
+    const router = useRouter() // Router để điều hướng
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
-      let filtered = [...news.value];
+      let filtered = [...news.value]
 
       // Lọc bỏ tin đã xóa
-      filtered = filtered.filter((item) => !item.isDeleted);
+      filtered = filtered.filter((item) => !item.isDeleted)
 
       // Tìm kiếm theo tiêu đề
       if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase();
-        filtered = filtered.filter((item) =>
-          item.title.toLowerCase().includes(query)
-        );
+        const query = searchQuery.value.toLowerCase()
+        filtered = filtered.filter((item) => item.title.toLowerCase().includes(query))
       }
 
       // Lọc theo loại
       if (filterType.value) {
-        filtered = filtered.filter((item) => item.type === filterType.value);
+        filtered = filtered.filter((item) => item.type === filterType.value)
       }
 
-      return filtered;
-    });
+      return filtered
+    })
 
     // Tải danh sách tin tức từ API
     const loadNews = async () => {
-      loading.value = true;
-      error.value = null;
+      loading.value = true
+      error.value = null
 
       try {
-        const newsData = await newsService.getNews();
-        const deletedNewsInfo = JSON.parse(
-          localStorage.getItem("deletedNewsInfo") || "[]"
-        );
-        const deletedIds = deletedNewsInfo.map((item) => item._id);
-        news.value = newsData.filter((item) => !deletedIds.includes(item._id));
+        const newsData = await newsService.getNews()
+        const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
+        const deletedIds = deletedNewsInfo.map((item) => item._id)
+        news.value = newsData.filter((item) => !deletedIds.includes(item._id))
       } catch (err) {
-        console.error("Error loading news:", err);
-        error.value = "Không thể tải danh sách tin tức. Vui lòng thử lại sau.";
+        console.error('Error loading news:', err)
+        error.value = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
       } finally {
-        loading.value = false;
+        loading.value = false
       }
-    };
+    }
 
     // Xử lý sự kiện tìm kiếm
     const handleSearch = () => {
       // Thực hiện tìm kiếm thông qua computed property
-    };
+    }
 
     // Xử lý sự kiện lọc
     const handleFilter = () => {
       // Thực hiện lọc thông qua computed property
-    };
+    }
 
     // Hiển thị chi tiết tin tức
     const showDetails = (item) => {
-      selectedNews.value = item;
-      showDetailsModal.value = true;
-    };
+      selectedNews.value = item
+      showDetailsModal.value = true
+    }
 
     // Mở modal chỉnh sửa tin tức (chuyển hướng đến trang chỉnh sửa)
     const openEditModal = (news) => {
-      router.push(`/admin/tin-tuc/chinh-sua/${news._id}`);
-    };
+      router.push(`/admin/tin-tuc/chinh-sua/${news._id}`)
+    }
 
     // Hiển thị modal xác nhận xóa tạm thời
     const confirmSoftDelete = (item) => {
-      selectedNews.value = item;
-      showSoftDeleteModal.value = true;
-    };
+      selectedNews.value = item
+      showSoftDeleteModal.value = true
+    }
 
     // Hiển thị modal xác nhận khôi phục
     const confirmRestore = (item) => {
-      selectedNews.value = item;
-      showRestoreModal.value = true;
-    };
+      selectedNews.value = item
+      showRestoreModal.value = true
+    }
 
     // Hiển thị modal xác nhận xóa vĩnh viễn
     const confirmPermanentDelete = (item) => {
-      selectedNews.value = item;
-      showPermanentDeleteModal.value = true;
-    };
+      selectedNews.value = item
+      showPermanentDeleteModal.value = true
+    }
 
     // Xử lý xóa tạm thời tin tức (chuyển vào thùng rác)
     const handleSoftDelete = async () => {
       try {
-        const newsToDelete = news.value.find(
-          (n) => n._id === selectedNews.value._id
-        );
+        const newsToDelete = news.value.find((n) => n._id === selectedNews.value._id)
         if (newsToDelete) {
           // Lưu vào thùng rác
           const deletedNewsInfo = {
             ...newsToDelete,
             isDeleted: true,
             deletedAt: new Date().toISOString(),
-          };
-          const deletedNewsInfoList = JSON.parse(
-            localStorage.getItem("deletedNewsInfo") || "[]"
-          );
-          deletedNewsInfoList.push(deletedNewsInfo);
-          localStorage.setItem(
-            "deletedNewsInfo",
-            JSON.stringify(deletedNewsInfoList)
-          );
+          }
+          const deletedNewsInfoList = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
+          deletedNewsInfoList.push(deletedNewsInfo)
+          localStorage.setItem('deletedNewsInfo', JSON.stringify(deletedNewsInfoList))
 
           // Xóa khỏi danh sách hiện tại
-          news.value = news.value.filter(
-            (n) => n._id !== selectedNews.value._id
-          );
+          news.value = news.value.filter((n) => n._id !== selectedNews.value._id)
 
-          showSoftDeleteModal.value = false;
-          eventBus.emit("update-deleted-news-count");
+          showSoftDeleteModal.value = false
+          eventBus.emit('update-deleted-news-count')
 
-          eventBus.emit("show-toast", {
-            type: "success",
-            message: "Đã chuyển tin tức vào thùng rác",
-          });
+          eventBus.emit('show-toast', {
+            type: 'success',
+            message: 'Đã chuyển tin tức vào thùng rác',
+          })
         }
       } catch (error) {
-        console.error("Error:", error);
-        eventBus.emit("show-toast", {
-          type: "error",
-          message: "Có lỗi xảy ra khi chuyển tin tức vào thùng rác",
-        });
+        console.error('Error:', error)
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Có lỗi xảy ra khi chuyển tin tức vào thùng rác',
+        })
       }
-    };
+    }
 
     // Xử lý khôi phục tin tức từ thùng rác
     const handleRestore = async () => {
       try {
-        await newsService.restoreNews(selectedNews.value._id);
-        await loadNews();
-        showRestoreModal.value = false;
+        await newsService.restoreNews(selectedNews.value._id)
+        await loadNews()
+        showRestoreModal.value = false
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error)
       }
-    };
+    }
 
     // Xử lý xóa vĩnh viễn tin tức
     const handlePermanentDelete = async () => {
       try {
-        await newsService.permanentDeleteNews(selectedNews.value._id);
-        await loadNews();
-        showPermanentDeleteModal.value = false;
+        await newsService.permanentDeleteNews(selectedNews.value._id)
+        await loadNews()
+        showPermanentDeleteModal.value = false
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error)
       }
-    };
+    }
 
     // Xử lý sự kiện tải ảnh lên
     const handleImageUpload = (event) => {
-      const file = event.target.files[0];
+      const file = event.target.files[0]
       if (file) {
-        formData.value.image = file;
-        imagePreview.value = URL.createObjectURL(file);
+        formData.value.image = file
+        imagePreview.value = URL.createObjectURL(file)
       }
-    };
+    }
 
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return null;
-      if (imagePath.startsWith("http")) return imagePath;
-      const cleanPath = imagePath.replace(/^[/\\]+/, "");
-      return `${baseImageUrl.value}/${cleanPath}`;
-    };
+      if (!imagePath) return null
+      if (imagePath.startsWith('http')) return imagePath
+      const cleanPath = imagePath.replace(/^[/\\]+/, '')
+      return `${baseImageUrl.value}/${cleanPath}`
+    }
 
     // Định dạng hiển thị ngày tháng
     const formatDate = (date) => {
-      return new Date(date).toLocaleDateString("vi-VN");
-    };
+      return new Date(date).toLocaleDateString('vi-VN')
+    }
 
     // Định dạng hiển thị loại tin tức
     const formatType = (type) => {
       const types = {
-        "tin-tuc": "Tin tức",
-        "su-kien": "Sự kiện",
-        "thong-bao": "Thông báo",
-      };
-      return types[type] || type;
-    };
+        'tin-tuc': 'Tin tức',
+        'su-kien': 'Sự kiện',
+        'thong-bao': 'Thông báo',
+      }
+      return types[type] || type
+    }
 
     // Rút gọn nội dung mô tả để hiển thị
     const formatDescription = (text) => {
-      return text?.length > 50 ? text.slice(0, 50) + "..." : text;
-    };
+      return text?.length > 50 ? text.slice(0, 50) + '...' : text
+    }
 
     // Mở modal thêm tin tức mới
     const openAddModal = () => {
-      isEditing.value = false;
+      isEditing.value = false
       formData.value = {
-        title: "",
-        summary: "",
-        content: "",
+        title: '',
+        summary: '',
+        content: '',
         image: null,
-        type: "",
-        publishedDate: new Date().toISOString().split("T")[0],
-        author: "",
+        type: '',
+        publishedDate: new Date().toISOString().split('T')[0],
+        author: '',
         view: 0,
         like: 0,
         isDeleted: false,
-      };
-      imagePreview.value = null;
-      uploadProgress.value = 0;
-      showFormModal.value = true;
-    };
+      }
+      imagePreview.value = null
+      uploadProgress.value = 0
+      showFormModal.value = true
+    }
 
     // Xử lý gửi form thêm/chỉnh sửa tin tức
     const handleSubmit = async () => {
       try {
         if (isEditing.value) {
-          await newsService.updateNews(selectedNews.value._id, formData.value);
+          await newsService.updateNews(selectedNews.value._id, formData.value)
         } else {
-          await newsService.createNews(formData.value);
+          await newsService.createNews(formData.value)
         }
-        await loadNews();
-        showFormModal.value = false;
-        imagePreview.value = null;
-        uploadProgress.value = 0;
+        await loadNews()
+        showFormModal.value = false
+        imagePreview.value = null
+        uploadProgress.value = 0
       } catch (err) {
-        console.error("Error:", err);
+        console.error('Error:', err)
         error.value = isEditing.value
-          ? "Không thể cập nhật tin tức. Vui lòng thử lại sau."
-          : "Không thể tạo tin tức mới. Vui lòng thử lại sau.";
+          ? 'Không thể cập nhật tin tức. Vui lòng thử lại sau.'
+          : 'Không thể tạo tin tức mới. Vui lòng thử lại sau.'
       }
-    };
+    }
 
     // Xử lý xóa tin tức
     const handleDelete = async () => {
       try {
-        await newsService.deleteNews(selectedNews.value._id);
-        await loadNews();
-        showSoftDeleteModal.value = false;
+        await newsService.deleteNews(selectedNews.value._id)
+        await loadNews()
+        showSoftDeleteModal.value = false
       } catch (err) {
-        console.error("Error:", err);
-        error.value = "Không thể xóa tin tức. Vui lòng thử lại sau.";
+        console.error('Error:', err)
+        error.value = 'Không thể xóa tin tức. Vui lòng thử lại sau.'
       }
-    };
+    }
 
     // Xử lý lỗi khi tải hình ảnh
     const handleImageError = (event, newsId) => {
       if (event) {
-        event.target.src = ""; // Xóa nguồn ảnh bị lỗi
-        event.target.style.display = "none"; // Ẩn ảnh bị lỗi
-        const parent = event.target.parentElement;
+        event.target.src = '' // Xóa nguồn ảnh bị lỗi
+        event.target.style.display = 'none' // Ẩn ảnh bị lỗi
+        const parent = event.target.parentElement
         if (parent) {
-          parent.classList.add("no-image");
-          parent.innerHTML = '<i class="fas fa-image"></i>';
+          parent.classList.add('no-image')
+          parent.innerHTML = '<i class="fas fa-image"></i>'
         }
       }
-      imageLoadError.value[newsId] = true;
-    };
+      imageLoadError.value[newsId] = true
+    }
 
     // Gọi khi component được tạo
     onMounted(() => {
-      loadNews();
+      loadNews()
       // Lắng nghe sự kiện cập nhật từ TrashNews
-      eventBus.on("update-deleted-news-count", () => {
-        loadNews();
-      });
-      console.log("Base Image URL:", baseImageUrl.value);
-    });
+      eventBus.on('update-deleted-news-count', () => {
+        loadNews()
+      })
+      console.log('Base Image URL:', baseImageUrl.value)
+    })
 
     // Dọn dẹp khi component bị hủy
     onBeforeUnmount(() => {
       // Dọn dẹp các event listener
-      eventBus.off("update-deleted-news-count");
+      eventBus.off('update-deleted-news-count')
       // Dọn dẹp các URL xem trước ảnh
       if (imagePreview.value) {
-        URL.revokeObjectURL(imagePreview.value);
+        URL.revokeObjectURL(imagePreview.value)
       }
-    });
+    })
 
     // Trả về các biến và phương thức sử dụng trong template
     return {
@@ -723,14 +651,14 @@ export default {
       handleDelete,
       imageLoadError,
       handleImageError,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>
 /* Nhập các styles chung từ file admin.css */
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 /* Tùy chỉnh kiểu dáng cho ảnh tin tức */
 

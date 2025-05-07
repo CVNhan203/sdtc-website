@@ -12,37 +12,41 @@
       <!-- Nội dung chính của bài viết -->
       <div class="main-content">
         <h1 class="news-title">{{ currentNews.title }}</h1>
-        
+
         <!-- Thông tin meta của bài viết: ngày đăng, tác giả, lượt xem, chia sẻ -->
         <div class="news-meta">
-          <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ formatDate(currentNews.publishedDate) }}</span>
+          <span class="meta-item"
+            ><i class="far fa-calendar-alt"></i> {{ formatDate(currentNews.publishedDate) }}</span
+          >
           <span class="meta-item"><i class="far fa-user"></i> {{ currentNews.author }}</span>
           <span class="meta-item"><i class="far fa-eye"></i> {{ currentNews.views }} lượt xem</span>
-          <span class="meta-item"><i class="far fa-share-square"></i> {{ currentNews.shares || 0 }} chia sẻ</span>
+          <span class="meta-item"
+            ><i class="far fa-share-square"></i> {{ currentNews.shares || 0 }} chia sẻ</span
+          >
         </div>
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" :alt="currentNews.title">
+          <img :src="currentNews.imageUrl" :alt="currentNews.title" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
         <div class="news-content">
           <p class="content-paragraph">{{ currentNews.summary }}</p>
           <div v-html="currentNews.content"></div>
-        </div>        
+        </div>
       </div>
 
       <!-- Thanh bên phải -->
       <div class="sidebar">
         <!-- Ô tìm kiếm bài viết -->
         <div class="search-container">
-          <input 
-            type="text" 
+          <input
+            type="text"
             class="search-input"
             placeholder="Tìm kiếm bài viết"
             v-model="searchQuery"
-          >
+          />
           <button class="search-button">
             <i class="fas fa-search"></i>
           </button>
@@ -52,12 +56,14 @@
         <div class="recent-posts">
           <h2>Bài viết gần đây</h2>
           <div class="posts-list">
-            <div v-for="(post, index) in filteredNews" 
-                 :key="index"
-                 class="post-item"
-                 @click="goToNewsDetail(post)">
+            <div
+              v-for="(post, index) in filteredNews"
+              :key="index"
+              class="post-item"
+              @click="goToNewsDetail(post)"
+            >
               <div class="post-image">
-                <img :src="post.imageUrl" :alt="post.title">
+                <img :src="post.imageUrl" :alt="post.title" />
               </div>
               <div class="post-info">
                 <div class="post-date">{{ formatDate(post.publishedDate) }}</div>
@@ -86,7 +92,7 @@
 <script>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
-import newsService from '@/api/news/newsService'
+import newsService from '@/api/services/newsService'
 
 export default {
   name: 'ComNewsDetail',
@@ -101,12 +107,10 @@ export default {
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
       const currentId = route.params.id
-      const filtered = allNews.value.filter(news => (news._id || news.id) != currentId)
+      const filtered = allNews.value.filter((news) => (news._id || news.id) != currentId)
       if (!searchQuery.value) return filtered
       const query = searchQuery.value.toLowerCase()
-      return filtered.filter(news =>
-        news.title.toLowerCase().includes(query)
-      )
+      return filtered.filter((news) => news.title.toLowerCase().includes(query))
     })
 
     // Tải dữ liệu động
@@ -129,7 +133,7 @@ export default {
     const goToPreviousPost = () => {
       const currentId = route.params.id
       const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
-      const currentIndex = sortedNews.findIndex(news => (news._id || news.id) == currentId)
+      const currentIndex = sortedNews.findIndex((news) => (news._id || news.id) == currentId)
       if (currentIndex > 0) {
         const prevNews = sortedNews[currentIndex - 1]
         router.push(`/tin-tuc/${prevNews._id || prevNews.id}`)
@@ -138,7 +142,7 @@ export default {
     const goToNextPost = () => {
       const currentId = route.params.id
       const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
-      const currentIndex = sortedNews.findIndex(news => (news._id || news.id) == currentId)
+      const currentIndex = sortedNews.findIndex((news) => (news._id || news.id) == currentId)
       if (currentIndex !== -1 && currentIndex < sortedNews.length - 1) {
         const nextNews = sortedNews[currentIndex + 1]
         router.push(`/tin-tuc/${nextNews._id || nextNews.id}`)
@@ -146,9 +150,9 @@ export default {
     }
 
     function formatDate(dateStr) {
-      if (!dateStr) return '';
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('vi-VN');
+      if (!dateStr) return ''
+      const d = new Date(dateStr)
+      return d.toLocaleDateString('vi-VN')
     }
 
     onMounted(loadData)
@@ -161,9 +165,9 @@ export default {
       goToPreviousPost,
       goToNextPost,
       error,
-      formatDate
+      formatDate,
     }
-  }
+  },
 }
 </script>
 
@@ -210,7 +214,7 @@ export default {
 }
 
 .back-link:hover .back-icon {
-  background: #004AAD;
+  background: #004aad;
 }
 
 .back-link:hover .back-icon i {
@@ -257,7 +261,7 @@ export default {
 
 /* Icon trong thông tin meta */
 .meta-item i {
-  color: #004AAD;
+  color: #004aad;
 }
 
 /* Container cho ảnh bài viết */
@@ -355,7 +359,7 @@ export default {
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  background: #4184F7;
+  background: #4184f7;
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -405,7 +409,6 @@ export default {
   margin-bottom: 16px;
   padding-bottom: 8px;
   color: rgba(31, 43, 108, 1);
-  ;
 }
 
 /* Danh sách các bài viết gần đây */
@@ -487,7 +490,7 @@ export default {
   .sidebar {
     width: 100%;
   }
-  
+
   .navigation-container {
     width: 100%;
   }
@@ -507,15 +510,14 @@ export default {
     width: 70px;
     height: 50px;
   }
-  
+
   .news-meta {
     gap: 12px;
   }
-  
+
   .nav-button {
     font-size: 14px;
     padding: 10px 16px;
   }
 }
 </style>
-

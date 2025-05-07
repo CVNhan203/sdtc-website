@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import bookingService from '@/api/booking/bookingService'
+import bookingService from '@/api/services/bookingService'
 
 export default {
   name: 'ComAdvise',
