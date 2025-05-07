@@ -4,42 +4,54 @@ const sendMail = require("../controllers/emailController");
 
 // Người dùng đặt lịch tư vấn
 exports.createBooking = asyncHandler(async (req, res) => {
-  const { fullName, phone, email, service, note } = req.body;
-  const booking = await Booking.create({
-    fullName,
-    phone,
-    email,
-    service,
-    note,
-  });
+  try {
+    const { fullName, phone, email, service, note } = req.body;
+    const booking = await Booking.create({
+      fullName,
+      phone,
+      email,
+      service,
+      note,
+    });
 
-  // Gửi email cho admin
-  await sendMail(
-    process.env.ADMIN_EMAIL || "hotansanh0304@gmail.com",
-    "[SDTC] Có người vừa đặt lịch tư vấn",
-    `<h3>Khách hàng mới đặt lịch tư vấn:</h3>
-    <ul>
-      <li><b>Họ tên:</b> ${fullName}</li>
-      <li><b>Số điện thoại:</b> ${phone}</li>
-      <li><b>Email:</b> ${email}</li>
-      <li><b>Dịch vụ:</b> ${service}</li>
-      <li><b>Ghi chú:</b> ${note || "(Không có)"}</li>
-    </ul>`
-  );
+    // Gửi email cho admin
+    try {
+      await sendMail(
+        process.env.ADMIN_EMAIL || "hotansanh0304@gmail.com",
+        "[SDTC] Có người vừa đặt lịch tư vấn",
+        `<h3>Khách hàng mới đặt lịch tư vấn:</h3>
+        <ul>
+          <li><b>Họ tên:</b> ${fullName}</li>
+          <li><b>Số điện thoại:</b> ${phone}</li>
+          <li><b>Email:</b> ${email}</li>
+          <li><b>Dịch vụ:</b> ${service}</li>
+          <li><b>Ghi chú:</b> ${note || "(Không có)"}</li>
+        </ul>`
+      );
 
-  // Gửi email xác nhận cho người dùng
-  await sendMail(
-    email,
-    "[SDTC] Xác nhận đặt lịch tư vấn",
-    `<p>Chúng tôi đã nhận được thông tin đặt lịch tư vấn từ bạn, hãy đợi chúng tôi phản hồi nhé.</p>`
-  );
+      // Gửi email xác nhận cho người dùng
+      await sendMail(
+        email,
+        "[SDTC] Xác nhận đặt lịch tư vấn",
+        `<p>Chúng tôi đã nhận được thông tin đặt lịch tư vấn từ bạn, hãy đợi chúng tôi phản hồi nhé.</p>`
+      );
+    } catch (mailErr) {
+      // Nếu lỗi gửi mail, vẫn trả về booking thành công, hoặc báo lỗi nhẹ
+    }
 
-  res.status(201).json({
-    success: true,
-    message:
-      "Chúng tôi đã nhận được thông tin đặt lịch tư vấn từ bạn, hãy đợi chúng tôi phản hồi nhé",
-    data: booking,
-  });
+    res.status(201).json({
+      success: true,
+      message:
+        "Chúng tôi đã nhận được thông tin đặt lịch tư vấn từ bạn, hãy đợi chúng tôi phản hồi nhé",
+      data: booking,
+    });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ success: false, message: messages.join(', ') });
+    }
+    res.status(500).json({ success: false, message: 'Lỗi hệ thống, vui lòng thử lại sau.' });
+  }
 });
 
 // Admin lấy danh sách đặt lịch
