@@ -341,8 +341,6 @@ h3 {
   .page-info {
     font-size: 12px;
   }
-<<<<<<< HEAD
-=======
   
   .price-card {
       width: 407;
@@ -804,6 +802,6 @@ h3 {
     width: 14px;
     height: 14px;
   }
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
+}
 }
 </style>
