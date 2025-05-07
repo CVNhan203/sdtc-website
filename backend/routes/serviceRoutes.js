@@ -2,12 +2,6 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/uploadImage");
 
-// Route upload ảnh riêng
-router.post("/upload", upload.single("image"), (req, res) => {
-  //Trả về đường dẫn của ảnh
-  res.json({ imagePath: req.file.path });
-});
-
 const {
   getServices,
   getServiceById,

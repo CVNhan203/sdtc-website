@@ -18,13 +18,13 @@
         <div class="search-filter">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input 
-              type="text" 
-              v-model="searchQuery" 
+            <input
+              type="text"
+              v-model="searchQuery"
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
-            >
+            />
           </div>
-          
+
           <select v-model="statusFilter" @change="applyFilters">
             <option value="">Tất cả trạng thái</option>
             <option value="pending">Chờ xử lý</option>
@@ -32,7 +32,7 @@
             <option value="completed">Hoàn thành</option>
             <option value="cancelled">Đã hủy</option>
           </select>
-          
+
           <select v-model="paymentFilter" @change="applyFilters">
             <option value="">Tất cả TT thanh toán</option>
             <option value="pending">Chờ thanh toán</option>
@@ -87,7 +87,11 @@
                 <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
                 </button>
-                <button class="icon-btn edit" @click="openEditModal(order)" title="Cập nhật trạng thái">
+                <button
+                  class="icon-btn edit"
+                  @click="openEditModal(order)"
+                  title="Cập nhật trạng thái"
+                >
                   <i class="fas fa-edit"></i>
                 </button>
               </td>
@@ -149,7 +153,9 @@
               <div class="detail-item">
                 <label>Trạng thái thanh toán:</label>
                 <p>
-                  <span :class="['status-badge', getPaymentStatusClass(selectedOrder.paymentStatus)]">
+                  <span
+                    :class="['status-badge', getPaymentStatusClass(selectedOrder.paymentStatus)]"
+                  >
                     {{ getPaymentStatusText(selectedOrder.paymentStatus) }}
                   </span>
                 </p>
@@ -221,9 +227,9 @@
 
               <div class="form-group">
                 <label>Ghi chú cập nhật (tùy chọn)</label>
-                <textarea 
-                  v-model="formData.notes" 
-                  rows="3" 
+                <textarea
+                  v-model="formData.notes"
+                  rows="3"
                   placeholder="Nhập ghi chú cập nhật nếu có..."
                 ></textarea>
               </div>
@@ -244,7 +250,7 @@
 </template>
 
 <script>
-import orderService from '@/api/order/orderService'
+import orderService from '@/api/services/orderService'
 import eventBus from '@/eventBus'
 
 export default {
@@ -262,82 +268,85 @@ export default {
       formData: {
         orderStatus: 'pending',
         paymentStatus: 'pending',
-        notes: ''
+        notes: '',
       },
       loading: false,
       submitLoading: false,
-      error: null
+      error: null,
     }
   },
   computed: {
     filteredOrders() {
       // Make sure orders is an array before trying to filter
       if (!this.orders || !Array.isArray(this.orders)) {
-        return [];
+        return []
       }
-      
-      let result = [...this.orders];
-      
+
+      let result = [...this.orders]
+
       // Search filter
       if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        result = result.filter(order => 
-          (order._id && order._id.toLowerCase().includes(query)) ||
-          (order.fullName && order.fullName.toLowerCase().includes(query)) ||
-          (order.phone && order.phone.includes(query)) ||
-          (order.email && order.email.toLowerCase().includes(query))
-        );
+        const query = this.searchQuery.toLowerCase()
+        result = result.filter(
+          (order) =>
+            (order._id && order._id.toLowerCase().includes(query)) ||
+            (order.fullName && order.fullName.toLowerCase().includes(query)) ||
+            (order.phone && order.phone.includes(query)) ||
+            (order.email && order.email.toLowerCase().includes(query))
+        )
       }
-      
+
       // Status filter
       if (this.statusFilter) {
-        result = result.filter(order => order.orderStatus === this.statusFilter);
+        result = result.filter((order) => order.orderStatus === this.statusFilter)
       }
-      
+
       // Payment status filter
       if (this.paymentFilter) {
-        result = result.filter(order => order.paymentStatus === this.paymentFilter);
+        result = result.filter((order) => order.paymentStatus === this.paymentFilter)
       }
-      
-      return result;
-    }
+
+      return result
+    },
   },
   methods: {
     applyFilters() {
       // This method exists to enable dynamic filtering on change events
-      console.log('Filters applied: Status -', this.statusFilter, 'Payment -', this.paymentFilter);
+      console.log('Filters applied: Status -', this.statusFilter, 'Payment -', this.paymentFilter)
     },
-    
+
     formatOrderId(id) {
-      if (!id) return '';
+      if (!id) return ''
       // Display only the last 6 characters for better readability
-      return id.length > 6 ? id.substring(id.length - 6) : id;
+      return id.length > 6 ? id.substring(id.length - 6) : id
     },
-    
+
     formatCurrency(amount) {
       return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
-        currency: 'VND'
+        currency: 'VND',
       }).format(amount)
     },
 
     formatDate(date) {
-      if (!date) return '';
-      
+      if (!date) return ''
+
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
-        
-        return dateObj.toLocaleDateString('vi-VN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit'
-        }).replace(/,/g, ' -'); // Replace comma with dash between date and time
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
+
+        return dateObj
+          .toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+          .replace(/,/g, ' -') // Replace comma with dash between date and time
       } catch (error) {
-        console.error('Error formatting date:', error);
-        return '';
+        console.error('Error formatting date:', error)
+        return ''
       }
     },
 
@@ -346,34 +355,34 @@ export default {
         pending: 'Chờ xử lý',
         processing: 'Đang xử lý',
         completed: 'Hoàn thành',
-        cancelled: 'Đã hủy'
+        cancelled: 'Đã hủy',
       }
       return statusMap[status] || status
     },
 
     getOrderStatusClass(status) {
-      return status || 'pending';
+      return status || 'pending'
     },
 
     getPaymentStatusText(status) {
       const statusMap = {
         pending: 'Chờ thanh toán',
         paid: 'Đã thanh toán',
-        failed: 'Thanh toán thất bại'
+        failed: 'Thanh toán thất bại',
       }
       return statusMap[status] || status
     },
-    
+
     getPaymentStatusClass(status) {
-      return status || 'pending';
+      return status || 'pending'
     },
-    
+
     getPaymentMethodText(method) {
       const methodMap = {
-        'VNPAY': 'VNPay',
-        'COD': 'Tiền mặt',
-        'BANK_TRANSFER': 'Chuyển khoản',
-        'MOMO': 'Ví MoMo'
+        VNPAY: 'VNPay',
+        COD: 'Tiền mặt',
+        BANK_TRANSFER: 'Chuyển khoản',
+        MOMO: 'Ví MoMo',
       }
       return methodMap[method] || method
     },
@@ -391,7 +400,7 @@ export default {
         this.orders = [] // Ensure orders is an array even after an error
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải danh sách đơn hàng'
+          message: 'Không thể tải danh sách đơn hàng',
         })
       } finally {
         this.loading = false
@@ -407,12 +416,12 @@ export default {
       this.formData = {
         orderStatus: order.orderStatus || 'pending',
         paymentStatus: order.paymentStatus || 'pending',
-        notes: ''
+        notes: '',
       }
       this.selectedOrder = { ...order }
       this.showFormModal = true
     },
-    
+
     openEditModalFromDetails() {
       this.showDetailsModal = false
       this.openEditModal(this.selectedOrder)
@@ -423,14 +432,14 @@ export default {
         this.submitLoading = true
         const updateData = {
           orderStatus: this.formData.orderStatus,
-          paymentStatus: this.formData.paymentStatus
+          paymentStatus: this.formData.paymentStatus,
         }
-        
+
         // Only include notes if provided
         if (this.formData.notes.trim()) {
           updateData.notes = this.formData.notes.trim()
         }
-        
+
         await orderService.updateOrderStatus(this.selectedOrder._id, updateData)
 
         // Reload orders to get fresh data
@@ -438,13 +447,13 @@ export default {
         this.showFormModal = false
         eventBus.emit('show-toast', {
           type: 'success',
-          message: 'Cập nhật đơn hàng thành công'
+          message: 'Cập nhật đơn hàng thành công',
         })
       } catch (error) {
         console.error('Error updating order:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi cập nhật đơn hàng'
+          message: 'Có lỗi xảy ra khi cập nhật đơn hàng',
         })
       } finally {
         this.submitLoading = false
@@ -452,41 +461,41 @@ export default {
     },
 
     formatDatePart(date) {
-      if (!date) return '';
+      if (!date) return ''
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
-        
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
+
         return dateObj.toLocaleDateString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit'
-        });
+          day: '2-digit',
+        })
       } catch (error) {
-        console.error('Error formatting date part:', error);
-        return '';
+        console.error('Error formatting date part:', error)
+        return ''
       }
     },
 
     formatTimePart(date) {
-      if (!date) return '';
+      if (!date) return ''
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
-        
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
+
         return dateObj.toLocaleTimeString('vi-VN', {
           hour: '2-digit',
-          minute: '2-digit'
-        });
+          minute: '2-digit',
+        })
       } catch (error) {
-        console.error('Error formatting time part:', error);
-        return '';
+        console.error('Error formatting time part:', error)
+        return ''
       }
-    }
+    },
   },
   created() {
     this.loadOrders()
-  }
+  },
 }
 </script>
 
@@ -583,7 +592,8 @@ export default {
   color: #166534;
 }
 
-.cancelled, .failed {
+.cancelled,
+.failed {
   background-color: #fee2e2;
   color: #b91c1c;
 }
