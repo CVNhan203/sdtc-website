@@ -5,6 +5,7 @@
       <div class="content-wrapper">
         <!-- Icon SVG phía trên stats-card -->
         <img src="@/assets/sdtc-image/icon/Vector 587.svg" alt="Arrow Icon" class="icon-above-card icon-left"/>
+
         <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
           <h3>Tăng trưởng hàng tuần</h3>
@@ -41,6 +42,7 @@
 
         <!-- Icon SVG phía trên trust-card -->
         <img src="@/assets/sdtc-image/icon/Vector 588.svg" alt="Arrow Icon" class="icon-above-card icon-right"/>
+
         <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
           <h3>Khách hàng tin tưởng</h3>
@@ -267,6 +269,7 @@
           Chúng tôi không ngừng nỗ lực để mang đến giải pháp tốt nhất, được khách hàng tin tưởng
           theo thời gian.
         </p>
+
         <router-link to="/bang-gia"><button class="cta-button">Bắt đầu ngay</button></router-link>
       </div>
     </div>
@@ -308,7 +311,9 @@
       </div>
     </div>
   </div>
+
     <router-link to="/team"><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link>
+
 </section>
 
 <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
@@ -324,6 +329,7 @@
     <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
   </div>
 <!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
+
   <div class="marquee-wrapper">
     <!-- Hàng trên: trái sang phải -->
     <div class="marquee marquee-normal">
@@ -365,6 +371,7 @@
       class="achievements-carousel">
       <Slide v-for="(item, idx) in achievements" :key="idx">
         <div class="achievement-slide">
+        
     <div class="achievement-visual">
       <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
       <div class="achievement-logo">
@@ -399,6 +406,7 @@
 </section>
 </template>
 
+<!-- đây là script -->
 <script>
 import { Carousel, Slide } from 'vue3-carousel'
 export default {
@@ -717,10 +725,6 @@ h1 {
   height: 2.5rem; /* 40px */
   object-fit: contain;
 }
-
-
-
-
 
 /*-------------------------------------- Phần hợp tác --------------------------------------*/
 /*-------------------------------------- Sếp bên trái --------------------------------------*/
@@ -1155,6 +1159,7 @@ h1 {
   z-index: 1;
 }
 
+
 /* Vị trí ảnh trung bình bên trái */
 .image-left {
   width: 13.75rem; /* 220px */
@@ -1413,6 +1418,7 @@ h1 {
 }
  
 /*-------------------------------- Hiệu ứng cuộn ảnh liên tục -------------------------------- */
+
 .marquee-wrapper {
   overflow: hidden;
   width: 100%;
@@ -1592,7 +1598,7 @@ h1 {
 
 .achievements-arrow:hover {
   background: #f3f7ff;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.13);
+  box-shadow: 0 0.5rem 2rem rgba(37, 99, 235, 0.13); /* 8px 32px */
 }
 
 .achievements-arrow.left {
@@ -1655,7 +1661,6 @@ h1 {
   background: #e6edff;
   color: #1746a2;
 }
-
 /* Responsive styles for ComHome */
 
 /* Tablet: 768px - 1024px */
@@ -1814,6 +1819,7 @@ h1 {
     height: 5rem;
     top: 12rem;
     left: 7.5rem;
+
   }
 
   .intro-section {

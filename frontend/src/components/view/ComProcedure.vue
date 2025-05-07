@@ -169,7 +169,6 @@ export default {
   max-width: 1020px;
   margin: 0;
 }
-
 .step-divider {
   display: flex;
   justify-content: center;
@@ -196,6 +195,8 @@ export default {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 14px;
+    /* Giữ nguyên background và border-radius */
   }
   .step-icon {
     width: 120px;
@@ -231,6 +232,7 @@ export default {
   .step-icon {
     width: 70px;
     height: 70px;
+
     margin-right: 0;
     margin-bottom: 10px;
   }

@@ -267,6 +267,7 @@ textarea {
 }
 
 /* Mobile: <= 768px */
+
 @media screen and (max-width: 768px) {
   .advise-background {
     padding: 1.5rem 0;
@@ -311,6 +312,7 @@ textarea {
 
   input,
   textarea {
+
     padding: 0.6rem;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -327,12 +329,14 @@ textarea {
 }
 
 /* Small Mobile: <= 480px */
+
 @media screen and (max-width: 480px) {
   .advise-background {
     padding: 1rem 0;
   }
 
   .contact-container {
+
     padding: 1rem;
     gap: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

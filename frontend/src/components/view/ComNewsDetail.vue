@@ -1,6 +1,6 @@
 <template>
   <div class="news-detail-container">
-    <!-- Back button -->
+    <!-- Nút quay lại trang tin tức -->
     <div class="back-link" @click="$router.push('/tin-tuc')">
       <div class="back-icon">
         <i class="fas fa-arrow-left"></i>
@@ -9,10 +9,11 @@
     </div>
 
     <div class="news-content-wrapper">
-      <!-- Main Content -->
+      <!-- Nội dung chính của bài viết -->
       <div class="main-content">
         <h1 class="news-title">{{ currentNews.title }}</h1>
         
+        <!-- Thông tin meta của bài viết: ngày đăng, tác giả, lượt xem, chia sẻ -->
         <div class="news-meta">
           <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ currentNews.date }}</span>
           <span class="meta-item"><i class="far fa-user"></i> {{ currentNews.author }}</span>
@@ -20,17 +21,20 @@
           <span class="meta-item"><i class="far fa-share-square"></i> {{ currentNews.shares }} chia sẻ</span>
         </div>
 
+        <!-- Hình ảnh bài viết -->
         <div class="news-image">
           <img :src="currentNews.image" :alt="currentNews.title">
         </div>
 
+        <!-- Nội dung văn bản của bài viết -->
         <div class="news-content">
           <p class="content-paragraph">{{ currentNews.excerpt }}</p>
         </div>        
       </div>
 
-      <!-- Sidebar -->
+      <!-- Thanh bên phải -->
       <div class="sidebar">
+        <!-- Ô tìm kiếm bài viết -->
         <div class="search-container">
           <input 
             type="text" 
@@ -43,6 +47,7 @@
           </button>
         </div>
 
+        <!-- Danh sách các bài viết gần đây -->
         <div class="recent-posts">
           <h2>Bài viết gần đây</h2>
           <div class="posts-list">
@@ -82,10 +87,17 @@ import { ref, computed, onMounted } from 'vue'
 export default {
   name: 'ComNewsDetail',
   setup() {
+    // Sử dụng Vue Router để lấy thông tin route và điều hướng
     const route = useRoute()
     const router = useRouter()
+    
+    // Biến lưu từ khóa tìm kiếm
     const searchQuery = ref('')
+    
+    // Biến lưu thông tin bài viết hiện tại
     const currentNews = ref({})
+    
+    // Danh sách các bài viết (dữ liệu mẫu)
     const allNews = ref([
     {
           id: 1,
@@ -180,6 +192,7 @@ export default {
         }
     ])
 
+    // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
       const currentId = Number(route.params.id)
       const filtered = allNews.value.filter(news => news.id !== currentId)
@@ -191,6 +204,7 @@ export default {
       )
     })
 
+    // Hàm tải thông tin bài viết hiện tại từ URL params
     const loadCurrentNews = () => {
       const id = Number(route.params.id)
       const found = allNews.value.find(news => news.id === id)
@@ -199,10 +213,10 @@ export default {
       }
     }
 
+    // Hàm điều hướng đến trang chi tiết bài viết khi click vào một bài viết
     const goToNewsDetail = (news) => {
       router.push(`/tin-tuc/${news.id}`)
     }
-
     const goToPreviousPost = () => {
       const currentId = Number(route.params.id)
       const sortedNews = [...allNews.value].sort((a, b) => a.id - b.id)
@@ -231,6 +245,7 @@ export default {
       loadCurrentNews()
     })
 
+    // Trả về các biến và hàm để sử dụng trong template
     return {
       searchQuery,
       currentNews,
@@ -244,12 +259,14 @@ export default {
 </script>
 
 <style scoped>
+/* Container chính chứa toàn bộ trang chi tiết tin tức */
 .news-detail-container {
   max-width: 1240px;
   margin: 0 auto;
   padding: 20px;
 }
 
+/* Nút trở lại trang tin tức */
 .back-link {
   display: flex;
   align-items: center;
@@ -261,6 +278,7 @@ export default {
   font-family: Roboto;
 }
 
+/* Icon hình tròn cho nút trở lại */
 .back-icon {
   display: flex;
   align-items: center;
@@ -271,11 +289,13 @@ export default {
   border: 1px solid #000000;
 }
 
+/* Style cho icon mũi tên trở lại */
 .back-icon i {
   color: #000000;
   font-size: 12px;
 }
 
+/* Hiệu ứng hover cho nút trở lại */
 .back-link:hover {
   color: #000000;
 }
@@ -288,16 +308,19 @@ export default {
   color: white;
 }
 
+/* Layout cho nội dung chính và thanh bên */
 .news-content-wrapper {
   display: flex;
   gap: 40px;
 }
 
+/* Style cho phần nội dung chính */
 .main-content {
   flex: 1;
   min-width: 0;
 }
 
+/* Tiêu đề bài viết */
 .news-title {
   font-size: 32px;
   font-weight: 700;
@@ -306,6 +329,7 @@ export default {
   line-height: 1.2;
 }
 
+/* Thông tin meta của bài viết */
 .news-meta {
   display: flex;
   gap: 16px;
@@ -325,6 +349,7 @@ export default {
   color: #004AAD;
 }
 
+/* Container cho ảnh bài viết */
 .news-image {
   width: 100%;
   margin-bottom: 24px;
@@ -332,12 +357,14 @@ export default {
   overflow: hidden;
 }
 
+/* Style cho ảnh bài viết */
 .news-image img {
   width: 100%;
   height: auto;
   object-fit: cover;
 }
 
+/* Style cho đoạn văn bản */
 .content-paragraph {
   color: #333;
   font-size: 16px;
@@ -381,22 +408,22 @@ export default {
 .next-button {
   padding-right: 20px;
 }
-
 .nav-button i {
   margin: 0 8px;
 }
-
 /* Sidebar Styles */
 .sidebar {
   width: 360px;
   flex-shrink: 0;
 }
 
+/* Container cho ô tìm kiếm */
 .search-container {
   position: relative;
   margin-bottom: 24px;
 }
 
+/* Input tìm kiếm */
 .search-input {
   width: 100%;
   height: 44px;
@@ -413,11 +440,18 @@ export default {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* Placeholder cho ô tìm kiếm */
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Focus style cho ô tìm kiếm */
 .search-input:focus {
   outline: none;
   background: #3367d6;
 }
 
+/* Nút tìm kiếm với icon */
 .search-button {
   position: absolute;
   right: 4px;
@@ -451,6 +485,7 @@ export default {
   border-bottom: 1px solid #f0f0f0;
 }
 
+/* Danh sách các bài viết gần đây */
 .posts-list {
   display: flex;
   flex-direction: column;
@@ -458,6 +493,7 @@ export default {
   background-color: #fff;
 }
 
+/* Mỗi item bài viết trong danh sách */
 .post-item {
   display: flex;
   gap: 12px;
@@ -471,25 +507,35 @@ export default {
   padding-bottom: 0;
 }
 
+/* Style cho item cuối cùng không có border dưới */
+.post-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Container cho hình ảnh trong danh sách bài viết */
 .post-image {
   width: 64px;
   height: 64px;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
 }
 
+/* Style cho ảnh trong danh sách bài viết */
 .post-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+/* Phần thông tin của mỗi bài viết trong danh sách */
 .post-info {
   flex: 1;
   min-width: 0;
 }
 
+/* Style cho ngày đăng bài viết */
 .post-date {
   color: #159eec;
   font-size: 12px;
@@ -503,9 +549,10 @@ export default {
   font-size: 12px;
 }
 
+/* Style cho phần tóm tắt bài viết trong danh sách */
 .post-excerpt {
   color: #333;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -513,6 +560,7 @@ export default {
   overflow: hidden;
 }
 
+/* Responsive cho màn hình tablet */
 @media (max-width: 1024px) {
   .news-content-wrapper {
     flex-direction: column;
@@ -521,8 +569,13 @@ export default {
   .sidebar {
     width: 100%;
   }
+  
+  .navigation-container {
+    width: 100%;
+  }
 }
 
+/* Responsive cho màn hình điện thoại */
 @media (max-width: 768px) {
   .news-detail-container {
     padding: 16px;
