@@ -36,6 +36,7 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Thống kê dashboard
 exports.getDashboardStats = asyncHandler(async (req, res) => {
+
   const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount, adminCount] =
     await Promise.all([
       Order.countDocuments(),
@@ -161,6 +162,7 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       services: serviceCount,
       news: newsCount,
       bookings: bookingsCount,
+
       admins: adminCount,
     },
   });
