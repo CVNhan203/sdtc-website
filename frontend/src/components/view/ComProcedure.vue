@@ -23,7 +23,10 @@
           </p>
         </div>
       </div>
-
+        <!-- SVG Divider Icon -->
+      <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
       <!-- Step 2 -->
       <div class="step-item">
         <div class="step-icon">
@@ -45,6 +48,11 @@
         </div>
       </div>
 
+       <!-- SVG Divider Icon -->
+       <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
+
       <!-- Step 3 -->
       <div class="step-item">
         <div class="step-icon">
@@ -63,6 +71,10 @@
         </div>
       </div>
 
+       <!-- SVG Divider Icon -->
+       <div class="step-divider">
+        <img src="@/assets/sdtc-image/icon/Line 1.svg" alt="divider" />
+      </div>
       <!-- Step 4 -->
       <div class="step-item">
         <div class="step-icon">
@@ -116,7 +128,7 @@ export default {
 .procedure-steps {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 10px;
 }
 
 .step-item {
@@ -129,8 +141,8 @@ export default {
 
 .step-icon {
   flex-shrink: 0;
-  width: 100px;
-  height: 100px;
+  width: 250px;
+  height: 250px;
   margin-right: 20px;
 }
 
@@ -145,26 +157,92 @@ export default {
 }
 
 .step-content h3 {
-  color: #333;
+  color: #5D5D5D;
   margin-bottom: 10px;
   font-size: 1.5em;
 }
 
 .step-content p {
-  color: #666;
-  line-height: 1.6;
+  color: #5D5D5D;
+  line-height: 1.7;
+  width: 100%;
+  max-width: 1020px;
   margin: 0;
 }
+.step-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-@media (max-width: 768px) {
+.step-divider img {
+  height: 60px;
+  width: auto;
+}
+
+/* Responsive Styles */
+/* Responsive Styles - KHÔNG thay đổi màu nền, border-radius gốc */
+@media screen and (max-width: 1024px) {
+  .procedure-container {
+    padding: 1.8rem 2rem;
+  }
+  .main-title {
+    font-size: 1.4em;
+  }
+  .step-item {
+    padding: 16px;
+    /* Giữ nguyên background và border-radius */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 14px;
+    /* Giữ nguyên background và border-radius */
+  }
+  .step-icon {
+    width: 120px;
+    height: 120px;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  .step-content h3 {
+    font-size: 1.1em;
+  }
+  .step-content p {
+    font-size: 0.95em;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .procedure-container {
+    padding: 1.2rem 0.5rem;
+  }
+  .procedure-steps {
+    gap: 16px;
+    /* Allow horizontal scroll if needed */
+    overflow-x: auto;
+  }
   .step-item {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 14px;
+    /* Giữ nguyên background và border-radius */
   }
-
   .step-icon {
-    margin: 0 0 20px 0;
+    width: 70px;
+    height: 70px;
+
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .step-content h3 {
+    font-size: 1em;
+  }
+  .step-content p {
+    font-size: 0.9em;
+    max-width: 100%;
   }
 }
+
 </style>

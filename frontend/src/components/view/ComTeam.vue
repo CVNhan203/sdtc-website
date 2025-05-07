@@ -146,9 +146,9 @@ export default {
 .grid-item {
   cursor: pointer;
   overflow: hidden;
-  border-radius: 8px;
-  position: relative;
+  border-radius: 0.5rem;
   aspect-ratio: 16/9;
+  position: relative;
 }
 
 .grid-item img {
@@ -234,29 +234,236 @@ export default {
   padding: 0 20px;
 }
 
-@media (max-width: 1024px) {
-  .team-gallery {
-    padding: 0 60px;
-  }
-}
 
-@media (max-width: 768px) {
-  .team-gallery {
-    padding: 0 20px;
+
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .team-container {
+    padding: 2.5rem 0;
   }
-  
+
+  .team-gallery {
+    padding: 0 80px;
+  }
+
+  .main-photo img {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+  }
+
   .photo-grid {
-    grid-template-columns: 1fr;
     gap: 15px;
   }
 
-  .grid-item {
-    aspect-ratio: 16/9;
+  .grid-item img {
+    height: 180px;
+  }
+
+  .mission-content {
+    padding: 2.5rem 1rem;
+  }
+
+  .mission-content h3 {
+    font-size: 1.8em;
   }
 }
 
-.grid-item img {
-  height: 200px;
+@media screen and (max-width: 1024px) {
+  .team-container {
+    padding: 2rem 0;
+  }
+
+  .team-header {
+    margin-bottom: 40px;
+    padding: 0 20px;
+  }
+
+  .team-title {
+    font-size: 2.2em;
+  }
+
+  .team-description {
+    font-size: 0.95em;
+    padding: 0 20px;
+  }
+
+  .team-gallery {
+    padding: 0 40px;
+  }
+
+  .main-photo img {
+    max-width: 800px;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .grid-item img {
+    height: 160px;
+  }
+
+  .mission-content {
+    padding: 2rem 1rem;
+  }
+
+  .mission-content h3 {
+    font-size: 1.6em;
+  }
+
+  .mission-content p {
+    font-size: 0.95em;
+    padding: 0 15px;
+  }
 }
 
+@media screen and (max-width: 768px) {
+  .team-container {
+    padding: 1.5rem 0;
+  }
+
+  .team-header {
+    margin-bottom: 30px;
+  }
+
+  .team-title {
+    font-size: 2em;
+  }
+
+  .team-description {
+    font-size: 0.9em;
+    padding: 0 15px;
+  }
+
+  .team-gallery {
+    padding: 0 20px;
+  }
+
+  .main-photo {
+    margin-bottom: 20px;
+  }
+
+  .main-photo img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .grid-item img {
+    height: 140px;
+  }
+
+  .mission-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .mission-content h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+
+  .mission-content p {
+    font-size: 0.9em;
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .team-container {
+    padding: 1rem 0;
+  }
+
+  .team-header {
+    margin-bottom: 25px;
+  }
+
+  .team-title {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+  }
+
+  .team-description {
+    font-size: 0.85em;
+    padding: 0 10px;
+  }
+
+  .team-gallery {
+    padding: 0 15px;
+  }
+
+  .main-photo {
+    margin-bottom: 15px;
+  }
+
+  .photo-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .grid-item img {
+    height: 200px;
+  }
+
+  .mission-content {
+    padding: 1rem;
+  }
+
+  .mission-content h3 {
+    font-size: 1.4em;
+    margin-bottom: 12px;
+  }
+
+  .mission-content p {
+    font-size: 0.85em;
+    padding: 0 8px;
+  }
+}
+
+/* Fix for mission section background */
+@media screen and (max-width: 768px) {
+  .team-mission {
+    margin-top: 30px;
+  }
+
+  .img-mission {
+    opacity: 0.1; /* Make background image more subtle on mobile */
+  }
+
+  .mission-content {
+    background-color: rgba(255, 255, 255, 0.9); /* Add semi-transparent background */
+    border-radius: 8px;
+    margin: 0 10px;
+  }
+}
+
+/* Animation for image transitions */
+.main-photo img {
+  transition: all 0.3s ease-in-out;
+}
+
+.grid-item {
+  transition: transform 0.3s ease;
+}
+
+.grid-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Improve touch targets for mobile */
+@media screen and (max-width: 768px) {
+  .grid-item {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .grid-item:active {
+    transform: scale(0.98);
+  }
+}
 </style>
