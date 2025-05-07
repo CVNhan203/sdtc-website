@@ -1,21 +1,21 @@
 <template>
   <div class="insert-news">
     <div class="form-container">
-      <form @submit.prevent="handleSubmit" :class="{ 'submitting': loading }">
+      <form @submit.prevent="handleSubmit" :class="{ submitting: loading }">
         <!-- Tiêu đề -->
         <div class="form-group">
           <label>Tiêu đề <span class="required">*</span></label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             v-model.trim="formData.title"
-            :class="{ 'error': errors.title }"
+            :class="{ error: errors.title }"
             :disabled="loading"
             placeholder="Nhập tiêu đề tin tức"
             required
             maxlength="200"
-          >
+          />
           <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
-          <span class="character-count" :class="{ 'error': formData.title.length > 200 }">
+          <span class="character-count" :class="{ error: formData.title.length > 200 }">
             {{ formData.title.length }}/200
           </span>
         </div>
@@ -25,9 +25,9 @@
           <!-- Phân loại -->
           <div class="form-group">
             <label>Phân loại <span class="required">*</span></label>
-            <select 
+            <select
               v-model="formData.type"
-              :class="{ 'error': errors.type }"
+              :class="{ error: errors.type }"
               :disabled="loading"
               required
             >
@@ -42,29 +42,31 @@
           <!-- Tác giả -->
           <div class="form-group">
             <label>Tác giả <span class="required">*</span></label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               v-model.trim="formData.author"
-              :class="{ 'error': errors.author }"
+              :class="{ error: errors.author }"
               :disabled="loading"
               placeholder="Nhập tên tác giả"
               required
-            >
+            />
             <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
           </div>
 
           <!-- Ngày đăng -->
           <div class="form-group">
             <label>Ngày đăng <span class="required">*</span></label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               v-model="formData.publishedDate"
-              :class="{ 'error': errors.publishedDate }"
+              :class="{ error: errors.publishedDate }"
               :disabled="loading"
               :min="minDate"
               required
-            >
-            <span class="error-message" v-if="errors.publishedDate">{{ errors.publishedDate }}</span>
+            />
+            <span class="error-message" v-if="errors.publishedDate">{{
+              errors.publishedDate
+            }}</span>
           </div>
         </div>
 
@@ -72,25 +74,30 @@
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
           <div class="image-upload-container" @click="triggerFileInput">
-            <input 
-              type="file" 
+            <input
+              type="file"
               class="file-input"
-              @change="handleImageUpload" 
+              @change="handleImageUpload"
               accept="image/*"
               ref="fileInput"
               :disabled="loading"
-            >
+            />
             <div v-if="!imagePreview" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 10MB. Định dạng: JPG, PNG, GIF</p>
             </div>
-            <div 
-              v-if="imagePreview" 
+            <div
+              v-if="imagePreview"
               class="image-preview"
               :style="{ backgroundImage: `url(${imagePreview})` }"
             >
-              <button type="button" @click.stop="removeImage" class="remove-image" :disabled="loading">
+              <button
+                type="button"
+                @click.stop="removeImage"
+                class="remove-image"
+                :disabled="loading"
+              >
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -101,9 +108,9 @@
         <!-- Tóm tắt -->
         <div class="form-group">
           <label>Tóm tắt <span class="required">*</span></label>
-          <textarea 
+          <textarea
             v-model.trim="formData.summary"
-            :class="{ 'error': errors.summary }"
+            :class="{ error: errors.summary }"
             :disabled="loading"
             rows="3"
             placeholder="Nhập tóm tắt nội dung"
@@ -111,7 +118,7 @@
             maxlength="500"
           ></textarea>
           <span class="error-message" v-if="errors.summary">{{ errors.summary }}</span>
-          <span class="character-count" :class="{ 'error': formData.summary.length > 500 }">
+          <span class="character-count" :class="{ error: formData.summary.length > 500 }">
             {{ formData.summary.length }}/500
           </span>
         </div>
@@ -119,9 +126,9 @@
         <!-- Nội dung chi tiết -->
         <div class="form-group content-section">
           <label>Nội dung chi tiết <span class="required">*</span></label>
-          <textarea 
+          <textarea
             v-model.trim="formData.content"
-            :class="{ 'error': errors.content }"
+            :class="{ error: errors.content }"
             :disabled="loading"
             rows="6"
             placeholder="Nhập nội dung chi tiết"
@@ -129,26 +136,22 @@
             maxlength="5000"
           ></textarea>
           <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
-          <span class="character-count" :class="{ 'error': formData.content.length > 5000 }">
+          <span class="character-count" :class="{ error: formData.content.length > 5000 }">
             {{ formData.content.length }}/5000
           </span>
         </div>
 
         <!-- Form Actions -->
         <div class="form-actions">
-          <button 
-            type="button" 
-            class="cancel-btn" 
+          <button
+            type="button"
+            class="cancel-btn"
             @click="$router.push('/admin/tin-tuc/danh-sach')"
             :disabled="loading"
           >
             <i class="fas fa-times"></i> Hủy
           </button>
-          <button 
-            type="submit" 
-            class="submit-btn" 
-            :disabled="loading"
-          >
+          <button type="submit" class="submit-btn" :disabled="loading">
             <i class="fas" :class="loading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
             {{ loading ? 'Đang xử lý...' : 'Thêm tin tức' }}
           </button>
@@ -159,7 +162,7 @@
 </template>
 
 <script>
-import newsService from '@/api/news/newsService'
+import newsService from '@/api/services/newsService'
 
 export default {
   name: 'InsertNews',
@@ -175,13 +178,13 @@ export default {
         publishedDate: new Date().toISOString().split('T')[0],
         view: 0,
         like: 0,
-        isDeleted: false
+        isDeleted: false,
       },
       imagePreview: null,
       loading: false,
       error: null,
       maxFileSize: 10 * 1024 * 1024, // 10MB in bytes
-      errors: {}
+      errors: {},
     }
   },
   computed: {
@@ -191,7 +194,8 @@ export default {
     },
     isFormValid() {
       // Kiểm tra các trường bắt buộc có giá trị
-      return this.formData.title?.trim() &&
+      return (
+        this.formData.title?.trim() &&
         this.formData.summary?.trim() &&
         this.formData.content?.trim() &&
         this.formData.type &&
@@ -201,7 +205,8 @@ export default {
         this.formData.title.length <= 200 &&
         this.formData.summary.length <= 500 &&
         this.formData.content.length <= 5000
-    }
+      )
+    },
   },
   methods: {
     triggerFileInput() {
@@ -292,7 +297,7 @@ export default {
         if (this.formData.image instanceof File) {
           const formData = new FormData()
           formData.append('image', this.formData.image)
-          
+
           try {
             const uploadResponse = await newsService.uploadImage(formData)
             if (!uploadResponse?.imagePath) {
@@ -304,7 +309,7 @@ export default {
             this.error = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
             this.$emit('show-toast', {
               type: 'error',
-              message: this.error
+              message: this.error,
             })
             this.loading = false
             return
@@ -322,16 +327,16 @@ export default {
           view: 0,
           like: 0,
           isDeleted: false,
-          image: imageUrl
+          image: imageUrl,
         }
 
         // Tạo tin tức
         const response = await newsService.createNews(newsData)
-        
+
         if (response.success) {
           this.$emit('show-toast', {
             type: 'success',
-            message: 'Tin tức đã được tạo thành công'
+            message: 'Tin tức đã được tạo thành công',
           })
           this.resetForm()
           this.$router.push('/admin/tin-tuc/danh-sach')
@@ -343,7 +348,7 @@ export default {
         this.error = err.response?.data?.message || err.message || 'Có lỗi xảy ra khi thêm tin tức'
         this.$emit('show-toast', {
           type: 'error',
-          message: this.error
+          message: this.error,
         })
       } finally {
         this.loading = false
@@ -360,20 +365,20 @@ export default {
         publishedDate: new Date().toISOString().split('T')[0],
         view: 0,
         like: 0,
-        isDeleted: false
+        isDeleted: false,
       }
       this.imagePreview = null
       this.error = null
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = ''
       }
-    }
+    },
   },
   beforeUnmount() {
     if (this.imagePreview) {
       URL.revokeObjectURL(this.imagePreview)
     }
-  }
+  },
 }
 </script>
 
@@ -387,7 +392,9 @@ export default {
 .form-container {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.07),
+    0 1px 3px rgba(0, 0, 0, 0.05);
   padding: 32px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -411,8 +418,8 @@ export default {
   margin-left: 4px;
 }
 
-input[type="text"],
-input[type="date"],
+input[type='text'],
+input[type='date'],
 select,
 textarea {
   width: 100%;
@@ -624,7 +631,7 @@ textarea:focus {
     grid-template-columns: 1fr;
     padding: 24px;
   }
-  
+
   .info-section {
     grid-template-columns: 1fr;
   }
@@ -672,8 +679,8 @@ textarea:focus {
     margin-bottom: 6px;
   }
 
-  input[type="text"],
-  input[type="date"],
+  input[type='text'],
+  input[type='date'],
   select,
   textarea {
     padding: 10px 12px;
@@ -708,8 +715,8 @@ textarea:focus {
     gap: 16px;
   }
 
-  input[type="text"],
-  input[type="date"],
+  input[type='text'],
+  input[type='date'],
   select,
   textarea {
     padding: 8px 10px;
