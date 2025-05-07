@@ -243,6 +243,7 @@ export default {
     padding: 0 20px;
   }
 
+
   .description,
   .contact-item a,
   .policy-info a {
@@ -301,6 +302,7 @@ export default {
 
   .contact-item i {
     font-size: 0.9rem;
+
   }
 }
 
@@ -324,7 +326,7 @@ export default {
   .logo img {
     width: 120px;
   }
-
+  
   .description,
   .contact-item a,
   .policy-info a {

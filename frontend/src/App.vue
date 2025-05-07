@@ -48,6 +48,7 @@ body {
 
 .html{
  font-size: 10px;
+
 }
 html, body {
   width: 100%;
@@ -56,6 +57,7 @@ html, body {
 }
 *, *::before, *::after {
   box-sizing: inherit;
+
 }
 
 * {
