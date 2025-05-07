@@ -422,6 +422,8 @@
       </button>
     </div>
   </section>
+
+  <!---------------------------------------- Section bạn đồng hành ---------------------------------------->
   <section class="companion-section">
     <div class="companion-content">
       <div class="companion-text">
@@ -448,7 +450,6 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
-
       achievements: [
         {
           logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),

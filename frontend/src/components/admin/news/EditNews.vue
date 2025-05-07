@@ -1,55 +1,68 @@
 <template>
   <div class="edit-news">
     <div class="form-container">
-      <form @submit.prevent="handleSubmit" :class="{ submitting: isSubmitting }">
+      <form @submit.prevent="handleSubmit" :class="{ submitting: isSubmitting }" novalidate>
+        <!-- Thông báo lỗi chung -->
+        <div v-if="error" class="error-alert">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ error }}
+        </div>
+
+        <!-- Thông báo thành công -->
+        <div v-if="successMessage" class="success-alert">
+          <i class="fas fa-check-circle"></i>
+          {{ successMessage }}
+        </div>
+
+        <!-- Trạng thái tải -->
+        <div v-if="uploadStatus" class="status-alert">
+          <i class="fas fa-spinner fa-spin" v-if="uploadStatus.includes('Đang')"></i>
+          <i class="fas fa-check" v-else></i>
+          {{ uploadStatus }}
+        </div>
+
         <!-- Tiêu đề -->
         <div class="form-group">
           <label>Tiêu đề <span class="required">*</span></label>
           <input
             type="text"
+            name="title"
             v-model.trim="formData.title"
             :class="{ error: errors.title }"
             :disabled="isSubmitting"
             placeholder="Nhập tiêu đề tin tức"
-            required
           />
           <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
-          <span class="character-count" :class="{ error: formData.title.length > 200 }">
-            {{ formData.title.length }}/200
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.title.length > 200 ||
+                (formData.title.length < 10 && formData.title.length > 0),
+            }"
+          >
+            {{ formData.title.length }}/200 (Tối thiểu 10 ký tự)
           </span>
         </div>
 
-        <!-- Phân loại + Tác giả + Ngày -->
+        <!-- Phân loại + Ngày -->
         <div class="info-section">
           <!-- Phân loại -->
           <div class="form-group">
             <label>Phân loại <span class="required">*</span></label>
-            <select
-              v-model="formData.type"
-              :class="{ error: errors.type }"
-              :disabled="isSubmitting"
-              required
-            >
-              <option value="">Chọn loại tin tức</option>
-              <option value="tin-tuc">Tin tức</option>
-              <option value="su-kien">Sự kiện</option>
-              <option value="thong-bao">Thông báo</option>
-            </select>
-            <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
-          </div>
-
-          <!-- Tác giả -->
-          <div class="form-group">
-            <label>Tác giả <span class="required">*</span></label>
             <input
               type="text"
-              v-model.trim="formData.author"
-              :class="{ error: errors.author }"
+              name="type"
+              v-model.trim="formData.type"
+              :class="{ error: errors.type }"
               :disabled="isSubmitting"
-              placeholder="Nhập tên tác giả"
-              required
+              placeholder="Nhập phân loại tin tức"
+              maxlength="50"
             />
-            <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
+            <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
+            <span class="character-count" :class="{ error: formData.type.length > 50 }">
+              {{ formData.type.length }}/50
+            </span>
           </div>
 
           <!-- Ngày đăng -->
@@ -57,11 +70,11 @@
             <label>Ngày đăng <span class="required">*</span></label>
             <input
               type="date"
+              name="publishedDate"
               v-model="formData.publishedDate"
               :class="{ error: errors.publishedDate }"
               :disabled="isSubmitting"
               :min="minDate"
-              required
             />
             <span class="error-message" v-if="errors.publishedDate">{{
               errors.publishedDate
@@ -72,9 +85,14 @@
         <!-- Ảnh -->
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
-          <div class="image-upload-container" @click="triggerFileInput">
+          <div
+            class="image-upload-container"
+            @click="triggerFileInput"
+            :class="{ 'error-border': errors.image }"
+          >
             <input
               type="file"
+              name="image"
               class="file-input"
               @change="handleImageChange"
               accept="image/*"
@@ -85,6 +103,7 @@
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+              <p class="upload-hint">Kích thước tối thiểu: 300x200px, tối đa 2000x2000px</p>
             </div>
             <div v-if="imagePreview || formData.image" class="image-preview">
               <img
@@ -109,16 +128,23 @@
         <div class="form-group">
           <label>Tóm tắt <span class="required">*</span></label>
           <textarea
+            name="summary"
             v-model.trim="formData.summary"
             :class="{ error: errors.summary }"
             :disabled="isSubmitting"
             rows="3"
             placeholder="Nhập tóm tắt nội dung"
-            required
           ></textarea>
           <span class="error-message" v-if="errors.summary">{{ errors.summary }}</span>
-          <span class="character-count" :class="{ error: formData.summary.length > 500 }">
-            {{ formData.summary.length }}/500
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.summary.length > 500 ||
+                (formData.summary.length < 20 && formData.summary.length > 0),
+            }"
+          >
+            {{ formData.summary.length }}/500 (Tối thiểu 20 ký tự)
           </span>
         </div>
 
@@ -126,16 +152,48 @@
         <div class="form-group content-section">
           <label>Nội dung chi tiết <span class="required">*</span></label>
           <textarea
+            name="content"
             v-model.trim="formData.content"
             :class="{ error: errors.content }"
             :disabled="isSubmitting"
             rows="6"
             placeholder="Nhập nội dung chi tiết"
-            required
           ></textarea>
           <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
-          <span class="character-count" :class="{ error: formData.content.length > 5000 }">
-            {{ formData.content.length }}/5000
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.content.length > 5000 ||
+                (formData.content.length < 100 && formData.content.length > 0),
+            }"
+          >
+            {{ formData.content.length }}/5000 (Tối thiểu 100 ký tự)
+          </span>
+        </div>
+
+        <!-- Tác giả -->
+        <div class="form-group">
+          <label>Tác giả</label>
+          <input
+            type="text"
+            name="author"
+            v-model.trim="formData.author"
+            :class="{ error: errors.author }"
+            :disabled="isSubmitting"
+            placeholder="Nhập tên tác giả (mặc định: Admin)"
+            maxlength="50"
+          />
+          <span class="error-message" v-if="errors.author">{{ errors.author }}</span>
+          <span
+            class="character-count"
+            :class="{
+              error:
+                formData.author.length > 50 ||
+                (formData.author.length < 3 && formData.author.length > 0),
+            }"
+          >
+            {{ formData.author.length }}/50 (Tối thiểu 3 ký tự)
           </span>
         </div>
 
@@ -202,8 +260,8 @@ export default {
       content: '',
       image: null,
       type: '',
-      author: '',
       publishedDate: new Date().toISOString().split('T')[0],
+      author: 'Admin',
       view: 0,
       like: 0,
       isDeleted: false,
@@ -217,6 +275,9 @@ export default {
     const showConfirmModal = ref(false)
     const originalData = ref(null)
     const newsId = ref(null)
+    const error = ref(null)
+    const successMessage = ref(null)
+    const uploadStatus = ref('')
 
     // Computed properties
     const minDate = computed(() => {
@@ -234,24 +295,33 @@ export default {
       }
 
       // Check text fields
-      return ['title', 'summary', 'content', 'type', 'author', 'publishedDate'].some((field) => {
+      return ['title', 'summary', 'content', 'type', 'publishedDate', 'author'].some((field) => {
         return formData.value[field]?.toString() !== originalData.value[field]?.toString()
       })
     })
 
     const isFormValid = computed(() => {
-      // Kiểm tra các trường bắt buộc có giá trị
+      // Kiểm tra dữ liệu hợp lệ dựa trên model
       const hasRequiredFields =
-        formData.value.title?.trim() &&
-        formData.value.summary?.trim() &&
-        formData.value.content?.trim() &&
-        formData.value.type &&
-        formData.value.author?.trim() &&
+        formData.value.title?.trim().length >= 10 &&
+        formData.value.title.trim().length <= 200 &&
+        formData.value.summary?.trim().length >= 20 &&
+        formData.value.summary.trim().length <= 500 &&
+        formData.value.content?.trim().length >= 100 &&
+        formData.value.content.trim().length <= 5000 &&
+        formData.value.type?.trim() &&
         formData.value.publishedDate &&
         (formData.value.image || imagePreview.value)
 
+      // Kiểm tra tác giả nếu được cung cấp
+      const authorValid =
+        !formData.value.author ||
+        (formData.value.author.trim().length >= 3 &&
+          formData.value.author.trim().length <= 50 &&
+          /^[a-zA-ZÀ-ỹ\s]+$/.test(formData.value.author.trim()))
+
       // Form hợp lệ khi có đầy đủ thông tin và không có lỗi
-      return hasRequiredFields && Object.keys(errors.value).length === 0
+      return hasRequiredFields && authorValid && Object.keys(errors.value).length === 0
     })
 
     // Watch for route changes to reload data
@@ -283,10 +353,10 @@ export default {
             content: news.content || '',
             image: news.image || null,
             type: news.type || '',
-            author: news.author || '',
             publishedDate: news.publishedDate
               ? new Date(news.publishedDate).toISOString().split('T')[0]
               : new Date().toISOString().split('T')[0],
+            author: news.author || 'Admin',
             view: news.view || 0,
             like: news.like || 0,
             isDeleted: news.isDeleted || false,
@@ -304,6 +374,8 @@ export default {
 
           // Clear any existing errors
           errors.value = {}
+          error.value = null
+          successMessage.value = null
         } else {
           throw new Error('Failed to load news data')
         }
@@ -328,23 +400,73 @@ export default {
 
     const handleImageChange = (event) => {
       const file = event.target.files[0]
-      if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          // 5MB limit
-          errors.value.image = 'Kích thước ảnh không được vượt quá 5MB'
-          return
-        }
+      if (!file) return
 
-        if (!file.type.match(/^image\/(jpeg|png|gif)$/)) {
-          errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
-          return
-        }
+      // Clear previous errors
+      delete errors.value.image
 
-        formData.value.image = file
-        imagePreview.value = URL.createObjectURL(file)
-        errors.value.image = null
-        console.log('New image selected:', file.name, file.type, file.size)
+      // Check file size (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        errors.value.image = 'Kích thước ảnh không được vượt quá 5MB'
+        if (fileInput.value) {
+          fileInput.value.value = ''
+        }
+        return
       }
+
+      // Check file type
+      if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+        errors.value.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
+        if (fileInput.value) {
+          fileInput.value.value = ''
+        }
+        return
+      }
+
+      // Check image dimensions
+      const img = new Image()
+      img.onload = () => {
+        URL.revokeObjectURL(img.src)
+
+        // Check min dimensions
+        if (img.width < 300 || img.height < 200) {
+          errors.value.image = 'Kích thước ảnh quá nhỏ (tối thiểu 300x200 pixels)'
+          if (fileInput.value) {
+            fileInput.value.value = ''
+          }
+          formData.value.image = null
+          imagePreview.value = null
+          return
+        }
+
+        // Check max dimensions
+        if (img.width > 2000 || img.height > 2000) {
+          errors.value.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
+          if (fileInput.value) {
+            fileInput.value.value = ''
+          }
+          formData.value.image = null
+          imagePreview.value = null
+          return
+        }
+      }
+
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src)
+        errors.value.image = 'File không phải là ảnh hợp lệ'
+        if (fileInput.value) {
+          fileInput.value.value = ''
+        }
+        formData.value.image = null
+        imagePreview.value = null
+      }
+
+      img.src = URL.createObjectURL(file)
+
+      // Set image data if passes validation
+      formData.value.image = file
+      imagePreview.value = URL.createObjectURL(file)
+      console.log('New image selected:', file.name, file.type, file.size)
     }
 
     const removeImage = (e) => {
@@ -358,7 +480,19 @@ export default {
     }
 
     const handleSubmit = async () => {
+      error.value = null
+      successMessage.value = null
+      uploadStatus.value = ''
+
       if (!validateForm()) {
+        // Focus on the first error field
+        const firstErrorField = Object.keys(errors.value)[0]
+        const element = document.querySelector(`[name="${firstErrorField}"]`)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          setTimeout(() => element.focus(), 500)
+        }
+
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Vui lòng kiểm tra lại thông tin nhập vào',
@@ -375,26 +509,21 @@ export default {
           title: formData.value.title.trim(),
           summary: formData.value.summary.trim(),
           content: formData.value.content.trim(),
-          type: formData.value.type,
-          author: formData.value.author.trim(),
+          type: formData.value.type.trim(),
           publishedDate: new Date(formData.value.publishedDate).toISOString(),
           view: formData.value.view,
           like: formData.value.like,
           isDeleted: formData.value.isDeleted,
+          author: formData.value.author.trim() || 'Admin',
         }
 
         // Xử lý ảnh
         let imageUrl = null
 
-        // Nếu image là một chuỗi (đã có ảnh trước đó), sử dụng chuỗi đó
-        if (typeof formData.value.image === 'string') {
-          imageUrl = formData.value.image
-          newsData.image = imageUrl
-        }
-        // Nếu có file ảnh mới, upload ảnh
-        else if (formData.value.image instanceof File) {
-          console.log('Uploading new image...')
-          // Tạo FormData
+        // Kiểm tra nếu có file ảnh mới
+        if (formData.value.image instanceof File) {
+          console.log('Uploading new image file:', formData.value.image.name)
+          uploadStatus.value = 'Đang tải ảnh lên...'
           const imageFormData = new FormData()
           imageFormData.append('image', formData.value.image)
 
@@ -405,27 +534,42 @@ export default {
             if (uploadResponse && uploadResponse.imagePath) {
               imageUrl = uploadResponse.imagePath
               newsData.image = imageUrl
+              console.log('New image path:', imageUrl)
+              uploadStatus.value = 'Ảnh đã được tải lên thành công'
             } else {
-              console.error('Invalid image upload response structure:', uploadResponse)
-              eventBus.emit('show-toast', {
-                type: 'error',
-                message: 'Định dạng response ảnh không hợp lệ. Vui lòng thử lại sau.',
-              })
-              isSubmitting.value = false
-              return
+              throw new Error('Invalid image upload response structure')
             }
-          } catch (error) {
-            console.error('Error uploading image:', error)
+          } catch (uploadError) {
+            console.error('Error uploading image:', uploadError)
             eventBus.emit('show-toast', {
               type: 'error',
               message: 'Không thể tải lên hình ảnh. Vui lòng thử lại.',
             })
+            error.value = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
             isSubmitting.value = false
             return
           }
         }
+        // Nếu là ảnh đã có sẵn
+        else if (typeof formData.value.image === 'string' && formData.value.image) {
+          console.log('Using existing image path:', formData.value.image)
+          imageUrl = formData.value.image
+          newsData.image = imageUrl
+        }
+        // Trường hợp không có ảnh
+        else {
+          console.log('No image provided')
+          eventBus.emit('show-toast', {
+            type: 'error',
+            message: 'Vui lòng chọn ảnh cho tin tức',
+          })
+          error.value = 'Vui lòng chọn ảnh cho tin tức'
+          isSubmitting.value = false
+          return
+        }
 
         console.log('Sending news data to update:', newsData)
+        uploadStatus.value = 'Đang cập nhật tin tức...'
 
         try {
           // Gọi API cập nhật tin tức
@@ -433,21 +577,36 @@ export default {
           console.log('Update response:', response)
 
           // Hiển thị thông báo thành công
+          successMessage.value = 'Tin tức đã được cập nhật thành công'
           eventBus.emit('show-toast', {
             type: 'success',
-            message: 'Tin tức đã được cập nhật thành công',
+            message: successMessage.value,
           })
 
-          // Chuyển về trang danh sách
-          router.push('/admin/tin-tuc/danh-sach')
+          // Chuyển về trang danh sách sau một khoảng thời gian ngắn
+          setTimeout(() => {
+            router.push('/admin/tin-tuc/danh-sach')
+          }, 1500)
         } catch (updateError) {
           console.error('Error updating news:', updateError)
-          eventBus.emit('show-toast', {
-            type: 'error',
-            message:
+
+          // Xử lý lỗi validation từ server
+          if (updateError.response?.data?.errors) {
+            const serverErrors = updateError.response.data.errors
+            Object.keys(serverErrors).forEach((key) => {
+              errors.value[key] = serverErrors[key]
+            })
+            error.value = 'Vui lòng kiểm tra lại thông tin nhập vào'
+          } else {
+            error.value =
               updateError.response?.data?.message ||
               updateError.message ||
-              'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.',
+              'Có lỗi xảy ra khi cập nhật tin tức. Vui lòng thử lại.'
+          }
+
+          eventBus.emit('show-toast', {
+            type: 'error',
+            message: error.value,
           })
         }
       } catch (error) {
@@ -458,6 +617,7 @@ export default {
         })
       } finally {
         isSubmitting.value = false
+        uploadStatus.value = ''
       }
     }
 
@@ -470,38 +630,73 @@ export default {
       console.log('Validating form data:', formData.value)
       const newErrors = {}
 
+      // Validate tiêu đề (title)
       if (!formData.value.title?.trim()) {
         newErrors.title = 'Tiêu đề không được để trống'
-      } else if (formData.value.title.length > 200) {
+      } else if (formData.value.title.trim().length < 10) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 10 ký tự'
+      } else if (formData.value.title.trim().length > 200) {
         newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
       }
 
+      // Validate tóm tắt (summary)
       if (!formData.value.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (formData.value.summary.length > 500) {
+      } else if (formData.value.summary.trim().length < 20) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
+      } else if (formData.value.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }
 
+      // Validate nội dung (content)
       if (!formData.value.content?.trim()) {
         newErrors.content = 'Nội dung không được để trống'
-      } else if (formData.value.content.length > 5000) {
+      } else if (formData.value.content.trim().length < 100) {
+        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự'
+      } else if (formData.value.content.trim().length > 5000) {
         newErrors.content = 'Nội dung không được vượt quá 5000 ký tự'
       }
 
-      if (!formData.value.type) {
-        newErrors.type = 'Vui lòng chọn loại tin tức'
+      // Validate loại (type)
+      if (!formData.value.type?.trim()) {
+        newErrors.type = 'Phân loại không được để trống'
+      } else if (formData.value.type.trim().length > 50) {
+        newErrors.type = 'Phân loại không được vượt quá 50 ký tự'
       }
 
-      if (!formData.value.author?.trim()) {
-        newErrors.author = 'Tác giả không được để trống'
-      }
-
+      // Validate ngày đăng (publishedDate)
       if (!formData.value.publishedDate) {
         newErrors.publishedDate = 'Vui lòng chọn ngày đăng'
+      } else {
+        const publishDate = new Date(formData.value.publishedDate)
+        const minDate = new Date()
+        minDate.setMonth(minDate.getMonth() - 1)
+
+        if (publishDate < minDate) {
+          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng trước'
+        }
+
+        const today = new Date()
+        today.setMonth(today.getMonth() + 1)
+        if (publishDate > today) {
+          newErrors.publishedDate = 'Ngày đăng không được vượt quá 1 tháng tới'
+        }
       }
 
+      // Validate ảnh (image)
       if (!formData.value.image && !imagePreview.value) {
         newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
+      }
+
+      // Validate tác giả (author) nếu có
+      if (formData.value.author && formData.value.author.trim() !== '') {
+        if (formData.value.author.trim().length < 3) {
+          newErrors.author = 'Tên tác giả phải có ít nhất 3 ký tự'
+        } else if (formData.value.author.trim().length > 50) {
+          newErrors.author = 'Tên tác giả không được vượt quá 50 ký tự'
+        } else if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(formData.value.author.trim())) {
+          newErrors.author = 'Tên tác giả chỉ được chứa chữ cái và khoảng trắng'
+        }
       }
 
       errors.value = newErrors
@@ -547,112 +742,38 @@ export default {
       formatFileSize,
       getImageUrl,
       triggerFileInput,
+      error,
+      successMessage,
+      uploadStatus,
     }
   },
 }
 </script>
 
 <style scoped>
+@import '@/styles/admin.css';
+
+/* Component-specific styles that aren't in admin.css */
 .edit-news {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.page-header {
-  margin-bottom: 24px;
+.content-section {
+  grid-column: 1 / -1;
 }
 
-.page-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #1a202c;
-  margin: 0 0 8px 0;
-}
-
-.page-header p {
-  color: #4a5568;
-  margin: 0;
-}
-
-.form-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.07),
-    0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 32px;
+.info-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 32px;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 0.95rem;
-}
-
-.required {
-  color: #e53e3e;
-  margin-left: 4px;
-}
-
-input[type='text'],
-input[type='date'],
-select,
-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  line-height: 1.5;
-  transition: all 0.3s ease;
-  background-color: #fff;
-  min-height: 46px;
-  box-sizing: border-box;
-}
-
-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 40px;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
-}
-
-.error {
-  border-color: #e53e3e !important;
-}
-
-.error-message {
-  color: #e53e3e;
-  font-size: 13px;
-  margin-top: 6px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 0;
+  grid-column: 1 / -1;
 }
 
 .image-upload-container {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed var(--border-color);
   border-radius: 12px;
   padding: 24px;
   text-align: center;
@@ -666,8 +787,8 @@ textarea:focus {
 }
 
 .image-upload-container:hover {
-  border-color: #4299e1;
-  background-color: rgba(66, 153, 225, 0.05);
+  border-color: var(--primary-color);
+  background-color: rgba(59, 130, 246, 0.05);
 }
 
 .file-input {
@@ -712,7 +833,7 @@ textarea:focus {
 }
 
 .remove-image:hover {
-  background: #ff4444;
+  background: var(--danger-color);
   color: white;
 }
 
@@ -721,167 +842,37 @@ textarea:focus {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .upload-button i {
   font-size: 2.5em;
-  color: #4299e1;
+  color: var(--primary-color);
   margin-bottom: 8px;
 }
 
 .upload-hint {
   font-size: 0.875rem;
-  color: #718096;
+  color: var(--text-tertiary);
   margin-top: 8px;
   line-height: 1.4;
-}
-
-.form-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 16px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.cancel-btn,
-.submit-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
-  justify-content: center;
-}
-
-.cancel-btn {
-  background: #f7fafc;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-  text-decoration: none;
-}
-
-.submit-btn {
-  background: #4299e1;
-  color: white;
-  border: none;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.cancel-btn:hover {
-  background: #edf2f7;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background: #3182ce;
-  transform: translateY(-1px);
 }
 
 .character-count {
   display: block;
   text-align: right;
   font-size: 0.85rem;
-  color: #718096;
+  color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .character-count.error {
-  color: #dc2626;
+  color: var(--danger-color);
 }
 
-.submitting {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.modal-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8fafc;
-}
-
-.modal-body {
-  padding: 1.75rem;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.confirm-btn {
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.confirm-btn:hover {
-  background: #b91c1c;
-}
-
-/* Form layout for specific sections */
-.content-section {
-  grid-column: 1 / -1;
-}
-
-.info-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 0;
-  grid-column: 1 / -1;
+.error-border {
+  border-color: var(--danger-color) !important;
+  border-style: solid !important;
 }
 
 @media (max-width: 768px) {
@@ -895,64 +886,7 @@ textarea:focus {
   }
 }
 
-@media (max-width: 640px) {
-  .edit-news {
-    padding: 16px;
-  }
-
-  .form-container {
-    padding: 20px;
-    border-radius: 8px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Additional responsive styles for very small devices */
 @media (max-width: 480px) {
-  .edit-news {
-    padding: 10px;
-  }
-
-  .form-container {
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    gap: 20px;
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group label {
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-  }
-
-  input[type='text'],
-  input[type='date'],
-  select,
-  textarea {
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    border-radius: 6px;
-    min-height: 42px;
-  }
-
-  .error-message,
-  .character-count,
-  .upload-hint {
-    font-size: 0.8rem;
-  }
-
   .image-upload-container {
     min-height: 180px;
     padding: 16px;
@@ -960,45 +894,6 @@ textarea:focus {
 
   .preview-img {
     max-height: 160px;
-  }
-}
-
-@media (max-width: 360px) {
-  .edit-news {
-    padding: 8px;
-  }
-
-  .form-container {
-    padding: 12px;
-    gap: 16px;
-  }
-
-  input[type='text'],
-  input[type='date'],
-  select,
-  textarea {
-    padding: 8px 10px;
-    font-size: 0.9rem;
-    min-height: 38px;
-  }
-
-  .form-group label {
-    font-size: 0.85rem;
-  }
-
-  .image-upload-container {
-    min-height: 160px;
-    padding: 12px;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    padding: 10px 18px;
-    font-size: 0.9rem;
-  }
-
-  .upload-button i {
-    font-size: 2em;
   }
 }
 </style>
