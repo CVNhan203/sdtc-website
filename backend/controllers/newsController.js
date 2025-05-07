@@ -205,5 +205,5 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
   });
 });
-});
+
 
