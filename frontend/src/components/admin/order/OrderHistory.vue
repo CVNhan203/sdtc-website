@@ -18,26 +18,12 @@
         <div class="search-filter">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input 
-              type="text" 
-              v-model="searchQuery" 
+            <input
+              type="text"
+              v-model="searchQuery"
               placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
-            >
+            />
           </div>
-          
-          <select v-model="statusFilter" @change="applyFilters">
-            <option value="">Tất cả trạng thái</option>
-            <option value="processing">Đang xử lý</option>
-            <option value="completed">Hoàn thành</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
-          
-          <select v-model="paymentFilter" @change="applyFilters">
-            <option value="">Tất cả TT thanh toán</option>
-            <option value="pending">Chờ thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-            <option value="failed">Thanh toán thất bại</option>
-          </select>
         </div>
       </div>
 
@@ -47,7 +33,7 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã đơn hàng</th>
+              <!-- <th>Mã đơn hàng</th> -->
               <th>Tên khách hàng</th>
               <th class="responsive-hide">Số điện thoại</th>
               <th class="responsive-hide">Email</th>
@@ -60,7 +46,7 @@
           <tbody>
             <tr v-for="(order, index) in filteredOrders" :key="order._id">
               <td>{{ index + 1 }}</td>
-              <td class="order-id">{{ formatOrderId(order._id) }}</td>
+              <!-- <td class="order-id">{{ formatOrderId(order._id) }}</td> -->
               <td class="truncate-text">{{ order.fullName }}</td>
               <td class="responsive-hide">{{ order.phone }}</td>
               <td class="responsive-hide">{{ order.email }}</td>
@@ -80,7 +66,7 @@
                   <div class="time-part">{{ formatTimePart(order.createdAt) }}</div>
                 </div>
               </td>
-              <td class="actions">
+              <td class="actions" style="height: 120px !important">
                 <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
                 </button>
@@ -161,7 +147,7 @@
 </template>
 
 <script>
-import orderService from '@/api/order/orderService'
+import orderService from '@/api/services/orderService'
 import eventBus from '@/eventBus'
 
 export default {
@@ -175,32 +161,33 @@ export default {
       selectedOrder: {},
       showDetailsModal: false,
       loading: false,
-      error: null
+      error: null,
     }
   },
   computed: {
     filteredOrders() {
-      let filtered = this.orders.filter(order => order.orderStatus !== 'pending')
+      let filtered = this.orders.filter((order) => order.orderStatus !== 'pending')
 
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase()
-        filtered = filtered.filter(order => 
-          order._id.toLowerCase().includes(query) ||
-          order.fullName.toLowerCase().includes(query) ||
-          order.phone.includes(query)
+        filtered = filtered.filter(
+          (order) =>
+            order._id.toLowerCase().includes(query) ||
+            order.fullName.toLowerCase().includes(query) ||
+            order.phone.includes(query)
         )
       }
 
       if (this.statusFilter) {
-        filtered = filtered.filter(order => order.orderStatus === this.statusFilter)
+        filtered = filtered.filter((order) => order.orderStatus === this.statusFilter)
       }
 
       if (this.paymentFilter) {
-        filtered = filtered.filter(order => order.paymentStatus === this.paymentFilter)
+        filtered = filtered.filter((order) => order.paymentStatus === this.paymentFilter)
       }
 
       return filtered
-    }
+    },
   },
   methods: {
     formatDate(date) {
@@ -209,7 +196,7 @@ export default {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     },
 
@@ -217,14 +204,14 @@ export default {
       return new Date(date).toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: '2-digit',
-        day: '2-digit'
+        day: '2-digit',
       })
     },
 
     formatTimePart(date) {
       return new Date(date).toLocaleTimeString('vi-VN', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     },
 
@@ -233,7 +220,7 @@ export default {
         pending: 'Chờ xử lý',
         processing: 'Đang xử lý',
         completed: 'Hoàn thành',
-        cancelled: 'Đã hủy'
+        cancelled: 'Đã hủy',
       }
       return statusMap[status] || status
     },
@@ -242,7 +229,7 @@ export default {
       const statusMap = {
         pending: 'Chờ thanh toán',
         paid: 'Đã thanh toán',
-        failed: 'Thanh toán thất bại'
+        failed: 'Thanh toán thất bại',
       }
       return statusMap[status] || status
     },
@@ -257,7 +244,7 @@ export default {
         this.error = 'Không thể tải lịch sử đơn hàng'
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải lịch sử đơn hàng'
+          message: 'Không thể tải lịch sử đơn hàng',
         })
       } finally {
         this.loading = false
@@ -270,18 +257,18 @@ export default {
     },
 
     formatOrderId(id) {
-      if (!id) return '';
+      if (!id) return ''
       // Display only the last 6 characters for better readability
-      return id.length > 6 ? id.substring(id.length - 6) : id;
+      return id.length > 6 ? id.substring(id.length - 6) : id
     },
 
     applyFilters() {
       // Implementation of applyFilters method
-    }
+    },
   },
   created() {
     this.loadOrderHistory()
-  }
+  },
 }
 </script>
 
@@ -291,10 +278,10 @@ export default {
 
 /* Component specific overrides */
 .order-history {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
   width: 100%;
 }
 
@@ -312,16 +299,16 @@ export default {
 /* Custom media queries for extreme mobile cases */
 @media (max-width: 480px) {
   .order-history {
-    padding: 1rem;
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
   }
-  
+
   .filter-group {
     margin-top: 0.75rem;
   }
-  
+
   .search-box input {
     font-size: 0.875rem;
   }
 }
-</style> 
+</style>

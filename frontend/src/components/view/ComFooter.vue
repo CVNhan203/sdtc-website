@@ -236,25 +236,171 @@ export default {
   border-radius: 8px;
 }
 
-@media (max-width: 1200px) {
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .footer-container {
+    gap: 30px;
+    padding: 0 20px;
   }
 
-  .company-info {
-    grid-column: 1 / -1;
-    max-width: none;
+
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.95rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 1.1rem;
+  }
+
+  .social-icon {
+    font-size: 1.2rem;
+  }
+
+  .contact-item i {
+    font-size: 0.95rem;
   }
 }
 
-@media (max-width: 768px) {
-  .footer-content {
-    grid-template-columns: 1fr;
+@media screen and (max-width: 992px) {
+  .footer-container {
+    gap: 20px;
+  }
+
+  .company-info,
+  .contact-info,
+  .policy-info,
+  .map-container {
+    flex: 1 1 45%;
+    min-width: 300px;
+  }
+
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.9rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 1.05rem;
+  }
+
+  .social-links {
+    gap: 25px;
+  }
+
+  .social-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 1.15rem;
+  }
+
+  .contact-item i {
+    font-size: 0.9rem;
+
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-footer {
+    padding: 30px 15px;
+  }
+
+  .footer-container {
+    gap: 15px;
+  }
+
+  .company-info,
+  .contact-info,
+  .policy-info,
+  .map-container {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .logo img {
+    width: 120px;
+  }
+  
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.85rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 1rem;
+  }
+
+  .contact-item {
+    margin-bottom: 12px;
+  }
+
+  .contact-item i {
+    font-size: 0.85rem;
+  }
+
+  .social-icon {
+    font-size: 1.1rem;
   }
 
   .map-container iframe {
-    height: 250px;
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-footer {
+    padding: 20px 10px;
+  }
+
+  .footer-container {
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 100px;
+  }
+
+  .description,
+  .contact-item a,
+  .policy-info a {
+    font-size: 0.8rem;
+  }
+
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 0.95rem;
+  }
+
+  .contact-item {
+    margin-bottom: 10px;
+  }
+
+  .contact-item i {
+    font-size: 0.8rem;
+  }
+
+  .social-links {
+    gap: 20px;
+  }
+
+  .social-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .map-container iframe {
+    height: 160px;
   }
 }
 </style>
