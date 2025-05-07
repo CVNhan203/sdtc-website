@@ -76,35 +76,42 @@ export default {
 </script>
 
 <style scoped>
+@import '@/styles/admin.css';
+
 .admin-dashboard-home {
-  padding: 40px;
+  padding: var(--spacing-xl);
   text-align: center;
 }
+
 .dashboard-overview {
-  margin-top: 40px;
+  margin-top: var(--spacing-xl);
 }
+
 .stats-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 32px;
-  margin-top: 24px;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
 }
+
 .stat-card {
-  background: #f5faff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: 24px 32px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-md) var(--spacing-lg);
   min-width: 180px;
 }
+
 .stat-number {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #007bff;
+  color: var(--primary-color);
   margin: 0;
 }
+
 .error {
-  color: red;
-  margin-top: 16px;
+  color: var(--danger-color);
+  margin-top: var(--spacing-md);
 }
 </style>

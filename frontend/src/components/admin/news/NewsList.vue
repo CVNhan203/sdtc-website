@@ -28,14 +28,6 @@
               @input="handleSearch"
             />
           </div>
-
-          <!-- Dropdown lọc theo loại tin tức -->
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="tin-tuc">Tin tức</option>
-            <option value="su-kien">Sự kiện</option>
-            <option value="thong-bao">Thông báo</option>
-          </select>
         </div>
       </div>
 
@@ -44,7 +36,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>STT</th>
               <th>Ảnh</th>
               <th style="max-width: 250px">Tiêu đề</th>
               <th>Loại</th>
@@ -55,8 +47,8 @@
 
           <tbody>
             <!-- Hiển thị từng dòng tin tức -->
-            <tr v-for="news in filteredNews" :key="news._id">
-              <td class="news-id">{{ news._id }}</td>
+            <tr v-for="(news, index) in filteredNews" :key="news._id">
+              <td class="news-id">{{ index + 1 }}</td>
               <!-- Ảnh đại diện tin tức -->
               <td>
                 <div class="image-container">
@@ -321,7 +313,6 @@
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import newsService from '@/api/services/newsService'
 import eventBus from '@/eventBus'
-import { useRouter } from 'vue-router'
 
 export default {
   name: 'NewsList',
@@ -353,7 +344,6 @@ export default {
     const isEditing = ref(false) // Trạng thái đang chỉnh sửa hay thêm mới
     const baseImageUrl = ref('http://localhost:3000') // URL cơ sở cho hình ảnh
     const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
-    const router = useRouter() // Router để điều hướng
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -382,10 +372,23 @@ export default {
       error.value = null
 
       try {
-        const newsData = await newsService.getNews()
+        console.log('Đang gọi API getNews...')
+        const response = await newsService.getNews()
+        console.log('Kết quả API:', response)
+
+        // Kiểm tra cấu trúc dữ liệu trả về
+        if (!response || !response.data) {
+          throw new Error('Dữ liệu trả về không hợp lệ')
+        }
+
         const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
+        console.log('Deleted news info:', deletedNewsInfo)
+
         const deletedIds = deletedNewsInfo.map((item) => item._id)
-        news.value = newsData.filter((item) => !deletedIds.includes(item._id))
+        console.log('Deleted IDs:', deletedIds)
+
+        news.value = response.data.filter((item) => !deletedIds.includes(item._id))
+        console.log('Filtered news:', news.value)
       } catch (err) {
         console.error('Error loading news:', err)
         error.value = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
@@ -393,7 +396,6 @@ export default {
         loading.value = false
       }
     }
-
     // Xử lý sự kiện tìm kiếm
     const handleSearch = () => {
       // Thực hiện tìm kiếm thông qua computed property
@@ -410,12 +412,42 @@ export default {
       showDetailsModal.value = true
     }
 
-    // Mở modal chỉnh sửa tin tức (chuyển hướng đến trang chỉnh sửa)
-    const openEditModal = (news) => {
-      router.push(`/admin/tin-tuc/chinh-sua/${news._id}`)
+    // Mở modal chỉnh sửa tin tức
+    const openEditModal = async (news) => {
+      try {
+        const newsDetail = await newsService.getNewsById(news._id)
+        if (newsDetail) {
+          selectedNews.value = newsDetail
+          formData.value = {
+            title: newsDetail.title || '',
+            summary: newsDetail.summary || '',
+            content: newsDetail.content || '',
+            type: newsDetail.type || '',
+            author: newsDetail.author || '',
+            publishedDate: newsDetail.publishedDate ? new Date(newsDetail.publishedDate).toISOString().split('T')[0] : '',
+            image: newsDetail.image || null,
+            isDeleted: newsDetail.isDeleted || false
+          }
+          
+          if (newsDetail.image) {
+            imagePreview.value = getImageUrl(newsDetail.image)
+          } else {
+            imagePreview.value = null
+          }
+          
+          isEditing.value = true
+          showFormModal.value = true
+        }
+      } catch (error) {
+        console.error('Error fetching news details:', error)
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Không thể tải thông tin tin tức. Vui lòng thử lại sau.'
+        })
+      }
     }
 
-    // Hiển thị modal xác nhận xóa tạm thời
+    // Hiển thị modal xác nhận xóa tạm thởi
     const confirmSoftDelete = (item) => {
       selectedNews.value = item
       showSoftDeleteModal.value = true
