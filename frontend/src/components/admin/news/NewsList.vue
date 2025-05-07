@@ -65,7 +65,7 @@
                 </div>
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
-              <td class="type-cell">{{ formatType(news.type) }}</td>
+              <td class="type-cell">{{ news.type }}</td>
               <td class="responsive-hide">{{ news.author }}</td>
               <!-- Các nút thao tác trên từng tin tức -->
               <td class="actions-cell">
@@ -151,7 +151,7 @@
             </div>
             <div class="detail-item">
               <label>Loại:</label>
-              <p>{{ formatType(selectedNews.type) }}</p>
+              <p>{{ news.type }}</p>
             </div>
             <div class="detail-item">
               <label>Tác giả:</label>
@@ -199,12 +199,7 @@
               </div>
               <div class="form-group">
                 <label>Phân loại</label>
-                <select v-model="formData.type" required>
-                  <option value="">Chọn phân loại</option>
-                  <option value="tin-tuc">Tin tức</option>
-                  <option value="su-kien">Sự kiện</option>
-                  <option value="thong-bao">Thông báo</option>
-                </select>
+                <input type="text" v-model="formData.type" required placeholder="Nhập phân loại tin tức" maxlength="50" />
               </div>
               <div class="form-group">
                 <label>Tác giả</label>
@@ -544,16 +539,6 @@ export default {
       return new Date(date).toLocaleDateString('vi-VN')
     }
 
-    // Định dạng hiển thị loại tin tức
-    const formatType = (type) => {
-      const types = {
-        'tin-tuc': 'Tin tức',
-        'su-kien': 'Sự kiện',
-        'thong-bao': 'Thông báo',
-      }
-      return types[type] || type
-    }
-
     // Rút gọn nội dung mô tả để hiển thị
     const formatDescription = (text) => {
       return text?.length > 50 ? text.slice(0, 50) + '...' : text
@@ -582,8 +567,30 @@ export default {
     // Xử lý gửi form thêm/chỉnh sửa tin tức
     const handleSubmit = async () => {
       try {
+        let dataToSend = { ...formData.value }
+        // Nếu là chỉnh sửa và có file ảnh mới
+        if (isEditing.value && formData.value.image instanceof File) {
+          const imageFormData = new FormData()
+          imageFormData.append('image', formData.value.image)
+          try {
+            const uploadResponse = await newsService.uploadImage(imageFormData)
+            if (uploadResponse && uploadResponse.imagePath) {
+              dataToSend.image = uploadResponse.imagePath
+            } else {
+              throw new Error('Không thể upload ảnh')
+            }
+          } catch (uploadError) {
+            console.error('Error uploading image:', uploadError)
+            error.value = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
+            return
+          }
+        }
+        // Nếu là chỉnh sửa và ảnh là string (đã có sẵn)
         if (isEditing.value) {
-          await newsService.updateNews(selectedNews.value._id, formData.value)
+          if (typeof formData.value.image === 'string') {
+            dataToSend.image = formData.value.image
+          }
+          await newsService.updateNews(selectedNews.value._id, dataToSend)
         } else {
           await newsService.createNews(formData.value)
         }
@@ -676,7 +683,6 @@ export default {
       handleImageUpload,
       getImageUrl,
       formatDate,
-      formatType,
       formatDescription,
       openAddModal,
       handleSubmit,
