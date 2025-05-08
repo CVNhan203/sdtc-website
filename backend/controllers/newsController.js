@@ -214,12 +214,6 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
-<<<<<<< HEAD
-  })
-})
-=======
   });
 });
-});
 
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19

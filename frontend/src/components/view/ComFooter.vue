@@ -22,9 +22,6 @@
           <a href="#" class="social-icon facebook"><i class="fa-brands fa-facebook"></i></a>
           <a href="#" class="social-icon instagram"><i class="fa-brands fa-instagram"></i></a>
         </div>
-        <div class="dmca-badge">
-          <img :src="require('@/assets/sdtc-image/trang-chu/Logo/DMCA.png')" alt="DMCA Badge" />
-        </div>
       </div>
 
       <!-- Liên hệ -->
@@ -71,8 +68,11 @@
         >
         </iframe>
       </div>
+      <div class="dmca-badge">
+      <img :src="require('@/assets/sdtc-image/trang-chu/Logo/DMCA.png')" alt="DMCA Badge" />
     </div>
-  </footer>
+  </div>
+</footer>
 </template>
 
 <script>
@@ -85,6 +85,7 @@ export default {
 .main-footer {
   background: #f4faff;
   padding: 40px 20px;
+  width:100%;
 }
 
 .footer-container {
@@ -102,6 +103,17 @@ export default {
 .company-info {
   flex: 1;
   min-width: 250px;
+}
+.dmca-badge {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 32px;
+  margin-bottom: 0; 
+}
+.dmca-badge img {
+  width: 100px;
+  margin-top: 0;
 }
 
 .logo {
@@ -242,7 +254,6 @@ export default {
     gap: 30px;
     padding: 0 20px;
   }
-
 
   .description,
   .contact-item a,

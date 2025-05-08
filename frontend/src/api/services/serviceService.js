@@ -4,6 +4,7 @@ const serviceService = {
   // Lấy danh sách dịch vụ
   async getServices(params) {
     try {
+      // Use params for querying if provided
       const response = await api.get('/services', { params })
       return {
         data: response.data.data || [],

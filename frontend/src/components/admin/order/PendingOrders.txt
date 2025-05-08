@@ -37,7 +37,7 @@
               <td>{{ order.email }}</td>
               <td>{{ order.paymentMethod }}</td>
               <td>{{ formatDate(order.createdAt) }}</td>
-              <td class="actions">
+              <td class="actions" style="height: 120px !important">
                 <div class="action-buttons">
                   <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                     <i class="fas fa-info-circle"></i>
@@ -104,7 +104,7 @@
       </div>
 
       <!-- Confirm Action Modal -->
-      <div class="modal" v-if="showConfirmModal">
+      <div class="modal" v-if="showConfirmModal" >
         <div class="modal-content">
           <div class="modal-header">
             <h3>{{ confirmAction === 'approve' ? 'Xác nhận duyệt' : 'Xác nhận từ chối' }}</h3>
