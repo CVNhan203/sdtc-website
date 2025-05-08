@@ -197,7 +197,7 @@ export default {
 
   nav {
     position: fixed;
-    top: 80px;
+    top: 70px;
     left: 0;
     width: 100%;
     height: 0;
@@ -207,7 +207,7 @@ export default {
   }
 
   nav.menu-open {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 70px);
   }
 
   .menu {
