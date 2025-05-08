@@ -27,7 +27,7 @@
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img :src="getImageUrl(news.image)" :alt="news.title" class="news-image" />
+        <img :src="getImageUrl(news.image)" class="news-image" />
         <div class="news-content">
           <p class="news-category">Công nghệ</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
