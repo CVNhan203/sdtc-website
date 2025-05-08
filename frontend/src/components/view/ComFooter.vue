@@ -414,4 +414,142 @@ export default {
     height: 160px;
   }
 }
+
+@media screen and (min-width: 3000px) {
+  .main-footer {
+    padding: 100px 120px;
+  }
+  .footer-container {
+    max-width: 3500px;
+    gap: 120px;
+    font-size: 2.2rem;
+  }
+  .logo img {
+    width: 400px;
+  }
+  .description {
+    font-size: 2.2rem;
+  }
+  .social-links {
+    gap: 80px;
+  }
+  .social-icon {
+    width: 90px;
+    height: 90px;
+    font-size: 3rem;
+  }
+  .dmca-badge img {
+    width: 220px;
+  }
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 2.2rem;
+  }
+  .contact-item a,
+  .policy-info a {
+    font-size: 2rem;
+  }
+  .policy-info {
+    max-width: 400px;
+  }
+  .map-container {
+    max-width: 600px;
+  }
+  .map-container iframe {
+    height: 400px;
+  }
+}
+
+@media screen and (min-width: 4000px) {
+  .main-footer {
+    padding: 160px 200px;
+  }
+  .footer-container {
+    max-width: 4500px;
+    gap: 180px;
+    font-size: 3rem;
+  }
+  .logo img {
+    width: 600px;
+  }
+  .description {
+    font-size: 3rem;
+  }
+  .social-links {
+    gap: 120px;
+  }
+  .social-icon {
+    width: 140px;
+    height: 140px;
+    font-size: 4.5rem;
+  }
+  .dmca-badge img {
+    width: 320px;
+  }
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 3rem;
+  }
+  .contact-item a,
+  .policy-info a {
+    font-size: 2.8rem;
+  }
+  .policy-info {
+    max-width: 600px;
+  }
+  .map-container {
+    max-width: 900px;
+  }
+  .map-container iframe {
+    height: 600px;
+  }
+}
+
+@media screen and (min-width: 5000px) {
+  .main-footer {
+    padding: 220px 320px;
+  }
+  .footer-container {
+    max-width: 6000px;
+    gap: 260px;
+    font-size: 4rem;
+  }
+  .logo img {
+    width: 900px;
+  }
+  .description {
+    font-size: 3rem;
+  }
+  .social-links {
+    gap: 25px;
+  }
+  .social-icon {
+    width: 200px;
+    height: 200px;
+    font-size: 6rem;
+  }
+  .dmca-badge img {
+    width: 480px;
+  }
+  .contact-info h3,
+  .policy-info h3,
+  .map-container h3 {
+    font-size: 3rem;
+  }
+  .contact-item a,
+  .policy-info a {
+    font-size: 3rem;
+  }
+  .policy-info {
+    max-width: 900px;
+  }
+  .map-container {
+    max-width: 1440px;
+  }
+  .map-container iframe {
+    height: 500px;
+  }
+}
 </style>
