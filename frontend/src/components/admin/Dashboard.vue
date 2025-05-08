@@ -165,6 +165,10 @@
     <div class="main-content">
       <header class="top-header">
         <div class="header-left">
+          <!-- Add toggle button -->
+          <button class="toggle-sidebar" @click="toggleSidebar">
+            <i class="fas" :class="isSidebarCollapsed ? 'fa-bars' : 'fa-bars-staggered'"></i>
+          </button>
           <h1 class="page-title">{{ currentPageTitle }}</h1>
         </div>
 
@@ -282,6 +286,8 @@ export default {
       } else {
         // On desktop, toggle collapsed state
         this.isSidebarCollapsed = !this.isSidebarCollapsed
+        // Lưu trạng thái sidebar vào localStorage
+        localStorage.setItem('sidebarCollapsed', this.isSidebarCollapsed)
       }
     },
     toggleServiceMenu() {
@@ -314,6 +320,13 @@ export default {
       if (this.userRole === 'staff' && !newPath.includes('/admin/tin-tuc')) {
         this.$router.push('/admin/tin-tuc/danh-sach');
       }
+    }
+  },
+  mounted() {
+    // Khôi phục trạng thái sidebar từ localStorage khi component được tạo
+    const savedState = localStorage.getItem('sidebarCollapsed')
+    if (savedState !== null) {
+      this.isSidebarCollapsed = savedState === 'true'
     }
   }
 };
@@ -763,4 +776,64 @@ export default {
   overflow-y: auto;
 }
 
+/* Thêm style cho nút toggle */
+.toggle-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.toggle-sidebar:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/* Điều chỉnh header left để chứa nút toggle */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+/* Điều chỉnh animation cho sidebar */
+.sidebar {
+  transition: all 0.3s ease;
+}
+
+/* Khi sidebar thu gọn */
+.sidebar-collapsed .sidebar {
+  width: 80px;
+}
+
+.sidebar-collapsed .nav-item span,
+.sidebar-collapsed .sidebar-header h2 {
+  display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .toggle-sidebar {
+    display: block;
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: 250px;
+  }
+  
+  .sidebar-open .sidebar {
+    left: 0;
+  }
+}
 </style>
