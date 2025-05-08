@@ -31,8 +31,6 @@
         <thead>
           <tr>
             <th>Họ tên</th>
-            <th>Email</th>
-            <th>Số điện thoại</th>
             <th>Dịch vụ</th>
             <th>Trạng thái</th>
             <th>Ngày đặt</th>
@@ -42,8 +40,6 @@
         <tbody>
           <tr v-for="booking in filteredBookings" :key="booking._id">
             <td>{{ booking.fullName }}</td>
-            <td>{{ booking.email }}</td>
-            <td>{{ booking.phone }}</td>
             <td>{{ booking.service }}</td>
             <td>
               <span :class="['status-badge', booking.status]">
@@ -76,14 +72,6 @@
           <div class="detail-item">
             <label>Họ tên:</label>
             <p>{{ selectedBooking.fullName }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Email:</label>
-            <p>{{ selectedBooking.email }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Số điện thoại:</label>
-            <p>{{ selectedBooking.phone }}</p>
           </div>
           <div class="detail-item">
             <label>Dịch vụ:</label>
@@ -224,4 +212,4 @@ select{
   border-radius: 6px;
   font-size: 0.95rem;
 }
-</style> 
+</style>
