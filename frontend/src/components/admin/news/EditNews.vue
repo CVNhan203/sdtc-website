@@ -58,6 +58,7 @@
               :disabled="isSubmitting"
               placeholder="Nhập phân loại tin tức"
               maxlength="50"
+              autocomplete="off"
             />
             <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
             <span class="character-count" :class="{ error: formData.type.length > 50 }">
@@ -66,7 +67,7 @@
           </div>
 
           <!-- Ngày đăng -->
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Ngày đăng <span class="required">*</span></label>
             <input
               type="date"
@@ -79,7 +80,7 @@
             <span class="error-message" v-if="errors.publishedDate">{{
               errors.publishedDate
             }}</span>
-          </div>
+          </div> -->
         </div>
 
         <!-- Ảnh -->
@@ -173,7 +174,7 @@
         </div>
 
         <!-- Tác giả -->
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label>Tác giả</label>
           <input
             type="text"
@@ -195,7 +196,7 @@
           >
             {{ formData.author.length }}/50 (Tối thiểu 3 ký tự)
           </span>
-        </div>
+        </div> -->
 
         <!-- Form Actions -->
         <div class="form-actions">

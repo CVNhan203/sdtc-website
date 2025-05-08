@@ -33,7 +33,7 @@
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã đơn hàng</th>
+              <!-- <th>Mã đơn hàng</th> -->
               <th>Tên khách hàng</th>
               <th class="responsive-hide">Số điện thoại</th>
               <th class="responsive-hide">Email</th>
@@ -46,7 +46,7 @@
           <tbody>
             <tr v-for="(order, index) in filteredOrders" :key="order._id">
               <td>{{ index + 1 }}</td>
-              <td class="order-id">{{ formatOrderId(order._id) }}</td>
+              <!-- <td class="order-id">{{ formatOrderId(order._id) }}</td> -->
               <td class="truncate-text">{{ order.fullName }}</td>
               <td class="responsive-hide">{{ order.phone }}</td>
               <td class="responsive-hide">{{ order.email }}</td>
@@ -66,7 +66,7 @@
                   <div class="time-part">{{ formatTimePart(order.createdAt) }}</div>
                 </div>
               </td>
-              <td class="actions">
+              <td class="actions" style="height: 120px !important">
                 <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                   <i class="fas fa-info-circle"></i>
                 </button>

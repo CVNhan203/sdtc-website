@@ -266,84 +266,83 @@ td {
    7. NÚT VÀ HÀNH ĐỘNG
    ================================================== */
 /* Khu vực nút hành động */
+.actions-cell {
+  padding: 0.5rem !important;
+}
+
 .actions {
-  gap: var(--spacing-sm);
+  display: flex;
+  gap: 4px;
   justify-content: center;
   align-items: center;
 }
 
 /* Nút icon */
 .icon-btn {
-  width: 40px;
-  height: 40px;
-  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 20px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  font-size: 18px;
+  margin: 0 2px;
 }
 
-/* Hiệu ứng hover cho nút icon */
-.icon-btn:hover {
-  transform: translateY(-2px);
+.icon-btn i {
+  font-size: 18px;
+  color: #fff;
 }
 
 /* Nút thông tin chi tiết */
 .icon-btn.info {
-  background: #e0f2fe;
-  color: #0369a1;
+  background-color: #3498db;
 }
 
-/* Hiệu ứng hover cho nút thông tin */
 .icon-btn.info:hover {
-  background: #bae6fd;
+  background-color: #217dbb;
 }
 
 /* Nút chỉnh sửa */
 .icon-btn.edit {
-  background: var(--secondary-color);
-  color: var(--text-secondary);
+  background-color: #2ecc71;
 }
 
-/* Hiệu ứng hover cho nút chỉnh sửa */
 .icon-btn.edit:hover {
-  background: #e2e8f0;
+  background-color: #27ae60;
 }
 
 /* Nút xóa */
 .icon-btn.delete {
-  background: #fee2e2;
-  color: var(--danger-hover);
+  background-color: #e74c3c;
 }
 
-/* Hiệu ứng hover cho nút xóa */
 .icon-btn.delete:hover {
-  background: #fecaca;
+  background-color: #c0392b;
 }
 
 /* Nút khôi phục */
 .icon-btn.restore {
-  background: #dcfce7;
-  color: #166534;
+  background-color: #f1c40f;
+  color: white;
 }
 
-/* Hiệu ứng hover cho nút khôi phục */
 .icon-btn.restore:hover {
-  background: #bbf7d0;
+  background-color: #f39c12;
 }
 
 /* Nút xóa vĩnh viễn */
 .icon-btn.permanent-delete {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: #c0392b;
+  color: white;
 }
 
-/* Hiệu ứng hover cho nút xóa vĩnh viễn */
 .icon-btn.permanent-delete:hover {
-  background: #fecaca;
+  background-color: #962d22;
 }
 
 /* ==================================================
@@ -464,7 +463,7 @@ td {
    ================================================== */
 /* Nhóm form input */
 .form-group {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -472,7 +471,7 @@ td {
 /* Nhãn cho input */
 .form-group label {
   display: block;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 0.5rem;
   font-weight: 700;
   color: var(--text-secondary);
   text-align: left;
@@ -483,7 +482,7 @@ td {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
@@ -501,7 +500,7 @@ td {
 
 /* Textareas */
 .form-group textarea {
-  min-height: 120px;
+  min-height: 100px;
   resize: vertical;
 }
 
@@ -527,27 +526,54 @@ td {
   margin-left: 0.25rem;
 }
 
+/* Form container styling */
+.form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
 /* Khu vực nút hành động trong form */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-md);
-  margin-top: var(--spacing-xl);
+  margin-top: 1.5rem;
 }
 
 /* Nút trong form */
 .form-actions button {
-  padding: 1rem 1.75rem;
+  padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--border-radius-md);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 140px;
+  min-width: 130px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm);
+}
+
+/* Image upload container */
+.image-upload-container {
+  min-height: 180px !important;
+  padding: 16px !important;
+}
+
+/* Character count */
+.character-count {
+  font-size: 0.75rem !important;
+  margin-top: 3px !important;
+}
+
+/* Info section styling */
+.info-section {
+  gap: 12px !important;
 }
 
 /* ==================================================

@@ -22,6 +22,9 @@
           <li><router-link to="/price-list" @click="closeMenu">Bảng Giá</router-link></li>
           <li><router-link to="/news" @click="closeMenu">Tin Tức</router-link></li>
         </ul>
+        <div v-if="isMenuOpen" class="advise-btn mobile">
+          <router-link to="/advise" class="btn" @click="closeMenu">Đặt lịch tư vấn</router-link>
+        </div>
       </nav>
       <!-- Nút đặt lịch tư vấn -->
       <div class="advise-btn">
@@ -41,14 +44,14 @@ export default {
   },
   methods: {
     toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-      document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+      this.isMenuOpen = !this.isMenuOpen
+      document.body.style.overflow = this.isMenuOpen ? 'hidden' : ''
     },
     closeMenu() {
-      this.isMenuOpen = false;
-      document.body.style.overflow = '';
-    }
-  }
+      this.isMenuOpen = false
+      document.body.style.overflow = ''
+    },
+  },
 }
 </script>
 

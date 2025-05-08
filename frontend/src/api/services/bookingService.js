@@ -1,79 +1,49 @@
-import api from '../config';
+import api from '../config'
 
-const bookingService = {
-  // Lấy danh sách booking
-  async getBookings(params) {
+export const bookingService = {
+  // Lấy tất cả các đặt lịch
+  getAllBookings: async () => {
     try {
-      const response = await api.get('/bookings', { params });
-      return {
-        data: response.data.data || [],
-        pagination: response.data.pagination || null,
-        message: response.data.message || ''
-      };
+      const response = await api.get('/bookings')
+      return response.data
     } catch (error) {
-      console.error('Error fetching bookings:', error);
-      throw error;
+      console.error('Lỗi khi lấy danh sách đặt lịch:', error)
+      throw error
     }
   },
 
-  // Lấy chi tiết booking
-  async getBookingById(id) {
+  // Lấy đặt lịch theo ID
+  getBookingById: async (id) => {
     try {
-      const response = await api.get(`/bookings/${id}`);
-      return response.data.data;
+      const response = await api.get(`/bookings/${id}`)
+      return response.data
     } catch (error) {
-      console.error('Error fetching booking details:', error);
-      throw error;
+      console.error('Lỗi khi lấy thông tin đặt lịch:', error)
+      throw error
     }
   },
 
-  // Tạo booking mới
-  async createBooking(data) {
+  // Cập nhật trạng thái đặt lịch
+  updateBookingStatus: async (id, status) => {
     try {
-      const response = await api.post('/bookings', JSON.stringify(data), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return response.data;
+      const response = await api.put(`/bookings/${id}`, { status })
+      return response.data
     } catch (error) {
-      console.error('Error creating booking:', error);
-      throw error;
+      console.error('Lỗi khi cập nhật trạng thái đặt lịch:', error)
+      throw error
     }
   },
-
-  // Cập nhật booking
-  async updateBooking(id, data) {
+  
+  // Tạo đặt lịch mới
+  createBooking: async (bookingData) => {
     try {
-      const response = await api.put(`/bookings/${id}`, JSON.stringify(data), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return response.data;
+      const response = await api.post('/bookings', bookingData)
+      return response.data
     } catch (error) {
-      console.error('Error updating booking:', error);
-      throw error;
+      console.error('Lỗi khi tạo đặt lịch:', error)
+      throw error
     }
   },
+}
 
-  // Xóa booking
-  async deleteBooking(id) {
-    try {
-      const response = await api.delete(`/bookings/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error deleting booking:', error);
-      throw error;
-    }
-  },
-
-  // Upload ảnh booking (nếu có)
-  async uploadImage(formData) {
-    try {
-      const response = await api.post('/bookings/upload', formData);
-      return response.data;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  }
-};
-
-export default bookingService; 
+export default bookingService

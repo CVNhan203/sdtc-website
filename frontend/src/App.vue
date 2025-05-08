@@ -50,6 +50,15 @@ body {
  font-size: 10px;
 
 }
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+
+}
 
 * {
  margin: 0;
