@@ -60,7 +60,7 @@
           </div>
 
           <!-- Ngày đăng -->
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Ngày đăng <span class="required">*</span></label>
             <input
               type="date"
@@ -73,7 +73,7 @@
             <span class="error-message" v-if="errors.publishedDate">{{
               errors.publishedDate
             }}</span>
-          </div>
+          </div> -->
         </div>
 
         <!-- Ảnh -->
@@ -97,12 +97,10 @@
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 10MB. Định dạng: JPG, PNG, GIF</p>
+              <p class="upload-hint">Kích thước tối thiểu: 300x200px, tối đa 2000x2000px</p>
             </div>
-            <div
-              v-if="imagePreview"
-              class="image-preview"
-              :style="{ backgroundImage: `url(${imagePreview})` }"
-            >
+            <div v-if="imagePreview" class="image-preview">
+              <img :src="imagePreview" alt="Preview" class="preview-img" />
               <button
                 type="button"
                 @click.stop="removeImage"
@@ -167,7 +165,7 @@
         </div>
 
         <!-- Tác giả -->
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label>Tác giả</label>
           <input
             type="text"
@@ -189,7 +187,7 @@
           >
             {{ formData.author.length }}/50 (Tối thiểu 3 ký tự)
           </span>
-        </div>
+        </div> -->
 
         <!-- Form Actions -->
         <div class="form-actions">
@@ -585,14 +583,23 @@ export default {
 }
 
 .image-preview {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
   border-radius: 8px;
 }
 
