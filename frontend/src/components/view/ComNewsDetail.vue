@@ -27,7 +27,7 @@
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" :alt="currentNews.title" />
+          <img :src="currentNews.imageUrl" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->

@@ -36,7 +36,6 @@
             <th>Họ tên</th>
             <th>Email</th>
             <th>Vai trò</th>
-            <th>Trạng thái</th>
             <th class="action-column">Thao tác</th>
           </tr>
         </thead>
@@ -51,44 +50,14 @@
               </span>
             </td>
             <td>
-              <span :class="['status-badge', account.isDeleted ? 'deleted' : 'active']">
-                {{ account.isDeleted ? 'Đã xóa' : 'Đang hoạt động' }}
-              </span>
-            </td>
-            <td>
               <div class="actions">
-                <template v-if="!account.isDeleted">
-                  <button 
-                    class="icon-btn edit" 
-                    title="Chỉnh sửa"
-                    @click="openEditModal(account)"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button 
-                    class="icon-btn delete" 
-                    title="Xóa"
-                    @click="confirmDelete(account)"
-                  >
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </template>
-                <template v-else>
-                  <button 
-                    class="icon-btn restore" 
-                    title="Khôi phục"
-                    @click="confirmRestore(account)"
-                  >
-                    <i class="fas fa-trash-restore"></i>
-                  </button>
-                  <button 
-                    class="icon-btn delete-permanent" 
-                    title="Xóa vĩnh viễn"
-                    @click="confirmDeletePermanent(account)"
-                  >
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </template>
+                <button 
+                  class="icon-btn edit" 
+                  title="Chỉnh sửa"
+                  @click="openEditModal(account)"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -157,13 +126,6 @@
             </select>
             <span class="error-message" v-if="editErrors.role">{{ editErrors.role }}</span>
           </div>
-          <div class="form-group">
-            <label>Trạng thái</label>
-            <select v-model="editFormData.status">
-              <option value="active">Đang hoạt động</option>
-              <option value="inactive">Không hoạt động</option>
-            </select>
-          </div>
           <div class="form-actions">
             <button type="button" class="cancel-btn" @click="showEditModal = false">Hủy</button>
             <button type="submit" class="submit-btn" :disabled="editLoading">{{ editLoading ? 'Đang lưu...' : 'Lưu thay đổi' }}</button>
@@ -200,8 +162,7 @@ export default {
       _id: '',
       fullName: '',
       email: '',
-      role: 'staff',
-      status: 'active',
+      role: 'staff'
     });
     const editErrors = ref({});
     const editLoading = ref(false);
@@ -425,8 +386,7 @@ export default {
         _id: account._id,
         fullName: account.fullName,
         email: account.email,
-        role: account.role,
-        status: account.status || 'active',
+        role: account.role
       };
       editErrors.value = {};
       editError.value = null;
@@ -458,8 +418,7 @@ export default {
       try {
         const res = await accountService.updateAccount(editFormData.value._id, {
           fullName: editFormData.value.fullName,
-          role: editFormData.value.role,
-          status: editFormData.value.status,
+          role: editFormData.value.role
         });
         if (res.success) {
           editSuccess.value = 'Cập nhật tài khoản thành công';
@@ -570,4 +529,4 @@ export default {
     max-width: 98vw;
   }
 }
-</style> 
+</style>

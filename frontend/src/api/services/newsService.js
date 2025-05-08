@@ -4,6 +4,7 @@ const newsService = {
   async getNews() {
     try {
       const response = await api.get('/news')
+      console.log('API Response:', response.data) // Thêm dòng này để debug
       return {
         data: response.data.data || [],
         pagination: response.data.pagination || null,

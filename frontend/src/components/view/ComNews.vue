@@ -3,7 +3,6 @@
     <!-- Header của trang tin tức với hình nền và tiêu đề -->
     <div class="news-header">
       <div class="wave-background"></div>
-      <h1 class="news-title">Tin tức</h1>
       <!-- Thanh tìm kiếm tin tức -->
       <div class="search-wrapper">
         <div class="search-bar">
@@ -27,9 +26,9 @@
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img :src="getImageUrl(news.image)" :alt="news.title" class="news-image" />
+        <img :src="getImageUrl(news.image)" class="news-image" />
         <div class="news-content">
-          <p class="news-category">Công nghệ</p>
+          <p class="news-category">{{ news.type || news.category || 'Không có danh mục' }}</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
 
           <p class="news-excerpt">{{ news.summary }}</p>
@@ -59,6 +58,7 @@ export default {
   async mounted() {
     try {
       const response = await newsService.getNews()
+      console.log('Mounted news data:', response.data) // Thêm dòng này để debug
       this.allNewsItems = response.data
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
@@ -108,27 +108,12 @@ export default {
   position: relative;
   background: rgba(0, 123, 255, 1);
   width: 1240;
-  height: 310px;
+  height: 200px; /* Reduced height since we removed the title */
   top: 184;
   left: 356;
   border-radius: 20px;
-
   text-align: center;
   background-image: url('@/assets/sdtc-image/brsearch.png');
-}
-
-/* Tiêu đề "Tin tức" hiển thị trên header */
-.news-title {
-  color: rgba(255, 255, 255, 1);
-  font-family: Roboto;
-  font-weight: 190px;
-  font-size: 70px;
-  line-height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
 }
 
 /* Wrapper cho thanh tìm kiếm */
