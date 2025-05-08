@@ -4,7 +4,11 @@
     <div class="home-container">
       <div class="content-wrapper">
         <!-- Icon SVG phía trên stats-card -->
-        <img src="@/assets/sdtc-image/icon/Vector 587.svg" alt="Arrow Icon" class="icon-above-card icon-left"/>
+        <img
+          src="@/assets/sdtc-image/icon/Vector 587.svg"
+          alt="Arrow Icon"
+          class="icon-above-card icon-left"
+        />
 
         <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
@@ -41,7 +45,11 @@
         </div>
 
         <!-- Icon SVG phía trên trust-card -->
-        <img src="@/assets/sdtc-image/icon/Vector 588.svg" alt="Arrow Icon" class="icon-above-card icon-right"/>
+        <img
+          src="@/assets/sdtc-image/icon/Vector 588.svg"
+          alt="Arrow Icon"
+          class="icon-above-card icon-right"
+        />
 
         <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
@@ -270,142 +278,187 @@
           theo thời gian.
         </p>
 
-        <router-link to="/bang-gia"><button class="cta-button">Bắt đầu ngay</button></router-link>
+        <router-link to="/team "><button class="cta-button">Bắt đầu ngay</button></router-link>
       </div>
     </div>
   </section>
 
-<!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
-<section class="successfull">
-  <div class="successfull-content">
-    <p>Dự án</p>
-    <h2>Thành công vượt bậc</h2>
-    <p>
-      Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.
-    </p>
-  </div>
-  <div class="projects-group-grid">
-    <div class="project-card large">
-      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
-      <div class="project-overlay">
-        <h3>Website Thẩm mỹ</h3>
-        <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
-      </div>
-    </div>
-
-    <div class="project-card-group">
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website bán hàng</h3>
-          <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
-        </div>
-      </div>
-      
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website phong thuỷ</h3>
-          <p>Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong thuỷ sâu sắc</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <router-link to="/team"><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link>
-
-</section>
-
-<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
-<section class="inspiration-section">
-  <div class="inspiration-header">
-    <div>
-      <p class="inspiration-label">Nguồn cảm hứng</p>
-      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
-      <p class="inspiration-desc">
-        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
-      </p>
-    </div>
-    <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
-  </div>
-<!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
-
-  <div class="marquee-wrapper">
-    <!-- Hàng trên: trái sang phải -->
-    <div class="marquee marquee-normal">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-    <!-- Hàng dưới: phải sang trái -->
-    <div class="marquee marquee-reverse">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-  </div>
-</section>
-
-<!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
-<section class="achievements">
-  <div class="achievements-header">
-    <p class="achievements-label">Những gì khách hàng nhận xét</p>
-    <h2 class="achievements-title">Thành tựu nổi bật</h2>
-    <p class="achievements-desc">
-      Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
-    </p>
-  </div>
-  <div class="achievements-carousel-wrapper">
-    <button class="achievements-arrow left" @click="prevAchievement">
-      <span>←</span>
-    </button>
-    <Carousel
-      ref="achievementsCarousel"
-      :itemsToShow="1"
-      :wrapAround="true"
-      :mouseDrag="false"
-      :touchDrag="false"
-      :paginationEnabled="false"
-      class="achievements-carousel">
-      <Slide v-for="(item, idx) in achievements" :key="idx">
-        <div class="achievement-slide">
-        
-    <div class="achievement-visual">
-      <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
-      <div class="achievement-logo">
-        <img :src="item.logo" :alt="item.company" />
-      </div>
-    </div>
-    <p class="achievement-content">{{ item.content }}</p>
-    <div class="achievement-author">
-      <div class="author-name">{{ item.author }}</div>
-      <div class="author-role">{{ item.role }}</div>
-    </div>
-  </div>
-</Slide>
-    </Carousel>
-    <button class="achievements-arrow right" @click="nextAchievement">
-      <span>→</span>
-    </button>
-  </div>
-</section>
-
-<!---------------------------------------- Section bạn đồng hành ---------------------------------------->
-<section class="companion-section">
-  <div class="companion-content">
-    <div class="companion-text">
-      <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+  <!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
+  <section class="successfull">
+    <div class="successfull-content">
+      <p>Dự án</p>
+      <h2>Thành công vượt bậc</h2>
       <p>
         Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
         thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
         kết của chúng tôi.
       </p>
     </div>
-    <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
-  </div>
-</section>
+    <div class="projects-group-grid">
+      <div class="project-card large">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website Thẩm mỹ</h3>
+          <p>
+            Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người
+            dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút
+          </p>
+        </div>
+      </div>
+
+      <div class="project-card-group">
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-2.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website bán hàng</h3>
+            <p>
+              Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm
+              giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán
+              nhanh chóng, giúp tối ưu doanh số.
+            </p>
+          </div>
+        </div>
+
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-3.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website phong thuỷ</h3>
+            <p>
+              Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển
+              ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong
+              thuỷ sâu sắc
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <router-link to="/team"
+      ><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link
+    >
+  </section>
+
+  <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
+  <section class="inspiration-section">
+    <div class="inspiration-header">
+      <div>
+        <p class="inspiration-label">Nguồn cảm hứng</p>
+        <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+        <p class="inspiration-desc">
+          Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc,
+          giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa
+          công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự
+          kết nối tự nhiên nhất.
+        </p>
+      </div>
+      <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
+    </div>
+    <!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
+
+    <div class="marquee-wrapper">
+      <!-- Hàng trên: trái sang phải -->
+      <div class="marquee marquee-normal">
+        <div class="marquee-group">
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'top' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+        </div>
+      </div>
+      <!-- Hàng dưới: phải sang trái -->
+      <div class="marquee marquee-reverse">
+        <div class="marquee-group">
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'bot' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
+  <section class="achievements">
+    <div class="achievements-header">
+      <p class="achievements-label">Những gì khách hàng nhận xét</p>
+      <h2 class="achievements-title">Thành tựu nổi bật</h2>
+      <p class="achievements-desc">
+        Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
+      </p>
+    </div>
+    <div class="achievements-carousel-wrapper">
+      <button class="achievements-arrow left" @click="prevAchievement">
+        <span>←</span>
+      </button>
+      <Carousel
+        ref="achievementsCarousel"
+        :itemsToShow="1"
+        :wrapAround="true"
+        :mouseDrag="false"
+        :touchDrag="false"
+        :paginationEnabled="false"
+        class="achievements-carousel"
+      >
+        <Slide v-for="(item, idx) in achievements" :key="idx">
+          <div class="achievement-slide">
+            <div class="achievement-visual">
+              <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
+              <div class="achievement-logo">
+                <img :src="item.logo" :alt="item.company" />
+              </div>
+            </div>
+            <p class="achievement-content">{{ item.content }}</p>
+            <div class="achievement-author">
+              <div class="author-name">{{ item.author }}</div>
+              <div class="author-role">{{ item.role }}</div>
+            </div>
+          </div>
+        </Slide>
+      </Carousel>
+      <button class="achievements-arrow right" @click="nextAchievement">
+        <span>→</span>
+      </button>
+    </div>
+  </section>
+
+  <!---------------------------------------- Section bạn đồng hành ---------------------------------------->
+  <section class="companion-section">
+    <div class="companion-content">
+      <div class="companion-text">
+        <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+        <p>
+          Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá
+          trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng
+          và cam kết của chúng tôi.
+        </p>
+      </div>
+      <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -1158,7 +1211,6 @@ h1 {
   z-index: 1;
 }
 
-
 /* Vị trí ảnh trung bình bên trái */
 .image-left {
   width: 13.75rem; /* 220px */
@@ -1416,7 +1468,7 @@ h1 {
   box-shadow: 0 0.75rem 1.75rem rgba(0, 87, 255, 0.35); /* 12px 28px */
   transform: translateY(-0.125rem); /* -2px */
 }
- 
+
 /*-------------------------------- Hiệu ứng cuộn ảnh liên tục -------------------------------- */
 
 .marquee-wrapper {
@@ -1600,7 +1652,10 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.2s;
   box-shadow: none;
 }
 
@@ -1708,7 +1763,7 @@ h1 {
     position: absolute;
     z-index: 2;
   }
-  
+
   .main-content h1 {
     font-size: 1.8rem;
   }
@@ -1829,7 +1884,6 @@ h1 {
     height: 5rem;
     top: 12rem;
     left: 7.5rem;
-
   }
 
   .intro-section {

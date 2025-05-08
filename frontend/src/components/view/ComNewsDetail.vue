@@ -72,7 +72,7 @@
               @click="goToNewsDetail(post)"
             >
               <div class="post-image">
-                <img :src="post.imageUrl" :alt="post.title" />
+                <img :src="post.imageUrl" />
               </div>
               <div class="post-info">
                 <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>
@@ -99,7 +99,7 @@ export default {
       return new Date(date).toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
       })
     }
 
@@ -124,15 +124,15 @@ export default {
       try {
         // Lấy danh sách tin tức gần đây
         const { data } = await newsService.getNews()
-        allNews.value = data.map(news => ({
+        allNews.value = data.map((news) => ({
           ...news,
-          imageUrl: getImageUrl(news.image)
+          imageUrl: getImageUrl(news.image),
         }))
         // Lấy chi tiết tin tức
         const newsDetail = await newsService.getNewsById(route.params.id)
         currentNews.value = {
           ...newsDetail,
-          imageUrl: getImageUrl(newsDetail.image)
+          imageUrl: getImageUrl(newsDetail.image),
         }
       } catch (e) {
         error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
@@ -172,9 +172,12 @@ export default {
     })
 
     // Theo dõi sự thay đổi của route.params.id để load lại dữ liệu
-    watch(() => route.params.id, () => {
-      loadData()
-    })
+    watch(
+      () => route.params.id,
+      () => {
+        loadData()
+      }
+    )
 
     return {
       searchQuery,
@@ -256,7 +259,7 @@ export default {
 .news-title {
   font-size: 32px;
   font-weight: 700;
-  color: #1F2B6C;
+  color: #1f2b6c;
   margin-bottom: 16px;
   line-height: 1.2;
 }
