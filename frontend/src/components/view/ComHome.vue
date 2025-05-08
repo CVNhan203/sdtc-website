@@ -2944,7 +2944,7 @@ h1 {
   }
 } */
 
-@media (min-width: 2560px) {
+/* @media (min-width: 2560px) {
   .home-container,
   .cooperation-container,
   .customer-trust-container,
@@ -2974,10 +2974,10 @@ h1 {
   .marquee-img {
     height: 400px;
   }
-}
+} */
 
 /* =========================================
-   📱 Responsive màn hình lớn: 3000px - 5000px
+ Responsive màn hình lớn: 3000px - 5000px
    Áp dụng cho toàn bộ section trong ComHome.vue
 ========================================= */
 
