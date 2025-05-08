@@ -77,7 +77,7 @@
 
         <!-- Ảnh -->
         <div class="form-group">
-          <label>Ảnh <span class="required">*</span></label>
+          <label>Ảnh</label>
           <div
             class="image-upload-container"
             @click="triggerFileInput"
@@ -98,15 +98,8 @@
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
               <p class="upload-hint">Kích thước tối thiểu: 200x200px, tối đa 2000x2000px</p>
             </div>
-            <div
-              v-if="imagePreview"
-              class="image-preview"
-            >
-              <img 
-                :src="imagePreview" 
-                alt="Preview" 
-                class="preview-img"
-              />
+            <div v-if="imagePreview" class="image-preview">
+              <img :src="imagePreview" alt="Preview" class="preview-img" />
               <button
                 type="button"
                 @click.stop="removeImage"
@@ -191,8 +184,7 @@ export default {
         this.formData.title?.trim() &&
         this.formData.type &&
         this.formData.price > 0 &&
-        this.formData.content?.trim() &&
-        (this.formData.image || this.imagePreview)
+        this.formData.content?.trim()
       )
     },
   },
@@ -262,10 +254,8 @@ export default {
         }
       }
 
-      // Ảnh validation
-      if (!this.formData.image && !this.imagePreview) {
-        newErrors.image = 'Vui lòng chọn ảnh cho dịch vụ'
-      }
+      // Ảnh validation is now optional - only validate if an image is provided
+      // No validation needed if no image is provided
 
       this.errors = newErrors
       return Object.keys(newErrors).length === 0
@@ -337,7 +327,6 @@ export default {
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = ''
       }
-      this.errors.image = 'Vui lòng chọn ảnh cho dịch vụ'
     },
     async handleSubmit() {
       // Perform validation
