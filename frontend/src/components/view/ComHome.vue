@@ -419,7 +419,7 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
-      
+      autoSlideInterval: null,
       achievements: [
         {
           logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),
@@ -450,17 +450,27 @@ export default {
     }
   },
   mounted() {
-    this.inspirationImagesTop = inspirationImagesTop
-    this.inspirationImagesBottom = inspirationImagesBottom
+    this.inspirationImagesTop = inspirationImagesTop;
+    this.inspirationImagesBottom = inspirationImagesBottom;
+    this.startAutoSlide();
   },
+  beforeUnmount() {
+    clearInterval(this.autoSlideInterval); // Xoá interval khi component huỷ
+  },
+
   methods: {
-    nextAchievement() {
-      this.$refs.achievementsCarousel.next()
+   nextAchievement() {
+      this.$refs.achievementsCarousel.next();
     },
     prevAchievement() {
-      this.$refs.achievementsCarousel.prev()
+      this.$refs.achievementsCarousel.prev();
     },
-  },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextAchievement();
+      }, 4000);
+    }
+  }
 }
 const inspirationImagesTop = [
   require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
@@ -1784,6 +1794,9 @@ h1 {
     min-width: 0;
     max-width: 100%;
   }
+  .banner-content{
+    width: 50%;
+  }
 
   .cooperation-info {
     flex: 1.4 1 0;
@@ -1800,7 +1813,7 @@ h1 {
   }
 
   .banner-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .banner-content .subtitle-1,
@@ -1809,7 +1822,7 @@ h1 {
   }
 
   .banner-image {
-    width: 7rem;
+    width: 10rem;
     border-radius: 1rem;
   }
 
@@ -2233,7 +2246,7 @@ h1 {
   /* Cooperation Section */
   .cooperation-container {
     display: grid;
-    grid-template-columns: 0.6fr 1.4fr; /* Two columns side by side */
+    grid-template-columns: 0.8fr 1.2fr; /* Two columns side by side */
     gap: 1rem;
     align-items: stretch;
   }
@@ -2241,6 +2254,9 @@ h1 {
     width: 100%;
     padding: 1rem;
     min-width: 0;
+  }
+  .banner-content{
+    width: 50%;
   }
   .banner-content h1 {
     font-size: 1.5rem;
@@ -2250,7 +2266,7 @@ h1 {
     font-size: 0.8rem;
   }
   .banner-image {
-    width: 6rem;
+    width: 9.3rem;
   }
   .cooperation-info {
     padding: 1rem;
@@ -2517,7 +2533,8 @@ h1 {
     height: 2rem;
   }
   .partners h3{
-    font-size: 0.8rem;
+    padding-top: 4rem;
+    font-size: 0.9rem;
   }
 
   .partner-logos {
@@ -2530,7 +2547,7 @@ h1 {
   }
   /* Cooperation Section */
   .cooperation-section {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 
   .cooperation-container {
@@ -2541,21 +2558,23 @@ h1 {
   .cooperation-banner {
     width: 100%;
     height: auto;
-    padding: 1rem;
+    padding: 1.6rem;
     border-radius: 1rem;
   }
 
   .banner-content h1 {
     font-size: 1.2rem;
   }
-
+  .banner-content {
+    width:45%;
+  }
   .banner-content .subtitle-1,
   .banner-content .description-1 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .banner-image {
-    width: 8rem;
+    width: 10rem;
   }
 
   .cooperation-info {
@@ -2665,37 +2684,37 @@ h1 {
   }
   /* Customer Trust Section */
   .circle-layout {
-    width: 12rem;
-    height: 12rem;
-  }
+  width: 14rem;
+  height: 14rem;
+}
 
-  .image-main {
-    width: 5.5rem;
-    height: 5.5rem;
-    left: 6rem;
-  }
+.image-main {
+  width: 6.5rem;
+  height: 6.5rem;
+  left: 7.5rem;
+}
 
-  .image-left {
-    width: 4.5rem;
-    height: 4.5rem;
-    top: 1.5rem;
-    left: 1rem;
-  }
+.image-left {
+  width: 5.5rem;
+  height: 5.5rem;
+  top: 2rem;
+  left: 1.5rem;
+}
 
-  .badge-center {
-    width: 4rem;
-    height: 4rem;
-    top: 3.5rem;
-    left: 4rem;
-    font-size: 0.6rem;
-  }
+.badge-center {
+  width: 4.75rem;
+  height: 4.75rem;
+  top: 4rem;
+  left: 5rem;
+  font-size: 0.75rem;
+}
 
-  .image-bottom {
-    width: 2.5rem;
-    height: 2.5rem;
-    top: 7rem;
-    left: 4.5rem;
-  }
+.image-bottom {
+  width: 3rem;
+  height: 3rem;
+  top: 8rem;
+  left: 5.5rem;
+}
 
   /* Successfull Section */
   .project-card.large {
@@ -2752,6 +2771,70 @@ h1 {
   }
   .achievements-arrow.right {
     right: 0;
+  }
+}
+@media screen and (width: 425px) {
+  .cooperation-section {
+    padding: 2.5rem;
+  }
+
+  .cooperation-container {
+    grid-template-columns: 1fr; /* Xếp cột để tránh chồng lấn */
+    gap: 1rem;
+  }
+
+  .cooperation-banner {
+    width: 100%;
+    height: auto;
+    padding: 1.6rem;
+    border-radius: 1rem;
+  }
+
+  .banner-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .banner-content .subtitle-1,
+  .banner-content .description-1 {
+    font-size: 0.9rem;
+  }
+
+  .banner-image {
+    width: 10rem;
+  }
+
+  /* Customer Trust Section */
+  .circle-layout {
+    width: 16rem;
+    height: 16rem;
+  }
+
+  .image-main {
+    width: 7.5rem;
+    height: 7.5rem;
+    left: 8.5rem;
+  }
+
+  .image-left {
+    width: 6.5rem;
+    height: 6.5rem;
+    top: 2.5rem;
+    left: 1.25rem;
+  }
+
+  .badge-center {
+    width: 5.25rem;
+    height: 5.25rem;
+    top: 4.75rem;
+    left: 6rem;
+    font-size: 0.85rem;
+  }
+
+  .image-bottom {
+    width: 4rem;
+    height: 4rem;
+    top: 9.25rem;
+    left: 6.25rem;
   }
 }
 
