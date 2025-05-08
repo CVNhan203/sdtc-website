@@ -270,7 +270,7 @@
           theo thời gian.
         </p>
 
-        <router-link to="/bang-gia"><button class="cta-button">Bắt đầu ngay</button></router-link>
+        <router-link to="/team"><button class="cta-button">Bắt đầu ngay</button></router-link>
       </div>
     </div>
   </section>
