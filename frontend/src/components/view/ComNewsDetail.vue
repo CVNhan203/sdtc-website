@@ -66,11 +66,7 @@
                 <img :src="post.imageUrl" :alt="post.title" />
               </div>
               <div class="post-info">
-<<<<<<< HEAD
-                <div class="post-date">{{ formatDate(post.publishedDate) }}</div>
-=======
                 <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
                 <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
@@ -141,10 +137,6 @@ export default {
         router.push(`/tin-tuc/${prevNews._id || prevNews.id}`)
       }
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
     const goToNextPost = () => {
       const currentId = route.params.id
       const sortedNews = [...allNews.value].sort((a, b) => (a._id || a.id) - (b._id || b.id))
@@ -155,23 +147,23 @@ export default {
       }
     }
 
-<<<<<<< HEAD
     function formatDate(dateStr) {
       if (!dateStr) return ''
       const d = new Date(dateStr)
-      return d.toLocaleDateString('vi-VN')
+      return d.toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
     }
 
-    onMounted(loadData)
-=======
     onMounted(() => {
-      loadCurrentNews()
+      loadData()
     })
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 
     return {
-      searchQuery,
       currentNews,
+      searchQuery,
       filteredNews,
       goToNewsDetail,
       goToPreviousPost,
@@ -179,7 +171,7 @@ export default {
       error,
       formatDate,
     }
-  },
+  }
 }
 </script>
 
@@ -356,11 +348,7 @@ export default {
   border: none;
   border-radius: 8px;
   font-size: 14px;
-<<<<<<< HEAD
-  background: #4184f7;
-=======
   background: #4285f4;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -411,11 +399,7 @@ export default {
   color: #262f5a;
   margin-bottom: 16px;
   padding-bottom: 8px;
-<<<<<<< HEAD
-  color: rgba(31, 43, 108, 1);
-=======
   border-bottom: 1px solid #f0f0f0;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 }
 
 /* Danh sách các bài viết gần đây */
