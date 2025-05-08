@@ -12,14 +12,8 @@
       </div>
     </div>
 
-    <!-- Hiển thị khi không có kết quả tìm kiếm -->
-    <div v-if="filteredNews.length === 0" class="no-results">
-      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
-      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
-    </div>
-
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
-    <div v-else class="news-grid">
+    <div v-if="filteredNews.length > 0" class="news-grid">
       <div
         v-for="(news, index) in filteredNews"
         :key="index"
@@ -34,6 +28,12 @@
           <p class="news-excerpt">{{ news.summary }}</p>
         </div>
       </div>
+    </div>
+
+    <!-- Hiển thị khi không có kết quả tìm kiếm -->
+    <div v-else class="no-results">
+      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
     </div>
   </div>
 </template>
@@ -236,6 +236,34 @@ export default {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Styling for no results section */
+.no-results {
+  text-align: center;
+  margin-top: 120px;
+  padding: 20px;
+}
+
+.no-results p {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.clear-search-btn {
+  background: #004aad;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.clear-search-btn:hover {
+  background: #003c8f;
 }
 
 /* Responsive Styles */
