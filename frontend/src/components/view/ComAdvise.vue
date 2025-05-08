@@ -198,7 +198,9 @@ textarea {
   font-size: 1rem;
   color: #333;
   background: #fff;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 input:focus,
@@ -350,7 +352,6 @@ textarea {
 
   input,
   textarea {
-
     padding: 0.6rem;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -374,7 +375,6 @@ textarea {
   }
 
   .contact-container {
-
     padding: 1rem;
     gap: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -464,7 +464,8 @@ html {
 }
 .error-message {
   color: #ff4136;
-  margin-top: 10px;
+  font-size: 0.8rem;
+
   font-weight: bold;
 }
 

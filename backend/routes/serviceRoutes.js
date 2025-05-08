@@ -8,6 +8,9 @@ const {
   createService,
   updateService,
   deleteService,
+  uploadServiceImage,
+  restoreService,
+  permanentDeleteService
 } = require('../controllers/serviceController')
 const adminMiddleware = require('../middleware/adminMiddleware')
 const authMiddleware = require('../middleware/authMiddleware')
@@ -16,10 +19,15 @@ const authMiddleware = require('../middleware/authMiddleware')
 router.get('/', getServices)
 router.get('/:id', getServiceById)
 
+// Route upload ảnh
+router.post('/upload', authMiddleware, adminMiddleware, upload.single('image'), uploadServiceImage)
+
 // Routes yêu cầu quyền admin
 router.post('/', authMiddleware, adminMiddleware, createService)
 router.put('/:id', authMiddleware, adminMiddleware, updateService)
 router.delete('/:id', authMiddleware, adminMiddleware, deleteService)
+router.patch('/:id/restore', authMiddleware, adminMiddleware, restoreService)
+router.delete('/:id/permanent', authMiddleware, adminMiddleware, permanentDeleteService)
 
 // Route upload ảnh
 router.post('/upload', authMiddleware, upload.single('image'), (req, res) => {

@@ -2,7 +2,11 @@
   <div class="admin-container">
     <div class="actions-header">
       <div class="search-box">
-        <input v-model="search" type="text" placeholder="Tìm kiếm theo tên, email, số điện thoại, dịch vụ..." />
+        <input
+          v-model="search"
+          type="text"
+          placeholder="Tìm kiếm theo tên, email, số điện thoại, dịch vụ..."
+        />
         <i class="fas fa-search"></i>
       </div>
       <div class="filter-box">
@@ -32,6 +36,8 @@
           <tr>
             <th>STT</th>
             <th>Họ tên</th>
+            <th>Email</th>
+            <!-- <th>Số điện thoại</th> -->
             <th>Dịch vụ</th>
             <th>Trạng thái</th>
             <th>Ngày đặt</th>
@@ -42,6 +48,8 @@
           <tr v-for="(booking, index) in filteredBookings" :key="booking._id">
             <td>{{ index + 1 }}</td>
             <td>{{ booking.fullName }}</td>
+            <td>{{ booking.email }}</td>
+            <!-- <td>{{ booking.phone }}</td> -->
             <td>{{ booking.service }}</td>
             <td>
               <span :class="['status-badge', booking.status]">
@@ -100,7 +108,7 @@
 </template>
 
 <script>
-import { bookingService } from '@/api/services/bookingService';
+import { bookingService } from '@/api/services/bookingService'
 
 export default {
   name: 'BookingList',
@@ -111,51 +119,54 @@ export default {
       loading: false,
       error: null,
       search: '',
-      statusFilter: 'all'
-    };
+      statusFilter: 'all',
+    }
   },
   computed: {
     filteredBookings() {
-      let filtered = this.bookings.filter(b => b.status === 'completed' || b.status === 'cancelled');
+      let filtered = this.bookings.filter(
+        (b) => b.status === 'completed' || b.status === 'cancelled'
+      )
       if (this.statusFilter !== 'all') {
-        filtered = filtered.filter(b => b.status === this.statusFilter);
+        filtered = filtered.filter((b) => b.status === this.statusFilter)
       }
       if (this.search) {
-        const s = this.search.toLowerCase();
-        filtered = filtered.filter(b =>
-          (b.fullName && b.fullName.toLowerCase().includes(s)) ||
-          (b.email && b.email.toLowerCase().includes(s)) ||
-          (b.phone && b.phone.toLowerCase().includes(s)) ||
-          (b.service && b.service.toLowerCase().includes(s))
-        );
+        const s = this.search.toLowerCase()
+        filtered = filtered.filter(
+          (b) =>
+            (b.fullName && b.fullName.toLowerCase().includes(s)) ||
+            (b.email && b.email.toLowerCase().includes(s)) ||
+            (b.phone && b.phone.toLowerCase().includes(s)) ||
+            (b.service && b.service.toLowerCase().includes(s))
+        )
       }
-      return filtered;
-    }
+      return filtered
+    },
   },
   methods: {
     async fetchBookings() {
       try {
-        this.loading = true;
-        this.error = null;
-        const response = await bookingService.getAllBookings();
-        this.bookings = response.data || [];
+        this.loading = true
+        this.error = null
+        const response = await bookingService.getAllBookings()
+        this.bookings = response.data || []
       } catch (error) {
-        console.error('Error fetching bookings:', error);
-        this.error = 'Không thể tải danh sách đặt lịch. Vui lòng thử lại sau.';
+        console.error('Error fetching bookings:', error)
+        this.error = 'Không thể tải danh sách đặt lịch. Vui lòng thử lại sau.'
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     viewDetails(booking) {
-      this.selectedBooking = booking;
+      this.selectedBooking = booking
     },
     getStatusText(status) {
       const statusMap = {
         processing: 'Đang xử lý',
         completed: 'Đã hoàn thành',
-        cancelled: 'Đã hủy'
-      };
-      return statusMap[status] || status;
+        cancelled: 'Đã hủy',
+      }
+      return statusMap[status] || status
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString('vi-VN', {
@@ -163,25 +174,25 @@ export default {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+        minute: '2-digit',
+      })
+    },
   },
   created() {
-    this.fetchBookings();
-  }
-};
+    this.fetchBookings()
+  },
+}
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
-select{
+select {
   padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    min-width: 160px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 160px;
 }
 
 .search-box {
