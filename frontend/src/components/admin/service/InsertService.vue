@@ -1,22 +1,41 @@
 <template>
   <div class="insert-service">
     <div class="form-container">
-      <form @submit.prevent="handleSubmit" :class="{ 'submitting': loading }">
+      <!-- Success message -->
+      <div v-if="successMessage" class="success-alert">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+      </div>
+
+      <form @submit.prevent="handleSubmit" :class="{ submitting: loading }" novalidate>
+        <!-- Hiển thị lỗi chung -->
+        <div v-if="error" class="error-alert">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ error }}
+        </div>
+
+        <!-- Upload status -->
+        <div v-if="uploadStatus" class="status-alert">
+          <i class="fas fa-spinner fa-spin" v-if="uploadStatus.includes('Đang')"></i>
+          <i class="fas fa-check" v-else></i>
+          {{ uploadStatus }}
+        </div>
+
         <!-- Tiêu đề -->
         <div class="form-group">
           <label>Tiêu đề <span class="required">*</span></label>
-          <input 
-            type="text" 
+          <input
+            type="text"
+            name="title"
             v-model.trim="formData.title"
-            :class="{ 'error': errors.title }"
+            :class="{ error: errors.title }"
             :disabled="loading"
             placeholder="Nhập tiêu đề dịch vụ"
-            required
             minlength="3"
             maxlength="200"
-          >
+          />
           <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
-          <span class="character-count" :class="{ 'error': formData.title.length > 200 }">
+          <span class="character-count" :class="{ error: formData.title.length > 200 }">
             {{ formData.title.length }}/200
           </span>
         </div>
@@ -26,11 +45,11 @@
           <!-- Loại dịch vụ -->
           <div class="form-group">
             <label>Loại dịch vụ <span class="required">*</span></label>
-            <select 
+            <select
+              name="type"
               v-model="formData.type"
-              :class="{ 'error': errors.type }"
+              :class="{ error: errors.type }"
               :disabled="loading"
-              required
             >
               <option value="">Chọn loại dịch vụ</option>
               <option value="web">Website</option>
@@ -43,15 +62,15 @@
           <!-- Giá -->
           <div class="form-group">
             <label>Giá <span class="required">*</span></label>
-            <input 
-              type="number" 
+            <input
+              type="number"
+              name="price"
               v-model="formData.price"
-              :class="{ 'error': errors.price }"
+              :class="{ error: errors.price }"
               :disabled="loading"
               placeholder="Nhập giá dịch vụ"
-              required
               min="0"
-            >
+            />
             <span class="error-message" v-if="errors.price">{{ errors.price }}</span>
           </div>
         </div>
@@ -59,26 +78,36 @@
         <!-- Ảnh -->
         <div class="form-group">
           <label>Ảnh <span class="required">*</span></label>
-          <div class="image-upload-container" @click="triggerFileInput">
-            <input 
-              type="file" 
+          <div
+            class="image-upload-container"
+            @click="triggerFileInput"
+            :class="{ 'error-border': errors.image }"
+          >
+            <input
+              type="file"
+              name="image"
               class="file-input"
-              @change="handleImageUpload" 
+              @change="handleImageUpload"
               accept="image/*"
               ref="fileInput"
               :disabled="loading"
-            >
+            />
             <div v-if="!imagePreview" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
             </div>
-            <div 
-              v-if="imagePreview" 
+            <div
+              v-if="imagePreview"
               class="image-preview"
               :style="{ backgroundImage: `url(${imagePreview})` }"
             >
-              <button type="button" @click.stop="removeImage" class="remove-image" :disabled="loading">
+              <button
+                type="button"
+                @click.stop="removeImage"
+                class="remove-image"
+                :disabled="loading"
+              >
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -89,36 +118,35 @@
         <!-- Mô tả dịch vụ -->
         <div class="form-group content-section">
           <label>Mô tả dịch vụ <span class="required">*</span></label>
-          <textarea 
+          <textarea
+            name="content"
             v-model.trim="formData.content"
-            :class="{ 'error': errors.content }"
+            :class="{ error: errors.content }"
             :disabled="loading"
             rows="6"
             placeholder="Nhập mô tả chi tiết về dịch vụ"
-            required
             maxlength="2000"
           ></textarea>
           <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
-          <span class="character-count" :class="{ 'error': formData.content.length > 2000 }">
+          <span class="character-count" :class="{ error: formData.content.length > 2000 }">
             {{ formData.content.length }}/2000
           </span>
+          <small class="form-help-text"
+            >Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small
+          >
         </div>
 
         <!-- Form Actions -->
         <div class="form-actions">
-          <button 
-            type="button" 
-            class="cancel-btn" 
+          <button
+            type="button"
+            class="cancel-btn"
             @click="$router.push('/admin/dich-vu/danh-sach')"
             :disabled="loading"
           >
             <i class="fas fa-times"></i> Hủy
           </button>
-          <button 
-            type="submit" 
-            class="submit-btn" 
-            :disabled="loading"
-          >
+          <button type="submit" class="submit-btn" :disabled="loading">
             <i class="fas" :class="loading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
             {{ loading ? 'Đang xử lý...' : 'Thêm dịch vụ' }}
           </button>
@@ -129,7 +157,7 @@
 </template>
 
 <script>
-import serviceService from '@/api/services/serviceService';
+import serviceService from '@/api/services/serviceService'
 
 export default {
   name: 'InsertService',
@@ -140,26 +168,28 @@ export default {
         price: '',
         content: '',
         image: null,
-        type: ''
+        type: '',
       },
       imagePreview: null,
       loading: false,
       error: null,
       maxFileSize: 5 * 1024 * 1024, // 5MB in bytes
-      errors: {} // Add errors object for validation
+      errors: {}, // Add errors object for validation
+      uploadStatus: '',
+      successMessage: '',
     }
   },
   computed: {
     isFormValid() {
-      // Kiểm tra các trường bắt buộc có giá trị và độ dài hợp lệ
-      return this.formData.title?.trim() &&
+      // Only basic validation - check required fields
+      return (
+        this.formData.title?.trim() &&
         this.formData.type &&
         this.formData.price > 0 &&
         this.formData.content?.trim() &&
-        (this.formData.image || this.imagePreview) &&
-        this.formData.title.length <= 200 &&
-        this.formData.content.length <= 2000;
-    }
+        (this.formData.image || this.imagePreview)
+      )
+    },
   },
   methods: {
     triggerFileInput() {
@@ -168,54 +198,132 @@ export default {
       }
     },
     validateForm() {
-      const newErrors = {};
+      const newErrors = {}
 
+      // Tiêu đề validation
       if (!this.formData.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống';
-      } else if (this.formData.title.length > 200) {
-        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+        newErrors.title = 'Tiêu đề không được để trống'
+      } else if (this.formData.title.trim().length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
+      } else if (this.formData.title.trim().length > 100) {
+        newErrors.title = 'Tiêu đề không được vượt quá 100 ký tự'
+      } else if (!/^[a-zA-Z0-9\sÀ-ỹ[\]{}()!@#$%^&*,.?-]+$/.test(this.formData.title.trim())) {
+        newErrors.title = 'Tiêu đề chứa ký tự không hợp lệ'
       }
 
+      // Loại dịch vụ validation
       if (!this.formData.type) {
-        newErrors.type = 'Vui lòng chọn loại dịch vụ';
+        newErrors.type = 'Vui lòng chọn loại dịch vụ'
+      } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
+        newErrors.type = 'Loại dịch vụ không hợp lệ'
       }
 
-      if (!this.formData.price || this.formData.price <= 0) {
-        newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
+      // Giá validation
+      if (
+        this.formData.price === undefined ||
+        this.formData.price === null ||
+        this.formData.price === ''
+      ) {
+        newErrors.price = 'Giá dịch vụ không được để trống'
+      } else {
+        const priceValue = Number(this.formData.price)
+        if (isNaN(priceValue)) {
+          newErrors.price = 'Giá dịch vụ phải là một số'
+        } else if (priceValue <= 0) {
+          newErrors.price = 'Giá dịch vụ phải lớn hơn 0'
+        } else if (priceValue > 1000000000) {
+          newErrors.price = 'Giá dịch vụ quá lớn'
+        }
       }
 
+      // Mô tả validation
       if (!this.formData.content?.trim()) {
-        newErrors.content = 'Mô tả không được để trống';
-      } else if (this.formData.content.length > 2000) {
-        newErrors.content = 'Mô tả không được vượt quá 2000 ký tự';
+        newErrors.content = 'Mô tả không được để trống'
+      } else {
+        const lines = this.formData.content.split('\n').filter((line) => line.trim())
+        if (lines.length === 0) {
+          newErrors.content = 'Mô tả không được để trống'
+        } else {
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim()
+            if (line.length < 10) {
+              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`
+              break
+            } else if (line.length > 500) {
+              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`
+              break
+            }
+          }
+        }
       }
 
+      // Ảnh validation
       if (!this.formData.image && !this.imagePreview) {
-        newErrors.image = 'Vui lòng chọn ảnh cho dịch vụ';
+        newErrors.image = 'Vui lòng chọn ảnh cho dịch vụ'
       }
 
-      this.errors = newErrors;
-      return Object.keys(newErrors).length === 0;
+      this.errors = newErrors
+      return Object.keys(newErrors).length === 0
     },
     handleImageUpload(event) {
       const file = event.target.files[0]
-      if (file) {
-        if (file.size > this.maxFileSize) {
-          this.errors.image = 'Kích thước file không được vượt quá 5MB';
-          this.$refs.fileInput.value = '';
-          return;
-        }
+      if (!file) return
 
-        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-          this.errors.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF';
-          this.$refs.fileInput.value = '';
-          return;
-        }
+      // Reset image error
+      delete this.errors.image
 
-        this.formData.image = file;
-        this.imagePreview = URL.createObjectURL(file);
-        delete this.errors.image;
+      // Check file size (5MB limit)
+      if (file.size > this.maxFileSize) {
+        this.errors.image = `Kích thước file không được vượt quá ${this.maxFileSize / (1024 * 1024)}MB`
+        this.$refs.fileInput.value = ''
+        return
       }
+
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+      if (!allowedTypes.includes(file.type)) {
+        this.errors.image = 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
+        this.$refs.fileInput.value = ''
+        return
+      }
+
+      // Check image dimensions (create a temporary image to check)
+      const img = new Image()
+      img.onload = () => {
+        URL.revokeObjectURL(img.src)
+
+        // Minimum dimensions check
+        if (img.width < 200 || img.height < 200) {
+          this.errors.image = 'Kích thước ảnh quá nhỏ (tối thiểu 200x200 pixels)'
+          this.$refs.fileInput.value = ''
+          this.formData.image = null
+          this.imagePreview = null
+          return
+        }
+
+        // Maximum dimensions check
+        if (img.width > 2000 || img.height > 2000) {
+          this.errors.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
+          this.$refs.fileInput.value = ''
+          this.formData.image = null
+          this.imagePreview = null
+          return
+        }
+      }
+
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src)
+        this.errors.image = 'File không phải là ảnh hợp lệ'
+        this.$refs.fileInput.value = ''
+        this.formData.image = null
+        this.imagePreview = null
+      }
+
+      img.src = URL.createObjectURL(file)
+
+      // Set image preview and data
+      this.formData.image = file
+      this.imagePreview = URL.createObjectURL(file)
     },
     removeImage(e) {
       if (e) e.stopPropagation()
@@ -227,64 +335,128 @@ export default {
       this.errors.image = 'Vui lòng chọn ảnh cho dịch vụ'
     },
     async handleSubmit() {
+      // Perform validation
       if (!this.validateForm()) {
-        return;
+        // Focus on the first field with an error
+        const errorFields = Object.keys(this.errors)
+        if (errorFields.length > 0) {
+          const firstErrorField = errorFields[0]
+          const element = document.querySelector(`[name="${firstErrorField}"]`)
+          if (element) {
+            element.focus()
+          }
+        }
+        return
       }
 
-      if (this.loading) return;
-      this.loading = true;
-      this.error = null;
+      if (this.loading) return
+      this.loading = true
+      this.error = null
 
       try {
-        let imageUrl = null;
-        
+        let imageUrl = null
+
         // Upload image if exists
         if (this.formData.image instanceof File) {
-          const formData = new FormData();
-          formData.append('image', this.formData.image);
-          
+          const formData = new FormData()
+          formData.append('image', this.formData.image)
+
           try {
-            const uploadResponse = await serviceService.uploadImage(formData);
-            imageUrl = uploadResponse.imagePath;
+            this.uploadStatus = 'Đang tải ảnh lên...'
+            const uploadResponse = await serviceService.uploadImage(formData)
+            if (uploadResponse && uploadResponse.imagePath) {
+              imageUrl = uploadResponse.imagePath
+              this.uploadStatus = 'Tải ảnh thành công!'
+            } else {
+              throw new Error('Không nhận được đường dẫn ảnh')
+            }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError);
-            this.error = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định');
-            this.loading = false;
-            return;
+            console.error('Error uploading image:', uploadError)
+            this.error = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
+            this.loading = false
+            return
           }
         }
 
         // Prepare service data according to backend model
+        this.uploadStatus = 'Đang xử lý...'
         const serviceData = {
           title: this.formData.title.trim(),
           description: this.formData.content
             .trim()
             .split('\n')
-            .filter(line => line.trim() !== '')
-            .map(line => line.trim()),
+            .filter((line) => line.trim() !== '')
+            .map((line) => line.trim()),
           price: Number(this.formData.price),
-          type: this.formData.type
-        };
+          type: this.formData.type,
+        }
 
         if (imageUrl) {
-          serviceData.image = imageUrl;
+          serviceData.image = imageUrl
         }
 
         // Create service
-        const response = await serviceService.createService(serviceData);
-        
+        const response = await serviceService.createService(serviceData)
+
         if (response.success) {
-          // Reset form and navigate
-          this.resetForm();
-          this.$router.push('/admin/dich-vu/danh-sach');
+          // Show success message
+          this.successMessage = 'Thêm dịch vụ thành công!'
+
+          // Reset form and navigate after a brief delay to show success message
+          setTimeout(() => {
+            this.resetForm()
+            this.$router.push('/admin/dich-vu/danh-sach')
+          }, 1000)
         } else {
-          throw new Error(response.message || 'Không thể tạo dịch vụ');
+          throw new Error(response.message || 'Không thể tạo dịch vụ')
         }
       } catch (error) {
-        console.error('Error submitting form:', error);
-        this.error = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi thêm dịch vụ. Vui lòng thử lại!';
+        console.error('Error submitting form:', error)
+
+        // Handle validation errors from backend
+        if (error.response?.data?.errors) {
+          const backendErrors = error.response.data.errors
+
+          // Map backend errors to form fields
+          const errorMapping = {
+            title: 'title',
+            description: 'content',
+            price: 'price',
+            type: 'type',
+            image: 'image',
+          }
+
+          // Reset all errors first
+          this.errors = {}
+
+          // Map backend errors to frontend error fields
+          Object.entries(backendErrors).forEach(([field, message]) => {
+            const frontendField = errorMapping[field] || field
+            this.errors[frontendField] = Array.isArray(message) ? message[0] : message
+          })
+
+          // Scroll to the first error field
+          const errorFields = Object.keys(this.errors)
+          if (errorFields.length > 0) {
+            const firstErrorField = errorFields[0]
+            const element = document.querySelector(`[name="${firstErrorField}"]`)
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              setTimeout(() => element.focus(), 500)
+            }
+          }
+
+          this.error = 'Vui lòng kiểm tra lại thông tin nhập'
+        } else {
+          // General error message
+          this.error =
+            error.response?.data?.message ||
+            error.message ||
+            'Có lỗi xảy ra khi thêm dịch vụ. Vui lòng thử lại!'
+        }
       } finally {
-        this.loading = false;
+        this.loading = false
+        this.uploadStatus = ''
       }
     },
     resetForm() {
@@ -293,112 +465,47 @@ export default {
         price: '',
         content: '',
         image: null,
-        type: ''
+        type: '',
       }
-      this.imagePreview = null;
-      this.error = null;
+      this.imagePreview = null
+      this.error = null
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = ''
       }
-    }
+    },
   },
   beforeUnmount() {
     if (this.imagePreview) {
-      URL.revokeObjectURL(this.imagePreview);
+      URL.revokeObjectURL(this.imagePreview)
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-.insert-service {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+@import '@/styles/admin.css';
+
+/* Component-specific styles that aren't in admin.css */
+.content-section {
+  grid-column: 1 / -1;
 }
 
-.form-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 32px;
+.info-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 32px;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 0.95rem;
-}
-
-.required {
-  color: #e53e3e;
-  margin-left: 4px;
-}
-
-input[type="text"],
-input[type="number"],
-select,
-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1rem;
-  line-height: 1.5;
-  transition: all 0.3s ease;
-  background-color: #fff;
-  min-height: 46px;
-  box-sizing: border-box;
-}
-
-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 40px;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
-}
-
-.error {
-  border-color: #e53e3e !important;
-}
-
-.error-message {
-  color: #e53e3e;
-  font-size: 13px;
-  margin-top: 6px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 0;
+  grid-column: 1 / -1;
 }
 
 .image-upload-container {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed var(--border-color);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  min-height: 220px;
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -406,8 +513,8 @@ textarea:focus {
 }
 
 .image-upload-container:hover {
-  border-color: #4299e1;
-  background-color: rgba(66, 153, 225, 0.05);
+  border-color: var(--primary-color);
+  background-color: rgba(59, 130, 246, 0.05);
 }
 
 .file-input {
@@ -445,7 +552,7 @@ textarea:focus {
 }
 
 .remove-image:hover {
-  background: #ff4444;
+  background: var(--danger-color);
   color: white;
 }
 
@@ -454,221 +561,54 @@ textarea:focus {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .upload-button i {
-  font-size: 2.5em;
-  color: #4299e1;
-  margin-bottom: 8px;
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 4px;
 }
 
 .upload-hint {
-  font-size: 0.875rem;
-  color: #718096;
-  margin-top: 8px;
-  line-height: 1.4;
-}
-
-.form-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 16px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.cancel-btn,
-.submit-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
-  justify-content: center;
-}
-
-.cancel-btn {
-  background: #f7fafc;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
-  text-decoration: none;
-}
-
-.submit-btn {
-  background: #4299e1;
-  color: white;
-  border: none;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.cancel-btn:hover {
-  background: #edf2f7;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background: #3182ce;
-  transform: translateY(-1px);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+  line-height: 1.3;
 }
 
 .character-count {
   display: block;
   text-align: right;
   font-size: 0.85rem;
-  color: #718096;
+  color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .character-count.error {
-  color: #dc2626;
+  color: var(--danger-color);
 }
 
-.submitting {
-  opacity: 0.7;
-  pointer-events: none;
+.error-border {
+  border-color: var(--danger-color) !important;
 }
 
-/* Form layout for specific sections */
-.content-section {
-  grid-column: 1 / -1;
+.form-help-text {
+  font-size: 0.75rem;
+  margin-top: 3px;
 }
 
-.info-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 0;
-  grid-column: 1 / -1;
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .form-container {
-    grid-template-columns: 1fr;
-    padding: 24px;
-  }
-  
-  .info-section {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .insert-service {
     padding: 16px;
   }
-
-  .form-container {
-    padding: 20px;
-    border-radius: 8px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
-/* Additional responsive styles for very small devices */
 @media (max-width: 480px) {
-  .insert-service {
-    padding: 10px;
-  }
-
-  .form-container {
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    gap: 20px;
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group label {
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    border-radius: 6px;
-    min-height: 42px;
-  }
-
-  .error-message,
-  .character-count,
-  .upload-hint {
-    font-size: 0.8rem;
-  }
-
   .image-upload-container {
     min-height: 180px;
     padding: 16px;
   }
-
-  .preview-img {
-    max-height: 160px;
-  }
-}
-
-@media (max-width: 360px) {
-  .insert-service {
-    padding: 8px;
-  }
-
-  .form-container {
-    padding: 12px;
-    gap: 16px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    padding: 8px 10px;
-    font-size: 0.9rem;
-    min-height: 38px;
-  }
-
-  .form-group label {
-    font-size: 0.85rem;
-  }
-
-  .image-upload-container {
-    min-height: 160px;
-    padding: 12px;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    padding: 10px 18px;
-    font-size: 0.9rem;
-  }
-
-  .upload-button i {
-    font-size: 2em;
-  }
 }
 </style>
-
-
