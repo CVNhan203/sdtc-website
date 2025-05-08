@@ -2233,7 +2233,7 @@ h1 {
   /* Cooperation Section */
   .cooperation-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns side by side */
+    grid-template-columns: 0.6fr 1.4fr; /* Two columns side by side */
     gap: 1rem;
     align-items: stretch;
   }
