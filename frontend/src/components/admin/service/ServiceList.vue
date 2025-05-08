@@ -482,13 +482,15 @@ export default {
       this.loading = true
       this.error = null
       try {
-        const response = await serviceService.getServices()
+        // Gọi API mà không có giới hạn limit để lấy tất cả dịch vụ
+        const response = await serviceService.getServices({ limit: 0 })
         // Lấy danh sách đã xóa từ localStorage
         const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
         // Lấy mảng dịch vụ từ response.data
         const servicesArr = Array.isArray(response.data) ? response.data : []
         // Lọc bỏ các service đã xóa
         this.services = servicesArr.filter((service) => !deletedServices.includes(service._id))
+        console.log('Loaded all services for admin:', this.services.length, 'services')
       } catch (error) {
         console.error('Error loading services:', error)
         this.error = 'Không thể tải danh sách dịch vụ'
@@ -596,17 +598,47 @@ export default {
       return isValid
     },
     async handleSubmit() {
-      // Basic trimming
+      // Basic trimming and data preparation
       if (typeof this.formData.title === 'string') {
         this.formData.title = this.formData.title.trim()
       }
 
+      // Đảm bảo description là một mảng các chuỗi có ít nhất 10 ký tự
+      let descriptionArray = [];
       if (typeof this.formData.description === 'string') {
-        this.formData.description = this.formData.description.trim()
+        // Nếu description là chuỗi, tách theo dòng và lọc các dòng trống
+        descriptionArray = this.formData.description
+          .split('\n')
+          .map(item => item.trim())
+          .filter(item => item.length >= 10);
+        
+        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
+        if (descriptionArray.length === 0) {
+          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
+        }
       } else if (Array.isArray(this.formData.description)) {
-        this.formData.description = this.formData.description
-          .map((item) => item.trim())
-          .filter((item) => item)
+        // Nếu description đã là mảng, lọc các phần tử trống
+        descriptionArray = this.formData.description
+          .map(item => item.trim())
+          .filter(item => item.length >= 10);
+          
+        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
+        if (descriptionArray.length === 0) {
+          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
+        }
+      }
+      
+      // Cập nhật lại formData với description đã xử lý
+      this.formData.description = descriptionArray;
+      
+      // Đảm bảo type có giá trị hợp lệ
+      if (!this.formData.type || !['web', 'app', 'agency'].includes(this.formData.type)) {
+        this.formData.type = 'web';
+      }
+      
+      // Đảm bảo price là số
+      if (this.formData.price) {
+        this.formData.price = Number(this.formData.price);
       }
 
       if (!this.validateForm()) {
@@ -650,15 +682,39 @@ export default {
 
         // Prepare service data according to backend model
         this.uploadStatus = 'Đang xử lý...'
-        const serviceData = {
-          title: this.formData.title,
-          description: Array.isArray(this.formData.description)
-            ? this.formData.description
-            : this.formData.description.split('\n').filter((line) => line.trim()),
-          price: Number(this.formData.price),
-          status: this.formData.status,
-          type: this.formData.type,
+        
+        // Đảm bảo description là một mảng có ít nhất 1 phần tử
+        let descriptionArray = this.formData.description;
+        if (!Array.isArray(descriptionArray) || descriptionArray.length === 0) {
+          descriptionArray = ['Mô tả dịch vụ mặc định'];
         }
+        
+        // Đảm bảo các phần tử trong mảng đều là chuỗi
+        descriptionArray = descriptionArray
+          .map(item => typeof item === 'string' ? item.trim() : String(item));
+          
+        // Kiểm tra độ dài và tự động điều chỉnh nếu cần
+        descriptionArray = descriptionArray.map(item => {
+          // Nếu chuỗi quá ngắn, thêm nội dung để đạt độ dài tối thiểu
+          if (item.length > 0 && item.length < 10) {
+            return item + ' - Thông tin chi tiết sẽ được cập nhật sau.';
+          }
+          return item;
+        }).filter(item => item.length > 0);
+          
+        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
+        if (descriptionArray.length === 0) {
+          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
+        }
+        
+        const serviceData = {
+          title: this.formData.title ? this.formData.title.trim() : 'Dịch vụ mới ' + new Date().toLocaleDateString(),
+          description: descriptionArray,
+          price: Number(this.formData.price) || 0,
+          type: this.formData.type || 'web',
+        }
+        
+        console.log('Preparing service data:', serviceData);
 
         if (imageUrl) {
           serviceData.image = imageUrl
@@ -732,6 +788,9 @@ export default {
     },
     async handleSoftDelete() {
       try {
+        // Gọi API để cập nhật trạng thái isDeleted trong database
+        await serviceService.deleteService(this.selectedService._id)
+        
         const serviceIndex = this.services.findIndex((s) => s._id === this.selectedService._id)
         if (serviceIndex !== -1) {
           // Lưu ID service đã xóa vào localStorage
@@ -758,6 +817,10 @@ export default {
         eventBus.emit('update-deleted-services-count')
       } catch (error) {
         console.error('Error:', error)
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Có lỗi xảy ra khi xóa dịch vụ'
+        })
       }
     },
     async handleRestore() {

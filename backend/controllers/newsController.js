@@ -59,16 +59,30 @@ exports.getNews = asyncHandler(async (req, res) => {
 // Lấy chi tiết bài viết
 
 exports.getNewsById = asyncHandler(async (req, res) => {
-  const news = await News.findByIdAndUpdate(
-    req.params.id,
-    { $inc: { views: 1 } },
-    { new: true }
-  ).lean()
+  const news = await News.findById(req.params.id).lean()
 
   if (!news) {
     res.status(404)
     throw new Error('Không tìm thấy bài viết')
   }
+  
+  // Nếu là staff, chỉ cho phép xem bài viết của mình 
+  if (req.user && req.user.role === 'staff' && news.author !== req.user.fullName) {
+    res.status(403)
+    throw new Error('Bạn không có quyền xem bài viết này')
+  }
+  
+  // Không cho phép xem bài viết đã bị xóa (trừ khi là admin hoặc staff và là tác giả)
+  if (news.isDeleted && 
+      (!req.user || 
+       (req.user.role !== 'admin' && 
+        (req.user.role !== 'staff' || news.author !== req.user.fullName)))) {
+    res.status(404)
+    throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
+  }
+  
+  // Tăng lượt xem
+  await News.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
 
   // Tự thêm trường imageUrl vào object trả về (URL tuyệt đối)
   let imageUrl = ''
@@ -214,6 +228,119 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: `Đã ẩn ${result.modifiedCount} bài viết thành công`,
-  });
-});
+  })
+})
 
+// Upload ảnh tin tức
+exports.uploadNewsImage = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    res.status(400)
+    throw new Error('Vui lòng chọn ảnh để tải lên')
+  }
+
+  const imagePath = req.file.path.replace(/\\/g, '/')
+  
+  res.status(200).json({
+    success: true,
+    imagePath: imagePath,
+    message: 'Tải ảnh lên thành công',
+  })
+})
+
+// Khôi phục bài viết
+exports.restoreNews = asyncHandler(async (req, res) => {
+  let news
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndUpdate(
+      { _id: req.params.id, author: req.user.fullName },
+      { $set: { isDeleted: false } },
+      { new: true }
+    )
+  } else {
+    news = await News.findByIdAndUpdate(req.params.id, { $set: { isDeleted: false } }, { new: true })
+  }
+
+  if (!news) {
+    res.status(404)
+    throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền khôi phục bài viết này')
+  }
+
+  res.status(200).json({
+    success: true,
+    data: news,
+    message: 'Khôi phục bài viết thành công',
+  })
+})
+
+// Xóa vĩnh viễn bài viết
+exports.permanentDeleteNews = asyncHandler(async (req, res) => {
+  let news
+  if (req.user && req.user.role === 'staff') {
+    news = await News.findOneAndDelete({ _id: req.params.id, author: req.user.fullName })
+  } else {
+    news = await News.findByIdAndDelete(req.params.id)
+  }
+
+  if (!news) {
+    res.status(404)
+    throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền xóa bài viết này')
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Đã xóa vĩnh viễn bài viết thành công',
+  })
+})
+
+// Lấy danh sách tin tức trong thùng rác
+exports.getTrashNews = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 100, sortBy = 'publishedDate', order = 'desc' } = req.query
+  const query = { isDeleted: true } // Chỉ lấy tin đã xóa
+
+  // Nếu là staff, chỉ lấy bài viết của mình
+  if (req.user && req.user.role === 'staff') {
+    query.author = req.user.fullName
+  }
+
+  const skip = (Number(page) - 1) * Number(limit)
+
+  // Kiểm tra trường sắp xếp hợp lệ
+  const validSortFields = ['publishedDate', 'views', 'like', 'title']
+  const sortField = validSortFields.includes(sortBy) ? sortBy : 'publishedDate'
+
+  const sortQuery = {}
+  sortQuery[sortField] = order === 'desc' ? -1 : 1
+
+  const [news, total] = await Promise.all([
+    News.find(query).sort(sortQuery).skip(skip).limit(Number(limit)).lean(),
+    News.countDocuments(query),
+  ])
+
+  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  const newsWithImageUrl = news.map((n) => {
+    let imageUrl = ''
+    if (n.image) {
+      if (n.image.startsWith('http')) {
+        imageUrl = n.image
+      } else {
+        const host = req.protocol + '://' + req.get('host')
+        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+      }
+    }
+    return { ...n, imageUrl }
+  })
+
+  const totalPages = Math.ceil(total / Number(limit))
+
+  res.status(200).json({
+    success: true,
+    data: newsWithImageUrl,
+    pagination: {
+      total,
+      totalPages,
+      currentPage: Number(page),
+      limit: Number(limit),
+    },
+    message: 'Lấy danh sách tin tức trong thùng rác thành công',
+  })
+})

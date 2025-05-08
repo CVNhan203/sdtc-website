@@ -27,9 +27,9 @@
           <thead>
             <tr>
               <th style="width: 5%">STT</th>
-              <th style="width: 15%">Tên Khách Hàng</th>
-              <th style="width: 10%">SĐT</th>
-              <th style="width: 15%">Email</th>
+              <th style="width: 15%">Tên KH</th>
+              <!-- <th style="width: 10%">SĐT</th>
+              <th style="width: 15%">Email</th> -->
               <th style="width: 15%">Loại dịch vụ</th>
               <th style="width: 15%">Số tiền đã thanh toán</th>
               <th style="width: 15%">Trạng thái</th>
@@ -40,8 +40,8 @@
             <tr v-for="(order, index) in filteredOrders" :key="order._id">
               <td class="text-center">{{ index + 1 }}</td>
               <td class="truncate-text">{{ order.fullName }}</td>
-              <td>{{ order.phone }}</td>
-              <td>{{ order.email }}</td>
+              <!-- <td>{{ order.phone }}</td>
+              <td>{{ order.email }}</td> -->
               <td>{{ order.serviceType }}</td>
               <td class="text-center">
                 <span :class="['amount-badge', getPaymentStatusClass(order.paymentStatus)]">
@@ -88,14 +88,14 @@
                 <label>Tên KH:</label>
                 <p>{{ selectedOrder.fullName }}</p>
               </div>
-              <div class="detail-item">
+              <!-- <div class="detail-item">
                 <label>SĐT:</label>
                 <p>{{ selectedOrder.phone }}</p>
               </div>
               <div class="detail-item">
                 <label>Email:</label>
                 <p>{{ selectedOrder.email }}</p>
-              </div>
+              </div> -->
               <div class="detail-item">
                 <label>Loại dịch vụ:</label>
                 <p>{{ selectedOrder.serviceType }}</p>
@@ -146,8 +146,8 @@
                 <div class="order-info">
                   <p><strong>Khách hàng:</strong> {{ selectedOrder.fullName }}</p>
                   <p><strong>Dịch vụ:</strong> {{ selectedOrder.serviceType }}</p>
-                  <p><strong>Email:</strong> {{ selectedOrder.email }}</p>
-                  <p><strong>SĐT:</strong> {{ selectedOrder.phone }}</p>
+                  <!-- <p><strong>Email:</strong> {{ selectedOrder.email }}</p>
+                  <p><strong>SĐT:</strong> {{ selectedOrder.phone }}</p> -->
                   <p>
                     <strong>Phương thức thanh toán:</strong>
                     {{ getPaymentMethodText(selectedOrder.paymentMethod) }}
@@ -166,7 +166,7 @@
                     :class="{ error: formErrors.orderStatus }"
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="pending">Trạng Thái</option>
+                    <option value="pending">Chờ xử lý</option>
                     <option value="processing">Đang Triển Khai</option>
                     <option value="completed">Hoàn Thành</option>
                     <option value="cancelled">Đã hủy</option>
@@ -334,21 +334,21 @@ export default {
     },
 
     formatDate(date) {
-      if (!date) return '';
+      if (!date) return ''
       try {
-        const dateObj = new Date(date);
-        if (isNaN(dateObj)) return '';
+        const dateObj = new Date(date)
+        if (isNaN(dateObj)) return ''
         // Định dạng: dd/MM/yyyy - HH:mm
         const datePart = dateObj.toLocaleDateString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit'
-        });
+          day: '2-digit',
+        })
         const timePart = dateObj.toLocaleTimeString('vi-VN', {
           hour: '2-digit',
-          minute: '2-digit'
-        });
-        return `${datePart} - ${timePart}`;
+          minute: '2-digit',
+        })
+        return `${datePart} - ${timePart}`
       } catch (error) {
         console.error('Error formatting date:', error)
         return ''
@@ -357,7 +357,7 @@ export default {
 
     getStatusText(status) {
       const statusMap = {
-        pending: 'Trạng Thái',
+        pending: 'Chờ xử lý',
         processing: 'Đang Triển Khai',
         completed: 'Hoàn Thành',
         cancelled: 'Đã hủy',
@@ -805,8 +805,6 @@ export default {
 .text-right {
   text-align: center;
 }
-
-
 
 .icon-btn {
   display: inline-flex;
