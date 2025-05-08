@@ -75,22 +75,6 @@
           <span class="error-message" v-if="errors.role">{{ errors.role }}</span>
         </div>
 
-        <!-- Status -->
-        <div class="form-group">
-          <label for="status">Trạng thái</label>
-          <div class="toggle-switch">
-            <input
-              type="checkbox"
-              id="status"
-              v-model="formData.status"
-              :class="{ 'error': errors.status }"
-            />
-            <label for="status" class="switch-label"></label>
-            <span class="status-text">{{ formData.status ? 'Đang hoạt động' : 'Không hoạt động' }}</span>
-          </div>
-          <span class="error-message" v-if="errors.status">{{ errors.status }}</span>
-        </div>
-
         <!-- Form Actions -->
         <div class="form-actions">
           <button type="button" class="cancel-btn" @click="$router.back()">Hủy</button>
@@ -126,8 +110,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      role: '',
-      status: true
+      role: ''
     });
 
     const errors = reactive({
@@ -135,8 +118,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      role: '',
-      status: ''
+      role: ''
     });
 
     const validateForm = () => {
@@ -228,8 +210,7 @@ export default {
           fullName: formData.fullName,
           email: formData.email.toLowerCase(),
           password: formData.password,
-          role: formData.role,
-          isDeleted: !formData.status
+          role: formData.role
         };
 
         const response = await accountService.createAccount(accountData);
@@ -313,50 +294,10 @@ export default {
   position: relative;
 }
 
-.toggle-switch {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.toggle-switch input[type="checkbox"] {
-  display: none;
-}
-
-.switch-label {
-  position: relative;
-  display: inline-block;
-  width: 46px;
-  height: 24px;
-  background-color: #e5e7eb;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.switch-label::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.2s;
-}
-
-input[type="checkbox"]:checked + .switch-label {
-  background-color: #10b981;
-}
-
-input[type="checkbox"]:checked + .switch-label::after {
-  transform: translateX(22px);
-}
-
+.toggle-switch,
+.switch-label,
 .status-text {
-  font-size: 0.875rem;
-  color: #6b7280;
+  display: none;
 }
 
 /* Responsive adjustments */
@@ -365,4 +306,4 @@ input[type="checkbox"]:checked + .switch-label::after {
     padding: 16px;
   }
 }
-</style> 
+</style>

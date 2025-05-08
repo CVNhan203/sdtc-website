@@ -190,14 +190,6 @@
                 <input type="text" v-model="formData.title" required />
               </div>
               <div class="form-group">
-                <label>Tóm tắt</label>
-                <textarea v-model="formData.summary" required rows="3"></textarea>
-              </div>
-              <div class="form-group">
-                <label>Nội dung chi tiết</label>
-                <textarea v-model="formData.content" required rows="6"></textarea>
-              </div>
-              <div class="form-group">
                 <label>Phân loại</label>
                 <input type="text" v-model="formData.type" required placeholder="Nhập phân loại tin tức" maxlength="50" />
               </div>
@@ -226,6 +218,14 @@
                     <div class="progress-bar" :style="{ width: `${uploadProgress}%` }"></div>
                   </div>
                 </div>
+              </div>
+              <div class="form-group">
+                <label>Tóm tắt</label>
+                <textarea v-model="formData.summary" required rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Nội dung chi tiết</label>
+                <textarea v-model="formData.content" required rows="6"></textarea>
               </div>
               <!-- Các nút hành động form -->
               <div class="form-actions">
@@ -821,5 +821,186 @@ export default {
   height: 100%;
   background-color: var(--primary-color);
   transition: width 0.3s ease;
+}
+
+/* Modal Form Styles */
+.modal-content {
+  max-width: 800px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  padding: 20px 25px;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Image Upload Section */
+.image-upload {
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: var(--bg-secondary);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.image-upload:hover {
+  border-color: var(--primary-color);
+  background: var(--bg-hover);
+}
+
+.image-upload input[type="file"] {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.image-preview {
+  margin-top: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.image-preview img {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border-color);
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.submit-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.cancel-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-secondary);
+}
+
+/* Upload Progress */
+.upload-progress {
+  margin-top: 15px;
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+  transition: width 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .form-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-primary);
+    padding: 15px;
+    margin: 0 -25px -25px;
+  }
+
+  .image-preview img {
+    max-width: 100%;
+  }
 }
 </style>

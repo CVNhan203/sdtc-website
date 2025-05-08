@@ -30,6 +30,7 @@
       <table>
         <thead>
           <tr>
+            <th>STT</th>
             <th>Họ tên</th>
             <th>Dịch vụ</th>
             <th>Trạng thái</th>
@@ -38,7 +39,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="booking in filteredBookings" :key="booking._id">
+          <tr v-for="(booking, index) in filteredBookings" :key="booking._id">
+            <td>{{ index + 1 }}</td>
             <td>{{ booking.fullName }}</td>
             <td>{{ booking.service }}</td>
             <td>
