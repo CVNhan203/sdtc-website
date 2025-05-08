@@ -31,15 +31,42 @@ const serviceService = {
   // Tạo dịch vụ mới
   async createService(serviceData) {
     try {
-      // Đảm bảo gửi dữ liệu dưới dạng JSON
-      const response = await api.post('/services', JSON.stringify(serviceData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      // Đảm bảo description là một mảng
+      if (serviceData.description && !Array.isArray(serviceData.description)) {
+        if (typeof serviceData.description === 'string') {
+          serviceData.description = serviceData.description
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length >= 10);
+        } else {
+          serviceData.description = ['Mô tả dịch vụ mặc định'];
+        }
+      }
+      
+      // Nếu description là mảng rỗng, thêm một mô tả mặc định
+      if (!serviceData.description || (Array.isArray(serviceData.description) && serviceData.description.length === 0)) {
+        serviceData.description = ['Mô tả dịch vụ mặc định'];
+      }
+      
+      // Đảm bảo các trường bắt buộc có giá trị
+      if (!serviceData.type) {
+        serviceData.type = 'web';
+      }
+      
+      if (!serviceData.title || serviceData.title.trim() === '') {
+        serviceData.title = 'Dịch vụ mới ' + new Date().toLocaleDateString();
+      }
+      
+      console.log('Sending service data to backend:', serviceData);
+      
+      // Gửi dữ liệu trực tiếp, không sử dụng JSON.stringify
+      const response = await api.post('/services', serviceData)
+      
+      console.log('Service created successfully:', response.data);
       return response.data
     } catch (error) {
       console.error('Error creating service:', error)
+      console.error('Error response:', error.response?.data)
       throw error
     }
   },
@@ -47,16 +74,33 @@ const serviceService = {
   // Cập nhật dịch vụ
   async updateService(id, serviceData) {
     try {
-      const response = await api.put(`/services/${id}`, JSON.stringify(serviceData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      // Đảm bảo description là một mảng
+      if (serviceData.description && !Array.isArray(serviceData.description)) {
+        if (typeof serviceData.description === 'string') {
+          serviceData.description = serviceData.description
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length >= 10);
+        } else {
+          serviceData.description = ['Mô tả dịch vụ mặc định'];
+        }
+      }
+      
+      // Nếu description là mảng rỗng, thêm một mô tả mặc định
+      if (!serviceData.description || (Array.isArray(serviceData.description) && serviceData.description.length === 0)) {
+        serviceData.description = ['Mô tả dịch vụ mặc định'];
+      }
+      
+      console.log('Updating service data:', serviceData);
+      
+      // Gửi dữ liệu trực tiếp, không sử dụng JSON.stringify
+      const response = await api.put(`/services/${id}`, serviceData)
 
       if (!response.data.success) {
         throw new Error(response.data.message || 'Không thể cập nhật dịch vụ')
       }
-
+      
+      console.log('Service updated successfully:', response.data);
       return response.data
     } catch (error) {
       console.error('Error updating service:', error)
@@ -73,6 +117,29 @@ const serviceService = {
       return response.data
     } catch (error) {
       console.error('Error deleting service:', error)
+      throw error
+    }
+  },
+  
+  // Khôi phục dịch vụ đã xóa
+  async restoreService(id) {
+    try {
+      // Gửi yêu cầu PATCH để khôi phục dịch vụ (đặt isDeleted = false)
+      const response = await api.patch(`/services/${id}/restore`, { isDeleted: false })
+      return response.data
+    } catch (error) {
+      console.error('Error restoring service:', error)
+      throw error
+    }
+  },
+  
+  // Xóa vĩnh viễn dịch vụ
+  async permanentDeleteService(id) {
+    try {
+      const response = await api.delete(`/services/${id}/permanent`)
+      return response.data
+    } catch (error) {
+      console.error('Error permanently deleting service:', error)
       throw error
     }
   },

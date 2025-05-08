@@ -15,8 +15,8 @@
 
     <!-- Hiển thị khi không có kết quả tìm kiếm -->
     <div v-if="filteredNews.length === 0" class="no-results">
-      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
-      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
+      <!-- <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button> -->
     </div>
 
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
@@ -84,9 +84,9 @@ export default {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
     getImageUrl(imagePath) {
-      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image';
-      if (imagePath.startsWith('http')) return imagePath;
-      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`;
+      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
+      if (imagePath.startsWith('http')) return imagePath
+      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`
     },
   },
 }

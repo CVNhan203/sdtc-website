@@ -90,14 +90,6 @@
             <i class="fas fa-list"></i>
             <span>Danh sách đơn hàng</span>
           </router-link>
-          <router-link to="/admin/don-hang/cho-duyet" class="submenu-item" active-class="active">
-            <i class="fas fa-clock"></i>
-            <span>Đơn hàng chờ duyệt</span>
-          </router-link>
-          <router-link to="/admin/don-hang/lich-su" class="submenu-item" active-class="active">
-            <i class="fas fa-history"></i>
-            <span>Lịch sử đơn hàng</span>
-          </router-link>
         </div>
       </div>
 
@@ -238,7 +230,7 @@ export default {
         'tin-tuc/danh-sach': 'Danh sách tin tức',
         'tin-tuc/them-moi': 'Thêm tin tức mới',
         'don-hang/danh-sach': 'Danh sách đơn hàng',
-        'don-hang/cho-duyet': 'Đơn hàng chờ duyệt',
+
         'don-hang/lich-su': 'Lịch sử đơn hàng',
         'thanh-toan/danh-sach': 'Quản lý thanh toán',
         'dat-lich/danh-sach': 'Danh sách đặt lịch',

@@ -96,12 +96,17 @@
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Tải ảnh lên</span>
               <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+              <p class="upload-hint">Kích thước tối thiểu: 200x200px, tối đa 2000x2000px</p>
             </div>
             <div
               v-if="imagePreview"
               class="image-preview"
-              :style="{ backgroundImage: `url(${imagePreview})` }"
             >
+              <img 
+                :src="imagePreview" 
+                alt="Preview" 
+                class="preview-img"
+              />
               <button
                 type="button"
                 @click.stop="removeImage"
@@ -522,14 +527,23 @@ export default {
 }
 
 .image-preview {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
   border-radius: 8px;
 }
 
