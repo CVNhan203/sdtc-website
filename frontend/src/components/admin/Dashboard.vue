@@ -444,7 +444,7 @@ export default {
 }
 
 .nav-group {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .nav-item {
@@ -508,6 +508,7 @@ export default {
 
 .submenu {
   margin-left: 1rem;
+  margin-top: 0.5rem; /* Thêm khoảng cách từ nav-item đến submenu */
   padding-left: 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -533,7 +534,7 @@ export default {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   border-radius: 6px;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem; /* Tăng khoảng cách giữa các submenu-item */
   transition: all 0.3s ease;
   position: relative;
 }
