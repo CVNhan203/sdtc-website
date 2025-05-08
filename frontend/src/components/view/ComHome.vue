@@ -316,37 +316,41 @@
 
 </section>
 
-<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
-<section class="inspiration-section">
-  <div class="inspiration-header">
-    <div>
-      <p class="inspiration-label">Nguồn cảm hứng</p>
-      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
-      <p class="inspiration-desc">
-        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
-      </p>
+  <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
+  <section class="inspiration-section">
+    <div class="inspiration-header">
+      <div>
+        <p class="inspiration-label">Nguồn cảm hứng</p>
+        <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+        <p class="inspiration-desc">
+          Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
+        </p>
+      </div>
+      <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
     </div>
-    <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
-  </div>
-<!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
+  <!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
 
-  <div class="marquee-wrapper">
-    <!-- Hàng trên: trái sang phải -->
-    <div class="marquee marquee-normal">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup'+idx" :src="img" class="marquee-img" />
+    <div class="marquee-wrapper">
+      <!-- Hàng trên: trái sang phải -->
+      <div class="marquee marquee-normal">
+        <div class="marquee-group">
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup1'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup2'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup3'+idx" :src="img" class="marquee-img" />
+        </div>
+      </div>
+      <!-- Hàng dưới: phải sang trái -->
+      <div class="marquee marquee-reverse">
+        <div class="marquee-group">
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup1'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup2'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup3'+idx" :src="img" class="marquee-img" />
+        </div>
       </div>
     </div>
-    <!-- Hàng dưới: phải sang trái -->
-    <div class="marquee marquee-reverse">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 <!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
 <section class="achievements">
@@ -1462,7 +1466,8 @@ h1 {
 .marquee-group {
   display: flex;
   align-items: center;
-  animation: marquee 32s linear infinite;
+  animation: marquee 64s linear infinite;
+  min-width: max-content;
 }
 .marquee-img {
   height: 220px;
@@ -2874,7 +2879,7 @@ h1 {
 }
 
 
-/* @media (min-width: 1440px) {
+@media (min-width: 1440px) {
   .home-container,
   .cooperation-container,
   .customer-trust-container,
@@ -2904,7 +2909,7 @@ h1 {
   .marquee-img {
     height: 300px;
   }
-} */
+}
 
 
 /* @media (min-width: 1920px) {
@@ -2939,7 +2944,7 @@ h1 {
   }
 } */
 
-/* @media (min-width: 2560px) {
+@media (min-width: 2560px) {
   .home-container,
   .cooperation-container,
   .customer-trust-container,
@@ -2969,6 +2974,208 @@ h1 {
   .marquee-img {
     height: 400px;
   }
-} */
+}
+
+/* =========================================
+   📱 Responsive màn hình lớn: 3000px - 5000px
+   Áp dụng cho toàn bộ section trong ComHome.vue
+========================================= */
+
+@media screen and (min-width: 3000px) {
+  section {
+    max-width: 4600px;
+    margin: 0 auto;
+    padding: 4rem 6rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 4rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.4rem;
+    padding: 1.2rem 2.5rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.3);
+  }
+
+  .project-card.large {
+    min-height: 50rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 2rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.4rem;
+  }
+
+  .achievement-logo img {
+    height: 6rem;
+  }
+
+  .achievement-content {
+    max-width: 120rem;
+  }
+
+  .marquee-img {
+    height: 300px;
+    margin-right: 36px;
+  }
+
+  .partner-logos img {
+    height: 4rem;
+  }
+}
+
+@media screen and (min-width: 4000px) {
+  section {
+    max-width: 5400px;
+    padding: 5rem 7rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 4.8rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 2rem;
+    line-height: 3.2rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.6rem;
+    padding: 1.5rem 3rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.5);
+  }
+
+  .project-card.large {
+    min-height: 60rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 2.4rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.6rem;
+  }
+
+  .achievement-logo img {
+    height: 7rem;
+  }
+
+  .marquee-img {
+    height: 360px;
+    margin-right: 40px;
+  }
+
+  .partner-logos img {
+    height: 5rem;
+  }
+}
+
+@media screen and (min-width: 5000px) {
+  section {
+    max-width: 6400px;
+    padding: 6rem 8rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 5.5rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 2.2rem;
+    line-height: 3.6rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.8rem;
+    padding: 2rem 4rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.7);
+  }
+
+  .project-card.large {
+    min-height: 70rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 3rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.8rem;
+  }
+
+  .achievement-logo img {
+    height: 8rem;
+  }
+
+  .marquee-img {
+    height: 400px;
+    margin-right: 50px;
+  }
+
+  .partner-logos img {
+    height: 6rem;
+  }
+}
 </style>
 
