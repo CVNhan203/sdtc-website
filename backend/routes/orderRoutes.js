@@ -8,6 +8,9 @@ const authMiddleware = require("../middleware/authMiddleware");
 // Người dùng tạo đơn hàng
 router.post("/", orderController.createOrder);
 
+// Xử lý thanh toán đơn hàng
+router.post("/:id/process-payment", orderController.processPayment);
+
 // Admin xem tất cả đơn hàng
 router.get("/", authMiddleware, adminMiddleware, orderController.getOrders);
 
