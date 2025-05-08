@@ -7,14 +7,11 @@ import AdminDashboard from '../components/admin/Dashboard.vue'
 import AdminServiceList from '../components/admin/service/ServiceList.vue'
 import AdminNewsList from '../components/admin/news/NewsList.vue'
 import AdminInsertNews from '../components/admin/news/InsertNews.vue'
-import AdminEditNews from '../components/admin/news/EditNews.vue'
 import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
-import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
-import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
-import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
+// import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
+// import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
-import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 import Home from '@/components/view/ComHome.vue'
 import Procedure from '@/components/view/ComProcedure.vue'
@@ -23,8 +20,11 @@ import PriceList from '@/components/view/ComPriceList.vue'
 import News from '@/components/view/ComNews.vue'
 import Advise from '@/components/view/ComAdvise.vue'
 import AdminDashboardHome from '../components/admin/AdminDashboardHome.vue'
-// @ - Alias cho thư mục src, đại diện cho thư mục src trong Vue CLI, giúp viết đường dẫn nhanh gọn hơn
-// Còn .. là cách viết đường dẫn tương đối, cách viết mặc định của javascript, chỉ ra thư mục cha của thư mục hiện tại
+import AccountList from '../components/admin/account/AccountList.vue'
+import AddAccount from '../components/admin/account/AddAccount.vue'
+import TrashAccount from '../components/admin/account/TrashAccount.vue'
+import BookingList from '@/components/admin/booking/BookingList.vue'
+import PendingBookings from '@/components/admin/booking/PendingBookings.vue'
 
 const routes = [
   // Public routes
@@ -78,23 +78,98 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: AdminDashboard,
+    meta: { requiresAuth: true },
     children: [
-      { path: 'dashboard', name: 'AdminDashboardHome', component: AdminDashboardHome },
-      { path: 'dich-vu/danh-sach', name: 'AdminServiceList', component: AdminServiceList },
-      { path: 'dich-vu/them-moi', name: 'AdminInsertService', component: AdminInsertService },
-      { path: 'dich-vu/thung-rac', name: 'AdminTrashService', component: AdminTrashService },
-      { path: 'dich-vu/chinh-sua/:id', name: 'AdminEditService', component: AdminEditService, meta: { requiresAuth: true } },
-      { path: 'tin-tuc/danh-sach', name: 'AdminNewsList', component: AdminNewsList },
-      { path: 'tin-tuc/them-moi', name: 'AdminInsertNews', component: AdminInsertNews },
-      { path: 'tin-tuc/chinh-sua/:id', name: 'AdminEditNews', component: AdminEditNews, meta: { requiresAuth: true } },
-      { path: 'tin-tuc/thung-rac', name: 'AdminTrashNews', component: AdminTrashNews, meta: { requiresAuth: true, title: 'Thùng rác tin tức' } },
-      { path: 'don-hang/danh-sach', name: 'AdminOrderList', component: AdminOrderList },
-      { path: 'don-hang/cho-duyet', name: 'AdminPendingOrders', component: AdminPendingOrders },
-      { path: 'don-hang/lich-su', name: 'AdminOrderHistory', component: AdminOrderHistory },
-      { path: 'thanh-toan/danh-sach', name: 'AdminPaymentList', component: AdminPaymentList },
+      {
+        path: 'dashboard',
+        name: 'AdminDashboardHome',
+        component: AdminDashboardHome,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'dich-vu/danh-sach',
+        name: 'AdminServiceList',
+        component: AdminServiceList,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: 'dich-vu/them-moi',
+        name: 'AdminInsertService',
+        component: AdminInsertService,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: 'dich-vu/thung-rac',
+        name: 'AdminTrashService',
+        component: AdminTrashService,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: 'tin-tuc/danh-sach',
+        name: 'AdminNewsList',
+        component: AdminNewsList,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'tin-tuc/them-moi',
+        name: 'AdminInsertNews',
+        component: AdminInsertNews,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'tin-tuc/thung-rac',
+        name: 'AdminTrashNews',
+        component: AdminTrashNews,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'don-hang/danh-sach',
+        name: 'AdminOrderList',
+        component: AdminOrderList,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      // {
+      //   path: 'don-hang/cho-duyet',
+      //   name: 'AdminPendingOrders',
+      //   component: AdminPendingOrders,
+      //   meta: { requiresAuth: true, requiresAdmin: true },
+      // },
+      // {
+      //   path: 'don-hang/lich-su',
+      //   name: 'AdminOrderHistory',
+      //   component: AdminOrderHistory,
+      //   meta: { requiresAuth: true, requiresAdmin: true },
+      // },
+      { 
+        path: 'tai-khoan/danh-sach', 
+        name: 'AccountList', 
+        component: AccountList, 
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'tai-khoan/them-moi',
+        name: 'AddAccount',
+        component: AddAccount,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: 'tai-khoan/thung-rac',
+        name: 'TrashAccount',
+        component: TrashAccount,
+        meta: { requiresAuth: true, requiresAdmin: true },
+      },
+      {
+        path: 'dat-lich/danh-sach',
+        component: BookingList,
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'dat-lich/cho-xu-ly',
+        component: PendingBookings,
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
     ]
   },
-  
   {
     path: '/admin/login',
     name: 'AdminLogin',
@@ -108,46 +183,51 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     // Nếu có vị trí scroll đã lưu (như khi nhấn nút back/forward)
     if (savedPosition) {
-      return savedPosition;
+      return savedPosition
     } else {
       // Mặc định scroll lên đầu trang
-      return { top: 0 };
+      return { top: 0 }
     }
-  }
+  },
 })
 
-// Route guard: bảo vệ các route admin
+// Route guard
 router.beforeEach((to, from, next) => {
-  // Kiểm tra đăng nhập cho trang admin
+  // Check authentication for admin routes
   if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
-    const isLoggedIn = !!localStorage.getItem('adminToken');
-    if (!isLoggedIn) {
-      return next('/admin/login');
+    const token = localStorage.getItem('adminToken')
+    if (!token) {
+      return next('/admin/login')
     }
-    
-    // Kiểm tra quyền truy cập cho role staff
-    const adminInfoString = localStorage.getItem('adminInfo');
+
+    // Check role permissions
+    const adminInfoString = localStorage.getItem('adminInfo')
     if (adminInfoString) {
       try {
-        const adminInfo = JSON.parse(adminInfoString);
-        const isStaff = adminInfo.role === 'staff';
-        
-        // Nếu là staff và không phải đang truy cập trang tin tức
+        const adminInfo = JSON.parse(adminInfoString)
+        const isStaff = adminInfo.role === 'staff'
+
+        // If staff trying to access admin-only routes
+        if (isStaff && to.meta.requiresAdmin) {
+          console.log('Staff attempting to access admin-only area')
+          return next('/admin/tin-tuc/danh-sach')
+        }
+
+        // If staff trying to access non-news routes
         if (isStaff && !to.path.includes('/admin/tin-tuc')) {
-          // Redirect về trang tin tức
-          console.log('Staff attempting to access restricted area, redirecting to news section');
-          return next('/admin/tin-tuc/danh-sach');
+          console.log('Staff redirected to news section')
+          return next('/admin/tin-tuc/danh-sach')
         }
       } catch (error) {
-        console.error('Error parsing admin info:', error);
+        console.error('Error parsing admin info:', error)
         // Nếu có lỗi khi parse JSON, logout để đăng nhập lại
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminInfo');
-        return next('/admin/login');
+        localStorage.removeItem('adminToken')
+        localStorage.removeItem('adminInfo')
+        return next('/admin/login')
       }
     }
   }
-  next();
-});
+  next()
+})
 
 export default router
