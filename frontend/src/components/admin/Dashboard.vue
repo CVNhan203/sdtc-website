@@ -90,14 +90,14 @@
             <i class="fas fa-list"></i>
             <span>Danh sách đơn hàng</span>
           </router-link>
-          <router-link to="/admin/don-hang/cho-duyet" class="submenu-item" active-class="active">
+          <!-- <router-link to="/admin/don-hang/cho-duyet" class="submenu-item" active-class="active">
             <i class="fas fa-clock"></i>
             <span>Đơn hàng chờ duyệt</span>
-          </router-link>
-          <router-link to="/admin/don-hang/lich-su" class="submenu-item" active-class="active">
+          </router-link> -->
+          <!-- <router-link to="/admin/don-hang/lich-su" class="submenu-item" active-class="active">
             <i class="fas fa-history"></i>
             <span>Lịch sử đơn hàng</span>
-          </router-link>
+          </router-link> -->
         </div>
       </div>
 
