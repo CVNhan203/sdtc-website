@@ -33,7 +33,7 @@
           <thead>
             <tr>
               <th style="width: 5%">STT</th>
-              <th style="width: 15%">Tên KH</th>
+              <th style="width: 15%">Tên Khách Hàng</th>
               <th style="width: 10%">SĐT</th>
               <th style="width: 15%">Email</th>
               <th style="width: 15%">Loại dịch vụ</th>
