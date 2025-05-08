@@ -378,7 +378,7 @@ export default {
         }
 
         // Kiểm tra kích thước tối đa
-        if (img.width > 2000 || img.height > 2000) {
+        if (img.width > 3000 || img.height > 3000) {
           this.errors.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
           this.$refs.fileInput.value = ''
           this.formData.image = null
