@@ -275,143 +275,17 @@
     </div>
   </section>
 
-<<<<<<< HEAD
   <!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
   <section class="successfull">
     <div class="successfull-content">
       <p>Dự án</p>
       <h2>Thành công vượt bậc</h2>
-=======
-<!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
-<section class="successfull">
-  <div class="successfull-content">
-    <p>Dự án</p>
-    <h2>Thành công vượt bậc</h2>
-    <p>
-      Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.
-    </p>
-  </div>
-  <div class="projects-group-grid">
-    <div class="project-card large">
-      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
-      <div class="project-overlay">
-        <h3>Website Thẩm mỹ</h3>
-        <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
-      </div>
-    </div>
-
-    <div class="project-card-group">
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website bán hàng</h3>
-          <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
-        </div>
-      </div>
-      
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website phong thuỷ</h3>
-          <p>Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong thuỷ sâu sắc</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <router-link to="/team"><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link>
-
-</section>
-
-<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
-<section class="inspiration-section">
-  <div class="inspiration-header">
-    <div>
-      <p class="inspiration-label">Nguồn cảm hứng</p>
-      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
-      <p class="inspiration-desc">
-        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
-      </p>
-    </div>
-    <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
-  </div>
-<!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
-
-  <div class="marquee-wrapper">
-    <!-- Hàng trên: trái sang phải -->
-    <div class="marquee marquee-normal">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-    <!-- Hàng dưới: phải sang trái -->
-    <div class="marquee marquee-reverse">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-  </div>
-</section>
-
-<!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
-<section class="achievements">
-  <div class="achievements-header">
-    <p class="achievements-label">Những gì khách hàng nhận xét</p>
-    <h2 class="achievements-title">Thành tựu nổi bật</h2>
-    <p class="achievements-desc">
-      Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
-    </p>
-  </div>
-  <div class="achievements-carousel-wrapper">
-    <button class="achievements-arrow left" @click="prevAchievement">
-      <span>←</span>
-    </button>
-    <Carousel
-      ref="achievementsCarousel"
-      :itemsToShow="1"
-      :wrapAround="true"
-      :mouseDrag="false"
-      :touchDrag="false"
-      :paginationEnabled="false"
-      class="achievements-carousel">
-      <Slide v-for="(item, idx) in achievements" :key="idx">
-        <div class="achievement-slide">
-        
-    <div class="achievement-visual">
-      <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
-      <div class="achievement-logo">
-        <img :src="item.logo" :alt="item.company" />
-      </div>
-    </div>
-    <p class="achievement-content">{{ item.content }}</p>
-    <div class="achievement-author">
-      <div class="author-name">{{ item.author }}</div>
-      <div class="author-role">{{ item.role }}</div>
-    </div>
-  </div>
-</Slide>
-    </Carousel>
-    <button class="achievements-arrow right" @click="nextAchievement">
-      <span>→</span>
-    </button>
-  </div>
-</section>
-
-<!---------------------------------------- Section bạn đồng hành ---------------------------------------->
-<section class="companion-section">
-  <div class="companion-content">
-    <div class="companion-text">
-      <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
       <p>
         Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
         thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
         kết của chúng tôi.
       </p>
     </div>
-<<<<<<< HEAD
     <div class="projects-group-grid">
       <div class="project-card large">
         <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
@@ -569,11 +443,6 @@
       <button class="companion-btn">Đặt lịch tư vấn</button>
     </div>
   </section>
-=======
-    <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
-  </div>
-</section>
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 </template>
 
 <script>
@@ -1637,13 +1506,8 @@ h1 {
 /*-------------------------------------- Thành tựu nổi bật --------------------------------------*/
 .achievements {
   width: 100%;
-<<<<<<< HEAD
   background: #ffffff;
   padding: 4rem 0 3rem 0; /* 64px 0 48px 0 */
-=======
-  background: #fff;
-  padding: 4rem 0 3rem 0;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1773,14 +1637,9 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-<<<<<<< HEAD
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-=======
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
-  box-shadow: none;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 }
 
 .achievements-arrow:hover {
@@ -1795,10 +1654,6 @@ h1 {
 .achievements-arrow.right {
   order: 2;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
 /*-------------------------------------- Bạn đồng hành --------------------------------------*/
 .companion-section {
   width: 100%;
@@ -1856,13 +1711,8 @@ h1 {
 }
 /* Responsive styles for ComHome */
 
-<<<<<<< HEAD
 /* Responsive Styles */
 @media screen and (max-width: 1200px) {
-=======
-/* Tablet: 768px - 1024px */
-@media (max-width: 1024px) {
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   /* Hero Section */
   .hero-section {
     padding: 1.5rem;
@@ -1905,23 +1755,9 @@ h1 {
     gap: 0.5rem;
   }
 
-<<<<<<< HEAD
   .stats-card,
   .trust-card {
     width: 14rem;
-=======
-  .services span {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .abc {
-    padding: 2rem;
-  }
-
-  .partner-logos {
-    gap: 2rem;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   }
 
   /* Cooperation Section */
@@ -2053,59 +1889,11 @@ h1 {
     text-align: center;
   }
 
-<<<<<<< HEAD
   .stats-card,
   .trust-card {
     width: 100%;
     max-width: 20rem;
     margin: 0 auto;
-=======
-  .inspiration-btn {
-    margin-top: 1rem;
-  }
-
-  .marquee-img {
-    height: 150px;
-    margin-right: 16px;
-  }
-
-  /* Achievements Section */
-  .achievement-content {
-    font-size: 1.2rem;
-  }
-
-  .big-quote-svg {
-    left: -100px; /* Điều chỉnh vị trí quote để tránh đè */
-    width: 48px;
-    height: 48px;
-  }
-
-  /* Companion Section */
-  .companion-content {
-    flex-direction: column;
-    text-align: center;
-    padding: 2rem;
-  }
-
-  .companion-btn {
-    margin-top: 1rem;
-  }
-}
-
-/* Mobile: < 768px */
-@media (max-width: 768px) {
-  /* Hero Section */
-  .hero-section {
-    padding: 1rem;
-  }
-
-  .content-wrapper {
-    gap: 1.5rem;
-  }
-
-  .stats-card {
-    padding: 0.8rem;
->>>>>>> e21e256b2ff67c75d3766d42d58e4cba87c7fa19
   }
 
   .main-content {
