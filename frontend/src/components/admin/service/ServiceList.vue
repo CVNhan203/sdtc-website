@@ -237,7 +237,6 @@
                   <i class="fas fa-cloud-upload-alt"></i>
                   <span>Click để tải ảnh lên</span>
                   <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
-                  <p class="upload-hint">Kích thước tối thiểu: 200x200px, tối đa 2000x2000px</p>
                 </div>
                 <div v-else class="image-preview">
                   <img :src="imagePreview" alt="Preview" />

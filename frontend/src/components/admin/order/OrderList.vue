@@ -1,13 +1,7 @@
 <template>
   <div class="order-list">
-    <!-- Loading state -->
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Đang tải danh sách đơn hàng...</p>
-    </div>
-
     <!-- Error state -->
-    <div v-else-if="error" class="error-container">
+    <div v-if="error" class="error-container">
       <p class="error-message">{{ error }}</p>
       <button class="retry-btn" @click="loadOrders">Thử lại</button>
     </div>
@@ -278,7 +272,6 @@ export default {
         paymentStatus: '',
         paidAmount: '',
       },
-      loading: false,
       submitLoading: false,
       error: null,
     }
@@ -406,7 +399,6 @@ export default {
 
     async loadOrders() {
       try {
-        this.loading = true
         const response = await orderService.getOrders()
         // orderService now ensures data is an array
         this.orders = response.data || []
@@ -419,8 +411,6 @@ export default {
           type: 'error',
           message: 'Không thể tải danh sách đơn hàng',
         })
-      } finally {
-        this.loading = false
       }
     },
 
@@ -617,12 +607,9 @@ export default {
   },
   async created() {
     try {
-      this.loading = true
       await Promise.all([this.loadOrders(), this.loadServices()])
     } catch (error) {
       console.error('Error initializing component:', error)
-    } finally {
-      this.loading = false
     }
   },
 }
