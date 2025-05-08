@@ -270,7 +270,7 @@
           theo thời gian.
         </p>
 
-        <router-link to="/bang-gia"><button class="cta-button">Bắt đầu ngay</button></router-link>
+        <router-link to="/team"><button class="cta-button">Bắt đầu ngay</button></router-link>
       </div>
     </div>
   </section>
@@ -316,37 +316,41 @@
 
 </section>
 
-<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
-<section class="inspiration-section">
-  <div class="inspiration-header">
-    <div>
-      <p class="inspiration-label">Nguồn cảm hứng</p>
-      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
-      <p class="inspiration-desc">
-        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
-      </p>
+  <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
+  <section class="inspiration-section">
+    <div class="inspiration-header">
+      <div>
+        <p class="inspiration-label">Nguồn cảm hứng</p>
+        <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+        <p class="inspiration-desc">
+          Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
+        </p>
+      </div>
+      <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
     </div>
-    <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
-  </div>
-<!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
+  <!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
 
-  <div class="marquee-wrapper">
-    <!-- Hàng trên: trái sang phải -->
-    <div class="marquee marquee-normal">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup'+idx" :src="img" class="marquee-img" />
+    <div class="marquee-wrapper">
+      <!-- Hàng trên: trái sang phải -->
+      <div class="marquee marquee-normal">
+        <div class="marquee-group">
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup1'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup2'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup3'+idx" :src="img" class="marquee-img" />
+        </div>
+      </div>
+      <!-- Hàng dưới: phải sang trái -->
+      <div class="marquee marquee-reverse">
+        <div class="marquee-group">
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup1'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup2'+idx" :src="img" class="marquee-img" />
+          <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup3'+idx" :src="img" class="marquee-img" />
+        </div>
       </div>
     </div>
-    <!-- Hàng dưới: phải sang trái -->
-    <div class="marquee marquee-reverse">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 <!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
 <section class="achievements">
@@ -420,6 +424,8 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
+      autoSlideInterval: null,
+
       achievements: [
         {
           logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),
@@ -449,17 +455,27 @@ export default {
     }
   },
   mounted() {
-    this.inspirationImagesTop = inspirationImagesTop
-    this.inspirationImagesBottom = inspirationImagesBottom
+    this.inspirationImagesTop = inspirationImagesTop;
+    this.inspirationImagesBottom = inspirationImagesBottom;
+    this.startAutoSlide();
   },
+  beforeUnmount() {
+    clearInterval(this.autoSlideInterval); // Xoá interval khi component huỷ
+  },
+
   methods: {
-    nextAchievement() {
-      this.$refs.achievementsCarousel.next()
+   nextAchievement() {
+      this.$refs.achievementsCarousel.next();
     },
     prevAchievement() {
-      this.$refs.achievementsCarousel.prev()
+      this.$refs.achievementsCarousel.prev();
     },
-  },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextAchievement();
+      }, 4000);
+    }
+  }
 }
 const inspirationImagesTop = [
   require('@/assets/sdtc-image/trang-chu/carousel/image-5.png'),
@@ -1452,7 +1468,8 @@ h1 {
 .marquee-group {
   display: flex;
   align-items: center;
-  animation: marquee 32s linear infinite;
+  animation: marquee 64s linear infinite;
+  min-width: max-content;
 }
 .marquee-img {
   height: 220px;
@@ -1794,6 +1811,9 @@ h1 {
     min-width: 0;
     max-width: 100%;
   }
+  .banner-content{
+    width: 50%;
+  }
 
   .cooperation-info {
     flex: 1.4 1 0;
@@ -1810,7 +1830,7 @@ h1 {
   }
 
   .banner-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .banner-content .subtitle-1,
@@ -1819,7 +1839,7 @@ h1 {
   }
 
   .banner-image {
-    width: 7rem;
+    width: 10rem;
     border-radius: 1rem;
   }
 
@@ -2243,7 +2263,7 @@ h1 {
   /* Cooperation Section */
   .cooperation-container {
     display: grid;
-    grid-template-columns: 0.6fr 1.4fr; /* Two columns side by side */
+    grid-template-columns: 0.8fr 1.2fr; /* Two columns side by side */
     gap: 1rem;
     align-items: stretch;
   }
@@ -2251,6 +2271,9 @@ h1 {
     width: 100%;
     padding: 1rem;
     min-width: 0;
+  }
+  .banner-content{
+    width: 50%;
   }
   .banner-content h1 {
     font-size: 1.5rem;
@@ -2260,7 +2283,7 @@ h1 {
     font-size: 0.8rem;
   }
   .banner-image {
-    width: 6rem;
+    width: 9.3rem;
   }
   .cooperation-info {
     padding: 1rem;
@@ -2527,7 +2550,8 @@ h1 {
     height: 2rem;
   }
   .partners h3{
-    font-size: 0.8rem;
+    padding-top: 4rem;
+    font-size: 0.9rem;
   }
 
   .partner-logos {
@@ -2540,7 +2564,7 @@ h1 {
   }
   /* Cooperation Section */
   .cooperation-section {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 
   .cooperation-container {
@@ -2551,21 +2575,23 @@ h1 {
   .cooperation-banner {
     width: 100%;
     height: auto;
-    padding: 1rem;
+    padding: 1.6rem;
     border-radius: 1rem;
   }
 
   .banner-content h1 {
     font-size: 1.2rem;
   }
-
+  .banner-content {
+    width:45%;
+  }
   .banner-content .subtitle-1,
   .banner-content .description-1 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .banner-image {
-    width: 8rem;
+    width: 10rem;
   }
 
   .cooperation-info {
@@ -2675,37 +2701,37 @@ h1 {
   }
   /* Customer Trust Section */
   .circle-layout {
-    width: 12rem;
-    height: 12rem;
-  }
+  width: 14rem;
+  height: 14rem;
+}
 
-  .image-main {
-    width: 5.5rem;
-    height: 5.5rem;
-    left: 6rem;
-  }
+.image-main {
+  width: 6.5rem;
+  height: 6.5rem;
+  left: 7.5rem;
+}
 
-  .image-left {
-    width: 4.5rem;
-    height: 4.5rem;
-    top: 1.5rem;
-    left: 1rem;
-  }
+.image-left {
+  width: 5.5rem;
+  height: 5.5rem;
+  top: 2rem;
+  left: 1.5rem;
+}
 
-  .badge-center {
-    width: 4rem;
-    height: 4rem;
-    top: 3.5rem;
-    left: 4rem;
-    font-size: 0.6rem;
-  }
+.badge-center {
+  width: 4.75rem;
+  height: 4.75rem;
+  top: 4rem;
+  left: 5rem;
+  font-size: 0.75rem;
+}
 
-  .image-bottom {
-    width: 2.5rem;
-    height: 2.5rem;
-    top: 7rem;
-    left: 4.5rem;
-  }
+.image-bottom {
+  width: 3rem;
+  height: 3rem;
+  top: 8rem;
+  left: 5.5rem;
+}
 
   /* Successfull Section */
   .project-card.large {
@@ -2764,6 +2790,70 @@ h1 {
     right: 0;
   }
 }
+@media screen and (width: 425px) {
+  .cooperation-section {
+    padding: 2.5rem;
+  }
+
+  .cooperation-container {
+    grid-template-columns: 1fr; /* Xếp cột để tránh chồng lấn */
+    gap: 1rem;
+  }
+
+  .cooperation-banner {
+    width: 100%;
+    height: auto;
+    padding: 1.6rem;
+    border-radius: 1rem;
+  }
+
+  .banner-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .banner-content .subtitle-1,
+  .banner-content .description-1 {
+    font-size: 0.9rem;
+  }
+
+  .banner-image {
+    width: 10rem;
+  }
+
+  /* Customer Trust Section */
+  .circle-layout {
+    width: 16rem;
+    height: 16rem;
+  }
+
+  .image-main {
+    width: 7.5rem;
+    height: 7.5rem;
+    left: 8.5rem;
+  }
+
+  .image-left {
+    width: 6.5rem;
+    height: 6.5rem;
+    top: 2.5rem;
+    left: 1.25rem;
+  }
+
+  .badge-center {
+    width: 5.25rem;
+    height: 5.25rem;
+    top: 4.75rem;
+    left: 6rem;
+    font-size: 0.85rem;
+  }
+
+  .image-bottom {
+    width: 4rem;
+    height: 4rem;
+    top: 9.25rem;
+    left: 6.25rem;
+  }
+}
 
 /*------------------------- Desktop lớn: >= 1200px -------------------------*/
 @media (min-width: 1200px) {
@@ -2801,7 +2891,7 @@ h1 {
 }
 
 
-/* @media (min-width: 1440px) {
+@media (min-width: 1440px) {
   .home-container,
   .cooperation-container,
   .customer-trust-container,
@@ -2831,7 +2921,7 @@ h1 {
   .marquee-img {
     height: 300px;
   }
-} */
+}
 
 
 /* @media (min-width: 1920px) {
@@ -2897,4 +2987,206 @@ h1 {
     height: 400px;
   }
 } */
+
+/* =========================================
+ Responsive màn hình lớn: 3000px - 5000px
+   Áp dụng cho toàn bộ section trong ComHome.vue
+========================================= */
+
+@media screen and (min-width: 3000px) {
+  section {
+    max-width: 4600px;
+    margin: 0 auto;
+    padding: 4rem 6rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 4rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.4rem;
+    padding: 1.2rem 2.5rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.3);
+  }
+
+  .project-card.large {
+    min-height: 50rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 2rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.4rem;
+  }
+
+  .achievement-logo img {
+    height: 6rem;
+  }
+
+  .achievement-content {
+    max-width: 120rem;
+  }
+
+  .marquee-img {
+    height: 300px;
+    margin-right: 36px;
+  }
+
+  .partner-logos img {
+    height: 4rem;
+  }
+}
+
+@media screen and (min-width: 4000px) {
+  section {
+    max-width: 5400px;
+    padding: 5rem 7rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 4.8rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 2rem;
+    line-height: 3.2rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.6rem;
+    padding: 1.5rem 3rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.5);
+  }
+
+  .project-card.large {
+    min-height: 60rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 2.4rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.6rem;
+  }
+
+  .achievement-logo img {
+    height: 7rem;
+  }
+
+  .marquee-img {
+    height: 360px;
+    margin-right: 40px;
+  }
+
+  .partner-logos img {
+    height: 5rem;
+  }
+}
+
+@media screen and (min-width: 5000px) {
+  section {
+    max-width: 6400px;
+    padding: 6rem 8rem;
+  }
+
+  .hero-title,
+  .commit-title,
+  .successfull-content h2,
+  .achievements-title,
+  .inspiration-title,
+  .companion-text h2 {
+    font-size: 5.5rem;
+  }
+
+  .hero-description,
+  .commit-desc,
+  .successfull-content p,
+  .inspiration-desc,
+  .achievement-content,
+  .companion-text p {
+    font-size: 2.2rem;
+    line-height: 3.6rem;
+  }
+
+  .hero-section .start-btn,
+  .cta-button,
+  .inspiration-btn,
+  .companion-btn {
+    font-size: 1.8rem;
+    padding: 2rem 4rem;
+  }
+
+  .trust-card,
+  .stats-card {
+    transform: scale(1.7);
+  }
+
+  .project-card.large {
+    min-height: 70rem;
+  }
+
+  .project-overlay h3 {
+    font-size: 3rem;
+  }
+
+  .project-overlay p {
+    font-size: 1.8rem;
+  }
+
+  .achievement-logo img {
+    height: 8rem;
+  }
+
+  .marquee-img {
+    height: 400px;
+    margin-right: 50px;
+  }
+
+  .partner-logos img {
+    height: 6rem;
+  }
+}
 </style>
