@@ -297,12 +297,60 @@ export default {
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
-
-/* Component specific styles */
 .add-account {
+  padding: 24px;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.form-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.password-input {
+  position: relative;
 }
 
 .toggle-password {
@@ -312,24 +360,96 @@ export default {
   transform: translateY(-50%);
   background: none;
   border: none;
+  padding: 8px;
   cursor: pointer;
   color: #6b7280;
+  transition: color 0.3s ease;
 }
 
-.password-input {
-  position: relative;
+.toggle-password:hover {
+  color: #3b82f6;
 }
 
-.toggle-switch,
-.switch-label,
-.status-text {
-  display: none;
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  display: block;
 }
 
-/* Responsive adjustments */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.error {
+  border-color: #dc2626;
+}
+
 @media (max-width: 768px) {
+  .add-account {
+    padding: 16px;
+  }
+
+  .form-container {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-account {
+    padding: 12px;
+  }
+
   .form-container {
     padding: 16px;
+    border-radius: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

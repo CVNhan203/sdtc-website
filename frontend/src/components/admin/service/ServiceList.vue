@@ -20,6 +20,18 @@
           <option value="agency">Agency</option>
         </select>
       </div>
+
+      <div class="action-buttons">
+        <router-link to="/admin/dich-vu/them-moi" class="action-btn add">
+          <i class="fas fa-plus"></i>
+          Thêm dịch vụ
+        </router-link>
+        <router-link to="/admin/dich-vu/thung-rac" class="action-btn trash">
+          <i class="fas fa-trash-alt"></i>
+          Thùng rác
+          <span v-if="deletedServicesCount" class="badge">{{ deletedServicesCount }}</span>
+        </router-link>
+      </div>
     </div>
 
     <!-- Service Table -->
@@ -27,18 +39,32 @@
       <table>
         <thead>
           <tr>
-            <th>STT</th>
-            <th>Ảnh</th>
-            <th>Tiêu đề</th>
-            <th>Giá</th>
-            <th>Loại</th>
-            <th>Thao tác</th>
+            <th style="width: 40px; text-align: center;">
+              <input
+                type="checkbox"
+                :checked="isAllSelected"
+                @change="toggleSelectAll"
+              />
+            </th>
+            <th style="width: 60px; text-align: center;">No.</th>
+            <th style="width: 70px; text-align: center;">Ảnh</th>
+            <th style="width: 30%; text-align: center;">Tiêu đề</th>
+            <th style="width: 15%; text-align: center;">Giá</th>
+            <th style="width: 15%; text-align: center;">Loại</th>
+            <th style="width: 20%; text-align: center;">Thao tác</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(service, index) in filteredServices" :key="service._id">
-            <td class="service-id">{{ index + 1 }}</td>
-            <td>
+            <td class="center-cell">
+              <input
+                type="checkbox"
+                :checked="isSelected(service._id)"
+                @change="toggleSelect(service._id)"
+              />
+            </td>
+            <td class="service-id center-cell">{{ index + 1 }}</td>
+            <td class="center-cell">
               <img
                 v-if="service.image"
                 :src="getImageUrl(service.image)"
@@ -47,11 +73,11 @@
               />
               <span v-else class="no-image">No image</span>
             </td>
-            <td class="truncate-text">{{ service.title }}</td>
-            <td>{{ formatPrice(service.price) }}</td>
-            <td>{{ formatType(service.type) }}</td>
+            <td class="truncate-text center-cell">{{ service.title }}</td>
+            <td class="center-cell">{{ formatPrice(service.price) }}</td>
+            <td class="center-cell">{{ formatType(service.type) }}</td>
 
-            <td class="actions-cell">
+            <td class="actions-cell center-cell">
               <div class="actions">
                 <button class="icon-btn info" @click="showDetails(service)">
                   <i class="fas fa-info-circle"></i>
@@ -95,6 +121,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3>Chi tiết dịch vụ</h3>
+          
           <button class="close-btn" @click="showDetailsModal = false">
             <i class="fas fa-times"></i>
           </button>
@@ -124,11 +151,11 @@
           </div>
           <div class="detail-item">
             <label>Mô tả:</label>
-            <p>{{ formatDescription(selectedService.description) }}</p>
+            <p style="white-space: pre-line;">{{ formatDescriptionNoBullet(selectedService.description) }}</p>
           </div>
           <div class="detail-item">
             <label>Loại:</label>
-            <p>{{ formatDescription(selectedService.type) }}</p>
+            <p>{{ formatTypeNoBullet(selectedService.type) }}</p>
           </div>
         </div>
       </div>
@@ -384,6 +411,7 @@ export default {
       uploadStatus: '',
       successMessage: '',
       errors: {},
+      selectedServices: [],
     }
   },
   computed: {
@@ -402,6 +430,12 @@ export default {
       }
 
       return result
+    },
+    isAllSelected() {
+      return (
+        this.filteredServices.length > 0 &&
+        this.filteredServices.every((service) => this.selectedServices.includes(service._id))
+      )
     },
   },
   methods: {
@@ -425,6 +459,22 @@ export default {
         return description.map((item) => `• ${item}`).join('\n')
       }
       return `• ${description.toString()}`
+    },
+    formatDescriptionNoBullet(description) {
+      if (!description) return ''
+      if (Array.isArray(description)) {
+        return description.join('\n')
+      }
+      return description.toString()
+    },
+    formatTypeNoBullet(type) {
+      // Hiển thị loại không có dấu đầu dòng, dùng tên tiếng Việt
+      const types = {
+        web: 'Website',
+        app: 'Ứng dụng',
+        agency: 'Agency',
+      }
+      return types[type] || type
     },
     handleSearch() {
       // Implement debounce if needed
@@ -948,6 +998,24 @@ export default {
         this.$refs.imageInput.value = ''
       }
     },
+    isSelected(id) {
+      return this.selectedServices.includes(id)
+    },
+    toggleSelect(id) {
+      const index = this.selectedServices.indexOf(id)
+      if (index === -1) {
+        this.selectedServices.push(id)
+      } else {
+        this.selectedServices.splice(index, 1)
+      }
+    },
+    toggleSelectAll() {
+      if (this.isAllSelected) {
+        this.selectedServices = []
+      } else {
+        this.selectedServices = this.filteredServices.map((service) => service._id)
+      }
+    },
   },
   created() {
     this.loadServices()
@@ -968,277 +1036,760 @@ export default {
 </script>
 
 <style scoped>
-/* Import the admin styles */
-@import '@/styles/admin.css';
-
-select {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  min-width: 160px;
-}
-/* Component specific overrides */
 .service-list {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  /* Thêm overflow-x cho toàn bộ modal/table */
   overflow-x: auto;
 }
 
+/* Header Actions */
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.search-filter {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+select {
+  padding: 10px 32px 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.action-btn.add {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.action-btn.add:hover {
+  background-color: #2563eb;
+}
+
+.action-btn.trash {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.action-btn.trash:hover {
+  background-color: #e5e7eb;
+}
+
+/* Table Styles */
+.table-container {
+  margin-top: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
 .service-image {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
   object-fit: cover;
-  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
 }
 
-.detail-image {
-  max-width: 200px;
-  height: auto;
-  border-radius: 4px;
-  margin-top: 0.5rem;
+.truncate-text {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
-.content {
-  text-align: left;
-  white-space: pre-line;
-  line-height: 1.5;
-  padding: 10px;
+.center-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
 }
 
+.actions-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Action Buttons in Table */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn.info {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+.icon-btn.edit {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.icon-btn.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+}
+
+/* Modal Styles */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 50;
+  padding: 16px;
 }
 
 .modal-content {
   background: white;
   border-radius: 12px;
-  width: 90%;
-  max-width: 800px;
+  width: 100%;
+  max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .modal-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .modal-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
+  font-size: 18px;
   font-weight: 600;
-  color: #2d3748;
+  color: #111827;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.close-btn:hover {
+  color: #374151;
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 24px;
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .actions-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-filter {
+    flex-direction: column;
+  }
+
+  .search-box {
+    max-width: none;
+  }
+
+  .action-buttons {
+    justify-content: stretch;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+}
+
+/* Form Specific Styles */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   font-weight: 500;
-  color: #4a5568;
+  color: #374151;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* Alert Messages */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-success {
+  background-color: #dcfce7;
+  color: #059669;
+  border: 1px solid #6ee7b7;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+/* Badge Styles */
+.badge {
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+
+/* Service Details Modal Styles */
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 20px 24px;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.detail-item {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.detail-item label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+
+.detail-item p {
+  font-size: 15px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  /* Thêm xử lý tràn nội dung */
+  overflow-x: auto;
+  word-break: break-word;
+  white-space: pre-line;
+  max-width: 100%;
+}
+
+.detail-item:has(.detail-image) {
+  grid-template-columns: 120px 1fr;
+}
+
+.detail-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 8px;
+}
+
+.no-image {
+  display: inline-block;
+  padding: 32px 48px;
+  background-color: #f1f5f9;
+  border-radius: 12px;
+  color: #94a3b8;
+  font-size: 14px;
+  text-align: center;
+}
+
+.detail-item:has(.detail-image) {
+  align-items: flex-start;
+}
+
+/* Scroll styling for modal content */
+.modal-content {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 3px;
+}
+
+/* Close button styling */
+.modal-header .close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f5f9;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.modal-header .close-btn:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Modal Details Styling */
+.detail-item {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.detail-item label {
+  display: block;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.detail-item p {
+  color: #111827;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.detail-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.status-badge.active {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.inactive {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Modal Header */
+.modal-header {
+  background: #fff;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  color: #6b7280;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #111827;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  background: #fff;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
 }
 
 .required {
-  color: #e53e3e;
-  margin-left: 2px;
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.form-group .error {
+  border-color: #dc2626;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.character-count {
+  color: #6b7280;
+  font-size: 12px;
+  text-align: right;
+  margin-top: 4px;
 }
 
 .info-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-input[type='text'],
-input[type='number'],
-select,
-textarea {
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: all 0.3s;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-}
-
+/* Image upload styling */
 .image-upload-container {
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed #e5e7eb;
   border-radius: 8px;
-  padding: 2rem;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
 .image-upload-container:hover {
-  border-color: #4299e1;
-  background-color: rgba(66, 153, 225, 0.05);
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
+
+.image-upload-container .file-input {
+  display: none;
 }
 
 .upload-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: #718096;
+  color: #6b7280;
 }
 
 .upload-placeholder i {
-  font-size: 2rem;
-  color: #4299e1;
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #9ca3af;
 }
 
 .upload-hint {
-  font-size: 0.875rem;
-  color: #a0aec0;
-  margin-top: 0.5rem;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 8px;
 }
 
 .image-preview {
   position: relative;
-  max-width: 300px;
-  margin: 0 auto;
+  display: inline-block;
 }
 
 .image-preview img {
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
 }
 
 .remove-image {
   position: absolute;
   top: -8px;
   right: -8px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 50%;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  background: white;
-  border: 1px solid #e2e8f0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
 .remove-image:hover {
-  background: #e53e3e;
-  border-color: #e53e3e;
-  color: white;
+  background: #b91c1c;
+  transform: scale(1.1);
 }
 
+/* Form actions */
 .form-actions {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.cancel-btn,
-.submit-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s;
-}
-
-.cancel-btn {
-  background: #edf2f7;
-  color: #4a5568;
-  border: 1px solid #e2e8f0;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
 .submit-btn {
-  background: #4299e1;
+  background-color: #3b82f6;
   color: white;
   border: none;
 }
 
-.cancel-btn:hover:not(:disabled) {
-  background: #e2e8f0;
-}
-
 .submit-btn:hover:not(:disabled) {
-  background: #3182ce;
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
 
-.cancel-btn:disabled,
-.submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.cancel-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
 }
 
-/* Validation styles */
-.error {
-  border-color: #e53e3e !important;
+.cancel-btn:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
 }
 
-.error-border {
-  border-color: #e53e3e !important;
-  border-style: solid !important;
-}
-
-.error-message {
-  color: #e53e3e;
-  font-size: 0.825rem;
-  display: block;
-  margin-top: 0.5rem;
-}
-
-.character-count {
-  display: block;
-  text-align: right;
-  font-size: 0.85rem;
-  color: #718096;
-  margin-top: 0.25rem;
-}
-
-.form-help-text {
-  display: block;
-  color: #718096;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-  font-style: italic;
-}
-
-/* Alert styles */
-.error-alert,
+/* Alert messages */
 .success-alert,
+.error-alert,
 .status-alert {
   padding: 12px 16px;
   border-radius: 8px;
@@ -1246,55 +1797,112 @@ textarea:focus {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.95rem;
-}
-
-.error-alert {
-  background-color: #ffe2e2;
-  color: #e53e3e;
-  border-left: 4px solid #e53e3e;
 }
 
 .success-alert {
-  background-color: #e6ffec;
-  color: #22c55e;
-  border-left: 4px solid #22c55e;
+  background-color: #dcfce7;
+  color: #059669;
+  border: 1px solid #6ee7b7;
+}
+
+.error-alert {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
 }
 
 .status-alert {
-  background-color: #ebf5ff;
-  color: #3b82f6;
-  border-left: 4px solid #3b82f6;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
 }
 
-.error-alert i,
-.success-alert i,
-.status-alert i {
-  font-size: 1.1rem;
+/* Disabled state */
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
 }
 
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
 @media (max-width: 640px) {
-  .modal-content {
-    width: 95%;
-    margin: 1rem;
-  }
-
   .info-section {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .form-actions {
     flex-direction: column;
   }
 
-  .cancel-btn,
-  .submit-btn {
+  .submit-btn,
+  .cancel-btn {
     width: 100%;
     justify-content: center;
   }
 }
 
-.file-input {
-  display: none;
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  position: relative;
+  transition: all 0.2s;
+  appearance: none;
+  background: white;
+}
+
+input[type="checkbox"]:checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
+
+/* Responsive fix cho modal chi tiết */
+@media (max-width: 900px) {
+  .modal-content {
+    max-width: 98vw;
+    min-width: 0;
+  }
+  .detail-item p {
+    font-size: 0.95rem;
+    padding: 4px 6px;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    max-width: 100vw;
+    min-width: 0;
+    padding: 0;
+  }
+  .detail-item {
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 8px;
+  }
+  .detail-item p {
+    font-size: 0.92rem;
+    padding: 4px 2px;
+    max-width: 100vw;
+  }
 }
 </style>

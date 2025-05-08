@@ -1,17 +1,28 @@
 <template>
   <div class="account-list">
-    <!-- Header actions -->
     <div class="header-actions">
-      <div class="search-filter">
-        <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Tìm kiếm theo tên hoặc email..."
-            @input="handleSearch"
-          />
+      <div class="left-actions">
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Tìm kiếm theo tên hoặc email..."
+              @input="handleSearch"
+            />
+          </div>
         </div>
+      </div>
+      <div class="action-buttons">
+        <router-link to="/admin/tai-khoan/them-moi" class="action-btn add">
+          <i class="fas fa-plus"></i>
+          Thêm mới
+        </router-link>
+        <router-link to="/admin/tai-khoan/thung-rac" class="action-btn trash">
+          <i class="fas fa-trash"></i>
+          Thùng rác
+        </router-link>
       </div>
     </div>
 
@@ -188,6 +199,19 @@ export default {
     const showRestoreModal = ref(false)
     const showDeletePermanentModal = ref(false)
     const selectedAccount = ref({})
+
+    // Add these new ref variables
+    const showEditModal = ref(false)
+    const editFormData = ref({
+      _id: '',
+      fullName: '',
+      email: '',
+      role: ''
+    })
+    const editErrors = ref({})
+    const editError = ref(null)
+    const editSuccess = ref(null)
+    const editLoading = ref(false)
 
     // Computed property for filtered accounts
     const filteredAccounts = computed(() => {
@@ -489,169 +513,278 @@ export default {
       handleSearch,
       handleFilter,
       truncateId,
+      showEditModal,
+      editFormData,
+      editErrors,
+      editError,
+      editSuccess,
+      editLoading,
+      openEditModal,
+      handleEditSubmit,
     }
   },
 }
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
-
-/* Chỉ giữ lại các style đặc biệt nếu cần, xóa style modal-content, form-group, form-actions, submit-btn, cancel-btn... để dùng style từ admin.css */
-
-.role-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.role-badge.admin {
-  background-color: #e0f2fe;
-  color: #0369a1;
-}
-
-.role-badge.staff {
-  background-color: #f3e8ff;
-  color: #7e22ce;
-}
-
-.icon-btn.activate {
-  background-color: #10b981;
-  color: white;
-}
-
-.icon-btn.activate:hover {
-  background-color: #059669;
-}
-
-.icon-btn.deactivate {
-  background-color: #ef4444;
-  color: white;
-}
-
-.icon-btn.deactivate:hover {
-  background-color: #dc2626;
-}
-
-@media (max-width: 600px) {
-  .modal-content {
-    padding: 8px 2px !important;
-    max-width: 98vw;
-  }
-}
-
-/* Edit Modal Styles */
-.modal-content {
-  max-width: 500px;
-  width: 90%;
+/* Container */
+.account-list {
   padding: 24px;
+  background: #fff;
   border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.modal-content h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
-}
-
-.form-group input.error,
-.form-group select.error {
-  border-color: #ef4444;
-}
-
-.error-message {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.required {
-  color: #ef4444;
-  margin-left: 2px;
-}
-
-.form-actions {
+/* Header Actions */
+.header-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
 }
 
-.submit-btn,
-.cancel-btn {
-  padding: 0.75rem 1.5rem;
+.search-box {
+  position: relative;
+  width: 320px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  font-weight: 500;
+  font-size: 14px;
   transition: all 0.2s;
 }
 
-.submit-btn {
-  background-color: #2563eb;
+.search-box input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.accounts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.accounts-table th {
+  background: #f9fafb;
+  padding: 12px 16px;
+  text-align: center; /* căn giữa tiêu đề bảng */
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.accounts-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+  text-align: center; /* căn giữa nội dung bảng */
+}
+
+.accounts-table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.action-btn.add {
+  background-color: #3b82f6;
   color: white;
 }
 
-.submit-btn:hover {
-  background-color: #1d4ed8;
+.action-btn.add:hover {
+  background-color: #2563eb;
 }
 
-.submit-btn:disabled {
-  background-color: #93c5fd;
-  cursor: not-allowed;
-}
-
-.cancel-btn {
+.action-btn.trash {
   background-color: #f3f4f6;
   color: #4b5563;
 }
 
-.cancel-btn:hover {
+.action-btn.trash:hover {
   background-color: #e5e7eb;
 }
 
-.success-alert,
-.error-alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+.icon-btn {
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
-.success-alert {
+.icon-btn.edit {
+  background-color: #60a5fa;
+  color: white;
+}
+
+.icon-btn.edit:hover {
+  background-color: #3b82f6;
+}
+
+.icon-btn.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.icon-btn.delete:hover {
+  background-color: #ef4444;
+}
+
+.icon-btn.restore {
+  background-color: #34d399;
+  color: white;
+}
+
+.icon-btn.restore:hover {
+  background-color: #10b981;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f4f6;
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .account-list {
+    padding: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .table-container {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+}
+
+/* Status and Role Badges */
+.status-badge,
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-badge.active {
   background-color: #dcfce7;
   color: #166534;
 }
 
-.error-alert {
+.status-badge.deleted {
   background-color: #fee2e2;
   color: #991b1b;
+}
+
+/* Custom Variables */
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --success-color: #10b981;
+  --success-hover: #059669;
 }
 </style>

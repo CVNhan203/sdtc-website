@@ -23,7 +23,7 @@
           class="bulk-action-btn restore" 
           @click="confirmBulkRestore"
         >
-          <i class="fas fa-trash-restore"></i>
+          <i class="fas fa-rotate-left"></i>
           Khôi phục đã chọn
         </button>
         <button 
@@ -31,7 +31,7 @@
           class="bulk-action-btn delete" 
           @click="confirmBulkDelete"
         >
-          <i class="fas fa-trash-alt"></i>
+          <i class="fas fa-trash"></i>
           Xóa vĩnh viễn đã chọn
         </button>
       </div>
@@ -54,7 +54,7 @@
                 @change="toggleSelectAll"
               >
             </th>
-            <th>STT</th>
+            <th>No.</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Ngày xóa</th>
@@ -81,14 +81,14 @@
                   @click="confirmRestore(account)"
                   title="Khôi phục"
                 >
-                  <i class="fas fa-trash-restore"></i>
+                  <i class="fas fa-rotate-left"></i>
                 </button>
                 <button 
                   class="icon-btn delete" 
                   @click="confirmDelete(account)"
                   title="Xóa vĩnh viễn"
                 >
-                  <i class="fas fa-trash-alt"></i>
+                  <i class="fas fa-trash"></i>
                 </button>
               </div>
             </td>
@@ -346,40 +346,384 @@ export default {
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
+.trash-accounts {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  position: relative;
+}
 
-/* Component specific styles */
-.bulk-action-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  cursor: pointer;
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.header-actions {
+  margin-bottom: 24px;
+}
+
+.actions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-filter {
+  flex: 1;
+  min-width: 280px;
+}
+
+.search-box {
+  position: relative;
+  max-width: 400px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.search-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.error-container {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.error-message {
+  color: #ef4444;
+  margin-bottom: 16px;
+}
+
+.retry-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   font-weight: 500;
+  transition: all 0.2s;
+}
+
+.retry-btn:hover {
+  background: #2563eb;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  background: #f8fafc;
+  padding: 12px 16px;
+  text-align: center; /* căn giữa tiêu đề bảng */
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  text-align: center; /* căn giữa nội dung bảng */
+}
+
+tr:hover {
+  background-color: #f8fafc;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.bulk-action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.bulk-action-btn.restore {
+  background: #0ea5e9;
+  color: white;
+}
+
+.bulk-action-btn.restore:hover {
+  background: #0284c7;
+}
+
+.bulk-action-btn.delete {
+  background: #ef4444;
+  color: white;
+}
+
+.bulk-action-btn.delete:hover {
+  background: #dc2626;
+}
+
+.icon-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn i {
+  font-size: 14px;
 }
 
 .icon-btn.restore {
-  background-color: #dcfce7;
+  background: #dcfce7;
   color: #166534;
 }
 
 .icon-btn.restore:hover {
-  background-color: #bbf7d0;
+  background: #bbf7d0;
+}
+
+.icon-btn.delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.icon-btn.delete:hover {
+  background: #fecaca;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.submit-btn, .delete-btn, .cancel-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #0ea5e9;
+  color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #cbd5e1;
+}
+
+[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.warning-text {
+  color: #ef4444;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
 .empty-message {
   text-align: center;
-  color: var(--text-tertiary);
-  padding: var(--spacing-lg);
+  padding: 48px 0;
+  color: #64748b;
   font-style: italic;
 }
 
+/* Custom checkbox styles */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  position: relative;
+  transition: all 0.2s;
+  appearance: none;
+  background: white;
+}
+
+input[type="checkbox"]:checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .header-actions {
+  .trash-accounts {
+    padding: 16px;
+  }
+
+  .actions-header {
     flex-direction: column;
-    align-items: flex-start;
+  }
+
+  .search-filter {
+    width: 100%;
+  }
+
+  .bulk-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .table-container {
+    margin: 0 -16px;
+    border-radius: 0;
   }
 }
 </style>

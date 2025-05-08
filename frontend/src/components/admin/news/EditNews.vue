@@ -752,7 +752,7 @@ export default {
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
+/* @import '@/styles/admin.css'; */
 
 /* Component-specific styles that aren't in admin.css */
 .edit-news {
