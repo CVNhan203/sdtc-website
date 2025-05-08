@@ -398,7 +398,9 @@
     <div class="companion-text">
       <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
       <p>
-        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển <br> bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
+        Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
+        thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
+        kết của chúng tôi.
       </p>
     </div>
     <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
@@ -406,7 +408,6 @@
 </section>
 </template>
 
-<!-- đây là script -->
 <script>
 import { Carousel, Slide } from 'vue3-carousel'
 export default {
@@ -419,7 +420,6 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
-      
       achievements: [
         {
           logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),
@@ -446,7 +446,6 @@ export default {
           role: 'CEO Công ty Thương mại Tiền Bạc',
         },
       ],
-      
     }
   },
   mounted() {
@@ -730,7 +729,7 @@ h1 {
 /*-------------------------------------- Sếp bên trái --------------------------------------*/
 .cooperation-section {
   padding: 2rem;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .cooperation-container {
@@ -748,7 +747,7 @@ h1 {
   padding: 2rem;
   position: relative;
   height: 19.25rem; /* 308px */
-  width: 22.75rem;  /* 364px */
+  width: 22.75rem; /* 364px */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -879,7 +878,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .commit-timeline-container {
@@ -1117,7 +1116,7 @@ h1 {
   width: 100%;
   margin: 0;
   padding: 0;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .customer-trust-container {
@@ -1246,7 +1245,7 @@ h1 {
 /*-------------------------------------- Section Thành công vượt bậc -------------------------------------- */
 .successfull {
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 3rem 0 4rem 0; /* 48px 0 64px 0 */
   display: flex;
   flex-direction: column;
@@ -1287,7 +1286,7 @@ h1 {
   min-height: 20rem; /* 320px */
   display: flex;
   align-items: flex-end;
-  box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.10); /* 8px 32px */
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1); /* 8px 32px */
 }
 
 .project-card.large {
@@ -1312,7 +1311,10 @@ h1 {
   object-fit: cover;
   display: block;
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
   filter: brightness(62%);
 }
@@ -1336,10 +1338,10 @@ h1 {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color:#D1D4DC
+  color: #d1d4dc;
 }
 
-.custom-button{
+.custom-button {
   padding: 0.75rem 1.5rem; /* 12px 24px */
   background: linear-gradient(90deg, #0057ff, #3c8bff);
   border: none;
@@ -1356,8 +1358,6 @@ h1 {
   box-shadow: 0 0.75rem 1.75rem rgba(0, 87, 255, 0.35); /* 12px 28px */
   transform: translateY(-0.125rem); /* -2px */
 }
-
-
 
 /*-------------------------------------- Nguồn cảm hứng -------------------------------------- */
 .inspiration-section {
@@ -1447,15 +1447,23 @@ h1 {
   display: block;
 }
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 .marquee-reverse .marquee-group {
   animation: marquee-reverse 32s linear infinite;
 }
 @keyframes marquee-reverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /*-------------------------------------- Thành tựu nổi bật --------------------------------------*/
@@ -1614,7 +1622,7 @@ h1 {
   display: flex;
   padding-bottom: 2.5rem; /* 40px */
   justify-content: center;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .companion-content {
@@ -1653,7 +1661,9 @@ h1 {
   padding: 1.125rem 2rem; /* 18px 32px */
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  transition:
+    background 0.18s,
+    color 0.18s;
   box-shadow: 0 0.25rem 1.5rem rgba(37, 99, 235, 0.08); /* 4px 24px */
 }
 
@@ -2240,4 +2250,3 @@ h1 {
   }
 }
 </style>
-

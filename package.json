@@ -13,8 +13,10 @@
   "author": "Ho Tan Sanh",
   "license": "ISC",
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "basic-auth": "^2.0.1",
     "bcryptjs": "^3.0.2",
+    "bootstrap": "^5.3.6",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
@@ -29,6 +31,7 @@
     "nodemailer": "^6.10.1",
     "prettier": "^3.5.3",
     "vue-router": "^4.5.1",
+    "vue-toastification": "^2.0.0-rc.5",
     "vue3-carousel": "^0.15.1"
   },
   "devDependencies": {
