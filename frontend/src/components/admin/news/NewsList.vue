@@ -40,7 +40,6 @@
               <th>Ảnh</th>
               <th style="max-width: 250px">Tiêu đề</th>
               <th>Loại</th>
-              <th class="responsive-hide">Tác giả</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -66,8 +65,6 @@
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
               <td class="type-cell">{{ news.type }}</td>
-              <td class="responsive-hide">{{ news.author }}</td>
-              <!-- Các nút thao tác trên từng tin tức -->
               <td class="actions-cell">
                 <div class="actions">
                   <!-- Nút xem chi tiết -->
@@ -154,14 +151,6 @@
               <p>{{ news.type }}</p>
             </div>
             <div class="detail-item">
-              <label>Tác giả:</label>
-              <p>{{ selectedNews.author }}</p>
-            </div>
-            <div class="detail-item">
-              <label>Ngày đăng:</label>
-              <p>{{ formatDate(selectedNews.publishedDate) }}</p>
-            </div>
-            <div class="detail-item">
               <label>Trạng thái:</label>
               <p>
                 <span :class="['status-badge', selectedNews.isDeleted ? 'inactive' : 'active']">
@@ -192,14 +181,6 @@
               <div class="form-group">
                 <label>Phân loại</label>
                 <input type="text" v-model="formData.type" required placeholder="Nhập phân loại tin tức" maxlength="50" />
-              </div>
-              <div class="form-group">
-                <label>Tác giả</label>
-                <input type="text" v-model="formData.author" required />
-              </div>
-              <div class="form-group">
-                <label>Ngày đăng</label>
-                <input type="date" v-model="formData.publishedDate" required />
               </div>
               <div class="form-group">
                 <label>Ảnh</label>
@@ -328,8 +309,6 @@ export default {
       content: '',
       image: null,
       type: '',
-      author: '',
-      publishedDate: '',
       isDeleted: false,
     }) // Dữ liệu form
     const imagePreview = ref(null) // URL xem trước ảnh
@@ -418,8 +397,6 @@ export default {
             summary: newsDetail.summary || '',
             content: newsDetail.content || '',
             type: newsDetail.type || '',
-            author: newsDetail.author || '',
-            publishedDate: newsDetail.publishedDate ? new Date(newsDetail.publishedDate).toISOString().split('T')[0] : '',
             image: newsDetail.image || null,
             isDeleted: newsDetail.isDeleted || false
           }
@@ -553,8 +530,6 @@ export default {
         content: '',
         image: null,
         type: '',
-        publishedDate: new Date().toISOString().split('T')[0],
-        author: '',
         view: 0,
         like: 0,
         isDeleted: false,
