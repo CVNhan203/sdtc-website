@@ -21,4 +21,29 @@ router.post('/', authMiddleware, adminMiddleware, createService)
 router.put('/:id', authMiddleware, adminMiddleware, updateService)
 router.delete('/:id', authMiddleware, adminMiddleware, deleteService)
 
+// Route upload ảnh
+router.post('/upload', authMiddleware, upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Không có file được tải lên'
+      })
+    }
+
+    // Trả về đường dẫn tương đối của file
+    const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn cho Windows
+    res.status(200).json({
+      success: true,
+      imagePath,
+      message: 'Tải ảnh lên thành công'
+    })
+  } catch (error) {
+    console.error('Error uploading image:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi tải ảnh lên'
+    })
+  }
+})
 module.exports = router
