@@ -197,19 +197,19 @@ export default {
   gap: 40px;
 }
 
+/* Điều chỉnh style cho card dịch vụ */
 .price-card {
-  width: 407;
-  height: 570;
-  gap: 36px;
-  border-radius: 37px;
-  border-width: 1px;
-  padding-top: 50px;
-  padding-right: 12px;
-  padding-bottom: 18px;
-  padding-left: 12px;
+  width: 100%;
+  height: auto;
+  min-height: 570px;
+  padding: 50px 24px 24px; /* Tăng padding hai bên */
   background: rgba(227, 242, 253, 1);
   border: 1px solid rgba(179, 229, 252, 1);
+  border-radius: 37px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .price-card:hover {
@@ -232,16 +232,18 @@ export default {
   left: 143.5px;
   object-fit: contain;
 }
-h3 {
-  width: 283;
-  height: 35;
-  gap: 10px;
 
-  text-align: center;
-  color: rgba(0, 74, 173, 1);
+/* Điều chỉnh khoảng cách và size cho tiêu đề */
+h3 {
+  width: 100%;
+  min-height: 35px;
+  margin: 16px 0;
   font-size: 20px;
-  font-weight: 600;
-  margin: 16px 0 8px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: rgba(0, 74, 173, 1);
+  text-align: center;
 }
 
 .price {
@@ -274,30 +276,41 @@ h3 {
   width: fit-content;
 }
 
+/* Điều chỉnh style cho features */
 .features {
-  width: 383;
-  height: 214;
+  width: 100%;
+  height: auto;
   border-radius: 15px;
-  padding: 10px;
-  gap: 10px;
+  padding: 16px;
   background: rgba(203, 233, 255, 1);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .features li {
-  margin: 10px 0;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  color: #333;
-  font-size: 14px;
+  align-items: flex-start; /* Đổi từ center thành flex-start */
+  gap: 12px;
+  padding: 8px 0;
+  margin: 0;
 }
 
-.feature-icon {
-  width: 20px;
-  height: 20px;
+.feature-icon-wrapper {
   flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.feature-content {
+  flex: 1;
+  min-width: 0; /* Quan trọng để text wrap đúng */
+}
+
+.feature-text {
+  display: block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  font-size: 14px;
 }
 
 .page-indicator {
