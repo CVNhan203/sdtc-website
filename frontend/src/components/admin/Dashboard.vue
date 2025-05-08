@@ -9,136 +9,65 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
-        <img src="@/assets/logo.png" alt="Logo" class="logo" />
-        <h2>SDTC Admin</h2>
+        <img src="@/assets/sdtc-image/trang-chu/Logo/sdtc.png" alt="Logo" class="logo" />
       </div>
       <!-- Tổng quan Dashboard chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isDashboardActive }">
-          <router-link to="/admin/dashboard" class="nav-item-content" active-class="active">
+        <router-link to="/admin/dashboard" class="nav-item" :class="{ active: isDashboardActive }">
+          <div class="nav-item-content">
             <i class="fas fa-tachometer-alt"></i>
             <span>Tổng quan</span>
-          </router-link>
-        </div>
+          </div>
+        </router-link>
       </div>
       <!-- Quản lý Dịch vụ chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isServiceMenuActive }" @click="toggleServiceMenu">
+        <router-link to="/admin/dich-vu/danh-sach" class="nav-item" :class="{ active: isServiceMenuActive }">
           <div class="nav-item-content">
             <i class="fas fa-cogs"></i>
             <span>Quản lý Dịch vụ</span>
           </div>
-          <i class="fas" :class="isServiceMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isServiceMenuOpen">
-          <router-link to="/admin/dich-vu/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách dịch vụ</span>
-          </router-link>
-          <router-link to="/admin/dich-vu/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-plus"></i>
-            <span>Thêm dịch vụ mới</span>
-          </router-link>
-          <router-link to="/admin/dich-vu/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-            <!-- <span v-if="deletedServicesCount" class="badge">{{ deletedServicesCount }}</span> -->
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Tin tức hiển thị cho mọi role -->
       <div class="nav-group">
-        <div class="nav-item" :class="{ active: isNewsMenuActive }" @click="toggleNewsMenu">
+        <router-link to="/admin/tin-tuc/danh-sach" class="nav-item" :class="{ active: isNewsMenuActive }">
           <div class="nav-item-content">
             <i class="fas fa-newspaper"></i>
             <span>Quản lý Tin tức</span>
           </div>
-          <i class="fas" :class="isNewsMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isNewsMenuOpen">
-          <router-link to="/admin/tin-tuc/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách tin tức</span>
-          </router-link>
-          <router-link to="/admin/tin-tuc/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-plus"></i>
-            <span>Thêm tin tức mới</span>
-          </router-link>
-          <router-link to="/admin/tin-tuc/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-            <!-- <span v-if="deletedNewsCount" class="badge">{{ deletedNewsCount }}</span> -->
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Đơn hàng chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isOrderMenuActive }" @click="toggleOrderMenu">
+        <router-link to="/admin/don-hang/danh-sach" class="nav-item" :class="{ active: isOrderMenuActive }">
           <div class="nav-item-content">
             <i class="fas fa-shopping-cart"></i>
             <span>Quản lý Đơn hàng</span>
           </div>
-          <i class="fas" :class="isOrderMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isOrderMenuOpen">
-          <router-link to="/admin/don-hang/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách đơn hàng</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Đặt lịch chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isBookingMenuActive }" @click="toggleBookingMenu">
+        <router-link to="/admin/dat-lich/danh-sach" class="nav-item" :class="{ active: isBookingMenuActive }">
           <div class="nav-item-content">
             <i class="fas fa-calendar-check"></i>
             <span>Quản lý Đặt lịch</span>
           </div>
-          <i class="fas" :class="isBookingMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isBookingMenuOpen">
-          <router-link to="/admin/dat-lich/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách đặt lịch</span>
-          </router-link>
-          <router-link to="/admin/dat-lich/cho-xu-ly" class="submenu-item" active-class="active">
-            <i class="fas fa-clock"></i>
-            <span>Đặt lịch chờ xử lý</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
-      <!-- Thêm mục Quản lý Tài khoản chỉ hiển thị cho admin -->
+      <!-- Quản lý Tài khoản chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isAccountMenuActive }" @click="toggleAccountMenu">
+        <router-link to="/admin/tai-khoan/danh-sach" class="nav-item" :class="{ active: isAccountMenuActive }">
           <div class="nav-item-content">
             <i class="fas fa-users-cog"></i>
             <span>Quản lý Tài khoản</span>
           </div>
-          <i class="fas" :class="isAccountMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isAccountMenuOpen">
-          <router-link to="/admin/tai-khoan/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách tài khoản</span>
-          </router-link>
-          <router-link to="/admin/tai-khoan/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-user-plus"></i>
-            <span>Thêm tài khoản mới</span>
-          </router-link>
-          <router-link to="/admin/tai-khoan/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <div class="sidebar-footer">
@@ -166,7 +95,7 @@
 
         <!-- <div class="header-right">
           <div class="admin-profile">
-            <img src="@/assets/avatar-placeholder.png" alt="Admin" class="avatar" />
+            <img src="@/assets/Logo/sdtc.png" alt="Admin" class="avatar" />
             <span class="admin-name">Admin</span>
           </div>
         </div> -->
@@ -190,7 +119,7 @@ export default {
       isSidebarCollapsed: false,
       isSidebarOpen: false,
       isServiceMenuOpen: false,
-      isNewsMenuOpen: false,
+      isNewsMenuOpen: false, // You can remove this line since we no longer need it
       isOrderMenuOpen: false,
       isAccountMenuOpen: false,
       isBookingMenuOpen: false,
@@ -285,9 +214,7 @@ export default {
     toggleServiceMenu() {
       this.isServiceMenuOpen = !this.isServiceMenuOpen
     },
-    toggleNewsMenu() {
-      this.isNewsMenuOpen = !this.isNewsMenuOpen
-    },
+    // You can remove the toggleNewsMenu method since we no longer need it
     toggleOrderMenu() {
       this.isOrderMenuOpen = !this.isOrderMenuOpen
     },
@@ -391,7 +318,7 @@ export default {
 /* Sidebar Styles */
 .sidebar {
   width: 330px;
-  background: #2c3e50;
+  background: #000000;
   color: white;
   display: flex;
   flex-direction: column;
@@ -423,8 +350,8 @@ export default {
 }
 
 .logo {
-  width: 36px;
-  height: 36px;
+  width: 360px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -453,9 +380,9 @@ export default {
 }
 
 .nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: block; /* Change to block */
+  text-decoration: none;
+  color: white;
   padding: 1rem 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -618,11 +545,9 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* Đảm bảo main-content chiếm toàn bộ chiều cao và cuộn độc lập */
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   margin-left: 0;
-  overflow-y: hidden;
 }
 
 .sidebar-collapsed .main-content {
@@ -679,8 +604,7 @@ export default {
 .content-area {
   padding: 2rem;
   flex: 1;
-  overflow-y: auto;
-  height: 0;
+  overflow: auto;
 }
 
 /* Mobile Overlay */
@@ -756,16 +680,27 @@ export default {
 }
 
 /* Khi hover vào sidebar, chỉ sidebar cuộn */
-.sidebar:hover {
-  overflow-y: auto;
+.sidebar {
+  overflow: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
+
+.sidebar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+.sidebar:hover {
+  overflow: auto;
+}
+
 .sidebar:hover ~ .main-content {
-  overflow-y: hidden;
+  overflow: auto;
 }
 
 /* Khi hover vào main-content, chỉ main-content cuộn */
 .main-content:hover {
-  overflow-y: auto;
+  overflow: auto;
 }
 
 /* Thêm style cho nút toggle */
@@ -777,7 +712,7 @@ export default {
   cursor: pointer;
   padding: 0.5rem;
   margin-right: 1rem;
-  display: flex;
+  display: none; /* Ẩn mặc định trên desktop */
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
@@ -812,7 +747,7 @@ export default {
 /* Responsive styles */
 @media (max-width: 768px) {
   .toggle-sidebar {
-    display: block;
+    display: block; /* Chỉ hiện trên mobile/tablet */
   }
   
   .sidebar {

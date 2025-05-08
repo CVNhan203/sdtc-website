@@ -17,16 +17,30 @@
     <template v-else>
       <!-- Thanh công cụ tìm kiếm và lọc -->
       <div class="actions-header">
-        <div class="search-filter">
-          <div class="search-box">
-            <!-- Icon tìm kiếm -->
-            <i class="fas fa-search"></i>
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Tìm kiếm theo tiêu đề..."
-              @input="handleSearch"
-            />
+        <div class="actions-left">
+          <div class="search-filter">
+            <div class="search-box">
+              <!-- Icon tìm kiếm -->
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Tìm kiếm theo tiêu đề..."
+                @input="handleSearch"
+              />
+            </div>
+          </div>
+
+          <!-- New buttons for Insert and Trash -->
+          <div class="action-buttons">
+            <button class="action-btn add" @click="$router.push('/admin/tin-tuc/them-moi')">
+              <i class="fas fa-plus"></i>
+              Thêm tin tức mới
+            </button>
+            <button class="action-btn trash" @click="$router.push('/admin/tin-tuc/thung-rac')">
+              <i class="fas fa-trash-alt"></i>
+              Thùng rác
+            </button>
           </div>
         </div>
       </div>
@@ -36,7 +50,15 @@
         <table>
           <thead>
             <tr>
-              <th>STT</th>
+              <th style="width: 70px;">
+                <input
+                  type="checkbox"
+                  :checked="isAllSelected"
+                  @change="toggleSelectAll"
+                  style="cursor:pointer"
+                />
+              </th>
+              <th style="width:6%;">No.</th>
               <th>Ảnh</th>
               <th style="max-width: 250px">Tiêu đề</th>
               <th>Loại</th>
@@ -47,6 +69,14 @@
           <tbody>
             <!-- Hiển thị từng dòng tin tức -->
             <tr v-for="(news, index) in filteredNews" :key="news._id">
+              <td>
+                <input
+                  type="checkbox"
+                  :checked="isSelected(news._id)"
+                  @change="toggleSelect(news._id)"
+                  style="cursor:pointer"
+                />
+              </td>
               <td class="news-id">{{ index + 1 }}</td>
               <!-- Ảnh đại diện tin tức -->
               <td>
@@ -65,7 +95,7 @@
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
               <td class="type-cell">{{ news.type }}</td>
-              <td class="actions-cell">
+              <td class="actions-cell" style="height: 120px !important;">
                 <div class="actions">
                   <!-- Nút xem chi tiết -->
                   <button class="icon-btn info" @click="showDetails(news)">
@@ -122,9 +152,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3>Chi tiết tin tức</h3>
-            <button class="close-btn" @click="showDetailsModal = false">
-              <i class="fas fa-times"></i>
-            </button>
+            <div class="modal-actions">
+              <button class="close-btn" @click="showDetailsModal = false">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
           </div>
           <div class="modal-body">
             <!-- Các trường thông tin chi tiết -->
@@ -156,7 +188,7 @@
             </div>
             <div class="detail-item">
               <label>Loại:</label>
-              <p>{{ news.type }}</p>
+              <p>{{ selectedNews.type }}</p>
             </div>
             <div class="detail-item">
               <label>Trạng thái:</label>
@@ -200,14 +232,6 @@
                 </span>
               </div>
               <div class="form-group">
-                <label>Tác giả</label>
-                <input type="text" v-model="formData.author" required />
-              </div>
-              <div class="form-group">
-                <label>Ngày đăng</label>
-                <input type="date" v-model="formData.publishedDate" required />
-              </div>
-              <div class="form-group">
                 <label>Ảnh</label>
                 <div class="image-upload">
                   <!-- Input chọn file ảnh -->
@@ -235,8 +259,12 @@
               </div>
               <!-- Các nút hành động form -->
               <div class="form-actions">
-                <button type="button" class="cancel-btn" @click="showFormModal = false">Hủy</button>
+                <button type="button" class="cancel-btn" @click="showFormModal = false">
+                  <i class="fas fa-times"></i>
+                  Hủy
+                </button>
                 <button type="submit" class="submit-btn">
+                  <i class="fas fa-save"></i>
                   {{ isEditing ? 'Cập nhật' : 'Thêm mới' }}
                 </button>
               </div>
@@ -343,6 +371,7 @@ export default {
     const isEditing = ref(false) // Trạng thái đang chỉnh sửa hay thêm mới
     const baseImageUrl = ref('http://localhost:3000') // URL cơ sở cho hình ảnh
     const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
+    const selectedNewsIds = ref([]) // Danh sách ID tin tức được chọn
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -364,6 +393,22 @@ export default {
 
       return filtered
     })
+
+    // Chọn tất cả
+    const isAllSelected = computed(() =>
+      filteredNews.value.length > 0 &&
+      filteredNews.value.every(news => selectedNewsIds.value.includes(news._id))
+    )
+    const isSelected = id => selectedNewsIds.value.includes(id)
+    const toggleSelect = id => {
+      const idx = selectedNewsIds.value.indexOf(id)
+      if (idx === -1) selectedNewsIds.value.push(id)
+      else selectedNewsIds.value.splice(idx, 1)
+    }
+    const toggleSelectAll = () => {
+      if (isAllSelected.value) selectedNewsIds.value = []
+      else selectedNewsIds.value = filteredNews.value.map(news => news._id)
+    }
 
     // Tải danh sách tin tức từ API
     const loadNews = async () => {
@@ -748,6 +793,15 @@ export default {
       imageLoadError.value[newsId] = true
     }
 
+    const openEditFromDetails = () => {
+      if (!canEditNews(selectedNews.value)) {
+        showPermissionError('sửa');
+        return;
+      }
+      showDetailsModal.value = false;
+      openEditModal(selectedNews.value);
+    }
+
     // Gọi khi component được tạo
     onMounted(() => {
       loadNews()
@@ -808,110 +862,615 @@ export default {
       canEditNews,
       canDeleteNews,
       showPermissionError,
+      openEditFromDetails,
+      selectedNewsIds,
+      isAllSelected,
+      isSelected,
+      toggleSelect,
+      toggleSelectAll,
     }
   },
 }
 </script>
 
 <style scoped>
-/* Nhập các styles chung từ file admin.css */
-@import '@/styles/admin.css';
+.news-list {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
 
-/* Tùy chỉnh kiểu dáng cho ảnh tin tức */
+/* Header Actions */
+.actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.actions-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  margin-left: 8px;
+  font-size: 0.95rem;
+}
+
+.search-box i {
+  color: #94a3b8;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto; /* Đẩy các nút sang phải */
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.add {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.action-btn.add:hover {
+  background-color: #4338ca;
+}
+
+.action-btn.trash {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.action-btn.trash:hover {
+  background-color: #e5e7eb;
+}
+
+/* Table Styling */
+.table-container {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: center;
+  vertical-align: middle;
+  /* Căn giữa toàn bộ nội dung bảng */
+}
+
+/* Căn giữa hình ảnh trong bảng */
 .image-container {
-  width: 70px;
-  height: 70px;
-  position: relative;
-  margin: 0 auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f3f4f6;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: var(--bg-secondary);
+  margin: 0 auto; /* Căn giữa container ảnh trong ô */
 }
 
-/* Kiểu dáng ảnh tin tức */
+/* Căn giữa các nút thao tác */
+.actions-cell,
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Image Styling */
 .news-image {
+  display: block;
+  margin: 0 auto; /* Căn giữa ảnh trong container */
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid var(--border-color);
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
-/* Hiệu ứng hover trên ảnh */
 .news-image:hover {
-  transform: scale(1.1);
-  border-color: var(--primary-color);
+  transform: scale(1.05);
 }
 
-/* Hiển thị khi không có ảnh */
 .no-image {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  border: 2px dashed var(--border-color);
-  color: var(--text-tertiary);
-}
-
-/* Icon hiển thị khi không có ảnh */
-.no-image i {
+  color: #9ca3af;
   font-size: 1.5rem;
 }
 
-/* Kiểu dáng cho tiêu đề bị cắt ngắn */
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 250px; /* Giới hạn chiều rộng tối đa */
-  padding: 0 10px;
+/* Action Buttons in Table */
+.icon-btn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Kiểu dáng ảnh trong phần xem chi tiết */
-.detail-image {
-  max-width: 300px;
-  max-height: 200px;
-  border-radius: var(--border-radius-md);
-  object-fit: contain;
-  border: 2px solid var(--border-color);
-  margin-top: var(--spacing-sm);
+.icon-btn.info {
+  background-color: #dbeafe;
+  color: #2563eb;
 }
 
-/* Vùng xem trước ảnh trong form */
-.image-preview {
-  margin-top: var(--spacing-sm);
-  position: relative;
-  width: 200px;
-  height: 150px;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  border: 2px solid var(--border-color);
+.icon-btn.edit {
+  background-color: #ecfdf5;
+  color: #059669;
 }
 
-/* Ảnh xem trước trong form */
-.image-preview img {
+.icon-btn.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+}
+
+.icon-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal Styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #fff;
+  transition: all 0.2s ease;
 }
 
-/* Nút xóa ảnh xem trước */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group .error {
+  border-color: #dc2626;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.character-count {
+  color: #6b7280;
+  font-size: 12px;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Image upload styling */
+.image-upload {
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.image-upload:hover {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
+
+.image-upload input[type="file"] {
+  display: none;
+}
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.image-preview img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
 .remove-image {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background: rgba(0, 0, 0, 0.6);
+  top: -8px;
+  right: -8px;
+  background: #dc2626;
   color: white;
-  width: 25px;
-  height: 25px;
   border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-image:hover {
+  background: #b91c1c;
+  transform: scale(1.1);
+}
+
+.upload-progress {
+  margin-top: 12px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 4px;
+  background: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn,
+.delete-btn,
+.permanent-delete-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.submit-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #fecaca;
+  transform: translateY(-1px);
+}
+
+.permanent-delete-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+}
+
+.permanent-delete-btn:hover:not(:disabled) {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+/* Warning text */
+.warning-text {
+  color: #dc2626;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background-color: #dcfce7;
+  color: #059669;
+}
+
+.status-badge.inactive {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #4f46e5;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  background-color: #4f46e5;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+  background-color: #4338ca;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .actions-header {
+    flex-direction: column;
+  }
+  
+  .actions-left {
+    width: 100%;
+  }
+
+  .actions-left {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+}
+
+/* Modal Details Styling */
+.detail-item {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.detail-item label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+
+.detail-item p {
+  font-size: 15px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.detail-item:has(.detail-image) {
+  grid-template-columns: 120px 1fr;
+}
+
+.detail-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 8px;
+}
+
+/* Modal Header Enhancement */
+.modal-header {
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.5rem 2rem;
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  background: linear-gradient(to right, #1e293b, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.close-btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -920,206 +1479,113 @@ export default {
   transition: all 0.2s ease;
 }
 
-/* Hiệu ứng hover trên nút xóa ảnh */
-.remove-image:hover {
-  background: var(--danger-color);
-}
-
-/* Thanh tiến trình tải ảnh */
-.upload-progress {
-  margin-top: var(--spacing-sm);
-  width: 100%;
-  height: 10px;
-  background-color: var(--bg-secondary);
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-/* Thanh tiến độ */
-.progress-bar {
-  height: 100%;
-  background-color: var(--primary-color);
-  transition: width 0.3s ease;
-}
-
-/* Modal Form Styles */
-.modal-content {
-  max-width: 800px;
-  width: 95%;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: var(--bg-primary);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.modal-header {
-  padding: 20px 25px;
-  background: var(--bg-secondary);
-  border-bottom: 2px solid var(--border-color);
-}
-
-.modal-header h3 {
-  font-size: 1.5rem;
-  color: var(--text-primary);
-  margin: 0;
+.close-btn:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  transform: rotate(90deg);
 }
 
 .modal-body {
-  padding: 25px;
+  padding: 2rem;
+  background: white;
 }
 
-/* Form Controls */
-.form-group {
-  margin-bottom: 20px;
+/* Animation Enhancements */
+.modal {
+  animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
 }
 
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-primary);
+.modal-content {
+  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
 }
 
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group textarea {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: 1rem;
-  transition: all 0.3s ease;
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
-  outline: none;
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-/* Image Upload Section */
-.image-upload {
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  background: var(--bg-secondary);
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.image-upload:hover {
-  border-color: var(--primary-color);
-  background: var(--bg-hover);
-}
-
-.image-upload input[type="file"] {
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.image-preview {
-  margin-top: 15px;
-  position: relative;
-  display: inline-block;
-}
-
-.image-preview img {
-  max-width: 300px;
-  max-height: 200px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Form Actions */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 2px solid var(--border-color);
-}
-
-.submit-btn,
-.cancel-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
-
-.submit-btn {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-}
-
-.submit-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-.cancel-btn {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
-}
-
-.cancel-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--text-secondary);
-}
-
-/* Upload Progress */
-.upload-progress {
-  margin-top: 15px;
-  height: 6px;
-  background: var(--bg-secondary);
-  border-radius: 3px;
+/* Content Formatting */
+.detail-item p.truncate-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-  transition: width 0.3s ease;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .modal-content {
-    width: 100%;
-    height: 100%;
-    max-height: 100vh;
-    border-radius: 0;
+/* Responsive Modal Content */
+@media (max-width: 640px) {
+  .detail-item label {
+    font-size: 0.875rem;
   }
 
-  .form-actions {
-    position: sticky;
-    bottom: 0;
-    background: var(--bg-primary);
-    padding: 15px;
-    margin: 0 -25px -25px;
+  .detail-item p {
+    font-size: 0.9375rem;
   }
 
-  .image-preview img {
+  .detail-image {
     max-width: 100%;
   }
+
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Modal Animation */
+.modal {
+  animation: modalFadeIn 0.3s ease;
+}
+
+.modal-content {
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+th input[type="checkbox"],
+td input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+  width: 18px;
+  height: 18px;
 }
 </style>

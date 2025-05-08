@@ -17,7 +17,7 @@
         <thead>
           <tr>
             <th>Họ tên</th>
-            <th>Email</th>
+            <!-- <th>Email</th> -->
             <th>Số điện thoại</th>
             <th>Dịch vụ</th>
             <th>Ngày đặt</th>
@@ -27,7 +27,7 @@
         <tbody>
           <tr v-for="booking in pendingBookings" :key="booking._id">
             <td>{{ booking.fullName }}</td>
-            <td>{{ booking.email }}</td>
+            <!-- <td>{{ booking.email }}</td> -->
             <td>{{ booking.phone }}</td>
             <td>{{ booking.service }}</td>
             <td>{{ formatDate(booking.createdAt) }}</td>
@@ -138,13 +138,17 @@ export default {
       this.selectedBooking = booking;
     },
     formatDate(date) {
-      return new Date(date).toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
+      const dateObj = new Date(date)
+      const dateString = dateObj.toLocaleDateString('vi-VN', {
         day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
+      const timeString = dateObj.toLocaleTimeString('vi-VN', {
         hour: '2-digit',
         minute: '2-digit'
-      });
+      })
+      return `${dateString} - ${timeString}`
     }
   },
   created() {
@@ -154,5 +158,231 @@ export default {
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
-</style> 
+.admin-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: center; /* căn giữa nội dung */
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* căn giữa các nút thao tác */
+.actions-cell {
+  width: 150px;
+  text-align: center; /* căn giữa cell */
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center; /* căn giữa các nút */
+  align-items: center;
+}
+
+.icon-btn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+}
+
+.info {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.edit {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.delete {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 800px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 2rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detail-item {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: flex-start;
+  transition: background-color 0.2s;
+}
+
+.detail-item:hover {
+  background-color: #f8f9fa;
+}
+
+.detail-item label {
+  font-weight: 600;
+  color: #495057;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #2c3e50;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  color: #343a40;
+  background-color: #e9ecef;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retry-btn:hover {
+  background-color: #0056b3;
+}
+</style>
