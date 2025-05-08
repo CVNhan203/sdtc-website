@@ -15,14 +15,6 @@
               @input="handleSearch"
             />
           </div>
-
-          <!-- Lọc theo loại tin tức -->
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="tin-tuc">Tin tức</option>
-            <option value="su-kien">Sự kiện</option>
-            <option value="thong-bao">Thông báo</option>
-          </select>
         </div>
 
         <!-- Nút khôi phục hàng loạt - chỉ hiển thị khi có mục được chọn -->
@@ -164,6 +156,7 @@
 
 <script>
 import eventBus from '@/eventBus'
+import newsService from '@/api/services/newsService'
 
 export default {
   name: 'AdminTrashNews',
@@ -183,8 +176,8 @@ export default {
   computed: {
     // Lọc tin tức dựa trên điều kiện tìm kiếm và lọc
     filteredNews() {
-      // Lọc chỉ những tin đã xóa
-      let result = this.news.filter((news) => news.isDeleted)
+      // Danh sách tin đã được lọc từ API
+      let result = this.news
 
       // Áp dụng bộ lọc tìm kiếm theo text
       if (this.searchQuery) {
@@ -211,15 +204,20 @@ export default {
     // Tải danh sách tin tức đã xóa từ localStorage
     async loadNews() {
       try {
-        // Lấy thông tin tin tức đã xóa từ localStorage
-        const deletedNewsInfo = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
-        this.news = deletedNewsInfo
+        // Lấy danh sách tin từ API thay vì localStorage
+        const response = await newsService.getNewsInTrash()
+        if (response && response.data) {
+          this.news = response.data
+        } else {
+          this.news = []
+        }
       } catch (error) {
         console.error('Error loading news:', error)
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Không thể tải danh sách tin tức đã xóa',
         })
+        this.news = []
       }
     },
     // Xử lý sự kiện tìm kiếm
@@ -302,15 +300,17 @@ export default {
     // Xử lý khôi phục tin tức
     async handleRestore() {
       try {
-        // Khôi phục các tin tức đã chọn
-        const deletedNewsInfoList = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
-        const remainingNews = deletedNewsInfoList.filter(
-          (news) => !this.selectedNews.includes(news._id)
-        )
-        localStorage.setItem('deletedNewsInfo', JSON.stringify(remainingNews))
+        // Gọi API để khôi phục các tin tức đã chọn
+        for (const id of this.selectedNews) {
+          try {
+            await newsService.restoreNews(id);
+          } catch (err) {
+            console.error('Error restoring news:', err);
+          }
+        }
 
-        // Cập nhật danh sách hiện tại
-        this.news = remainingNews
+        // Cập nhật danh sách
+        await this.loadNews()
 
         // Reset selection
         this.selectedNews = []
@@ -333,20 +333,23 @@ export default {
     // Xử lý xóa vĩnh viễn tin tức
     async handleDelete() {
       try {
-        // Xóa vĩnh viễn các tin tức đã chọn
-        const deletedNewsInfoList = JSON.parse(localStorage.getItem('deletedNewsInfo') || '[]')
-        const remainingNews = deletedNewsInfoList.filter(
-          (news) => !this.selectedNews.includes(news._id)
-        )
-        localStorage.setItem('deletedNewsInfo', JSON.stringify(remainingNews))
-
-        // Cập nhật danh sách hiện tại
-        this.news = remainingNews
-
-        // Reset selection
+        // Gọi API xóa vĩnh viễn từng tin tức đã chọn
+        for (const id of this.selectedNews) {
+          try {
+            await newsService.permanentDeleteNews(id)
+          } catch (err) {
+            // Nếu có lỗi khi xóa từng tin, vẫn tiếp tục xóa các tin khác
+            console.error('Error deleting news:', err)
+          }
+        }
+        
+        // Cập nhật danh sách
+        await this.loadNews()
+        
+        // Reset selection và đóng modal
         this.selectedNews = []
         this.showDeleteModal = false
-
+        
         // Thông báo thành công
         eventBus.emit('show-toast', {
           type: 'success',

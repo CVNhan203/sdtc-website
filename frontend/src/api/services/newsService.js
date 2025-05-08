@@ -81,7 +81,7 @@ const newsService = {
   // Khôi phục tin tức
   async restoreNews(id) {
     try {
-      const response = await api.patch(`/news/${id}/restore`)
+      const response = await api.patch(`/news/${id}/restore`, { isDeleted: false })
       return response.data
     } catch (error) {
       console.error('Error restoring news:', error)
@@ -99,6 +99,22 @@ const newsService = {
       throw error
     }
   },
+
+  // Lấy tin tức trong thùng rác
+  async getNewsInTrash() {
+    try {
+      const response = await api.get('/news/trash')
+      return {
+        data: response.data.data || [],
+        pagination: response.data.pagination || null,
+        message: response.data.message || '',
+      }
+    } catch (error) {
+      console.error('Error fetching news in trash:', error)
+      throw error
+    }
+  },
 }
 
 export default newsService
+      

@@ -12,13 +12,6 @@
               @input="handleSearch"
             />
           </div>
-
-          <select v-model="filterType" @change="handleFilter">
-            <option value="">Tất cả loại</option>
-            <option value="web">Website</option>
-            <option value="app">Ứng dụng</option>
-            <option value="agency">Agency</option>
-          </select>
         </div>
 
         <button
@@ -274,6 +267,9 @@ export default {
     async handleRestore() {
       try {
         for (const id of this.selectedServices) {
+          // Gọi API để khôi phục dịch vụ trong database
+          await serviceService.restoreService(id);
+          
           // Xóa khỏi danh sách đã xóa trong localStorage
           const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
           const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id)
@@ -294,17 +290,25 @@ export default {
         this.selectedServices = []
         this.showRestoreModal = false
         eventBus.emit('update-deleted-services-count')
+        eventBus.emit('show-toast', {
+          type: 'success',
+          message: 'Khôi phục dịch vụ thành công'
+        })
       } catch (error) {
         console.error('Error restoring services:', error)
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Có lỗi xảy ra khi khôi phục dịch vụ'
+        })
       }
     },
     async handleDelete() {
       try {
         for (const id of this.selectedServices) {
           // Xóa vĩnh viễn từ backend
-          await serviceService.deleteService(id)
+          await serviceService.permanentDeleteService(id)
 
-          // Xóa khỏi localStorage
+          // Xóa khỏi danh sách đã xóa trong localStorage
           const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
           const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id)
           localStorage.setItem('deletedServices', JSON.stringify(updatedDeletedServices))
@@ -323,8 +327,16 @@ export default {
         this.selectedServices = []
         this.showDeleteModal = false
         eventBus.emit('update-deleted-services-count')
+        eventBus.emit('show-toast', {
+          type: 'success',
+          message: 'Xóa vĩnh viễn dịch vụ thành công'
+        })
       } catch (error) {
         console.error('Error deleting services:', error)
+        eventBus.emit('show-toast', {
+          type: 'error',
+          message: 'Có lỗi xảy ra khi xóa vĩnh viễn dịch vụ'
+        })
       }
     },
     handleFilter() {
@@ -353,7 +365,7 @@ td:nth-child(1) {
 
 th:nth-child(2),
 td:nth-child(2) {
-  width: 200px; /* ID */
+  width: 5%; /* ID */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

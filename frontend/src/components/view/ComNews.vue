@@ -15,8 +15,8 @@
 
     <!-- Hiển thị khi không có kết quả tìm kiếm -->
     <div v-if="filteredNews.length === 0" class="no-results">
-      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
-      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
+      <!-- <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button> -->
     </div>
 
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
@@ -27,7 +27,7 @@
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img :src="news.imageUrl" :alt="news.title" class="news-image" />
+        <img :src="getImageUrl(news.image)" :alt="news.title" class="news-image" />
         <div class="news-content">
           <p class="news-category">Công nghệ</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
@@ -58,8 +58,8 @@ export default {
   },
   async mounted() {
     try {
-      const { data } = await newsService.getNews()
-      this.allNewsItems = data
+      const response = await newsService.getNews()
+      this.allNewsItems = response.data
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
     }
@@ -82,6 +82,11 @@ export default {
     },
     goToNewsDetail(news) {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
+    },
+    getImageUrl(imagePath) {
+      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
+      if (imagePath.startsWith('http')) return imagePath
+      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`
     },
   },
 }

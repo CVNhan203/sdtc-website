@@ -1,6 +1,5 @@
 const Admin = require('../models/adminModel')
 const Order = require('../models/orderModel')
-const Payment = require('../models/paymentModel')
 const Service = require('../models/serviceModel')
 const News = require('../models/newsModel')
 const Booking = require('../models/bookingModel')
@@ -30,10 +29,10 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Thống kê dashboard
 exports.getDashboardStats = asyncHandler(async (req, res) => {
-  const [orderCount, paymentCount, serviceCount, newsCount, bookingsCount, adminCount] =
+  const [orderCount, paidOrdersCount, serviceCount, newsCount, bookingsCount, adminCount] =
     await Promise.all([
       Order.countDocuments(),
-      Payment.countDocuments(),
+      Order.countDocuments({ paymentStatus: 'paid' }),
       Service.countDocuments(),
       News.countDocuments(),
       Booking.countDocuments(),
@@ -43,10 +42,11 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
     success: true,
     data: {
       orders: orderCount,
-      payments: paymentCount,
+      payments: paidOrdersCount,
       services: serviceCount,
       news: newsCount,
       bookings: bookingsCount,
+
       admins: adminCount,
     },
   })

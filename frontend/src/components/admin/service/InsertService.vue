@@ -101,8 +101,12 @@
             <div
               v-if="imagePreview"
               class="image-preview"
-              :style="{ backgroundImage: `url(${imagePreview})` }"
             >
+              <img 
+                :src="imagePreview" 
+                alt="Preview" 
+                class="preview-img"
+              />
               <button
                 type="button"
                 @click.stop="removeImage"
@@ -494,7 +498,7 @@ export default {
 .info-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 12px;
   margin-top: 0;
   grid-column: 1 / -1;
 }
@@ -502,11 +506,11 @@ export default {
 .image-upload-container {
   border: 2px dashed var(--border-color);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  min-height: 220px;
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -523,14 +527,23 @@ export default {
 }
 
 .image-preview {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
   border-radius: 8px;
 }
 
@@ -566,16 +579,16 @@ export default {
 }
 
 .upload-button i {
-  font-size: 2.5em;
+  font-size: 2rem;
   color: var(--primary-color);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .upload-hint {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--text-tertiary);
-  margin-top: 8px;
-  line-height: 1.4;
+  margin-top: 4px;
+  line-height: 1.3;
 }
 
 .character-count {
@@ -595,22 +608,14 @@ export default {
 }
 
 .form-help-text {
-  display: block;
-  color: var(--text-tertiary);
-  font-size: 0.85rem;
-  margin-top: 6px;
-  font-style: italic;
+  font-size: 0.75rem;
+  margin-top: 3px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .form-container {
-    grid-template-columns: 1fr;
-    padding: 24px;
-  }
-
-  .info-section {
-    grid-template-columns: 1fr;
+    padding: 16px;
   }
 }
 

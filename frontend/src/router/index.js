@@ -3,6 +3,7 @@ import ComNews from '../components/view/ComNews.vue'
 import ComNewsDetail from '../components/view/ComNewsDetail.vue'
 import AdminLogin from '../components/admin/login.vue'
 import ComPriceList from '../components/view/ComPriceList.vue'
+import ComPayment from '../components/view/ComPayment.vue'
 import AdminDashboard from '../components/admin/Dashboard.vue'
 import AdminServiceList from '../components/admin/service/ServiceList.vue'
 import AdminNewsList from '../components/admin/news/NewsList.vue'
@@ -10,11 +11,9 @@ import AdminInsertNews from '../components/admin/news/InsertNews.vue'
 import AdminEditNews from '../components/admin/news/EditNews.vue'
 import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
-import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
+
 import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
-import AdminPaymentList from '../components/admin/payment/PaymentList.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
-// import AdminEditService from '../components/admin/service/EditService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 import Home from '@/components/view/ComHome.vue'
 import Procedure from '@/components/view/ComProcedure.vue'
@@ -26,7 +25,9 @@ import AdminDashboardHome from '../components/admin/AdminDashboardHome.vue'
 import AccountList from '../components/admin/account/AccountList.vue'
 import AddAccount from '../components/admin/account/AddAccount.vue'
 import EditAccount from '../components/admin/account/EditAccount.vue'
-import TrashAccount from '../components/admin/account/TrashAccount.vue' // Import the TrashAccounts component
+import TrashAccount from '../components/admin/account/TrashAccount.vue'
+import BookingList from '@/components/admin/booking/BookingList.vue'
+import PendingBookings from '@/components/admin/booking/PendingBookings.vue'
 
 const routes = [
   // Public routes
@@ -74,6 +75,11 @@ const routes = [
     path: '/advise',
     name: 'Advise',
     component: Advise,
+  },
+  {
+    path: '/thanh-toan/:serviceId',
+    name: 'ComPayment',
+    component: ComPayment,
   },
   // Admin login route
   {
@@ -136,29 +142,18 @@ const routes = [
         component: AdminOrderList,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-      {
-        path: 'don-hang/cho-duyet',
-        name: 'AdminPendingOrders',
-        component: AdminPendingOrders,
-        meta: { requiresAuth: true, requiresAdmin: true },
-      },
+
       {
         path: 'don-hang/lich-su',
         name: 'AdminOrderHistory',
         component: AdminOrderHistory,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-      {
-        path: 'thanh-toan/danh-sach',
-        name: 'AdminPaymentList',
-        component: AdminPaymentList,
-        meta: { requiresAuth: true, requiresAdmin: true },
-      },
-      {
-        path: 'tai-khoan/danh-sach',
-        name: 'AccountList',
-        component: AccountList,
-        meta: { requiresAuth: true, requiresAdmin: true },
+      { 
+        path: 'tai-khoan/danh-sach', 
+        name: 'AccountList', 
+        component: AccountList, 
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: 'tai-khoan/them-moi',
@@ -178,7 +173,17 @@ const routes = [
         component: TrashAccount,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-    ],
+      {
+        path: 'dat-lich/danh-sach',
+        component: BookingList,
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: 'dat-lich/cho-xu-ly',
+        component: PendingBookings,
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+    ]
   },
   {
     path: '/admin/login',

@@ -293,6 +293,26 @@ export default {
 @import "@/styles/admin.css";
 
 /* Component specific styles */
+.add-account {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.password-input {
+  position: relative;
+}
+
 .toggle-switch {
   display: flex;
   align-items: center;
@@ -306,10 +326,10 @@ export default {
 .switch-label {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 26px;
+  width: 46px;
+  height: 24px;
   background-color: #e5e7eb;
-  border-radius: 13px;
+  border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -319,8 +339,8 @@ export default {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   background-color: white;
   border-radius: 50%;
   transition: transform 0.2s;
@@ -331,7 +351,7 @@ input[type="checkbox"]:checked + .switch-label {
 }
 
 input[type="checkbox"]:checked + .switch-label::after {
-  transform: translateX(24px);
+  transform: translateX(22px);
 }
 
 .status-text {
@@ -339,18 +359,10 @@ input[type="checkbox"]:checked + .switch-label::after {
   color: #6b7280;
 }
 
-.password-input {
-  position: relative;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 16px;
+  }
 }
 </style> 
