@@ -2052,7 +2052,7 @@ h1 {
   }
 
   .project-card.small {
-    min-height: 12rem;
+    min-height: 14rem;
   }
 
   .project-overlay {
@@ -2187,6 +2187,42 @@ h1 {
     padding: 0.8rem 1.5rem;
     font-size: 0.9rem;
   }
+}
+@media (width: 1024px) {
+/* Successfull Section */
+.projects-group-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  column-gap: 1.5rem;
+  row-gap: 0;
+  max-width: 98vw;
+  margin: 0 auto 2rem auto;
+  align-items: stretch;
+}
+
+.project-card.large {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+  min-height: 20rem;
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.project-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 0;
+}
+
+.project-card.small {
+  min-height: 12rem;
+  min-width: 100%;
+  max-width: 100%;
+  margin-bottom: 0;
+}
 }
 /*------------------------- Mobile: < 768px --------------------------*/
 @media (max-width: 768px) {
@@ -2396,6 +2432,16 @@ h1 {
   }
 
   /* Successfull Section */
+  .project-card.large {
+    min-height: 12rem;
+  }
+
+  .project-card-group{
+    gap: 1rem;
+  }
+  .project-card.small {
+    min-height: 12rem;
+  }
   .successfull-content h2 {
     font-size: 1.8rem;
   }
@@ -2732,9 +2778,12 @@ h1 {
 
   /* Successfull Section */
   .project-card.large {
-    min-height: 20rem;
+    min-height: 12rem;
   }
 
+  .project-card-group{
+    gap: 1rem;
+  }
   .project-card.small {
     min-height: 12rem;
   }
@@ -2979,684 +3028,4 @@ h1 {
     height: 400px;
   }
 } */
-
-/* @media screen and (min-width: 3000px) {
-  section {
-    max-width: 4600px;
-    margin: 0 auto;
-    padding: 4rem 6rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 4rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 1.8rem;
-    line-height: 2.8rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.3);
-  }
-
-  .project-card.large {
-    min-height: 50rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 2rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.4rem;
-  }
-
-  .achievement-logo img {
-    height: 6rem;
-  }
-
-  .achievement-content {
-    max-width: 120rem;
-  }
-
-  .marquee-img {
-    height: 300px;
-    margin-right: 36px;
-  }
-
-  .partner-logos img {
-    height: 4rem;
-  }
-} */
-
-/* @media screen and (min-width: 4000px) {
-  section {
-    max-width: 5400px;
-    padding: 5rem 7rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 4.8rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 2rem;
-    line-height: 3.2rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.6rem;
-    padding: 1.5rem 3rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.5);
-  }
-
-  .project-card.large {
-    min-height: 60rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 2.4rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.6rem;
-  }
-
-  .achievement-logo img {
-    height: 7rem;
-  }
-
-  .marquee-img {
-    height: 360px;
-    margin-right: 40px;
-  }
-
-  .partner-logos img {
-    height: 5rem;
-  }
-} */
-
-/* @media screen and (min-width: 5000px) {
-
-
-  section {
-    max-width: 6400px;
-    padding: 6rem 8rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 5.5rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 2.2rem;
-    line-height: 3.6rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.8rem;
-    padding: 2rem 4rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.7);
-  }
-
-  .project-card.large {
-    min-height: 70rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 3rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.8rem;
-  }
-
-  .achievement-logo img {
-    height: 8rem;
-  }
-
-  .marquee-img {
-    height: 400px;
-    margin-right: 50px;
-  }
-
-  .partner-logos img {
-    height: 6rem;
-  }
-} */
-
-/* --------- Responsive cho màn hình lớn: ≥ 3000px --------- */
-@media (min-width: 3000px) {
-  /* Hero Section */
-  .hero-section {
-    padding: 6rem 0 6rem 0;
-  }
-  .home-container {
-    max-width: 3200px;
-    padding: 0 8rem;
-  }
-  .content-wrapper {
-    justify-content: center;
-    gap: 5rem;
-  }
-  .stats-card {
-    width: 28rem;
-    height: 14rem;
-    padding: 2.5rem;
-    font-size: 2rem;
-    box-shadow: 0 0.5rem 2.5rem rgba(0,0,0,0.12);
-    transform: scale(1.2);
-  }
-  .trust-card {
-    width: 24rem;
-    height: 12rem;
-    padding: 2.5rem;
-    font-size: 2rem;
-    box-shadow: 0 0.5rem 2.5rem rgba(0,0,0,0.12);
-    transform: scale(1.2);
-  }
-  .icon-above-card {
-    width: 5rem;
-    height: 5rem;
-    top: -5rem;
-  }
-  .main-content {
-    padding: 4rem 0;
-    max-width: 1200px;
-  }
-  .main-content h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    line-height: 1.3;
-  }
-  .main-content .subtitle {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  .main-content .description {
-    font-size: 1.6rem;
-    line-height: 2.2rem;
-    margin-bottom: 2rem;
-  }
-  .avatar-group {
-    gap: 0.1rem;
-  }
-  .avatar {
-    width: 3rem;
-    height: 3rem;
-    margin-right: -1.2rem;
-  }
-  .rating {
-    display: flex;
-    align-items: center;
-    font-size: 2rem;
-    margin-left: 2rem;
-  }
-  .star {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 1.5rem;
-  }
-  .rate{}
-
-  /* Services */
-  .wrapper {
-    margin-top: 4rem;
-    margin-bottom: 2rem;
-  }
-  .services {
-    gap: 2rem;
-  }
-  .services span {
-    font-size: 1.5rem;
-    padding: 1rem 2.5rem;
-    border-radius: 2rem;
-  }
-  .cta-button {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-    margin-top: 2rem;
-  }
-
-  /* Social & Partners */
-  .abc {
-    padding: 4rem;
-    background-size: 1200px 400px;
-  }
-  .social-links {
-    gap: 3rem;
-    margin: 4rem 0;
-  }
-  .social-link {
-    width: 4rem;
-    height: 4rem;
-    font-size: 2.5rem;
-  }
-  .partners {
-    margin-top: 6rem;
-    font-size: 2rem;
-  }
-  .partner-logos {
-    gap: 5rem;
-    margin-top: 3rem;
-  }
-  .partner-logos img {
-    height: 3rem;
-  }
-
-  /* Cooperation Section */
-  .cooperation-section {
-    padding: 6rem 0;
-  }
-  .cooperation-container {
-    max-width: 3200px;
-    gap: 4rem;
-  }
-  .cooperation-banner {
-    width: 40rem;
-    height: 28rem;
-    padding: 4rem;
-    border-radius: 3rem;
-  }
-  .banner-content h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  .banner-content .subtitle-1,
-  .banner-content .description-1 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-  .banner-image {
-    width: 20rem;
-    border-radius: 2rem;
-  }
-  .cooperation-info {
-    padding: 4rem;
-    border-radius: 3rem;
-    gap: 2rem;
-  }
-  .trust-header h2 {
-    font-size: 2.8rem;
-    margin-bottom: 1.5rem;
-  }
-  .trust-description {
-    font-size: 1.6rem;
-    margin-bottom: 1.5rem;
-  }
-  .stats-container {
-    gap: 3rem;
-  }
-  .stat-item h3 {
-    font-size: 4rem;
-  }
-  .stat-item p {
-    font-size: 2rem;
-  }
-  .start-btn {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-  }
-
-  /* Timeline Section */
-  .commit-timeline-section {
-    padding: 6rem 0;
-  }
-  .commit-content {
-    padding: 4rem 0 4rem 4rem;
-  }
-  .commit-title {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  .commit-desc {
-    font-size: 1.6rem;
-    line-height: 2.2rem;
-    max-width: 1200px;
-  }
-  .timeline-header {
-    padding: 2rem;
-    gap: 4rem;
-    font-size: 2rem;
-  }
-  .timeline-labels {
-    font-size: 1.5rem;
-  }
-  .timeline-task {
-    font-size: 1.2rem;
-    padding: 1.2rem 2.5rem 1.2rem 2rem;
-    height: 5rem;
-  }
-  .timeline-task .percent {
-    font-size: 1.2rem;
-    padding: 0.4rem 1.5rem;
-  }
-  .timeline-task .task-name {
-    font-size: 1.1rem;
-  }
-  .timeline-task .avatars img {
-    width: 3rem;
-    height: 3rem;
-    margin-left: -1.5rem;
-  }
-
-  /* Customer Trust Section */
-  .customer-trust-section {
-    padding: 6rem 0;
-  }
-  .customer-trust-container {
-    max-width: 3200px;
-    gap: 4rem;
-  }
-  .circle-layout {
-    width: 50rem;
-    height: 50rem;
-    transform: scale(1.2);
-  }
-  .image-main {
-    width: 24rem;
-    height: 24rem;
-    left: 25rem;
-    top: 3rem;
-  }
-  .image-left {
-    width: 22rem;
-    height: 22rem;
-    top: 8rem;
-    left: -2rem;
-  }
-  .badge-center {
-    width: 15rem;
-    height: 15rem;
-    top: 16rem;
-    left: 16rem;
-    font-size: 2.2rem;
-  }
-  .image-bottom {
-    width: 10rem;
-    height: 10rem;
-    top: 33rem;
-    left: 20rem;
-  }
-
-  /* Successfull Section */
-  .successfull {
-    padding: 6rem 0;
-  }
-  .successfull-content {
-    max-width: 1200px;
-    margin-bottom: 4rem;
-  }
-  .successfull-content h2 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  .successfull-content p {
-    font-size: 1.6rem;
-    margin-bottom: 1.5rem;
-  }
-  .projects-group-grid {
-    gap: 4rem;
-    max-width: 3200px;
-  }
-  .project-card.large {
-    min-height: 40rem;
-    min-width: 40rem;
-  }
-  .project-card.small {
-    min-height: 20rem;
-  }
-  .project-overlay {
-    padding: 3rem 2.5rem 2.5rem 2.5rem;
-  }
-  .project-overlay h3 {
-    font-size: 2rem;
-  }
-  .project-overlay p {
-    font-size: 1.4rem;
-  }
-  .custom-button {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-  }
-
-  /* Inspiration Section */
-  .inspiration-section {
-    padding: 4rem 0;
-  }
-  .inspiration-header {
-    gap: 4rem;
-    max-width: 3200px;
-  }
-  .inspiration-title {
-    font-size: 3rem;
-  }
-  .inspiration-desc {
-    font-size: 1.6rem;
-    max-width: 1200px;
-  }
-  .inspiration-btn {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-    margin-top: 4rem;
-  }
-  .marquee-img {
-    height: 300px;
-    margin-right: 36px;
-    border-radius: 24px;
-  }
-
-  /* Achievements Section */
-  .achievements {
-    padding: 6rem 0 5rem 0;
-  }
-  .achievements-header {
-    margin-bottom: 4rem;
-  }
-  .achievements-title {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-  }
-  .achievements-desc {
-    font-size: 1.6rem;
-  }
-  .achievements-carousel-wrapper {
-    gap: 3rem;
-    max-width: 120rem;
-  }
-  .achievement-slide {
-    padding: 0 3rem;
-  }
-  .achievement-logo img {
-    height: 6rem;
-  }
-  .achievement-content {
-    font-size: 1.6rem;
-    max-width: 120rem;
-  }
-  .author-name {
-    font-size: 1.5rem;
-  }
-  .author-role {
-    font-size: 1.2rem;
-  }
-  .achievements-arrow {
-    width: 4rem;
-    height: 4rem;
-    font-size: 2rem;
-  }
-
-  /* Companion Section */
-  .companion-section {
-    padding-bottom: 4rem;
-  }
-  .companion-content {
-    border-radius: 3rem;
-    max-width: 1800px;
-    min-height: 16rem;
-    padding: 4rem 6rem;
-  }
-  .companion-text h2 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  .companion-text p {
-    font-size: 1.6rem;
-  }
-  .companion-btn {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-    margin-top: 2rem;
-  }
-}
-
-/* --------- Responsive cho màn hình cực lớn: ≥ 4000px --------- */
-@media (min-width: 4000px) {
-  .hero-section h1,
-  .commit-title,
-  .main-heading,
-  .achievements-title {
-    font-size: 3.5rem;
-  }
-
-  .hero-section p,
-  .description,
-  .commit-desc,
-  .achievements-desc {
-    font-size: 1.8rem;
-  }
-
-  .avatar {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-
-  .partner-logos img {
-    height: 3.8rem;
-  }
-
-  .project-card.large {
-    min-height: 46rem;
-  }
-
-  .cta-button,
-  .custom-button,
-  .start-btn,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.6rem;
-    padding: 1.5rem 3rem;
-  }
-
-  .timeline-task {
-    transform: scale(1.3);
-    transform-origin: left top;
-  }
-
-  .circle-layout {
-    transform: scale(1.4);
-    transform-origin: left center;
-  }
-}
-
-/* --------- Responsive cho siêu màn hình: ≥ 5000px --------- */
-@media (min-width: 5000px) {
-  .hero-section h1,
-  .commit-title,
-  .main-heading,
-  .achievements-title {
-    font-size: 4rem;
-  }
-
-  .hero-section p,
-  .description,
-  .commit-desc,
-  .achievements-desc {
-    font-size: 2rem;
-  }
-
-  .cta-button,
-  .custom-button,
-  .start-btn,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.8rem;
-    padding: 2rem 3.5rem;
-  }
-
-  .avatar {
-    width: 4rem;
-    height: 4rem;
-  }
-
-  .partner-logos img {
-    height: 4.5rem;
-  }
-
-  .project-card.large {
-    min-height: 50rem;
-  }
-
-  .circle-layout {
-    transform: scale(1.6);
-  }
-
-  .timeline-task {
-    transform: scale(1.4);
-  }
-}
 </style>
