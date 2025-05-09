@@ -27,7 +27,7 @@
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" :alt="currentNews.title" />
+          <img :src="currentNews.imageUrl" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
@@ -72,7 +72,7 @@
               @click="goToNewsDetail(post)"
             >
               <div class="post-image">
-                <img :src="post.imageUrl" :alt="post.title" />
+                <img :src="post.imageUrl" />
               </div>
               <div class="post-info">
                 <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>

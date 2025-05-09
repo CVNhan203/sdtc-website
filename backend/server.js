@@ -19,12 +19,11 @@ connectDB()
 app.use(express.json())
 
 // Cấu hình CORS cho phép frontend truy cập API
-app.use(
-  cors({
-    origin: 'http://localhost:8080', // Cho phép frontend truy cập
-    credentials: true, // Nếu cần gửi cookie, xác thực
-  })
-)
+app.use(cors())
+
+// Định nghĩa BASE_URL cho server
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
+app.locals.BASE_URL = BASE_URL
 
 // Cho phép truy cập thư mục uploads
 app.use('/uploads', express.static('uploads'))
