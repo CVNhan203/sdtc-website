@@ -402,9 +402,8 @@
     <div class="companion-text">
       <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
       <p>
-        Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
-        thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
-        kết của chúng tôi.
+        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, 
+        giúp bạn phát triển bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
       </p>
     </div>
     <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
@@ -1666,7 +1665,9 @@ const inspirationImagesBottom = [
   padding: 2.5rem 3rem; /* 40px 48px */
   box-sizing: border-box;
 }
-
+.companion-text{
+  width: 42.5rem; /* 680px */
+}
 .companion-text h2 {
   color: #fff;
   font-size: 2rem;
