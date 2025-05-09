@@ -10,13 +10,13 @@
         <img src="@/assets/sdtc-image/icon/Vector 587.svg" alt="Arrow Icon" class="icon-above-card icon-left"/>
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
-            <svg viewBox="0 0 500 200" class="wave-svg">
+            <svg viewBox="0 0 500 210" class="wave-svg">
               <path
-                d="M0,100 
-             C50,50 100,50 125,100 
-             C150,150 200,150 225,100 
-             C250,50 300,50 325,100 
-             C350,150 400,150 450,100"
+                d="M0,185 
+             C80,220 80,0 130,110 
+             C200,240 200,220 240,50 
+             C250,0 270,0 310,120
+             C350,240 370,170 400,90"
                 class="wave-path"
               />
             </svg>
@@ -576,32 +576,16 @@ const inspirationImagesBottom = [
   font-weight: bold;
   margin-bottom: 0.75rem; /* 12px */
 }
-
-.chart {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.75rem; /* 12px */
-}
-
 .wave-svg {
   width: 100%;
   height: 5rem; /* 80px */
 }
-
 .wave-path {
   fill: none;
   stroke: #5a8dee;
   stroke-width: 0.25rem; /* 4px */
   stroke-linecap: round;
 }
-
-.stats-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
-}
-
 .dot {
   display: inline-block;
   width: 0.8rem;
@@ -609,16 +593,14 @@ const inspirationImagesBottom = [
   border-radius: 50%;
 }
 .dot-red {
-  background: #ff6b6b;
+  background: #FF7777;
 }
 .dot-blue {
-  background: #5a8dee;
+  background: #6389EB;
 }
-
 .number {
   color: #141414;
 }
-
 .percentage {
   display: flex;
   color: #141414;
@@ -629,6 +611,13 @@ const inspirationImagesBottom = [
   font-size: 1rem;
 }
 
+.stats-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 .main-content {
   text-align: center;
   padding: 2rem 0;
@@ -636,11 +625,12 @@ const inspirationImagesBottom = [
 
 .subtitle {
   color: #516371;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 1rem;
 }
 
-h1 {
+.main-content h1 {
+  color: #5D5D5D;
   font-size: 2.2rem;
   margin-bottom: 1rem;
   line-height: 1.3;
@@ -651,9 +641,10 @@ h1 {
 }
 
 .description {
-  color: #666;
+  color: #516371;
   margin-bottom: 1rem;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
 .services {
@@ -666,9 +657,10 @@ h1 {
 
 .services span {
   padding: 0.5rem 1rem;
+  color:#516371;
   background: #f8f9fa;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .wrapper {
@@ -685,7 +677,7 @@ h1 {
 }
 
 .avatar {
-  width: 1.875rem; /* 30px */
+  width: 1.8rem; /* 30px */
   height: 1.875rem;
   border-radius: 50%;
   background: #e0e0e0;
@@ -700,9 +692,13 @@ h1 {
 }
 
 .star {
-  width: 1.375rem; /* 22px */
-  height: 1.375rem;
+  width: 2rem; /* 22px */
+  height: 2.2rem;
   color: #ff8933;
+}
+.rate{
+  font-size: 1rem; /* 16px */
+  color: #516371;
 }
 
 .abc {
