@@ -43,7 +43,7 @@
       <table class="accounts-table">
         <thead>
           <tr>
-            <th>STT</th>
+            <th>No.</th>
             <th>Họ tên</th>
             <th>Email</th>
             <!-- <th>Vai trò</th> -->
@@ -109,7 +109,8 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận xóa</h3>
         <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
         <div class="modal-actions">
@@ -121,7 +122,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận khôi phục</h3>
         <p>Bạn có chắc chắn muốn khôi phục tài khoản này?</p>
         <div class="modal-actions">
@@ -133,7 +135,8 @@
 
     <!-- Permanent Delete Confirmation Modal -->
     <div class="modal" v-if="showDeletePermanentModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeletePermanentModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận xóa vĩnh viễn</h3>
         <p class="warning">Cảnh báo: Hành động này không thể hoàn tác!</p>
         <p>Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản này?</p>
@@ -146,7 +149,8 @@
 
     <!-- Modal sửa tài khoản -->
     <div class="modal" v-if="showEditModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showEditModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Chỉnh sửa tài khoản</h3>
         <form @submit.prevent="handleEditSubmit">
           <div v-if="editError" class="error-alert">{{ editError }}</div>
@@ -527,9 +531,12 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 /* Container */
 .account-list {
-  padding: 24px;
+  padding: 20px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -598,7 +605,6 @@ export default {
 .accounts-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #e5e7eb;
-  color: #4b5563;
   text-align: center; /* căn giữa nội dung bảng */
 }
 
@@ -695,20 +701,105 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.25); /* nhẹ hơn */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
-
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
 .modal-content {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  padding: 24px 28px 20px 28px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  text-align: left;
+  position: relative;
+}
+
+.modal-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+}
+
+.modal-content p {
+  margin: 0 0 18px 0;
+  font-size: 15px;
+  color: #222;
+}
+
+.modal-content .warning {
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-btn,
+.confirm-btn,
+.delete-btn {
+  min-width: 90px;
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #222;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.confirm-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.confirm-btn:hover {
+  background: #fecaca;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+/* Đảm bảo modal nhỏ gọn, căn giữa */
+@media (max-width: 500px) {
+  .modal-content {
+    max-width: 95vw;
+    padding: 18px 8px 14px 8px;
+  }
 }
 
 /* Loading and Error States */

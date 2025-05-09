@@ -146,31 +146,8 @@ export default {
 </script>
 
 <style scoped>
-/* CSS Variables */
-:root {
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #f1f5f9;
-  --secondary-hover: #e2e8f0;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  --success-color: #10b981;
-  --success-hover: #059669;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+
+@import "@/styles/admin.css";
 
 /* Login Page Styles */
 .login-container {
@@ -186,8 +163,8 @@ export default {
 .login-form {
   background: rgba(255, 255, 255, 0.95);
   padding: 2.5rem;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 420px;
   backdrop-filter: blur(10px);
@@ -199,14 +176,14 @@ export default {
 }
 
 .form-header h2 {
-  color: var(--text-primary);
+  color: #1e293b;
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .form-header p {
-  color: var(--text-secondary);
+  color: #64748b;
   font-size: 1rem;
 }
 
@@ -219,7 +196,7 @@ export default {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #64748b;
 }
 
 .form-group input {
@@ -233,16 +210,16 @@ export default {
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-group input.error {
-  border-color: var(--danger-color);
+  border-color: #ef4444;
 }
 
 .error-text {
-  color: var(--danger-color);
+  color: #ef4444;
   font-size: 0.875rem;
   margin-top: 0.25rem;
   display: block;

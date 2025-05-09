@@ -247,7 +247,6 @@ export default {
 /* Styling for no results section */
 .no-results {
   text-align: center;
-  margin-top: 120px;
   padding: 20px;
 }
 

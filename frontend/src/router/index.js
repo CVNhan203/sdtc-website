@@ -86,6 +86,10 @@ const routes = [
     component: AdminDashboard,
     meta: { requiresAuth: true },
     children: [
+      // {
+      //   path: '',
+      //   redirect: 'dashboard'
+      // },
       {
         path: 'dashboard',
         name: 'AdminDashboardHome',

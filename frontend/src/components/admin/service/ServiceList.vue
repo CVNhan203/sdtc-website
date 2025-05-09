@@ -118,7 +118,8 @@
 
     <!-- Service Details Modal -->
     <div class="modal" v-if="showDetailsModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDetailsModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Chi tiết dịch vụ</h3>
           
@@ -163,7 +164,8 @@
 
     <!-- Add/Edit Service Modal -->
     <div class="modal" v-if="showFormModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showFormModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>{{ isEditing ? 'Chỉnh sửa dịch vụ' : 'Thêm dịch vụ mới' }}</h3>
           <button class="close-btn" @click="showFormModal = false">
@@ -263,7 +265,7 @@
                 <div v-if="!imagePreview" class="upload-placeholder">
                   <i class="fas fa-cloud-upload-alt"></i>
                   <span>Click để tải ảnh lên</span>
-                  <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+                  <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
                 </div>
                 <div v-else class="image-preview">
                   <img :src="imagePreview" alt="Preview" />
@@ -287,9 +289,6 @@
                 placeholder="Nhập mô tả dịch vụ"
               ></textarea>
               <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
-              <small class="form-help-text"
-                >Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small
-              >
             </div>
 
             <div class="form-actions">
@@ -313,7 +312,8 @@
 
     <!-- Soft Delete Confirmation Modal -->
     <div class="modal" v-if="showSoftDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showSoftDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận chuyển vào thùng rác</h3>
           <button class="close-btn" @click="showSoftDeleteModal = false">
@@ -334,7 +334,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận khôi phục</h3>
           <button class="close-btn" @click="showRestoreModal = false">
@@ -353,7 +354,8 @@
 
     <!-- Permanent Delete Confirmation Modal -->
     <div class="modal" v-if="showPermanentDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showPermanentDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa vĩnh viễn</h3>
           <button class="close-btn" @click="showPermanentDeleteModal = false">
@@ -1036,12 +1038,16 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .service-list {
+  
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  /* Thêm overflow-x cho toàn bộ modal/table */
+  padding: 20px;
+  /* Đảm bảo có thể cuộn ngang toàn bộ bảng */
   overflow-x: auto;
 }
 
@@ -1144,11 +1150,14 @@ select {
   margin-top: 20px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  overflow: hidden;
+  /* Sửa lại để luôn có thể cuộn ngang khi tràn */
+  overflow-x: auto;
+  /* Xóa overflow: hidden nếu có */
 }
 
 table {
   width: 100%;
+  min-width: 900px; /* hoặc giá trị phù hợp với số cột */
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -1156,20 +1165,8 @@ table {
 th, td {
   text-align: center;
   vertical-align: middle;
-}
-
-th {
-  background-color: #f9fafb;
-  color: #374151;
-  font-weight: 600;
-  padding: 12px 16px;
+  padding: 20px;
   border-bottom: 1px solid #e5e7eb;
-}
-
-td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  color: #4b5563;
 }
 
 tr:last-child td {
@@ -1181,8 +1178,8 @@ tr:hover {
 }
 
 .service-image {
-  width: 48px;
-  height: 48px;
+  width: 80px;
+  height: 80px;
   border-radius: 6px;
   object-fit: cover;
   display: block;
@@ -1253,16 +1250,149 @@ tr:hover {
   filter: brightness(0.95);
 }
 
-/* Modal Styles */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+  animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.modal-header {
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
-  padding: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+.modal-body {
+  padding: 20px;
+  font-size: 1rem;
+  color: #222;
+}
+
+.modal-body p {
+  margin-bottom: 0;
+}
+
+.warning-text {
+  color: #ef4444;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #475569;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.delete-btn,
+.permanent-delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.delete-btn:hover:not(:disabled),
+.permanent-delete-btn:hover:not(:disabled) {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+/* Responsive modal */
+@media (max-width: 600px) {
+  .modal-content {
+    max-width: 98vw;
+    padding: 0;
+  }
+  .modal-header,
+  .modal-body {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
@@ -1273,13 +1403,15 @@ tr:hover {
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative; /* Thêm dòng này */
+  z-index: 1;         /* Thêm dòng này */
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
+  padding: 20px;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -1303,7 +1435,7 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
 /* Responsive Design */
@@ -1331,6 +1463,7 @@ tr:hover {
   }
 
   .table-container {
+    /* Đảm bảo vẫn có thể cuộn ngang trên mobile */
     overflow-x: auto;
   }
 
@@ -1342,6 +1475,7 @@ tr:hover {
 /* Form Specific Styles */
 .form-group {
   margin-bottom: 20px;
+  padding: 0;
 }
 
 .form-group label {
@@ -1412,7 +1546,7 @@ tr:hover {
 .modal-header {
   background-color: #f8fafc;
   border-bottom: 1px solid #e2e8f0;
-  padding: 20px 24px;
+  padding: 20px;
 }
 
 .modal-header h3 {
@@ -1422,7 +1556,7 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
 .detail-item {
@@ -1431,7 +1565,7 @@ tr:hover {
   grid-template-columns: 120px 1fr;
   gap: 16px;
   align-items: start;
-  padding: 12px;
+  padding: 20px;
   background-color: #f8fafc;
   border-radius: 8px;
 }
@@ -1449,7 +1583,7 @@ tr:hover {
   color: #334155;
   line-height: 1.6;
   margin: 0;
-  padding: 4px 12px;
+  padding: 20px;
   background: white;
   border-radius: 6px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -1583,7 +1717,7 @@ tr:hover {
 /* Modal Header */
 .modal-header {
   background: #fff;
-  padding: 1rem 1.5rem;
+  padding: 20px;
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -1606,13 +1740,14 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 20px;
   background: #fff;
 }
 
 /* Form Styling */
 .form-group {
   margin-bottom: 24px;
+  padding: 0;
 }
 
 .form-group label {
@@ -1748,7 +1883,7 @@ tr:hover {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 32px;
+  margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e5e7eb;
 }
@@ -1791,7 +1926,7 @@ tr:hover {
 .success-alert,
 .error-alert,
 .status-alert {
-  padding: 12px 16px;
+  padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
   display: flex;
@@ -1830,6 +1965,14 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* Thêm dòng này */
+}
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .info-section {
@@ -1845,6 +1988,7 @@ button:disabled {
   .cancel-btn {
     width: 100%;
     justify-content: center;
+    padding: 20px;
   }
 }
 
@@ -1880,10 +2024,11 @@ input[type="checkbox"]:checked::after {
   .modal-content {
     max-width: 98vw;
     min-width: 0;
+    padding: 20px;
   }
   .detail-item p {
     font-size: 0.95rem;
-    padding: 4px 6px;
+    padding: 20px;
     max-width: 100vw;
   }
 }
@@ -1892,16 +2037,16 @@ input[type="checkbox"]:checked::after {
   .modal-content {
     max-width: 100vw;
     min-width: 0;
-    padding: 0;
+    padding: 20px;
   }
   .detail-item {
     grid-template-columns: 1fr;
-    padding: 8px;
+    padding: 20px;
     gap: 8px;
   }
   .detail-item p {
     font-size: 0.92rem;
-    padding: 4px 2px;
+    padding: 20px;
     max-width: 100vw;
   }
 }

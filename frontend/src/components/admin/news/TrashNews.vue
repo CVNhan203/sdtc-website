@@ -109,7 +109,8 @@
 
     <!-- Modal xác nhận khôi phục tin tức -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận khôi phục</h3>
           <button class="close-btn" @click="showRestoreModal = false">
@@ -131,7 +132,8 @@
 
     <!-- Modal xác nhận xóa vĩnh viễn tin tức -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa vĩnh viễn</h3>
           <button class="close-btn" @click="showDeleteModal = false">
@@ -383,11 +385,14 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .trash-news {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+  padding: 20px;
 }
 
 .header-actions {
@@ -537,8 +542,15 @@ tr:last-child td {
   justify-content: center;
   z-index: 1000;
 }
-
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
 .modal-content {
+  position: relative;
+  z-index: 2;
   background: white;
   border-radius: 12px;
   width: 90%;
@@ -636,6 +648,34 @@ input[type="checkbox"]:checked {
   border-color: #3b82f6;
 }
 
+.close-btn {
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  font-size: 24px;
+  margin-left: auto;
+  box-shadow: none;
+}
+
+.close-btn:hover {
+  background: #e2e8f0;
+  color: #ef4444;
+  box-shadow: 0 0 0 2px #ef444422;
+}
+
+.close-btn i {
+  font-size: 24px;
+  pointer-events: none;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .trash-news {
@@ -663,6 +703,7 @@ input[type="checkbox"]:checked {
 
 th,
 td {
+
   text-align: center;
   vertical-align: middle;
 }
@@ -679,6 +720,10 @@ tr {
   align-items: center;
   justify-content: center;
   height: 60px;
+  min-width: 80px;
+  min-height: 80px;
+  /* Đảm bảo giữ kích thước cố định cho cell ảnh */
+  box-sizing: border-box;
 }
 
 /* Căn giữa checkbox */
@@ -696,5 +741,31 @@ th input[type="checkbox"] {
   align-items: center;
   gap: 8px;
   text-align: center;
+}
+
+.news-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+  /* Đảm bảo không bị nhảy lung tung */
+  box-sizing: border-box;
+}
+
+.no-image {
+  width: 50px;
+  height: 50px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 22px;
+  box-sizing: border-box;
 }
 </style>

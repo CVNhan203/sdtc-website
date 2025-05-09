@@ -89,7 +89,7 @@
                   title="Xóa vĩnh viễn"
                 >
                   <i class="fas fa-trash"></i>
-                </button>
+                </button>                
               </div>
             </td>
           </tr>
@@ -104,7 +104,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận khôi phục</h3>
           <button class="close-btn" @click="showRestoreModal = false">
@@ -126,7 +127,8 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa vĩnh viễn</h3>
           <button class="close-btn" @click="showDeleteModal = false">
@@ -146,12 +148,41 @@
         </div>
       </div>
     </div>
+
+    <!-- Service Modal -->
+    <div class="modal" v-if="showServiceModal">
+      <div class="modal-overlay" @click="showServiceModal = false"></div>
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>Dịch vụ của tài khoản</h3>
+          <button class="close-btn" @click="showServiceModal = false">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div v-if="serviceLoading" style="text-align:center;padding:24px;">
+            <i class="fas fa-spinner fa-spin"></i> Đang tải dịch vụ...
+          </div>
+          <div v-else-if="serviceError" class="error-message">{{ serviceError }}</div>
+          <div v-else-if="services.length === 0" class="empty-message">
+            Không có dịch vụ nào cho tài khoản này.
+          </div>
+          <ul v-else>
+            <li v-for="service in services" :key="service._id">
+              <strong>{{ service.name || service.title }}</strong>
+              <span v-if="service.status">({{ service.status }})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import eventBus from '@/eventBus';
 import accountService from '@/api/services/accountService';
+import serviceService from '@/api/services/serviceService';
 
 export default {
   name: 'AdminTrashAccounts',
@@ -164,6 +195,11 @@ export default {
       showDeleteModal: false,
       loading: false,
       error: null,
+      // Service modal state
+      showServiceModal: false,
+      services: [],
+      serviceLoading: false,
+      serviceError: null,
     }
   },
   computed: {
@@ -337,6 +373,26 @@ export default {
     
     confirmBulkDelete() {
       this.showDeleteModal = true;
+    },
+
+    async viewServices(account) {
+      this.showServiceModal = true;
+      this.services = [];
+      this.serviceLoading = true;
+      this.serviceError = null;
+      try {
+        // Giả sử serviceService có hàm getServicesByAccountId
+        const res = await serviceService.getServicesByAccountId(account._id);
+        if (res && res.success) {
+          this.services = res.data || [];
+        } else {
+          this.serviceError = res.message || 'Không thể tải dịch vụ';
+        }
+      } catch (err) {
+        this.serviceError = err.message || 'Không thể tải dịch vụ';
+      } finally {
+        this.serviceLoading = false;
+      }
     }
   },
   created() {
@@ -346,11 +402,14 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .trash-accounts {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+  padding: 20px;
   position: relative;
 }
 
@@ -566,8 +625,15 @@ tr:last-child td {
   justify-content: center;
   z-index: 1000;
 }
-
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
 .modal-content {
+  position: relative;
+  z-index: 2;
   background: white;
   border-radius: 12px;
   width: 90%;
@@ -590,18 +656,31 @@ tr:last-child td {
 }
 
 .close-btn {
-  background: transparent;
+  background: #f1f5f9;
   border: none;
   color: #64748b;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  font-size: 24px;
+  margin-left: auto;
+  box-shadow: none;
 }
 
 .close-btn:hover {
-  background: #f1f5f9;
-  color: #1e293b;
+  background: #e2e8f0;
+  color: #ef4444;
+  box-shadow: 0 0 0 2px #ef444422;
+}
+
+.close-btn i {
+  font-size: 24px;
+  pointer-events: none;
 }
 
 .modal-body {

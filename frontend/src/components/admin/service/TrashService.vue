@@ -101,7 +101,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận khôi phục</h3>
           <button class="close-btn" @click="showRestoreModal = false">
@@ -123,7 +124,8 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa vĩnh viễn</h3>
           <button class="close-btn" @click="showDeleteModal = false">
@@ -356,11 +358,14 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .trash-service {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+  padding: 20px;
 }
 
 .header-actions {
@@ -427,7 +432,7 @@ th, td {
 
 th {
   background: #f8fafc;
-  padding: 12px 16px;
+  padding: 20px;
   text-align: center;
   font-weight: 600;
   color: #1e293b;
@@ -436,7 +441,7 @@ th {
 }
 
 td {
-  padding: 12px 16px;
+  padding: 20px;
   border-bottom: 1px solid #e2e8f0;
   vertical-align: middle;
 }
@@ -529,16 +534,26 @@ tr:hover {
   z-index: 1000;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1; /* Thêm dòng này */
+}
+
 .modal-content {
   background: white;
   border-radius: 12px;
   width: 90%;
   max-width: 500px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 2; /* Thêm dòng này */
 }
 
 .modal-header {
-  padding: 16px 24px;
+  padding: 20px;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
@@ -552,14 +567,19 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 24px;
+  padding-top: 20px;
 }
 
 .submit-btn, .delete-btn, .cancel-btn {
@@ -619,6 +639,7 @@ tr:hover {
   border-radius: 4px;
   margin: 0 auto;
   display: block;
+  padding: 0;
 }
 
 .image-container {
@@ -630,8 +651,8 @@ tr:hover {
 }
 
 .no-image {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   background: #f1f5f9;
   border-radius: 4px;
   display: flex;
@@ -641,6 +662,7 @@ tr:hover {
   display: block;
   margin: 0 auto;
   text-align: center;
+  padding: 0;
 }
 
 /* Custom checkbox styles */
@@ -671,10 +693,39 @@ input[type="checkbox"]:checked::after {
   font-size: 12px;
 }
 
+.close-btn {
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  font-size: 24px;
+  margin-left: auto;
+  box-shadow: none;
+  padding: 0;
+}
+
+.close-btn:hover {
+  background: #e2e8f0;
+  color: #ef4444;
+  box-shadow: 0 0 0 2px #ef444422;
+}
+
+.close-btn i {
+  font-size: 24px;
+  pointer-events: none;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .trash-service {
-    padding: 16px;
+    padding: 20px;
   }
 
   .actions-header {

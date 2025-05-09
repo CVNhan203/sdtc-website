@@ -26,7 +26,7 @@
         <table>
           <thead>
             <tr>
-              <th style="width: 5%">STT</th>
+              <th style="width: 5%">No.</th>
               <th style="width: 15%">Tên KH</th>
               <!-- <th style="width: 10%">SĐT</th>
               <th style="width: 15%">Email</th> -->
@@ -73,7 +73,8 @@
 
       <!-- Order Details Modal -->
       <div class="modal" v-if="showDetailsModal">
-        <div class="modal-content detail-modal">
+        <div class="modal-overlay" @click="showDetailsModal = false"></div>
+        <div class="modal-content detail-modal" @click.stop>
           <div class="modal-header">
             <h3>Chi tiết đơn hàng</h3>
             <button class="close-btn" @click="showDetailsModal = false">
@@ -117,7 +118,8 @@
 
       <!-- Edit Order Modal -->
       <div class="modal" v-if="showFormModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="closeEditModal"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>Cập nhật trạng thái đơn hàng</h3>
             <button class="close-btn" @click="closeEditModal">
@@ -604,11 +606,14 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .order-list {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 24px;
+  padding: 20px;
 }
 
 /* Table Styles */
@@ -637,7 +642,6 @@ th {
 td {
   padding: 16px;
   border-bottom: 1px solid #e2e8f0;
-  color: #334155;
   vertical-align: middle;
   text-align: center; /* căn giữa nội dung cột */
 }
@@ -712,12 +716,11 @@ tr:hover td {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
 }
 
 .modal-content {
@@ -727,6 +730,8 @@ tr:hover td {
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative; /* Thêm dòng này */
+  z-index: 1;         /* Thêm dòng này */
 }
 
 .modal-header {
@@ -744,7 +749,7 @@ tr:hover td {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
 /* Form Styles */
@@ -1113,6 +1118,13 @@ button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+.close-btn{
+    color: #6b7280;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
 
 /* Status Badges Enhancement */
 .status-badge {
@@ -1159,6 +1171,15 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* Thêm dòng này */
 }
 
 /* Responsive Adjustments */
