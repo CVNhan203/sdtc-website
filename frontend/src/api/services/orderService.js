@@ -81,7 +81,13 @@ const orderService = {
   // Tạo đơn hàng mới
   async createOrder(orderData) {
     try {
-      const response = await api.post('/orders', orderData)
+      // Đảm bảo trạng thái đơn hàng mới luôn là 'pending' (chờ xử lý)
+      const orderWithStatus = {
+        ...orderData,
+        orderStatus: 'pending', // Gán trạng thái mặc định là chờ xử lý
+      }
+
+      const response = await api.post('/orders', orderWithStatus)
       return {
         success: true,
         data: response.data.data,
@@ -114,20 +120,20 @@ const orderService = {
     }
   },
 
-  // Lấy đơn hàng đang chờ xử lý
-  async getPendingOrders() {
+  // Xử lý thanh toán cho đơn hàng
+  async processPayment(orderId, paymentData) {
     try {
-      const response = await api.get('/orders/pending')
+      const response = await api.post(`/orders/${orderId}/process-payment`, paymentData)
       return {
         success: true,
-        data: response.data.data || [],
-        message: response.data.message || 'Lấy danh sách đơn hàng chờ xử lý thành công',
+        data: response.data.data,
+        message: response.data.message || 'Xử lý thanh toán thành công',
       }
     } catch (error) {
-      console.error('Error fetching pending orders:', error)
+      console.error('Error processing payment:', error)
       return {
         success: false,
-        message: error.response?.data?.message || 'Không thể tải danh sách đơn hàng chờ xử lý',
+        message: error.response?.data?.message || 'Không thể xử lý thanh toán',
       }
     }
   },

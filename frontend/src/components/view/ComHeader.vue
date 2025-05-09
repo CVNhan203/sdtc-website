@@ -44,14 +44,14 @@ export default {
   },
   methods: {
     toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-      document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+      this.isMenuOpen = !this.isMenuOpen
+      document.body.style.overflow = this.isMenuOpen ? 'hidden' : ''
     },
     closeMenu() {
-      this.isMenuOpen = false;
-      document.body.style.overflow = '';
-    }
-  }
+      this.isMenuOpen = false
+      document.body.style.overflow = ''
+    },
+  },
 }
 </script>
 
