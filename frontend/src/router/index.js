@@ -3,14 +3,15 @@ import ComNews from '../components/view/ComNews.vue'
 import ComNewsDetail from '../components/view/ComNewsDetail.vue'
 import AdminLogin from '../components/admin/login.vue'
 import ComPriceList from '../components/view/ComPriceList.vue'
+import ComPayment from '../components/view/ComPayment.vue'
 import AdminDashboard from '../components/admin/Dashboard.vue'
 import AdminServiceList from '../components/admin/service/ServiceList.vue'
 import AdminNewsList from '../components/admin/news/NewsList.vue'
 import AdminInsertNews from '../components/admin/news/InsertNews.vue'
 import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
-import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
-import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
+
+// import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
 import Home from '@/components/view/ComHome.vue'
@@ -73,6 +74,11 @@ const routes = [
     name: 'Advise',
     component: Advise,
   },
+  {
+    path: '/thanh-toan/:serviceId',
+    name: 'ComPayment',
+    component: ComPayment,
+  },
   // Admin login route
   {
     path: '/admin',
@@ -80,6 +86,10 @@ const routes = [
     component: AdminDashboard,
     meta: { requiresAuth: true },
     children: [
+      // {
+      //   path: '',
+      //   redirect: 'dashboard'
+      // },
       {
         path: 'dashboard',
         name: 'AdminDashboardHome',
@@ -128,18 +138,13 @@ const routes = [
         component: AdminOrderList,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-      {
-        path: 'don-hang/cho-duyet',
-        name: 'AdminPendingOrders',
-        component: AdminPendingOrders,
-        meta: { requiresAuth: true, requiresAdmin: true },
-      },
-      {
-        path: 'don-hang/lich-su',
-        name: 'AdminOrderHistory',
-        component: AdminOrderHistory,
-        meta: { requiresAuth: true, requiresAdmin: true },
-      },
+
+      // {
+      //   path: 'don-hang/lich-su',
+      //   name: 'AdminOrderHistory',
+      //   component: AdminOrderHistory,
+      //   meta: { requiresAuth: true, requiresAdmin: true },
+      // },
       { 
         path: 'tai-khoan/danh-sach', 
         name: 'AccountList', 

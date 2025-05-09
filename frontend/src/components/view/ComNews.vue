@@ -3,7 +3,6 @@
     <!-- Header của trang tin tức với hình nền và tiêu đề -->
     <div class="news-header">
       <div class="wave-background"></div>
-      <h1 class="news-title">Tin tức</h1>
       <!-- Thanh tìm kiếm tin tức -->
       <div class="search-wrapper">
         <div class="search-bar">
@@ -15,26 +14,32 @@
 
     <!-- Hiển thị khi không có kết quả tìm kiếm -->
     <div v-if="filteredNews.length === 0" class="no-results">
-      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
-      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
+      <!-- <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button> -->
     </div>
 
     <!-- Phần hiển thị lưới tin tức - Grid layout -->
-    <div v-else class="news-grid">
+    <div v-if="filteredNews.length > 0" class="news-grid">
       <div
         v-for="(news, index) in filteredNews"
         :key="index"
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img :src="getImageUrl(news.image)" :alt="news.title" class="news-image" />
+        <img :src="getImageUrl(news.image)" class="news-image" />
         <div class="news-content">
-          <p class="news-category">Công nghệ</p>
+          <p class="news-category">{{ news.type || news.category || 'Không có danh mục' }}</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
 
           <p class="news-excerpt">{{ news.summary }}</p>
         </div>
       </div>
+    </div>
+
+    <!-- Hiển thị khi không có kết quả tìm kiếm -->
+    <div v-else class="no-results">
+      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
     </div>
   </div>
 </template>
@@ -59,6 +64,7 @@ export default {
   async mounted() {
     try {
       const response = await newsService.getNews()
+      console.log('Mounted news data:', response.data) // Thêm dòng này để debug
       this.allNewsItems = response.data
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
@@ -84,9 +90,9 @@ export default {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
     getImageUrl(imagePath) {
-      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image';
-      if (imagePath.startsWith('http')) return imagePath;
-      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`;
+      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
+      if (imagePath.startsWith('http')) return imagePath
+      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`
     },
   },
 }
@@ -108,27 +114,12 @@ export default {
   position: relative;
   background: rgba(0, 123, 255, 1);
   width: 1240;
-  height: 310px;
+  height: 200px; /* Reduced height since we removed the title */
   top: 184;
   left: 356;
   border-radius: 20px;
-
   text-align: center;
   background-image: url('@/assets/sdtc-image/brsearch.png');
-}
-
-/* Tiêu đề "Tin tức" hiển thị trên header */
-.news-title {
-  color: rgba(255, 255, 255, 1);
-  font-family: Roboto;
-  font-weight: 190px;
-  font-size: 70px;
-  line-height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
 }
 
 /* Wrapper cho thanh tìm kiếm */
@@ -251,6 +242,33 @@ export default {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Styling for no results section */
+.no-results {
+  text-align: center;
+  padding: 20px;
+}
+
+.no-results p {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.clear-search-btn {
+  background: #004aad;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.clear-search-btn:hover {
+  background: #003c8f;
 }
 
 /* Responsive Styles */
