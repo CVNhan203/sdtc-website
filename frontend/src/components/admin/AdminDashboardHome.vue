@@ -7,45 +7,36 @@
       <h2>Tổng quan hệ thống</h2>
       <div v-if="loading">Đang tải dữ liệu...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else>
-        <div class="stats-row">
-          <div class="stat-card">
-            <h3>Đơn hàng</h3>
-            <p class="stat-number">{{ stats.orders }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Dịch vụ</h3>
-            <p class="stat-number">{{ stats.services }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Tin tức</h3>
-            <p class="stat-number">{{ stats.news }}</p>
-          </div>
-          <div class="stat-card">
-            <h3>Lịch đặt</h3>
-            <p class="stat-number">{{ stats.bookings }}</p>
-          </div>
+      <div v-else class="stats-grid">
+        <div class="stat-card">
+          <h3>Đơn hàng</h3>
+          <p class="stat-number">{{ stats.orders }}</p>
         </div>
-        <div class="charts-section">
-          <h2>Biểu đồ thống kê</h2>
-          <div class="charts-grid">
-            <div class="chart-card">
-              <div class="chart-title">Đơn hàng (Bar)</div>
-              <Bar :data="ordersChartData" :options="chartOptions" />
-            </div>
-            <div class="chart-card">
-              <div class="chart-title">Dịch vụ (Line)</div>
-              <Line :data="servicesChartData" :options="chartOptions" />
-            </div>
-            <div class="chart-card">
-              <div class="chart-title">Tin tức (Pie)</div>
-              <Pie :data="newsChartDataPie" :options="pieOptions" />
-            </div>
-            <div class="chart-card">
-              <div class="chart-title">Lịch đặt (Doughnut)</div>
-              <Doughnut :data="bookingsChartDataDoughnut" :options="pieOptions" />
-            </div>
-          </div>
+        <div class="stat-card">
+          <h3>Dịch vụ</h3>
+          <p class="stat-number">{{ stats.services }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Tin tức</h3>
+          <p class="stat-number">{{ stats.news }}</p>
+        </div>
+        <div class="stat-card">
+          <h3>Lịch đặt</h3>
+          <p class="stat-number">{{ stats.bookings }}</p>
+        </div>
+      </div>
+      <div class="charts-grid" v-if="!loading && !error">
+        <div class="chart-card">
+          <Bar :data="ordersChartData" :options="chartOptions" />
+        </div>
+        <div class="chart-card">
+          <Line :data="servicesChartData" :options="chartOptions" />
+        </div>
+        <div class="chart-card">
+          <Pie :data="newsChartDataPie" :options="pieOptions" />
+        </div>
+        <div class="chart-card">
+          <Doughnut :data="bookingsChartDataDoughnut" :options="pieOptions" />
         </div>
       </div>
     </div>
@@ -170,81 +161,60 @@ export default {
 @import "@/styles/admin.css";
 
 .admin-dashboard-home {
-  padding: 20px;
-  /* Xóa max-width để full màn hình */
-  width: 100%;
-  margin: 0;
-  background: #f6f9fb;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .admin-dashboard-home h1 {
   font-size: 2.5rem;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .admin-dashboard-home p {
   color: #666;
   font-size: 1.1rem;
-  text-align: center;
-  margin-bottom: 2rem;
 }
 
 .dashboard-overview {
-  margin-top: 2rem;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(52, 152, 219, 0.07);
-  padding: 20px;
-  /* full width */
-  width: 100%;
+  margin-top: 3rem;
 }
 
 .dashboard-overview h2 {
   color: #2c3e50;
-  font-size: 1.6rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
 }
 
-.stats-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 2.5rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
 }
 
 .stat-card {
-  flex: 1 1 220px;
-  background: linear-gradient(135deg, #f8fafc 70%, #eaf6fb 100%);
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.09);
-  padding: 1.5rem 1rem;
-  margin: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-  border: 1px solid #e3eaf1;
-  min-width: 220px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 8px 24px rgba(52, 152, 219, 0.13);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card h3 {
   color: #666;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
-  font-weight: 500;
 }
 
 .stat-number {
-  font-size: 2.4rem;
+  font-size: 2.8rem;
   font-weight: 700;
   color: #3498db;
   margin: 0.5rem 0;
@@ -253,93 +223,52 @@ export default {
   -webkit-text-fill-color: transparent;
 }
 
-.charts-section {
-  margin-top: 2.5rem;
-  padding: 1.5rem 1vw 0.5rem 1vw;
-  background: #fafdff;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.06);
-  width: 100%;
-}
-
-.charts-section h2 {
-  text-align: center;
-  font-size: 1.3rem;
-  color: #2980b9;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem;
-  padding: 0.5rem 0;
-  width: 100%;
-}
-
-.chart-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.07);
-  padding: 1.2rem 0.7rem 1.5rem 0.7rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 220px;
-  border: 1px solid #e3eaf1;
-  width: 100%;
-}
-
-.chart-title {
-  font-size: 1.05rem;
-  color: #555;
-  font-weight: 500;
-  margin-bottom: 0.7rem;
-  letter-spacing: 0.5px;
-}
-
 .error {
   color: #e74c3c;
   background: #ffd7d7;
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;
-  text-align: center;
 }
 
-@media (max-width: 1024px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-  .stats-row {
-    flex-direction: column;
-    gap: 1rem;
-  }
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
 }
 
 @media (max-width: 768px) {
   .admin-dashboard-home {
-    padding: 0.5rem;
+    padding: 1rem;
   }
-  .dashboard-overview {
-    padding: 1rem 0.2rem 1.5rem 0.2rem;
-  }
-  .charts-section {
-    padding: 1rem 0.2rem 0.5rem 0.2rem;
-  }
+
   .stat-card {
-    padding: 1rem 0.5rem;
-    margin: 0.3rem 0;
+    padding: 1.2rem;
   }
+
   .stat-number {
-    font-size: 1.7rem;
+    font-size: 2.2rem;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   .chart-card {
-    min-height: 160px;
-    padding: 0.7rem 0.2rem 1rem 0.2rem;
+    padding: 1rem;
+    min-height: 120px;
   }
 }
 </style>

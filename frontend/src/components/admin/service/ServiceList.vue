@@ -203,6 +203,7 @@
                 :class="{ error: errors.title }"
                 :disabled="submitLoading"
                 placeholder="Nhập tiêu đề dịch vụ"
+                maxlength="100"
               />
               <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
               <span class="character-count" v-if="formData.title">
@@ -287,8 +288,12 @@
                 :disabled="submitLoading"
                 rows="4"
                 placeholder="Nhập mô tả dịch vụ"
+                maxlength="1000"
               ></textarea>
               <span class="error-message" v-if="errors.description">{{ errors.description }}</span>
+              <span class="character-count" v-if="formData.description">
+                {{ formData.description.length }}/1000
+              </span>
             </div>
 
             <div class="form-actions">
@@ -552,31 +557,48 @@ export default {
       }
     },
     validateForm() {
-      let isValid = true
-      let errors = {}
+      let isValid = true;
+      let newErrors = {};
 
       // Tiêu đề validation
       if (!this.formData.title?.trim()) {
-        errors.title = 'Tiêu đề không được để trống'
-        isValid = false
-      } else if (this.formData.title.trim().length < 3) {
-        errors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
-        isValid = false
-      } else if (this.formData.title.trim().length > 100) {
-        errors.title = 'Tiêu đề không được vượt quá 100 ký tự'
-        isValid = false
-      } else if (!/^[a-zA-Z0-9\sÀ-ỹ[\]{}()!@#$%^&*,.?-]+$/.test(this.formData.title.trim())) {
-        errors.title = 'Tiêu đề chứa ký tự không hợp lệ'
-        isValid = false
+        newErrors.title = 'Tiêu đề không được để trống';
+        isValid = false;
+      } else {
+        const trimmedTitle = this.formData.title.trim();
+        
+        // Kiểm tra khoảng trắng đầu và cuối
+        if (this.formData.title !== trimmedTitle) {
+          newErrors.title = 'Tiêu đề không được có khoảng trắng ở đầu hoặc cuối';
+          isValid = false;
+        }
+        // Kiểm tra độ dài
+        else if (trimmedTitle.length < 3) {
+          newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
+          isValid = false;
+        } else if (trimmedTitle.length > 200) {
+          newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+          isValid = false;
+        }
+        // Kiểm tra khoảng trắng liên tiếp
+        else if (/\s{2,}/.test(trimmedTitle)) {
+          newErrors.title = 'Tiêu đề không được có nhiều khoảng trắng liên tiếp';
+          isValid = false;
+        }
+        // Kiểm tra ký tự đặc biệt
+        else if (!/^[a-zA-Z0-9À-ỹ\s.,!?-]+$/.test(trimmedTitle)) {
+          newErrors.title = 'Tiêu đề chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?-';
+          isValid = false;
+        }
       }
 
       // Loại dịch vụ validation
       if (!this.formData.type) {
-        errors.type = 'Vui lòng chọn loại dịch vụ'
-        isValid = false
+        newErrors.type = 'Vui lòng chọn loại dịch vụ';
+        isValid = false;
       } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        errors.type = 'Loại dịch vụ không hợp lệ'
-        isValid = false
+        newErrors.type = 'Loại dịch vụ không hợp lệ';
+        isValid = false;
       }
 
       // Giá validation
@@ -585,257 +607,127 @@ export default {
         this.formData.price === null ||
         this.formData.price === ''
       ) {
-        errors.price = 'Giá dịch vụ không được để trống'
-        isValid = false
+        newErrors.price = 'Giá dịch vụ không được để trống';
+        isValid = false;
       } else {
-        const priceValue = Number(this.formData.price)
+        const priceValue = Number(this.formData.price);
         if (isNaN(priceValue)) {
-          errors.price = 'Giá dịch vụ phải là một số'
-          isValid = false
+          newErrors.price = 'Giá dịch vụ phải là một số';
+          isValid = false;
         } else if (priceValue <= 0) {
-          errors.price = 'Giá dịch vụ phải lớn hơn 0'
-          isValid = false
+          newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
+          isValid = false;
         } else if (priceValue > 1000000000) {
-          errors.price = 'Giá dịch vụ quá lớn'
-          isValid = false
+          newErrors.price = 'Giá dịch vụ quá lớn';
+          isValid = false;
         }
       }
 
       // Mô tả validation
-      const description =
-        typeof this.formData.description === 'string'
-          ? this.formData.description
-          : Array.isArray(this.formData.description)
-            ? this.formData.description.join('\n')
-            : ''
+      const content = this.formData.description;
 
-      if (!description.trim()) {
-        errors.description = 'Mô tả không được để trống'
-        isValid = false
+      if (typeof content !== 'string' || content.trim() === '') {
+        newErrors.description = 'Mô tả không được để trống';
+        isValid = false;
       } else {
-        const lines = description.split('\n').filter((line) => line.trim())
-        if (lines.length === 0) {
-          errors.description = 'Mô tả không được để trống'
-          isValid = false
+        const trimmedContent = content.trim();
+        
+        if (trimmedContent.length < 10) {
+          newErrors.description = 'Mô tả phải có ít nhất 10 ký tự.';
+          isValid = false;
+        } else if (trimmedContent.length > 1000) {
+          newErrors.description = 'Mô tả không được vượt quá 1000 ký tự.';
+          isValid = false;
+        } else if (/\s{2,}/.test(trimmedContent)) {
+          newErrors.description = 'Mô tả không được có nhiều khoảng trắng liên tiếp.';
+          isValid = false;
+        } else if (!/^[a-zA-Z0-9À-ỹ\s.,!?()]+$/.test(trimmedContent)) {
+          newErrors.description = 'Mô tả chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?()';
+          isValid = false;
         } else {
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim()
-            if (line.length < 10) {
-              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`
-              isValid = false
-              break
-            } else if (line.length > 500) {
-              errors.description = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`
-              isValid = false
-              break
-            }
-          }
+          this.formData.description = trimmedContent;
         }
       }
 
       // Ảnh validation - Chỉ kiểm tra khi thêm mới
       if (!this.isEditing && !this.formData.image && !this.imagePreview) {
-        errors.image = 'Vui lòng tải lên ảnh cho dịch vụ'
-        isValid = false
+        newErrors.image = 'Vui lòng tải lên ảnh cho dịch vụ';
+        isValid = false;
       }
 
-      this.errors = errors
+      this.errors = newErrors;
 
-      if (!isValid) {
-        // Display error message
-        const errorMessages = Object.values(errors).join('\n')
-        alert('Vui lòng sửa các lỗi sau:\n' + errorMessages)
-      }
-
-      return isValid
+      return isValid;
     },
     async handleSubmit() {
       // Basic trimming and data preparation
-      if (typeof this.formData.title === 'string') {
-        this.formData.title = this.formData.title.trim()
-      }
+      this.formData.title = this.formData.title.trim();
 
-      // Đảm bảo description là một mảng các chuỗi có ít nhất 10 ký tự
-      let descriptionArray = [];
-      if (typeof this.formData.description === 'string') {
-        // Nếu description là chuỗi, tách theo dòng và lọc các dòng trống
-        descriptionArray = this.formData.description
-          .split('\n')
-          .map(item => item.trim())
-          .filter(item => item.length >= 10);
-        
-        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
-        if (descriptionArray.length === 0) {
-          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
-        }
-      } else if (Array.isArray(this.formData.description)) {
-        // Nếu description đã là mảng, lọc các phần tử trống
-        descriptionArray = this.formData.description
-          .map(item => item.trim())
-          .filter(item => item.length >= 10);
-          
-        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
-        if (descriptionArray.length === 0) {
-          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
-        }
-      }
-      
-      // Cập nhật lại formData với description đã xử lý
-      this.formData.description = descriptionArray;
-      
-      // Đảm bảo type có giá trị hợp lệ
-      if (!this.formData.type || !['web', 'app', 'agency'].includes(this.formData.type)) {
-        this.formData.type = 'web';
-      }
-      
-      // Đảm bảo price là số
-      if (this.formData.price) {
-        this.formData.price = Number(this.formData.price);
-      }
-
+      // Validate the form before proceeding with the update
       if (!this.validateForm()) {
         // Focus on the first field with an error
-        const errorFields = Object.keys(this.errors)
+        const errorFields = Object.keys(this.errors);
         if (errorFields.length > 0) {
-          const firstErrorField = errorFields[0]
-          const element = document.querySelector(`[name="${firstErrorField}"]`)
+          const firstErrorField = errorFields[0];
+          const element = document.querySelector(`[name="${firstErrorField}"]`);
           if (element) {
-            element.focus()
+            element.focus();
           }
         }
-        return
+        return; // Stop the update process if validation fails
       }
 
       try {
-        this.submitLoading = true
-        this.submitError = null
+        this.submitLoading = true;
+        this.submitError = null;
 
-        let imageUrl = null
+        let imageUrl = null;
         if (this.formData.image instanceof File) {
-          const imageFormData = new FormData()
-          imageFormData.append('image', this.formData.image)
+          const imageFormData = new FormData();
+          imageFormData.append('image', this.formData.image);
 
           try {
-            this.uploadStatus = 'Đang tải ảnh lên...'
-            const uploadResponse = await serviceService.uploadImage(imageFormData)
+            this.uploadStatus = 'Đang tải ảnh lên...';
+            const uploadResponse = await serviceService.uploadImage(imageFormData);
             if (uploadResponse && uploadResponse.imagePath) {
-              imageUrl = uploadResponse.imagePath
-              this.uploadStatus = 'Tải ảnh thành công!'
+              imageUrl = uploadResponse.imagePath;
+              this.uploadStatus = 'Tải ảnh thành công!';
             } else {
-              throw new Error('Không nhận được đường dẫn ảnh')
+              throw new Error('Không nhận được đường dẫn ảnh');
             }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError)
-            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
-            this.submitLoading = false
-            return
+            console.error('Error uploading image:', uploadError);
+            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định');
+            this.submitLoading = false;
+            return;
           }
         }
 
-        // Prepare service data according to backend model
-        this.uploadStatus = 'Đang xử lý...'
-        
-        // Đảm bảo description là một mảng có ít nhất 1 phần tử
-        let descriptionArray = this.formData.description;
-        if (!Array.isArray(descriptionArray) || descriptionArray.length === 0) {
-          descriptionArray = ['Mô tả dịch vụ mặc định'];
-        }
-        
-        // Đảm bảo các phần tử trong mảng đều là chuỗi
-        descriptionArray = descriptionArray
-          .map(item => typeof item === 'string' ? item.trim() : String(item));
-          
-        // Kiểm tra độ dài và tự động điều chỉnh nếu cần
-        descriptionArray = descriptionArray.map(item => {
-          // Nếu chuỗi quá ngắn, thêm nội dung để đạt độ dài tối thiểu
-          if (item.length > 0 && item.length < 10) {
-            return item + ' - Thông tin chi tiết sẽ được cập nhật sau.';
-          }
-          return item;
-        }).filter(item => item.length > 0);
-          
-        // Nếu sau khi lọc không còn phần tử nào, thêm một mô tả mặc định
-        if (descriptionArray.length === 0) {
-          descriptionArray = ['Mô tả dịch vụ mặc định - được tạo tự động'];
-        }
-        
+        // Prepare the service data for the update
         const serviceData = {
-          title: this.formData.title ? this.formData.title.trim() : 'Dịch vụ mới ' + new Date().toLocaleDateString(),
-          description: descriptionArray,
-          price: Number(this.formData.price) || 0,
-          type: this.formData.type || 'web',
-        }
-        
-        console.log('Preparing service data:', serviceData);
+          title: this.formData.title,
+          description: this.formData.description,
+          price: this.formData.price,
+          type: this.formData.type,
+          // Include imageUrl if it was uploaded
+          ...(imageUrl && { image: imageUrl }),
+        };
 
-        if (imageUrl) {
-          serviceData.image = imageUrl
-        } else if (this.formData.image && typeof this.formData.image === 'string') {
-          serviceData.image = this.formData.image
-        }
+        // Call the update service API
+        await serviceService.updateService(this.formData._id, serviceData);
+        this.successMessage = 'Cập nhật dịch vụ thành công!';
 
-        if (this.isEditing) {
-          await serviceService.updateService(this.formData._id, serviceData)
-          this.successMessage = 'Cập nhật dịch vụ thành công!'
-        } else {
-          await serviceService.createService(serviceData)
-          this.successMessage = 'Thêm dịch vụ mới thành công!'
-        }
-
-        // Success handling
+        // Reset form and reload services
         setTimeout(() => {
-          this.loadServices()
-          this.showFormModal = false
-          this.resetForm()
-        }, 1000)
+          this.loadServices();
+          this.showFormModal = false;
+          this.resetForm();
+        }, 1000);
       } catch (error) {
-        console.error('Error:', error)
-
-        // Handle validation errors from backend
-        if (error.response?.data?.errors) {
-          const backendErrors = error.response.data.errors
-
-          // Map backend errors to form fields
-          const errorMapping = {
-            title: 'title',
-            description: 'description',
-            price: 'price',
-            type: 'type',
-            image: 'image',
-          }
-
-          // Reset all errors first
-          this.errors = {}
-
-          // Map backend errors to frontend error fields
-          Object.entries(backendErrors).forEach(([field, message]) => {
-            const frontendField = errorMapping[field] || field
-            this.errors[frontendField] = Array.isArray(message) ? message[0] : message
-          })
-
-          // Show validation message
-          this.submitError = 'Vui lòng kiểm tra lại thông tin nhập'
-
-          // Scroll to the first error field
-          this.$nextTick(() => {
-            const errorFields = Object.keys(this.errors)
-            if (errorFields.length > 0) {
-              const firstErrorField = errorFields[0]
-              const element = document.querySelector(`[name="${firstErrorField}"]`)
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                setTimeout(() => element.focus(), 500)
-              }
-            }
-          })
-        } else {
-          // General error message
-          this.submitError =
-            error.response?.data?.message || error.message || 'Có lỗi xảy ra. Vui lòng thử lại!'
-        }
+        console.error('Error updating service:', error);
+        this.submitError = 'Có lỗi xảy ra khi cập nhật dịch vụ. Vui lòng thử lại!';
       } finally {
-        this.submitLoading = false
-        this.uploadStatus = ''
+        this.submitLoading = false;
       }
     },
     async handleSoftDelete() {
@@ -1332,7 +1224,8 @@ tr:hover {
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #e5e7eb;
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
 }
 
 .delete-btn,
@@ -1365,7 +1258,8 @@ tr:hover {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #2563eb;
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
 
 /* Responsive modal */
