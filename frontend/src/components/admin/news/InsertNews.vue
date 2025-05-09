@@ -97,7 +97,7 @@
             <div v-if="!imagePreview" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
               <span>Nhấp để tải ảnh lên</span>
-              <p class="upload-hint">Kích thước tối đa: 10MB. Định dạng: JPG, PNG, GIF</p>
+              <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
             </div>
             <div v-if="imagePreview" class="image-preview">
               <img :src="imagePreview" alt="Preview" class="preview-img" />
@@ -544,8 +544,11 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .insert-news {
-  padding: 24px;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -553,12 +556,12 @@ export default {
 .form-container {
   background: #fff;
   border-radius: 16px;
-  padding: 32px;
+  padding: 20px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -577,7 +580,7 @@ input[type="text"],
 input[type="date"],
 textarea {
   width: 100%;
-  padding: 12px 16px;
+  padding: 20px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 1rem;
@@ -596,15 +599,14 @@ textarea:focus {
 
 .info-section {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* Changed to make title take more space */
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
-  margin-bottom: 24px;
 }
 
 .image-upload-container {
   border: 2px dashed #e5e7eb;
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -684,14 +686,14 @@ textarea:focus {
   display: flex;
   gap: 16px;
   justify-content: flex-end;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid #e5e7eb;
 }
 
 .submit-btn,
 .cancel-btn {
-  padding: 12px 24px;
+  padding: 20px;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.2s ease;
@@ -741,7 +743,7 @@ textarea:focus {
 
 .error-alert,
 .success-alert {
-  padding: 16px;
+  padding: 20px;
   border-radius: 8px;
   margin-bottom: 24px;
   display: flex;
@@ -763,11 +765,11 @@ textarea:focus {
 
 @media (max-width: 768px) {
   .insert-news {
-    padding: 16px;
+    padding: 20px;
   }
 
   .form-container {
-    padding: 24px;
+    padding: 20px;
   }
 
   .info-section {
@@ -777,11 +779,11 @@ textarea:focus {
 
 @media (max-width: 480px) {
   .insert-news {
-    padding: 12px;
+    padding: 20px;
   }
 
   .form-container {
-    padding: 16px;
+    padding: 20px;
     border-radius: 12px;
   }
 

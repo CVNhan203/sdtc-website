@@ -51,7 +51,8 @@
 
     <!-- Modal chi tiết -->
     <div v-if="selectedBooking" class="modal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="selectedBooking = null"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Chi tiết đặt lịch</h3>
           <button @click="selectedBooking = null" class="close-btn">
@@ -158,10 +159,14 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .admin-container {
-  padding: 2rem;
+  padding: 20px;
   min-height: 100vh;
   background-color: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .loading-container {
@@ -284,7 +289,16 @@ tr:hover {
   z-index: 1000;
 }
 
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
+
 .modal-content {
+  position: relative;
+  z-index: 2;
   background-color: white;
   border-radius: 12px;
   width: 95%;
@@ -310,7 +324,7 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 2rem;
+  padding: 20px;
   max-height: 70vh;
   overflow-y: auto;
 }

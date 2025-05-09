@@ -35,7 +35,7 @@
           <div class="action-buttons">
             <button class="action-btn add" @click="$router.push('/admin/tin-tuc/them-moi')">
               <i class="fas fa-plus"></i>
-              Thêm tin tức mới
+              Thêm tin tức
             </button>
             <button class="action-btn trash" @click="$router.push('/admin/tin-tuc/thung-rac')">
               <i class="fas fa-trash-alt"></i>
@@ -149,10 +149,11 @@
 
       <!-- Modal xem chi tiết tin tức -->
       <div class="modal" v-if="showDetailsModal">
-        <div class="modal-content">
-          <div class="modal-header">
+        <div class="modal-overlay" @click="showDetailsModal = false"></div>
+        <div class="modal-content" @click.stop>
+          <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between;">
             <h3>Chi tiết tin tức</h3>
-            <div class="modal-actions">
+            <div class="modal-actions" style="margin-left: auto;">
               <button class="close-btn" @click="showDetailsModal = false">
                 <i class="fas fa-times"></i>
               </button>
@@ -204,10 +205,11 @@
 
       <!-- Modal thêm/chỉnh sửa tin tức -->
       <div class="modal" v-if="showFormModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="closeFormModal"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>{{ isEditing ? 'Chỉnh sửa tin tức' : 'Thêm tin tức mới' }}</h3>
-            <button class="close-btn" @click="showFormModal = false">
+            <button class="close-btn" @click="closeFormModal">
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -259,7 +261,7 @@
               </div>
               <!-- Các nút hành động form -->
               <div class="form-actions">
-                <button type="button" class="cancel-btn" @click="showFormModal = false">
+                <button type="button" class="cancel-btn" @click="closeFormModal">
                   <i class="fas fa-times"></i>
                   Hủy
                 </button>
@@ -275,7 +277,8 @@
 
       <!-- Modal xác nhận xóa tạm thời -->
       <div class="modal" v-if="showSoftDeleteModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="showSoftDeleteModal = false"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>Xác nhận chuyển vào thùng rác</h3>
             <button class="close-btn" @click="showSoftDeleteModal = false">
@@ -296,7 +299,8 @@
 
       <!-- Modal xác nhận khôi phục -->
       <div class="modal" v-if="showRestoreModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="showRestoreModal = false"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>Xác nhận khôi phục</h3>
             <button class="close-btn" @click="showRestoreModal = false">
@@ -315,7 +319,8 @@
 
       <!-- Modal xác nhận xóa vĩnh viễn -->
       <div class="modal" v-if="showPermanentDeleteModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="showPermanentDeleteModal = false"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>Xác nhận xóa vĩnh viễn</h3>
             <button class="close-btn" @click="showPermanentDeleteModal = false">
@@ -508,6 +513,11 @@ export default {
           
           isEditing.value = true
           showFormModal.value = true
+          // Không cần hiệu ứng khi sửa
+          setTimeout(() => {
+            const modal = document.querySelector('.modal-content')
+            if (modal) modal.classList.add('no-animation')
+          }, 0)
         }
       } catch (error) {
         console.error('Error fetching news details:', error)
@@ -702,20 +712,19 @@ export default {
       try {
         // Chuẩn bị dữ liệu để gửi lên server
         const newsData = {
-          title: formData.value.title.trim(),
-          summary: formData.value.summary.trim(),
-          content: formData.value.content.trim(),
-          type: formData.value.type.trim(),
-          publishedDate: formData.value.publishedDate,
-          author: formData.value.author.trim() || 'Admin'
+          title: (formData.value.title || '').trim(),
+          summary: (formData.value.summary || '').trim(),
+          content: (formData.value.content || '').trim(),
+          type: (formData.value.type || '').trim(),
+          // Không gửi publishedDate nếu không có giá trị hợp lệ
+          // Không gửi các trường không cần thiết
         };
 
         // Xử lý ảnh
         if (formData.value.image instanceof File) {
-          // Nếu là file mới, upload ảnh trước
           const imageFormData = new FormData();
           imageFormData.append('image', formData.value.image);
-          
+
           try {
             const uploadResponse = await newsService.uploadImage(imageFormData);
             if (uploadResponse && uploadResponse.imagePath) {
@@ -732,9 +741,12 @@ export default {
             return;
           }
         } else if (typeof formData.value.image === 'string') {
-          // Nếu là đường dẫn ảnh đã có, giữ nguyên
           newsData.image = formData.value.image;
         }
+
+        // Thêm author nếu backend yêu cầu (lấy từ localStorage hoặc mặc định)
+        const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+        newsData.author = adminInfo.fullName || 'Admin';
 
         // Gửi dữ liệu lên server
         if (isEditing.value) {
@@ -750,8 +762,7 @@ export default {
             message: 'Tạo tin tức mới thành công!'
           });
         }
-        
-        // Cập nhật lại danh sách tin tức
+
         await loadNews();
         showFormModal.value = false;
         imagePreview.value = null;
@@ -800,6 +811,15 @@ export default {
       }
       showDetailsModal.value = false;
       openEditModal(selectedNews.value);
+    }
+
+    // Khi đóng modal form, bỏ class no-animation để lần sau thêm mới có hiệu ứng
+    const closeFormModal = () => {
+      showFormModal.value = false
+      setTimeout(() => {
+        const modal = document.querySelector('.modal-content')
+        if (modal) modal.classList.remove('no-animation')
+      }, 300)
     }
 
     // Gọi khi component được tạo
@@ -868,14 +888,18 @@ export default {
       isSelected,
       toggleSelect,
       toggleSelectAll,
+      closeFormModal,
     }
   },
 }
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .news-list {
-  padding: 1.5rem;
+  padding: 20px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -904,7 +928,7 @@ export default {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 8px 16px;
-  width: 100%;
+  width: 400px;
   max-width: 400px;
   transition: all 0.2s ease;
 }
@@ -980,7 +1004,27 @@ th, td {
   padding: 1rem;
   text-align: center;
   vertical-align: middle;
-  /* Căn giữa toàn bộ nội dung bảng */
+  height: 100%; /* Đảm bảo chiều cao 100% cho cell */
+      border-bottom: 1px solid #e2e8f0;
+}
+
+tr {
+  min-height: 80px; /* Đảm bảo chiều cao tối thiểu cho dòng */
+}
+
+.actions-cell {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Nếu cần, có thể thêm min-height cho cell này */
+}
+
+/* Căn giữa toàn bộ nội dung bảng */
+th, td {
+  padding: 1rem;
+  text-align: center;
+  vertical-align: middle; /* Đảm bảo căn giữa theo chiều dọc */
 }
 
 /* Căn giữa hình ảnh trong bảng */
@@ -1082,26 +1126,62 @@ tr:hover {
   z-index: 1000;
 }
 
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
+
 .modal-content {
+  position: relative;
+  z-index: 2;
   background: white;
   border-radius: 12px;
   width: 90%;
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: auto; /* Thêm dòng này để cho phép cuộn ngang nếu cần */
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
+/* Thêm xử lý tràn ngang cho modal-body */
 .modal-body {
   padding: 1.5rem;
+  overflow-x: auto; /* Cho phép cuộn ngang nếu nội dung quá dài */
+}
+
+/* Đảm bảo nội dung chi tiết không bị tràn ra ngoài */
+.detail-item {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  word-break: break-word; /* Thêm dòng này */
+  overflow-wrap: anywhere; /* Thêm dòng này */
+}
+
+.detail-item p {
+  font-size: 15px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  word-break: break-word; /* Thêm dòng này */
+  overflow-wrap: anywhere; /* Thêm dòng này */
+  max-width: 100%; /* Đảm bảo không vượt quá khung */
+  overflow-x: auto; /* Cho phép cuộn ngang nếu vẫn tràn */
 }
 
 /* Form Styling */
@@ -1234,7 +1314,7 @@ tr:hover {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 32px;
+  margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e5e7eb;
 }
@@ -1453,6 +1533,9 @@ tr:hover {
   background: linear-gradient(to right, #f8fafc, #f1f5f9);
   border-bottom: 1px solid #e2e8f0;
   padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Đưa các phần tử về hai phía */
 }
 
 .modal-header h3 {
@@ -1477,6 +1560,7 @@ tr:hover {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-left: auto; /* Đẩy nút đóng sang phải */
 }
 
 .close-btn:hover {
@@ -1487,7 +1571,7 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 2rem;
+  padding: 20px;
   background: white;
 }
 
@@ -1500,6 +1584,11 @@ tr:hover {
 .modal-content {
   animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: top;
+}
+
+/* Không hiệu ứng khi là modal form chỉnh sửa */
+.modal-content.no-animation {
+  animation: none !important;
 }
 
 @keyframes modalFadeIn {

@@ -229,7 +229,7 @@ export default {
     },
     handleLogout() {
       authService.logout()
-      this.$router.push('/admin')
+      this.$router.push('/admin/dang-nhap')
     },
   },
   watch: {
@@ -252,58 +252,9 @@ export default {
 </script>
 
 <style scoped>
-/* Import CSS variables */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-:root {
-  /* Color variables */
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #f1f5f9;
-  --secondary-hover: #e2e8f0;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  --success-color: #10b981;
-  --success-hover: #059669;
+@import "@/styles/admin.css";
 
-  /* Text colors */
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
-
-  /* Border colors */
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
-
-  /* Background colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-
-  /* Spacing variables */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 0.75rem;
-  --spacing-md: 1.25rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 2.5rem;
-
-  /* Border radius */
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
-
-  /* Shadow */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  /* Font sizes */
-  --font-size-xs: 16px;
-  --font-size-sm: 18px;
-  --font-size-md: 20px;
-  --font-size-lg: 22px;
-  --font-size-xl: 24px;
-}
 
 /* Dashboard-specific styles */
 .dashboard-container {
@@ -317,8 +268,8 @@ export default {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 330px;
-  background: #000000;
+  width: 280px;
+  background: #F7F8FA;
   color: white;
   display: flex;
   flex-direction: column;
@@ -382,8 +333,8 @@ export default {
 .nav-item {
   display: block; /* Change to block */
   text-decoration: none;
-  color: white;
-  padding: 1rem 1.5rem;
+  color: rgb(0, 0, 0);
+  padding: 1rem 2.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -407,11 +358,10 @@ export default {
   font-size: 20px;
   width: 24px;
   text-align: center;
-  color: #fff;
+  color: #000000;
 }
 
 .nav-item a{
-  color: #fff;
   text-decoration: none;
   border: none;
   background: none;
@@ -424,18 +374,18 @@ export default {
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: #000000;
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
+  background: #bad4ff;
   font-weight: 500;
-  color: #fff;
+  color: #000000;
 }
 
 .nav-item.active .nav-item-content i,
 .nav-item:hover .nav-item-content i {
-  color: #fff;
+  color: #000000;
 }
 
 .submenu {
@@ -520,7 +470,7 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: #3b82f6;
   border: none;
   border-radius: 8px;
   color: white;
@@ -533,7 +483,7 @@ export default {
 }
 
 .logout-btn:hover {
-  background: var(--danger-color);
+  background: rgba(255, 0, 0, 0.2);
 }
 
 .logout-btn:active {
@@ -602,7 +552,7 @@ export default {
 }
 
 .content-area {
-  padding: 2rem;
+  padding: 20px;
   flex: 1;
   overflow: auto;
 }
@@ -676,7 +626,7 @@ export default {
 
 /* Add new styles for account management */
 .nav-item i.fa-users-cog {
-  color: #fff;
+  color: #000000;
 }
 
 /* Khi hover vào sidebar, chỉ sidebar cuộn */

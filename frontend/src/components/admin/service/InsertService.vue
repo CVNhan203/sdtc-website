@@ -96,7 +96,7 @@
               <div v-if="!imagePreview" class="upload-button">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Nhấp để tải ảnh lên</span>
-                <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
+                <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
               </div>
               <div v-if="imagePreview" class="image-preview">
                 <img :src="imagePreview" alt="Preview" class="preview-img" />
@@ -130,9 +130,6 @@
           <span class="character-count" :class="{ error: formData.content.length > 2000 }">
             {{ formData.content.length }}/2000
           </span>
-          <small class="form-help-text"
-            >Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small
-          >
         </div>
 
         <!-- Form Actions -->
@@ -478,8 +475,11 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .insert-service {
-  padding: 24px;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -487,12 +487,12 @@ export default {
 .form-container {
   background: #fff;
   border-radius: 16px;
-  padding: 32px;
+  padding: 20px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
@@ -507,9 +507,28 @@ export default {
   margin-left: 4px;
 }
 
+select{
+  background: #f9fafb;
+  padding: 10px 32px 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url(data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e);
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
 input[type="text"],
 input[type="number"],
-select,
 textarea {
   width: 100%;
   padding: 12px 16px;
@@ -534,14 +553,14 @@ textarea:focus {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   align-items: start;
 }
 
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .type-group,
@@ -633,8 +652,8 @@ textarea:focus {
   display: flex;
   gap: 16px;
   justify-content: flex-end;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid #e5e7eb;
 }
 

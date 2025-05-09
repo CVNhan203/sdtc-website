@@ -1,117 +1,122 @@
 <template>
   <div class="admin-container">
-    <div class="actions-header">
-      <div class="search-section">
-        <div class="filter-box">
-          <select v-model="statusFilter">
-            <option value="all">Tất cả trạng thái</option>
-            <option value="completed">Đã hoàn thành</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
+    <div class="account-list">
+      <div class="actions-header">
+        <div class="search-section">
+          <div class="filter-box">
+            <select v-model="statusFilter">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="completed">Đã hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+          <div class="search-box">
+            <input
+              v-model="search"
+              type="text"
+              placeholder="Tìm kiếm theo tên, email, số điện thoại, dịch vụ..."
+            />
+            <i class="fas fa-search"></i>
+          </div>
         </div>
-        <div class="search-box">
-          <input
-            v-model="search"
-            type="text"
-            placeholder="Tìm kiếm theo tên, email, số điện thoại, dịch vụ..."
-          />
-          <i class="fas fa-search"></i>
+        <div class="right-section">
+          <router-link to="/admin/dat-lich/cho-xu-ly" class="pending-btn">
+            <i class="fas fa-clock"></i>
+            Đặt lịch chờ xử lý
+          </router-link>
         </div>
       </div>
-      <div class="right-section">
-        <router-link to="/admin/dat-lich/cho-xu-ly" class="pending-btn">
-          <i class="fas fa-clock"></i>
-          Đặt lịch chờ xử lý
-        </router-link>
-      </div>
-    </div>
 
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <div>Đang tải dữ liệu...</div>
-    </div>
-    <div v-else-if="error" class="error-container">
-      <div class="error-message">{{ error }}</div>
-      <button class="retry-btn" @click="fetchBookings">Thử lại</button>
-    </div>
-    <div v-else-if="filteredBookings.length === 0" class="empty-state">
-      <i class="fas fa-calendar-times"></i>
-      <span>Không có đặt lịch nào phù hợp</span>
-    </div>
-    <div v-else class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Họ tên</th>
-            <!-- <th>Email</th> -->
-            <!-- <th>Số điện thoại</th> -->
-            <th>Dịch vụ</th>
-            <th>Trạng thái</th>
-            <th>Ngày đặt</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(booking, index) in filteredBookings" :key="booking._id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ booking.fullName }}</td>
-            <!-- <td>{{ booking.email }}</td> -->
-            <!-- <td>{{ booking.phone }}</td> -->
-            <td>{{ booking.service }}</td>
-            <td>
-              <span :class="['status-badge', booking.status]">
-                {{ getStatusText(booking.status) }}
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div>Đang tải dữ liệu...</div>
+      </div>
+      <div v-else-if="error" class="error-container">
+        <div class="error-message">{{ error }}</div>
+        <button class="retry-btn" @click="fetchBookings">Thử lại</button>
+      </div>
+      <div v-else-if="filteredBookings.length === 0" class="empty-state">
+        <i class="fas fa-calendar-times"></i>
+        <span>Không có đặt lịch nào phù hợp</span>
+      </div>
+      <div v-else>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Họ tên</th>
+                <!-- <th>Email</th> -->
+                <!-- <th>Số điện thoại</th> -->
+                <th>Dịch vụ</th>
+                <th>Trạng thái</th>
+                <th>Ngày đặt</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(booking, index) in filteredBookings" :key="booking._id">
+                <td>{{ index + 1 }}</td>
+                <td>{{ booking.fullName }}</td>
+                <!-- <td>{{ booking.email }}</td> -->
+                <!-- <td>{{ booking.phone }}</td> -->
+                <td>{{ booking.service }}</td>
+                <td>
+                  <span :class="['status-badge', booking.status]">
+                    {{ getStatusText(booking.status) }}
+                  </span>
+                </td>
+                <td>{{ formatDate(booking.createdAt) }}</td>
+                <td class="actions-cell">
+                  <div class="actions">
+                    <button @click="viewDetails(booking)" class="icon-btn info" title="Xem chi tiết">
+                      <i class="fas fa-info-circle"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal chi tiết -->
+      <div v-if="selectedBooking" class="modal">
+        <div class="modal-overlay" @click="selectedBooking = null"></div>
+        <div class="modal-content" @click.stop>
+          <div class="modal-header">
+            <h3>Chi tiết đặt lịch</h3>
+            <button @click="selectedBooking = null" class="close-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="detail-item">
+              <label>Họ tên:</label>
+              <p>{{ selectedBooking.fullName }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Email:</label>
+              <p>{{ selectedBooking.email }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Dịch vụ:</label>
+              <p>{{ selectedBooking.service }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Ghi chú:</label>
+              <p>{{ selectedBooking.note || 'Không có' }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Trạng thái:</label>
+              <span :class="['status-badge', selectedBooking.status]">
+                {{ getStatusText(selectedBooking.status) }}
               </span>
-            </td>
-            <td>{{ formatDate(booking.createdAt) }}</td>
-            <td class="actions-cell">
-              <div class="actions">
-                <button @click="viewDetails(booking)" class="icon-btn info" title="Xem chi tiết">
-                  <i class="fas fa-info-circle"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Modal chi tiết -->
-    <div v-if="selectedBooking" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Chi tiết đặt lịch</h3>
-          <button @click="selectedBooking = null" class="close-btn">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="detail-item">
-            <label>Họ tên:</label>
-            <p>{{ selectedBooking.fullName }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Email:</label>
-            <p>{{ selectedBooking.email }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Dịch vụ:</label>
-            <p>{{ selectedBooking.service }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Ghi chú:</label>
-            <p>{{ selectedBooking.note || 'Không có' }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Trạng thái:</label>
-            <span :class="['status-badge', selectedBooking.status]">
-              {{ getStatusText(selectedBooking.status) }}
-            </span>
-          </div>
-          <div class="detail-item">
-            <label>Ngày đặt:</label>
-            <p>{{ formatDate(selectedBooking.createdAt) }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Ngày đặt:</label>
+              <p>{{ formatDate(selectedBooking.createdAt) }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -201,9 +206,11 @@ export default {
 </script>
 
 <style scoped>
+
+@import "@/styles/admin.css";
+
 .admin-container {
-  padding: 24px;
-  background: #f8fafc;
+  background: #fff;
   min-height: 100vh;
 }
 
@@ -213,6 +220,7 @@ export default {
   align-items: center;
   margin-bottom: 24px;
   gap: 20px;
+  flex-wrap: wrap; /* Thêm dòng này để cho phép xuống dòng khi thiếu không gian */
 }
 
 .search-section {
@@ -220,11 +228,49 @@ export default {
   align-items: center;
   gap: 16px;
   flex-direction: row-reverse; /* Reverse the order of search and filter */
+  flex-wrap: wrap; /* Cho phép xuống dòng khi không đủ chỗ */
 }
 
 .right-section {
   display: flex;
   align-items: center;
+  /* Thêm thuộc tính này để tránh tràn ra ngoài */
+  flex-shrink: 0;
+  min-width: 180px;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .actions-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .search-section {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  .right-section {
+    margin-top: 0;
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-box {
+    width: 100%;
+    min-width: 0;
+  }
+  .filter-box {
+    width: 100%;
+    min-width: 0;
+  }
+  .right-section {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }
 
 .search-box {
@@ -260,13 +306,19 @@ export default {
 }
 
 .filter-box select {
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    padding: 10px 32px 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url(data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e);
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
 }
 
 .filter-box select:focus {
@@ -314,6 +366,13 @@ th, td {
   border-bottom: 1px solid #e2e8f0;
 }
 
+th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
 /* căn giữa các nút thao tác */
 .actions-cell {
   width: 100px;
@@ -325,18 +384,6 @@ th, td {
   gap: 0.5rem;
   justify-content: center; /* căn giữa các nút */
   align-items: center;
-}
-
-th {
-  background-color: #f8fafc;
-  font-weight: 600;
-  color: #475569;
-  font-size: 14px;
-}
-
-td {
-  color: #1e293b;
-  font-size: 14px;
 }
 
 tr:hover {
@@ -399,8 +446,15 @@ tr:hover {
   animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(4px);
 }
-
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
 .modal-content {
+  position: relative;
+  z-index: 2;
   background: white;
   border-radius: 16px;
   width: 100%;
@@ -431,7 +485,7 @@ tr:hover {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
 .detail-item {
@@ -486,23 +540,6 @@ tr:hover {
   color: white;
   border-color: #ef4444;
   transform: rotate(90deg);
-}
-
-select{
-    padding: 10px 32px 10px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 14px;
-    background-color: white;
-    cursor: pointer;
-    min-width: 160px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url(data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e);
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
 }
 
 @keyframes modalFadeIn {
@@ -579,5 +616,12 @@ select{
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.account-list {
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 </style>
