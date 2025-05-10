@@ -37,7 +37,7 @@
                   (formData.title.length < 3 && formData.title.length > 0),
               }"
             >
-              {{ formData.title.length }}/200 (Tối thiểu 3 ký tự)
+              {{ formData.title.length }}/200
             </span>
           </div>
 
@@ -135,7 +135,7 @@
                 (formData.summary.length < 10 && formData.summary.length > 0),
             }"
           >
-            {{ formData.summary.length }}/500 (Tối thiểu 10 ký tự)
+            {{ formData.summary.length }}/500
           </span>
         </div>
 
@@ -160,7 +160,7 @@
                 (formData.content.length < 100 && formData.content.length > 0),
             }"
           >
-            {{ formData.content.length }}/5000 (Tối thiểu 100 ký tự)
+            {{ formData.content.length }}/5000
           </span>
         </div>
 
@@ -282,8 +282,8 @@ export default {
       // Validate tóm tắt (summary) giống như mô tả trong InsertService
       if (!this.formData.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (this.formData.summary.trim().length < 10) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự'
+      } else if (this.formData.summary.trim().length < 20) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
       } else if (this.formData.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }

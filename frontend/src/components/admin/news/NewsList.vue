@@ -760,8 +760,8 @@ export default {
       // Validate summary
       if (!formData.value.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống';
-      } else if (formData.value.summary.trim().length < 10) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự';
+      } else if (formData.value.summary.trim().length < 20) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự';
       } else if (formData.value.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự';
       }
