@@ -247,12 +247,16 @@ export default {
 .news-content-wrapper {
   display: flex;
   gap: 40px;
+  align-items: flex-start;
 }
 
 /* Style cho phần nội dung chính */
 .main-content {
   flex: 1;
   min-width: 0;
+  max-width: calc(100% - 400px);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Tiêu đề bài viết */
@@ -314,6 +318,13 @@ export default {
   word-break: break-word;
 }
 
+/* Nội dung văn bản của bài viết */
+.news-content {
+  width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
 /* Post Navigation */
 .post-navigation {
   display: flex;
@@ -357,6 +368,8 @@ export default {
 .sidebar {
   width: 360px;
   flex-shrink: 0;
+  position: sticky;
+  top: 20px;
 }
 
 /* Container cho ô tìm kiếm */
@@ -508,8 +521,13 @@ export default {
     flex-direction: column;
   }
 
+  .main-content {
+    max-width: 100%;
+  }
+
   .sidebar {
     width: 100%;
+    position: static;
   }
 
   .navigation-container {

@@ -11,7 +11,7 @@ const {
   uploadNewsImage,
   restoreNews,
   permanentDeleteNews,
-  getTrashNews
+  getTrashNews,
 } = require('../controllers/newsController')
 
 const adminOrStaffMiddleware = require('../middleware/adminOrStaffMiddleware')
@@ -27,7 +27,13 @@ router.get('/trash', authMiddleware, adminOrStaffMiddleware, getTrashNews)
 router.get('/:id', getNewsById)
 
 // Route upload ảnh
-router.post('/upload', authMiddleware, adminOrStaffMiddleware, upload.single('image'), uploadNewsImage)
+router.post(
+  '/upload',
+  authMiddleware,
+  adminOrStaffMiddleware,
+  upload.single('image'),
+  uploadNewsImage
+)
 
 // Tạo bài viết mới (yêu cầu admin hoặc staff)
 router.post('/', authMiddleware, adminOrStaffMiddleware, createNews)

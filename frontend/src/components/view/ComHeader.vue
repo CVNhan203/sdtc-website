@@ -197,7 +197,7 @@ export default {
 
   nav {
     position: fixed;
-    top: 80px;
+    top: 70px;
     left: 0;
     width: 100%;
     height: 0;
@@ -207,7 +207,7 @@ export default {
   }
 
   nav.menu-open {
-    height: calc(100vh - 80px);
+    height: calc(100vh - 70px);
   }
 
   .menu {
@@ -259,6 +259,105 @@ export default {
 
   .menu li a {
     font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 3000px) {
+  .header-container {
+    max-width: 3500px;
+    height: 180px;
+    padding: 0 80px;
+  }
+
+  .logo img {
+    height: 150px;
+    width: 400px;
+  }
+
+  .menu {
+    gap: 80px;
+    height: 40px;
+  }
+
+  .menu li a {
+    font-size: 40px;
+  }
+
+  .advise-btn .btn {
+    padding: 28px 56px;
+    font-size: 32px;
+    border-width: 2px;
+  }
+
+  .mobile-menu-btn {
+    font-size: 48px;
+    padding: 24px;
+  }
+}
+
+@media screen and (min-width: 4000px) {
+  .header-container {
+    max-width: 4500px;
+    height: 220px;
+    padding: 0 120px;
+  }
+
+  .logo img {
+    height: 200px;
+    width: 550px;
+  }
+
+  .menu {
+    gap: 120px;
+    height: 60px;
+  }
+
+  .menu li a {
+    font-size: 56px;
+  }
+
+  .advise-btn .btn {
+    padding: 36px 80px;
+    font-size: 44px;
+    border-width: 3px;
+  }
+
+  .mobile-menu-btn {
+    font-size: 64px;
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width: 5000px) {
+  .header-container {
+    max-width: 6000px;
+    height: 300px;
+    padding: 0 200px;
+  }
+
+  .logo img {
+    height: 280px;
+    width: 800px;
+  }
+
+  .menu {
+    gap: 180px;
+    height: 90px;
+  }
+
+  .menu li a {
+    font-size: 80px;
+  }
+
+  .advise-btn .btn {
+    padding: 60px 140px;
+    font-size: 60px;
+    border-width: 4px;
+  }
+
+  .mobile-menu-btn {
+    font-size: 100px;
+    padding: 48px;
   }
 }
 </style>

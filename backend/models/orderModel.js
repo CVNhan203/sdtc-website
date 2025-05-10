@@ -38,8 +38,8 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ["MOMO", "VNPAY", "BANK_TRANSFER"],
-    required: [true, "Phương thức thanh toán phải là 'MOMO', 'VNPAY' hoặc 'BANK_TRANSFER'"],
+    enum: ["MOMO", "VNPAY"],
+    required: [true, "Phương thức thanh toán phải là 'MOMO', 'VNPAY'"],
   },
   paymentStatus: {
     type: String,
