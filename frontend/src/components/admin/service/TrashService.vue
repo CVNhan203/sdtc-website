@@ -19,7 +19,7 @@
           class="bulk-action-btn restore"
           @click="confirmBulkRestore"
         >
-          <i class="fas fa-trash-restore"></i>
+          <i class="fas fa-rotate-left"></i>
           Khôi phục đã chọn
         </button>
 
@@ -28,7 +28,7 @@
           class="bulk-action-btn delete"
           @click="confirmBulkDelete"
         >
-          <i class="fas fa-trash-alt"></i>
+          <i class="fas fa-trash"></i>
           Xóa vĩnh viễn đã chọn
         </button>
       </div>
@@ -38,29 +38,29 @@
       <table>
         <thead>
           <tr>
-            <th width="50px">
+            <th width="50px" style="text-align: center;">
               <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" />
             </th>
-            <th>STT</th>
-            <th>Ảnh</th>
-            <th>Tiêu đề</th>
-            <th>Giá</th>
-            <th>Loại</th>
-            <th>Ngày xóa</th>
-            <th class="action-column">Thao tác</th>
+            <th style="width: 60px; text-align: center;">STT</th>
+            <th style="width: 70px; text-align: center;">Ảnh</th>
+            <th style="width: 30%; text-align: center;">Tiêu đề</th>
+            <th style="width: 15%; text-align: center;">Giá</th>
+            <th style="width: 10%; text-align: center;">Loại</th>
+            <th style="width: 15%; text-align: center;">Ngày xóa</th>
+            <th class="action-column" style="width: 15%; text-align: center;">Thao tác</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(service, index) in filteredServices" :key="service._id">
-            <td>
+            <td class="center-cell">
               <input
                 type="checkbox"
                 :checked="isSelected(service._id)"
                 @change="toggleSelect(service._id)"
               />
             </td>
-            <td>{{ index + 1 }}</td>
-            <td>
+            <td class="center-cell">{{ index + 1 }}</td>
+            <td class="center-cell">
               <div class="image-container">
                 <img
                   v-if="service.image"
@@ -73,21 +73,21 @@
                 </div>
               </div>
             </td>
-            <td>{{ service.title }}</td>
-            <td>{{ formatPrice(service.price) }}</td>
-            <td>{{ formatType(service.type) }}</td>
-            <td>{{ formatDate(service.deletedAt) }}</td>
-            <td>
+            <td class="center-cell">{{ service.title }}</td>
+            <td class="center-cell">{{ formatPrice(service.price) }}</td>
+            <td class="center-cell">{{ formatType(service.type) }}</td>
+            <td class="center-cell">{{ formatDate(service.deletedAt) }}</td>
+            <td class="center-cell">
               <div class="actions">
                 <button class="icon-btn restore" @click="confirmRestore(service)" title="Khôi phục">
-                  <i class="fas fa-trash-restore"></i>
+                  <i class="fas fa-rotate-left"></i>
                 </button>
                 <button
                   class="icon-btn delete"
                   @click="confirmDelete(service)"
                   title="Xóa vĩnh viễn"
                 >
-                  <i class="fas fa-trash-alt"></i>
+                  <i class="fas fa-trash"></i>
                 </button>
               </div>
             </td>
@@ -101,7 +101,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận khôi phục</h3>
           <button class="close-btn" @click="showRestoreModal = false">
@@ -123,7 +124,8 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Xác nhận xóa vĩnh viễn</h3>
           <button class="close-btn" @click="showDeleteModal = false">
@@ -219,13 +221,14 @@ export default {
       return types[type] || type
     },
     formatDate(date) {
-      return new Date(date).toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
+      const d = new Date(date)
+      // Hiển thị ngày trước, giờ sau (dd/mm/yyyy, HH:MM)
+      const day = d.getDate().toString().padStart(2, '0')
+      const month = (d.getMonth() + 1).toString().padStart(2, '0')
+      const year = d.getFullYear()
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year}, ${hour}:${minute}`
     },
     getImageUrl(imagePath) {
       if (!imagePath) return null
@@ -355,57 +358,278 @@ export default {
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
 
-/* Component specific styles */
-th:nth-child(1),
-td:nth-child(1) {
-  width: 50px; /* Checkbox */
+@import "@/styles/admin.css";
+
+.trash-service {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
-th:nth-child(2),
-td:nth-child(2) {
-  width: 5%; /* ID */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.header-actions {
+  margin-bottom: 24px;
 }
 
-th:nth-child(3),
-td:nth-child(3) {
-  width: 100px; /* Ảnh */
+.actions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-th:nth-child(4),
-td:nth-child(4) {
-  width: 150px; /* Tiêu đề */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.search-filter {
+  flex: 1;
+  min-width: 280px;
 }
 
-th:nth-child(5),
-td:nth-child(5) {
-  width: 120px; /* Giá */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.search-box {
+  position: relative;
+  max-width: 400px;
 }
 
-th:nth-child(6),
-td:nth-child(6) {
-  width: 100px; /* Loại */
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s;
 }
 
-th:nth-child(7),
-td:nth-child(7) {
-  width: 150px; /* Ngày xóa */
+.search-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
-th:nth-child(8),
-td:nth-child(8) {
-  width: 100px; /* Thao tác */
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th, td {
   text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  background: #f8fafc;
+  padding: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+td {
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background-color: #f8fafc;
+}
+
+.bulk-action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.bulk-action-btn.restore {
+  background: #0ea5e9;
+  color: white;
+}
+
+.bulk-action-btn.restore:hover {
+  background: #0284c7;
+}
+
+.bulk-action-btn.delete {
+  background: #ef4444;
+  color: white;
+}
+
+.bulk-action-btn.delete:hover {
+  background: #dc2626;
+}
+
+.icon-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn i {
+  font-size: 14px;
+}
+
+.icon-btn.restore {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.icon-btn.restore:hover {
+  background: #bbf7d0;
+}
+
+.icon-btn.delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.icon-btn.delete:hover {
+  background: #fecaca;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1; /* Thêm dòng này */
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 2; /* Thêm dòng này */
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.submit-btn, .delete-btn, .cancel-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.submit-btn {
+  background: #0ea5e9;
+  color: white;
+}
+
+.submit-btn:hover {
+  background: #0284c7;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e1;
+}
+
+.warning-text {
+  color: #ef4444;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 48px 0;
+  color: #64748b;
+  font-style: italic;
 }
 
 .service-image {
@@ -415,6 +639,7 @@ td:nth-child(8) {
   border-radius: 4px;
   margin: 0 auto;
   display: block;
+  padding: 0;
 }
 
 .image-container {
@@ -426,95 +651,99 @@ td:nth-child(8) {
 }
 
 .no-image {
-  color: var(--text-tertiary);
-  font-size: 12px;
-  text-align: center;
+  width: 80px;
+  height: 80px;
+  background: #f1f5f9;
+  border-radius: 4px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-}
-
-.bulk-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.bulk-action-btn.restore {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.bulk-action-btn.restore:hover {
-  background-color: var(--primary-hover);
-}
-
-.bulk-action-btn.delete {
-  background-color: var(--danger-color);
-  color: white;
-}
-
-.bulk-action-btn.delete:hover {
-  background-color: var(--danger-hover);
-}
-
-.icon-btn.restore {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.icon-btn.restore:hover {
-  background-color: #bbf7d0;
-}
-
-.icon-btn.delete {
-  background-color: var(--danger-color);
-  color: white;
-}
-
-.icon-btn.delete:hover {
-  background-color: var(--danger-hover);
-}
-
-.empty-message {
-  text-align: center;
-  color: var(--text-tertiary);
-  padding: var(--spacing-lg);
-  font-style: italic;
-}
-
-.action-column {
-  text-align: center;
-}
-
-th input[type='checkbox'],
-td input[type='checkbox'] {
-  margin: 0 auto;
+  color: #94a3b8;
   display: block;
-  cursor: pointer;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0;
+}
+
+/* Custom checkbox styles */
+input[type="checkbox"] {
   width: 18px;
   height: 18px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  position: relative;
+  transition: all 0.2s;
+  appearance: none;
+  background: white;
 }
 
+input[type="checkbox"]:checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
+
+.close-btn {
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  font-size: 24px;
+  margin-left: auto;
+  box-shadow: none;
+  padding: 0;
+}
+
+.close-btn:hover {
+  background: #e2e8f0;
+  color: #ef4444;
+  box-shadow: 0 0 0 2px #ef444422;
+}
+
+.close-btn i {
+  font-size: 24px;
+  pointer-events: none;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .header-actions {
-    flex-direction: column;
-    align-items: stretch;
+  .trash-service {
+    padding: 20px;
   }
 
-  .search-box {
-    max-width: none;
+  .actions-header {
+    flex-direction: column;
+  }
+
+  .search-filter {
+    width: 100%;
   }
 
   .bulk-action-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .table-container {
+    margin: 0 -16px;
+    border-radius: 0;
   }
 }
 </style>

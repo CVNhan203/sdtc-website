@@ -27,7 +27,7 @@
           <input
             type="text"
             name="title"
-            v-model.trim="formData.title"
+            v-model="formData.title"
             :class="{ error: errors.title }"
             :disabled="loading"
             placeholder="Nhập tiêu đề dịch vụ"
@@ -40,77 +40,78 @@
           </span>
         </div>
 
-        <!-- Info section: Type and Price -->
         <div class="info-section">
-          <!-- Loại dịch vụ -->
-          <div class="form-group">
-            <label>Loại dịch vụ <span class="required">*</span></label>
-            <select
-              name="type"
-              v-model="formData.type"
-              :class="{ error: errors.type }"
-              :disabled="loading"
-            >
-              <option value="">Chọn loại dịch vụ</option>
-              <option value="web">Website</option>
-              <option value="app">Ứng dụng</option>
-              <option value="agency">Agency</option>
-            </select>
-            <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
-          </div>
-
-          <!-- Giá -->
-          <div class="form-group">
-            <label>Giá <span class="required">*</span></label>
-            <input
-              type="number"
-              name="price"
-              v-model="formData.price"
-              :class="{ error: errors.price }"
-              :disabled="loading"
-              placeholder="Nhập giá dịch vụ"
-              min="0"
-            />
-            <span class="error-message" v-if="errors.price">{{ errors.price }}</span>
-          </div>
-        </div>
-
-        <!-- Ảnh -->
-        <div class="form-group">
-          <label>Ảnh</label>
-          <div
-            class="image-upload-container"
-            @click="triggerFileInput"
-            :class="{ 'error-border': errors.image }"
-          >
-            <input
-              type="file"
-              name="image"
-              class="file-input"
-              @change="handleImageUpload"
-              accept="image/*"
-              ref="fileInput"
-              :disabled="loading"
-            />
-            <div v-if="!imagePreview" class="upload-button">
-              <i class="fas fa-cloud-upload-alt"></i>
-              <span>Tải ảnh lên</span>
-              <p class="upload-hint">Kích thước tối đa: 5MB. Định dạng: JPG, PNG, GIF</p>
-              <p class="upload-hint">Kích thước tối thiểu: 200x200px, tối đa 2000x2000px</p>
-            </div>
-            <div v-if="imagePreview" class="image-preview">
-              <img :src="imagePreview" alt="Preview" class="preview-img" />
-              <button
-                type="button"
-                @click.stop="removeImage"
-                class="remove-image"
+          <div class="form-fields">
+            <!-- Loại dịch vụ -->
+            <div class="form-group type-group">
+              <label>Loại dịch vụ <span class="required">*</span></label>
+              <select
+                name="type"
+                v-model="formData.type"
+                :class="{ error: errors.type }"
                 :disabled="loading"
               >
-                <i class="fas fa-times"></i>
-              </button>
+                <option value="">Chọn loại dịch vụ</option>
+                <option value="web">Website</option>
+                <option value="app">Ứng dụng</option>
+                <option value="agency">Agency</option>
+              </select>
+              <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
+            </div>
+
+            <!-- Giá -->
+            <div class="form-group price-group">
+              <label>Giá <span class="required">*</span></label>
+              <input
+                type="text"
+                name="price"
+                v-model="formData.price"
+                :class="{ error: errors.price }"
+                :disabled="loading"
+                placeholder="Nhập giá dịch vụ"
+                @input="validatePrice"
+              />
+              <span class="error-message" v-if="errors.price">{{ errors.price }}</span>
             </div>
           </div>
-          <span class="error-message" v-if="errors.image">{{ errors.image }}</span>
+
+          <!-- Ảnh -->
+          <div class="form-group image-group">
+            <label>Ảnh</label>
+            <div
+              class="image-upload-container"
+              @click="triggerFileInput"
+              :class="{ 'error-border': errors.image }"
+            >
+              <input
+                type="file"
+                name="image"
+                class="file-input"
+                @change="handleImageUpload"
+                accept="image/*"
+                ref="fileInput"
+                :disabled="loading"
+                style="display: none;"
+              />
+              <div v-if="!imagePreview" class="upload-button">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Nhấp để tải ảnh lên</span>
+                <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
+              </div>
+              <div v-if="imagePreview" class="image-preview">
+                <img :src="imagePreview" alt="Preview" class="preview-img" />
+                <button
+                  type="button"
+                  @click.stop="removeImage"
+                  class="remove-image"
+                  :disabled="loading"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <span class="error-message" v-if="errors.image">{{ errors.image }}</span>
+          </div>
         </div>
 
         <!-- Mô tả dịch vụ -->
@@ -118,7 +119,7 @@
           <label>Mô tả dịch vụ <span class="required">*</span></label>
           <textarea
             name="content"
-            v-model.trim="formData.content"
+            v-model="formData.content"
             :class="{ error: errors.content }"
             :disabled="loading"
             rows="6"
@@ -129,9 +130,6 @@
           <span class="character-count" :class="{ error: formData.content.length > 2000 }">
             {{ formData.content.length }}/2000
           </span>
-          <small class="form-help-text"
-            >Mỗi dòng mô tả cần có ít nhất 10 ký tự và tối đa 500 ký tự.</small
-          >
         </div>
 
         <!-- Form Actions -->
@@ -194,25 +192,74 @@ export default {
         this.$refs.fileInput.click()
       }
     },
-    validateForm() {
-      const newErrors = {}
-
-      // Tiêu đề validation
-      if (!this.formData.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống'
-      } else if (this.formData.title.trim().length < 3) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
-      } else if (this.formData.title.trim().length > 100) {
-        newErrors.title = 'Tiêu đề không được vượt quá 100 ký tự'
-      } else if (!/^[a-zA-Z0-9\sÀ-ỹ[\]{}()!@#$%^&*,.?-]+$/.test(this.formData.title.trim())) {
-        newErrors.title = 'Tiêu đề chứa ký tự không hợp lệ'
+    validatePrice() {
+      const priceValue = Number(this.formData.price);
+      if (isNaN(priceValue) || priceValue < 0 || priceValue > 1000000000) {
+        this.errors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ';
+      } else {
+        delete this.errors.price; // Clear error if valid
       }
+    },
+    validateForm() {
+      let isValid = true;
+      let newErrors = {};
 
-      // Loại dịch vụ validation
-      if (!this.formData.type) {
-        newErrors.type = 'Vui lòng chọn loại dịch vụ'
-      } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        newErrors.type = 'Loại dịch vụ không hợp lệ'
+      // Helper function to validate title, summary, and content
+      const validateTextField = (field, fieldName) => {
+        // Trim whitespace
+        const trimmedField = field.trim();
+        
+        // Check for empty field
+        if (!trimmedField) {
+          newErrors[fieldName] = `${fieldName} không được để trống`;
+          isValid = false;
+          return;
+        }
+
+        // Remove internal whitespace
+        const noWhitespaceField = trimmedField.replace(/\s+/g, '');
+        
+        // Check for special characters (allow basic punctuation)
+        const specialCharRegex = /^[a-zA-Z0-9.,!?'" ]*$/; // Adjust as needed for allowed characters
+        if (!specialCharRegex.test(noWhitespaceField)) {
+          newErrors[fieldName] = `${fieldName} không được chứa ký tự đặc biệt`;
+          isValid = false;
+          return;
+        }
+
+        // Check character length after trimming
+        if (trimmedField.length < 10) {
+          newErrors[fieldName] = `${fieldName} phải có ít nhất 10 ký tự`;
+          isValid = false;
+        } else if (trimmedField.length > 200) { // Adjust max length as needed
+          newErrors[fieldName] = `${fieldName} không được vượt quá 200 ký tự`;
+          isValid = false;
+        }
+
+        // Update the original field with the trimmed and cleaned value
+        if (fieldName === 'Tiêu đề') {
+          this.formData.title = trimmedField; // Update title
+        } else if (fieldName === 'Mô tả') {
+          this.formData.content = trimmedField; // Update content
+        }
+      };
+
+      // Validate title
+      validateTextField(this.formData.title, 'Tiêu đề');
+
+      // Validate content
+      validateTextField(this.formData.content, 'Mô tả');
+
+      // Validate type (only alphabetic characters)
+      const typeField = this.formData.type.trim();
+      if (!typeField) {
+        newErrors.type = 'Phân loại không được để trống';
+        isValid = false;
+      } else if (!/^[a-zA-Z]+$/.test(typeField)) {
+        newErrors.type = 'Phân loại chỉ được chứa ký tự chữ';
+        isValid = false;
+      } else {
+        this.formData.type = typeField; // Update type
       }
 
       // Giá validation
@@ -221,44 +268,24 @@ export default {
         this.formData.price === null ||
         this.formData.price === ''
       ) {
-        newErrors.price = 'Giá dịch vụ không được để trống'
+        newErrors.price = 'Giá dịch vụ không được để trống';
+        isValid = false; // Set isValid to false
       } else {
-        const priceValue = Number(this.formData.price)
+        const priceValue = Number(this.formData.price);
         if (isNaN(priceValue)) {
-          newErrors.price = 'Giá dịch vụ phải là một số'
+          newErrors.price = 'Giá dịch vụ phải là một số';
+          isValid = false; // Set isValid to false
         } else if (priceValue <= 0) {
-          newErrors.price = 'Giá dịch vụ phải lớn hơn 0'
+          newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
+          isValid = false; // Set isValid to false
         } else if (priceValue > 1000000000) {
-          newErrors.price = 'Giá dịch vụ quá lớn'
+          newErrors.price = 'Giá dịch vụ quá lớn';
+          isValid = false; // Set isValid to false
         }
       }
 
-      // Mô tả validation
-      if (!this.formData.content?.trim()) {
-        newErrors.content = 'Mô tả không được để trống'
-      } else {
-        const lines = this.formData.content.split('\n').filter((line) => line.trim())
-        if (lines.length === 0) {
-          newErrors.content = 'Mô tả không được để trống'
-        } else {
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim()
-            if (line.length < 10) {
-              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`
-              break
-            } else if (line.length > 500) {
-              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`
-              break
-            }
-          }
-        }
-      }
-
-      // Ảnh validation is now optional - only validate if an image is provided
-      // No validation needed if no image is provided
-
-      this.errors = newErrors
-      return Object.keys(newErrors).length === 0
+      this.errors = newErrors;
+      return isValid;
     },
     handleImageUpload(event) {
       const file = event.target.files[0]
@@ -329,18 +356,21 @@ export default {
       }
     },
     async handleSubmit() {
+      // Trim whitespace from title
+      this.formData.title = this.formData.title.trim();
+
       // Perform validation
       if (!this.validateForm()) {
         // Focus on the first field with an error
-        const errorFields = Object.keys(this.errors)
+        const errorFields = Object.keys(this.errors);
         if (errorFields.length > 0) {
-          const firstErrorField = errorFields[0]
-          const element = document.querySelector(`[name="${firstErrorField}"]`)
+          const firstErrorField = errorFields[0];
+          const element = document.querySelector(`[name="${firstErrorField}"]`);
           if (element) {
-            element.focus()
+            element.focus();
           }
         }
-        return
+        return;
       }
 
       if (this.loading) return
@@ -375,8 +405,8 @@ export default {
         // Prepare service data according to backend model
         this.uploadStatus = 'Đang xử lý...'
         const serviceData = {
-          title: this.formData.title.trim(),
-          description: this.formData.content
+          title: this.formData.title,
+          description: this.formData.content  
             .trim()
             .split('\n')
             .filter((line) => line.trim() !== '')
@@ -477,86 +507,118 @@ export default {
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
 
-/* Component-specific styles that aren't in admin.css */
-.content-section {
-  grid-column: 1 / -1;
+@import "@/styles/admin.css";
+
+.insert-service {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+select{
+  background: #f9fafb;
+  padding: 10px 32px 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .info-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 0;
-  grid-column: 1 / -1;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  margin-bottom: 20px;
+  align-items: start;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.type-group,
+.price-group,
+.image-group {
+  margin-bottom: 0;
 }
 
 .image-upload-container {
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  min-height: 180px;
+  min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  background: #f9fafb;
 }
 
 .image-upload-container:hover {
-  border-color: var(--primary-color);
-  background-color: rgba(59, 130, 246, 0.05);
-}
-
-.file-input {
-  display: none;
-}
-
-.image-preview {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.preview-img {
-  max-width: 100%;
-  max-height: 180px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.remove-image {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.remove-image:hover {
-  background: var(--danger-color);
-  color: white;
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .upload-button {
@@ -564,54 +626,193 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: var(--text-secondary);
+  width: 100%;
+  height: 100%;
+  justify-content: center;
 }
 
 .upload-button i {
-  font-size: 2rem;
-  color: var(--primary-color);
-  margin-bottom: 4px;
+  font-size: 2.5rem;
+  color: #3b82f6;
+  margin-bottom: 8px;
+}
+
+.upload-button span {
+  font-size: 1.1rem;
+  color: #374151;
+  font-weight: 500;
 }
 
 .upload-hint {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-  margin-top: 4px;
-  line-height: 1.3;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.remove-image {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.remove-image:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  display: block;
 }
 
 .character-count {
-  display: block;
+  color: #6b7280;
+  font-size: 0.875rem;
   text-align: right;
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .character-count.error {
-  color: var(--danger-color);
+  color: #dc2626;
 }
 
-.error-border {
-  border-color: var(--danger-color) !important;
+.error-alert,
+.success-alert {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.form-help-text {
-  font-size: 0.75rem;
-  margin-top: 3px;
+.error-alert {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
-/* Responsive adjustments */
+.success-alert {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.file-input {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .info-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-  .form-container {
+  .insert-service {
     padding: 16px;
+  }
+
+  .form-container {
+    padding: 24px;
+  }
+
+  .info-section {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .form-fields {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .image-upload-container {
-    min-height: 180px;
+  .insert-service {
+    padding: 12px;
+  }
+
+  .form-container {
     padding: 16px;
+    border-radius: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
