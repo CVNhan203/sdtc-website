@@ -258,24 +258,40 @@ export default {
       // Reset các lỗi hiện tại
       Object.keys(errors).forEach((key) => (errors[key] = ''))
 
+      let hasError = false
+
       // Xử lý lỗi theo mã
-      if (response.code === 'EMAIL_EXISTS') {
+      if (
+        response &&
+        (response.code === 'EMAIL_EXISTS' ||
+          (response.errors &&
+            response.errors.email &&
+            (response.errors.email === 'Email đã tồn tại' ||
+              (Array.isArray(response.errors.email) &&
+                response.errors.email.includes('Email đã tồn tại')))))
+      ) {
         errorMessage.value = 'Email này đã được sử dụng'
         errors.email = 'Email đã tồn tại'
-      } else if (response.code === 'USERNAME_EXISTS') {
+        hasError = true
+      } else if (response && response.code === 'USERNAME_EXISTS') {
         errorMessage.value = 'Tên tài khoản này đã tồn tại'
         errors.fullName = 'Tên đã được sử dụng'
-      } else {
-        errorMessage.value = response.message || 'Có lỗi khi tạo tài khoản'
+        hasError = true
       }
 
       // Xử lý lỗi validation
-      if (response.errors && Object.keys(response.errors).length > 0) {
+      if (response && response.errors && Object.keys(response.errors).length > 0) {
         Object.entries(response.errors).forEach(([field, message]) => {
           if (errors[field] !== undefined) {
             errors[field] = Array.isArray(message) ? message[0] : message
+            hasError = true
           }
         })
+      }
+
+      // Nếu không có lỗi cụ thể, báo lỗi chung
+      if (!hasError) {
+        errorMessage.value = (response && response.message) || 'Có lỗi khi tạo tài khoản'
       }
 
       // Focus vào trường lỗi đầu tiên
@@ -285,7 +301,7 @@ export default {
         if (element) element.focus()
       }
 
-      // Hiển thị thông báo lỗi
+      // Hiển thị thông báo lỗi (luôn luôn gọi)
       eventBus.emit('show-toast', {
         type: 'error',
         message: errorMessage.value,
@@ -309,45 +325,61 @@ export default {
 @import '@/styles/admin.css';
 
 .add-account {
+  padding: 24px;
   max-width: 800px;
   margin: 0 auto;
 }
 
-.error-alert {
-  background-color: #fee2e2;
-  color: #ef4444;
-  border-left: 4px solid #ef4444;
-  padding: 10px 16px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-.error-alert i {
-  margin-right: 8px;
-}
-
-.has-error label {
-  color: #ef4444;
-}
-
-.has-error input,
-.has-error select {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-.error-message {
-  color: #ef4444;
-  font-size: 13px;
-  margin-top: 4px;
-  display: block;
+.form-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+input[type='text']:focus,
+input[type='email']:focus,
+input[type='password']:focus,
+select:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.password-input {
+  position: relative;
 }
 
 .toggle-password {
@@ -357,17 +389,96 @@ export default {
   transform: translateY(-50%);
   background: none;
   border: none;
+  padding: 8px;
   cursor: pointer;
   color: #6b7280;
+  transition: color 0.3s ease;
 }
 
-.password-input {
-  position: relative;
+.toggle-password:hover {
+  color: #3b82f6;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.error {
+  border-color: #dc2626;
 }
 
 @media (max-width: 768px) {
+  .add-account {
+    padding: 16px;
+  }
+
+  .form-container {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-account {
+    padding: 12px;
+  }
+
   .form-container {
     padding: 16px;
+    border-radius: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

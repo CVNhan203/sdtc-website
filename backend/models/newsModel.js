@@ -12,7 +12,7 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Tóm tắt bài viết là bắt buộc'],
     trim: true,
-    minLength: [20, 'Tóm tắt phải có ít nhất 20 ký tự'],
+    minLength: [10, 'Tóm tắt phải có ít nhất 10 ký tự'],
     maxLength: [500, 'Tóm tắt không được vượt quá 500 ký tự'],
   },
   content: {

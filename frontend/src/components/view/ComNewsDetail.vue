@@ -21,18 +21,19 @@
           <span class="meta-item"><i class="far fa-user"></i> {{ currentNews.author }}</span>
           <span class="meta-item"><i class="far fa-eye"></i> {{ currentNews.views }} lượt xem</span>
           <span class="meta-item"
-            ><i class="far fa-share-square"></i> {{ currentNews.shares || 0 }} chia sẻ</span
+            ><i class="far fa-heart heart-red"></i> {{ currentNews.likes || 0 }} lượt thích</span
           >
         </div>
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" :alt="currentNews.title" />
+          <img :src="currentNews.imageUrl" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
         <div class="news-content">
-          <p class="content-paragraph">{{ currentNews.summary }}</p>
+          <p class="content-paragraph"></p>
+          <!-- <p class="content-paragraph">{{ currentNews.summary }}</p> -->
           <div v-html="currentNews.content"></div>
         </div>
         <!-- Đưa post-navigation vào đây -->
@@ -75,7 +76,7 @@
                 <img :src="post.imageUrl" />
               </div>
               <div class="post-info">
-                <div class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date }}</div>
+                <div class="post-date">{{ post.date }}</div>
                 <div class="post-excerpt">{{ post.title }}</div>
               </div>
             </div>
@@ -113,7 +114,11 @@ export default {
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
       const currentId = route.params.id
-      const filtered = allNews.value.filter((news) => (news._id || news.id) != currentId)
+      // Sắp xếp theo ngày đăng mới nhất, loại bỏ bài hiện tại, lấy tối đa 10 bài
+      const filtered = allNews.value
+        .filter((news) => (news._id || news.id) != currentId)
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+        .slice(0, 10)
       if (!searchQuery.value) return filtered
       const query = searchQuery.value.toLowerCase()
       return filtered.filter((news) => news.title.toLowerCase().includes(query))
@@ -127,6 +132,7 @@ export default {
         allNews.value = data.map((news) => ({
           ...news,
           imageUrl: getImageUrl(news.image),
+          date: formatDate(news.publishedDate), // Thêm ngày đăng cho từng bài viết
         }))
         // Lấy chi tiết tin tức
         const newsDetail = await newsService.getNewsById(route.params.id)
@@ -288,6 +294,10 @@ export default {
   color: #004aad;
 }
 
+.heart-red {
+  color: #e53935 !important;
+}
+
 /* Container cho ảnh bài viết */
 .news-image {
   width: 100%;
@@ -432,7 +442,7 @@ export default {
 }
 
 .recent-posts h2 {
-  font-size: 18px;
+  font-size: 30px;
   font-weight: 600;
   color: #262f5a;
   margin-bottom: 16px;
@@ -451,7 +461,7 @@ export default {
 /* Mỗi item bài viết trong danh sách */
 .post-item {
   display: flex;
-  gap: 12px;
+  gap: 30px;
   cursor: pointer;
   padding-bottom: 12px;
   border-bottom: 1px solid #f0f0f0;
@@ -470,8 +480,8 @@ export default {
 
 /* Container cho hình ảnh trong danh sách bài viết */
 .post-image {
-  width: 64px;
-  height: 64px;
+  width: 90px; /* tăng chiều rộng container */
+  height: 60px;
   flex-shrink: 0;
   border-radius: 5px;
   overflow: hidden;
@@ -479,8 +489,9 @@ export default {
 
 /* Style cho ảnh trong danh sách bài viết */
 .post-image img {
-  width: 100%;
-  height: 100%;
+  width: 90px; /* tăng chiều rộng ảnh */
+  height: 60px;
+  border-radius: 5px;
   object-fit: cover;
 }
 
@@ -493,7 +504,7 @@ export default {
 /* Style cho ngày đăng bài viết */
 .post-date {
   color: #159eec;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 4px;
   display: flex;
   align-items: center;

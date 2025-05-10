@@ -117,7 +117,7 @@ exports.uploadServiceImage = asyncHandler(async (req, res) => {
   }
 
   const imagePath = req.file.path.replace(/\\/g, '/')
-  
+
   res.status(200).json({
     success: true,
     imagePath: imagePath,
