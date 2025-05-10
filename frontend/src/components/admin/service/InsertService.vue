@@ -204,45 +204,62 @@ export default {
       let isValid = true;
       let newErrors = {};
 
-      // Tiêu đề validation
-      if (!this.formData.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống';
-        isValid = false; // Set isValid to false
-      } else {
-        const trimmedTitle = this.formData.title.trim();
+      // Helper function to validate title, summary, and content
+      const validateTextField = (field, fieldName) => {
+        // Trim whitespace
+        const trimmedField = field.trim();
         
-        // Kiểm tra khoảng trắng đầu và cuối
-        if (this.formData.title !== trimmedTitle) {
-          newErrors.title = 'Tiêu đề không được có khoảng trắng ở đầu hoặc cuối';
-          isValid = false; // Set isValid to false
+        // Check for empty field
+        if (!trimmedField) {
+          newErrors[fieldName] = `${fieldName} không được để trống`;
+          isValid = false;
+          return;
         }
-        // Kiểm tra độ dài
-        else if (trimmedTitle.length < 3) {
-          newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
-          isValid = false; // Set isValid to false
-        } else if (trimmedTitle.length > 200) {
-          newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
-          isValid = false; // Set isValid to false
-        }
-        // Kiểm tra khoảng trắng liên tiếp
-        else if (/\s{2,}/.test(trimmedTitle)) {
-          newErrors.title = 'Tiêu đề không được có nhiều khoảng trắng liên tiếp';
-          isValid = false; // Set isValid to false
-        }
-        // Kiểm tra ký tự đặc biệt
-        else if (!/^[a-zA-Z0-9À-ỹ\s.,!?-]+$/.test(trimmedTitle)) {
-          newErrors.title = 'Tiêu đề chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?-';
-          isValid = false; // Set isValid to false
-        }
-      }
 
-      // Loại dịch vụ validation
-      if (!this.formData.type) {
-        newErrors.type = 'Vui lòng chọn loại dịch vụ';
-        isValid = false; // Set isValid to false
-      } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        newErrors.type = 'Loại dịch vụ không hợp lệ';
-        isValid = false; // Set isValid to false
+        // Remove internal whitespace
+        const noWhitespaceField = trimmedField.replace(/\s+/g, '');
+        
+        // Check for special characters (allow basic punctuation)
+        const specialCharRegex = /^[a-zA-Z0-9.,!?'" ]*$/; // Adjust as needed for allowed characters
+        if (!specialCharRegex.test(noWhitespaceField)) {
+          newErrors[fieldName] = `${fieldName} không được chứa ký tự đặc biệt`;
+          isValid = false;
+          return;
+        }
+
+        // Check character length after trimming
+        if (trimmedField.length < 10) {
+          newErrors[fieldName] = `${fieldName} phải có ít nhất 10 ký tự`;
+          isValid = false;
+        } else if (trimmedField.length > 200) { // Adjust max length as needed
+          newErrors[fieldName] = `${fieldName} không được vượt quá 200 ký tự`;
+          isValid = false;
+        }
+
+        // Update the original field with the trimmed and cleaned value
+        if (fieldName === 'Tiêu đề') {
+          this.formData.title = trimmedField; // Update title
+        } else if (fieldName === 'Mô tả') {
+          this.formData.content = trimmedField; // Update content
+        }
+      };
+
+      // Validate title
+      validateTextField(this.formData.title, 'Tiêu đề');
+
+      // Validate content
+      validateTextField(this.formData.content, 'Mô tả');
+
+      // Validate type (only alphabetic characters)
+      const typeField = this.formData.type.trim();
+      if (!typeField) {
+        newErrors.type = 'Phân loại không được để trống';
+        isValid = false;
+      } else if (!/^[a-zA-Z]+$/.test(typeField)) {
+        newErrors.type = 'Phân loại chỉ được chứa ký tự chữ';
+        isValid = false;
+      } else {
+        this.formData.type = typeField; // Update type
       }
 
       // Giá validation
@@ -267,40 +284,7 @@ export default {
         }
       }
 
-      // Mô tả validation
-      const content = this.formData.content;
-
-      if (typeof content !== 'string' || content.trim() === '') {
-        newErrors.content = 'Mô tả không được để trống';
-        isValid = false; // Set isValid to false
-      } else {
-        const trimmedContent = content.trim();
-        
-        if (trimmedContent.length < 10) {
-          newErrors.content = 'Mô tả phải có ít nhất 10 ký tự.';
-          isValid = false; // Set isValid to false
-        } else if (trimmedContent.length > 1000) {
-          newErrors.content = 'Mô tả không được vượt quá 1000 ký tự.';
-          isValid = false; // Set isValid to false
-        } else if (/\s{2,}/.test(trimmedContent)) {
-          newErrors.content = 'Mô tả không được có nhiều khoảng trắng liên tiếp.';
-          isValid = false; // Set isValid to false
-        } else if (!/^[a-zA-Z0-9À-ỹ\s.,!?()]+$/.test(trimmedContent)) {
-          newErrors.content = 'Mô tả chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?()';
-          isValid = false; // Set isValid to false
-        } else {
-          this.formData.content = trimmedContent;
-        }
-      }
-
-      // // Ảnh validation - Chỉ kiểm tra khi thêm mới
-      // if (!this.isEditing && !this.formData.image && !this.imagePreview) {
-      //   newErrors.image = 'Vui lòng tải lên ảnh cho dịch vụ';
-      //   isValid = false; // Set isValid to false
-      // }
-
       this.errors = newErrors;
-
       return isValid;
     },
     handleImageUpload(event) {
