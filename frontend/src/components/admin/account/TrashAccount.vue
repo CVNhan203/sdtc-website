@@ -7,7 +7,6 @@
 
     <div class="header-actions">
       <div class="current-date">
-        Ngày hiện tại: {{ currentDate }}
       </div>
       <div class="actions-header">
         <div class="search-filter">
