@@ -158,7 +158,7 @@ export default {
         errors.email = 'Vui lòng nhập email'
         isValid = false
       } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email.trim())) {
-        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)'
+        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: sea.dragon@gmail.com)'
         isValid = false
       }
 
@@ -289,7 +289,10 @@ export default {
 
       // Xử lý lỗi validation
       if (response && response.errors && Object.keys(response.errors).length > 0) {
+        //entries trả về đối tượng có thể lặp
+        //forEach lặp qua các phần tử
         Object.entries(response.errors).forEach(([field, message]) => {
+          //undefined đại diện 1 giá trị chưa được xác định
           if (errors[field] !== undefined) {
             errors[field] = Array.isArray(message) ? message[0] : message
             hasError = true

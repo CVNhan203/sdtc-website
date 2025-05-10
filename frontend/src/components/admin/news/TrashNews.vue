@@ -86,7 +86,7 @@
             <td>{{ news.title }}</td>
             <td>{{ formatType(news.type) }}</td>
             <td>{{ news.author }}</td>
-            <td>{{ formatDate(news.deletedAt) }}</td>
+            <td>{{ currentDate }}</td>
             <!-- Các nút thao tác cho từng dòng -->
             <td>
               <div class="actions">
@@ -200,6 +200,16 @@ export default {
         this.filteredNews.length > 0 &&
         this.filteredNews.every((news) => this.selectedNews.includes(news._id))
       )
+    },
+    // New computed property to get the current date
+    currentDate() {
+      const d = new Date(); // Get the current date
+      const day = d.getDate().toString().padStart(2, '0'); // Get day and pad with zero if needed
+      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Get month (0-indexed) and pad
+      const year = d.getFullYear(); // Get full year
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
   },
   methods: {

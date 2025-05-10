@@ -3,7 +3,7 @@
   <div class="news-list">
     <!-- Hiển thị trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
+      <!-- <div class="loading-spinner"></div> -->
       <p>Đang tải danh sách tin tức...</p>
     </div>
 

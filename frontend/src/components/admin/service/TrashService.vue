@@ -228,7 +228,7 @@ export default {
       const year = d.getFullYear()
       const hour = d.getHours().toString().padStart(2, '0')
       const minute = d.getMinutes().toString().padStart(2, '0')
-      return `${day}/${month}/${year}, ${hour}:${minute}`
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
     getImageUrl(imagePath) {
       if (!imagePath) return null

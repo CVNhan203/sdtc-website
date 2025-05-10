@@ -6,6 +6,9 @@
     </div>
 
     <div class="header-actions">
+      <div class="current-date">
+        Ngày hiện tại: {{ currentDate }}
+      </div>
       <div class="actions-header">
         <div class="search-filter">
           <div class="search-box">
@@ -73,7 +76,7 @@
             <td>{{ index + 1 }}</td>
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
-            <td>{{ formatDate(account.deletedAt || account.updatedAt) }}</td>
+            <td>{{ currentDate }}</td>
             <td>
               <div class="actions">
                 <button 
@@ -215,7 +218,16 @@ export default {
     isAllSelected() {
       return this.filteredAccounts.length > 0 && 
              this.filteredAccounts.every(account => this.selectedAccounts.includes(account._id)); // Kiểm tra xem tất cả tài khoản đã chọn
-    }
+    },
+    currentDate() {
+      const d = new Date(); // Get the current date
+      const day = d.getDate().toString().padStart(2, '0'); // Get day and pad with zero if needed
+      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Get month (0-indexed) and pad
+      const year = d.getFullYear(); // Get full year
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year} - ${hour}:${minute}`
+    },
   },
   methods: {
     async loadAccounts() {
@@ -247,17 +259,6 @@ export default {
     
     handleSearch() {
       // Xử lý tìm kiếm, đã được xử lý qua computed property
-    },
-    
-    formatDate(date) {
-      if (!date) return ''; // Nếu không có ngày, trả về chuỗi rỗng
-      return new Date(date).toLocaleString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      }); // Định dạng ngày theo kiểu Việt Nam
     },
     
     truncateId(id) {
