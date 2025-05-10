@@ -1,17 +1,28 @@
 <template>
   <div class="account-list">
-    <!-- Header actions -->
     <div class="header-actions">
-      <div class="search-filter">
-        <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Tìm kiếm theo tên hoặc email..."
-            @input="handleSearch"
-          />
+      <div class="left-actions">
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Tìm kiếm theo tên hoặc email..."
+              @input="handleSearch"
+            />
+          </div>
         </div>
+      </div>
+      <div class="action-buttons">
+        <router-link to="/admin/tai-khoan/them-moi" class="action-btn add">
+          <i class="fas fa-plus"></i>
+          Thêm mới
+        </router-link>
+        <router-link to="/admin/tai-khoan/thung-rac" class="action-btn trash">
+          <i class="fas fa-trash"></i>
+          Thùng rác
+        </router-link>
       </div>
     </div>
 
@@ -32,7 +43,7 @@
       <table class="accounts-table">
         <thead>
           <tr>
-            <th>STT</th>
+            <th>No.</th>
             <th>Họ tên</th>
             <th>Email</th>
             <!-- <th>Vai trò</th> -->
@@ -98,7 +109,8 @@
 
     <!-- Delete Confirmation Modal -->
     <div class="modal" v-if="showDeleteModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeleteModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận xóa</h3>
         <p>Bạn có chắc chắn muốn xóa tài khoản này?</p>
         <div class="modal-actions">
@@ -110,7 +122,8 @@
 
     <!-- Restore Confirmation Modal -->
     <div class="modal" v-if="showRestoreModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showRestoreModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận khôi phục</h3>
         <p>Bạn có chắc chắn muốn khôi phục tài khoản này?</p>
         <div class="modal-actions">
@@ -122,7 +135,8 @@
 
     <!-- Permanent Delete Confirmation Modal -->
     <div class="modal" v-if="showDeletePermanentModal">
-      <div class="modal-content">
+      <div class="modal-overlay" @click="showDeletePermanentModal = false"></div>
+      <div class="modal-content" @click.stop>
         <h3>Xác nhận xóa vĩnh viễn</h3>
         <p class="warning">Cảnh báo: Hành động này không thể hoàn tác!</p>
         <p>Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản này?</p>
@@ -130,6 +144,39 @@
           <button class="cancel-btn" @click="showDeletePermanentModal = false">Hủy</button>
           <button class="delete-btn" @click="handleDeletePermanent">Xóa vĩnh viễn</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Modal sửa tài khoản -->
+    <div class="modal" v-if="showEditModal">
+      <div class="modal-overlay" @click="showEditModal = false"></div>
+      <div class="modal-content" @click.stop>
+        <h3>Chỉnh sửa tài khoản</h3>
+        <form @submit.prevent="handleEditSubmit">
+          <div v-if="editError" class="error-alert">{{ editError }}</div>
+          <div v-if="editSuccess" class="success-alert">{{ editSuccess }}</div>
+          <div class="form-group">
+            <label>Họ tên <span class="required">*</span></label>
+            <input type="text" v-model.trim="editFormData.fullName" :class="{ error: editErrors.fullName }" maxlength="50" />
+            <span class="error-message" v-if="editErrors.fullName">{{ editErrors.fullName }}</span>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" v-model="editFormData.email" readonly />
+          </div>
+          <div class="form-group">
+            <label>Vai trò <span class="required">*</span></label>
+            <select v-model="editFormData.role" :class="{ error: editErrors.role }">
+              <option value="admin">Quản trị viên</option>
+              <option value="staff">Nhân viên</option>
+            </select>
+            <span class="error-message" v-if="editErrors.role">{{ editErrors.role }}</span>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" @click="showEditModal = false">Hủy</button>
+            <button type="submit" class="submit-btn" :disabled="editLoading">{{ editLoading ? 'Đang lưu...' : 'Lưu thay đổi' }}</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -156,6 +203,19 @@ export default {
     const showRestoreModal = ref(false)
     const showDeletePermanentModal = ref(false)
     const selectedAccount = ref({})
+
+    // Add these new ref variables
+    const showEditModal = ref(false)
+    const editFormData = ref({
+      _id: '',
+      fullName: '',
+      email: '',
+      role: ''
+    })
+    const editErrors = ref({})
+    const editError = ref(null)
+    const editSuccess = ref(null)
+    const editLoading = ref(false)
 
     // Computed property for filtered accounts
     const filteredAccounts = computed(() => {
@@ -369,6 +429,61 @@ export default {
       return id.length > 8 ? id.substring(0, 8) + '...' : id
     }
 
+    // Mở modal sửa
+    const openEditModal = (account) => {
+      editFormData.value = {
+        _id: account._id,
+        fullName: account.fullName,
+        email: account.email,
+        role: account.role
+      };
+      editErrors.value = {};
+      editError.value = null;
+      editSuccess.value = null;
+      showEditModal.value = true;
+    };
+
+    // Validate form sửa
+    const validateEdit = () => {
+      const errs = {};
+      if (!editFormData.value.fullName.trim()) {
+        errs.fullName = 'Họ tên không được để trống';
+      } else if (editFormData.value.fullName.length < 3) {
+        errs.fullName = 'Họ tên phải có ít nhất 3 ký tự';
+      }
+      if (!editFormData.value.role) {
+        errs.role = 'Vui lòng chọn vai trò';
+      }
+      editErrors.value = errs;
+      return Object.keys(errs).length === 0;
+    };
+
+    // Gửi form sửa
+    const handleEditSubmit = async () => {
+      editError.value = null;
+      editSuccess.value = null;
+      if (!validateEdit()) return;
+      editLoading.value = true;
+      try {
+        const res = await accountService.updateAccount(editFormData.value._id, {
+          fullName: editFormData.value.fullName,
+          role: editFormData.value.role
+        });
+        if (res.success) {
+          editSuccess.value = 'Cập nhật tài khoản thành công';
+          eventBus.emit('show-toast', { type: 'success', message: editSuccess.value });
+          showEditModal.value = false;
+          await loadAccounts();
+        } else {
+          throw new Error(res.message || 'Không thể cập nhật tài khoản');
+        }
+      } catch (err) {
+        editError.value = err.message || 'Có lỗi xảy ra khi cập nhật';
+      } finally {
+        editLoading.value = false;
+      }
+    };
+
     onMounted(() => {
       loadAccounts()
     })
@@ -402,60 +517,365 @@ export default {
       handleSearch,
       handleFilter,
       truncateId,
+      showEditModal,
+      editFormData,
+      editErrors,
+      editError,
+      editSuccess,
+      editLoading,
+      openEditModal,
+      handleEditSubmit,
     }
   },
 }
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
 
-/* Component specific styles */
-.role-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+@import "@/styles/admin.css";
+
+/* Container */
+.account-list {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-box {
+  position: relative;
+  width: 320px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.search-box input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.accounts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.accounts-table th {
+  background: #f9fafb;
+  padding: 12px 16px;
+  text-align: center; /* căn giữa tiêu đề bảng */
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.accounts-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center; /* căn giữa nội dung bảng */
+}
+
+.accounts-table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 500;
-  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.role-badge.admin {
-  background-color: #e0f2fe;
-  color: #0369a1;
-}
-
-.role-badge.staff {
-  background-color: #f3e8ff;
-  color: #7e22ce;
-}
-
-.icon-btn.activate {
-  background-color: #10b981;
+.action-btn.add {
+  background-color: #3b82f6;
   color: white;
 }
 
-.icon-btn.activate:hover {
-  background-color: #059669;
+.action-btn.add:hover {
+  background-color: #2563eb;
 }
 
-.icon-btn.deactivate {
+.action-btn.trash {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.action-btn.trash:hover {
+  background-color: #e5e7eb;
+}
+
+.icon-btn {
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn.edit {
+  background-color: #60a5fa;
+  color: white;
+}
+
+.icon-btn.edit:hover {
+  background-color: #3b82f6;
+}
+
+.icon-btn.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.icon-btn.delete:hover {
   background-color: #ef4444;
+}
+
+.icon-btn.restore {
+  background-color: #34d399;
   color: white;
 }
 
-.icon-btn.deactivate:hover {
-  background-color: #dc2626;
+.icon-btn.restore:hover {
+  background-color: #10b981;
 }
 
-/* Responsive styles */
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25); /* nhẹ hơn */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+}
+.modal-content {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  padding: 24px 28px 20px 28px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  text-align: left;
+  position: relative;
+}
+
+.modal-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+}
+
+.modal-content p {
+  margin: 0 0 18px 0;
+  font-size: 15px;
+  color: #222;
+}
+
+.modal-content .warning {
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-btn,
+.confirm-btn,
+.delete-btn {
+  min-width: 90px;
+  padding: 8px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #222;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.confirm-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.confirm-btn:hover {
+  background: #fecaca;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+/* Đảm bảo modal nhỏ gọn, căn giữa */
+@media (max-width: 500px) {
+  .modal-content {
+    max-width: 95vw;
+    padding: 18px 8px 14px 8px;
+  }
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f4f6;
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .search-filter {
-    flex-direction: column;
-    gap: 12px;
+  .account-list {
+    padding: 16px;
   }
 
-  .search-filter select {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
     width: 100%;
   }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .table-container {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+}
+
+/* Status and Role Badges */
+.status-badge,
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-badge.active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.deleted {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Custom Variables */
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --success-color: #10b981;
+  --success-hover: #059669;
 }
 </style>
