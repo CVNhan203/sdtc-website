@@ -215,23 +215,28 @@
           </div>
           <div class="modal-body">
             <!-- Form nhập/sửa thông tin tin tức -->
-            <form @submit.prevent="handleSubmit">
+            <form @submit.prevent="handleSubmit" novalidate>
               <div class="form-group">
                 <label>Tiêu đề</label>
-                <input type="text" v-model="formData.title" required />
+                <input
+                  type="text"
+                  v-model="formData.title"
+                  :class="{ error: errors.title }"
+                  placeholder="Nhập tiêu đề tin tức"
+                />
+                <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
               </div>
               <div class="form-group">
                 <label>Phân loại</label>
                 <input 
                   type="text" 
                   v-model="formData.type" 
+                  :class="{ error: errors.type }"
                   placeholder="Nhập phân loại tin tức"
                   maxlength="50"
                   required 
                 />
-                <span class="character-count" v-if="formData.type">
-                  {{ formData.type.length }}/50
-                </span>
+                <span class="error-message" v-if="errors.type">{{ errors.type }}</span>
               </div>
               <div class="form-group">
                 <label>Ảnh</label>
@@ -258,11 +263,23 @@
               </div>
               <div class="form-group">
                 <label>Tóm tắt</label>
-                <textarea v-model="formData.summary" required rows="3"></textarea>
+                <textarea
+                  v-model="formData.summary"
+                  :class="{ error: errors.summary }"
+                  placeholder="Nhập tóm tắt nội dung"
+                ></textarea>
+                <span class="error-message" v-if="errors.summary">{{ errors.summary }}</span>
               </div>
               <div class="form-group">
                 <label>Nội dung chi tiết</label>
-                <textarea v-model="formData.content" required rows="6"></textarea>
+                <textarea
+                  v-model="formData.content"
+                  :class="{ error: errors.content }"
+                  placeholder="Nhập nội dung chi tiết"
+                  required
+                  rows="6"
+                ></textarea>
+                <span class="error-message" v-if="errors.content">{{ errors.content }}</span>
               </div>
               <!-- Các nút hành động form -->
               <div class="form-actions">
@@ -383,6 +400,7 @@ export default {
     const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
     const selectedNewsIds = ref([]) // Danh sách ID tin tức được chọn
     const fileInput = ref(null)
+    const errors = ref({}) // Add a reactive object for errors
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -726,8 +744,65 @@ export default {
       showFormModal.value = true
     }
 
-    // Xử lý gửi form thêm/chỉnh sửa tin tức
+    // Validation method
+    const validateForm = () => {
+      const newErrors = {};
+
+      // Validate title
+      if (!formData.value.title?.trim()) {
+        newErrors.title = 'Tiêu đề không được để trống';
+      } else if (formData.value.title.trim().length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
+      } else if (formData.value.title.trim().length > 200) {
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+      }
+
+      // Validate summary
+      if (!formData.value.summary?.trim()) {
+        newErrors.summary = 'Tóm tắt không được để trống';
+      } else if (formData.value.summary.trim().length < 10) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự';
+      } else if (formData.value.summary.trim().length > 500) {
+        newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự';
+      }
+
+      // Validate content
+      if (!formData.value.content?.trim()) {
+        newErrors.content = 'Nội dung không được để trống';
+      } else if (formData.value.content.trim().length < 100) {
+        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự';
+      } else if (formData.value.content.trim().length > 5000) {
+        newErrors.content = 'Nội dung không được vượt quá 5000 ký tự';
+      }
+
+      // Validate type
+      if (!formData.value.type?.trim()) {
+        newErrors.type = 'Phân loại không được để trống';
+      } else if (formData.value.type.trim().length > 50) {
+        newErrors.type = 'Phân loại không được vượt quá 50 ký tự';
+      }
+
+      // Validate image if necessary
+      if (!formData.value.image && !imagePreview.value) {
+        newErrors.image = 'Vui lòng chọn ảnh cho tin tức';
+      }
+
+      errors.value = newErrors; // Update the errors reactive object
+      return Object.keys(newErrors).length === 0; // Return true if no errors
+    };
+
+    // Update handleSubmit to include validation
     const handleSubmit = async () => {
+      if (!validateForm()) {
+        // Focus on the first error field
+        const firstErrorField = Object.keys(errors.value)[0];
+        const element = document.querySelector(`[name="${firstErrorField}"]`);
+        if (element) {
+          element.focus();
+        }
+        return;
+      }
+
       try {
         // Chuẩn bị dữ liệu để gửi lên server
         const newsData = {
@@ -939,6 +1014,8 @@ export default {
       removeImage,
       fileInput,
       triggerFileInput,
+      errors,
+      validateForm,
     }
   },
 }

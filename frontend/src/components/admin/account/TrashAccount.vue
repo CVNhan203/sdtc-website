@@ -1,6 +1,6 @@
 <template>
   <div class="trash-accounts">
-    <!-- Add loading indicator -->
+    <!-- Thêm chỉ báo tải -->
     <div class="loading-overlay" v-if="loading">
       <div class="spinner"></div>
     </div>
@@ -102,7 +102,7 @@
       </table>
     </div>
 
-    <!-- Restore Confirmation Modal -->
+    <!-- Modal xác nhận khôi phục -->
     <div class="modal" v-if="showRestoreModal">
       <div class="modal-overlay" @click="showRestoreModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -125,7 +125,7 @@
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Modal xác nhận xóa -->
     <div class="modal" v-if="showDeleteModal">
       <div class="modal-overlay" @click="showDeleteModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- Service Modal -->
+    <!-- Modal dịch vụ -->
     <div class="modal" v-if="showServiceModal">
       <div class="modal-overlay" @click="showServiceModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -188,60 +188,60 @@ export default {
   name: 'AdminTrashAccounts',
   data() {
     return {
-      accounts: [],
-      searchQuery: '',
-      selectedAccounts: [],
-      showRestoreModal: false,
-      showDeleteModal: false,
-      loading: false,
-      error: null,
-      // Service modal state
-      showServiceModal: false,
-      services: [],
-      serviceLoading: false,
-      serviceError: null,
+      accounts: [], // Danh sách tài khoản đã xóa
+      searchQuery: '', // Chuỗi tìm kiếm
+      selectedAccounts: [], // Danh sách tài khoản được chọn
+      showRestoreModal: false, // Trạng thái hiển thị modal khôi phục
+      showDeleteModal: false, // Trạng thái hiển thị modal xóa
+      loading: false, // Trạng thái tải
+      error: null, // Thông báo lỗi
+      // Trạng thái modal dịch vụ
+      showServiceModal: false, // Trạng thái hiển thị modal dịch vụ
+      services: [], // Danh sách dịch vụ
+      serviceLoading: false, // Trạng thái tải dịch vụ
+      serviceError: null, // Thông báo lỗi dịch vụ
     }
   },
   computed: {
     filteredAccounts() {
-      if (!this.searchQuery) return this.accounts;
+      if (!this.searchQuery) return this.accounts; // Nếu không có tìm kiếm, trả về tất cả tài khoản
       
-      const query = this.searchQuery.toLowerCase();
+      const query = this.searchQuery.toLowerCase(); // Chuyển chuỗi tìm kiếm thành chữ thường
       return this.accounts.filter(account => 
         (account.fullName?.toLowerCase().includes(query) || 
-         account.email?.toLowerCase().includes(query))
+         account.email?.toLowerCase().includes(query)) // Lọc tài khoản theo tên hoặc email
       );
     },
     isAllSelected() {
       return this.filteredAccounts.length > 0 && 
-             this.filteredAccounts.every(account => this.selectedAccounts.includes(account._id));
+             this.filteredAccounts.every(account => this.selectedAccounts.includes(account._id)); // Kiểm tra xem tất cả tài khoản đã chọn
     }
   },
   methods: {
     async loadAccounts() {
       try {
-        this.loading = true;
-        this.error = null; // Reset error state
+        this.loading = true; // Bắt đầu tải
+        this.error = null; // Đặt lại trạng thái lỗi
         
         // Sử dụng phương thức có sẵn để lấy tài khoản đã xóa
         const response = await accountService.getDeletedAccounts();
         
         if (response.success) {
           // Gán trực tiếp dữ liệu đã được lọc từ service
-          this.accounts = response.data || [];
+          this.accounts = response.data || []; // Gán danh sách tài khoản đã xóa
           console.log('Tài khoản đã xóa:', this.accounts);
         } else {
           throw new Error(response.message || 'Không thể tải danh sách tài khoản đã xóa');
         }
       } catch (error) {
         console.error('Lỗi khi tải tài khoản đã xóa:', error);
-        this.error = error.message || 'Không thể tải danh sách tài khoản đã xóa';
+        this.error = error.message || 'Không thể tải danh sách tài khoản đã xóa'; // Ghi lại lỗi
         eventBus.emit('show-toast', {
           type: 'error',
           message: this.error
         });
       } finally {
-        this.loading = false;
+        this.loading = false; // Kết thúc tải
       }
     },
     
@@ -250,46 +250,46 @@ export default {
     },
     
     formatDate(date) {
-      if (!date) return '';
+      if (!date) return ''; // Nếu không có ngày, trả về chuỗi rỗng
       return new Date(date).toLocaleString('vi-VN', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit'
-      });
+      }); // Định dạng ngày theo kiểu Việt Nam
     },
     
     truncateId(id) {
-      if (!id) return '';
-      return id.length > 8 ? id.substring(0, 8) + '...' : id;
+      if (!id) return ''; // Nếu không có id, trả về chuỗi rỗng
+      return id.length > 8 ? id.substring(0, 8) + '...' : id; // Cắt ngắn id nếu dài hơn 8 ký tự
     },
     
     isSelected(id) {
-      return this.selectedAccounts.includes(id);
+      return this.selectedAccounts.includes(id); // Kiểm tra xem tài khoản đã được chọn hay chưa
     },
     
     toggleSelect(id) {
       const index = this.selectedAccounts.indexOf(id);
       if (index === -1) {
-        this.selectedAccounts.push(id);
+        this.selectedAccounts.push(id); // Thêm tài khoản vào danh sách đã chọn
       } else {
-        this.selectedAccounts.splice(index, 1);
+        this.selectedAccounts.splice(index, 1); // Xóa tài khoản khỏi danh sách đã chọn
       }
     },
     
     toggleSelectAll() {
       if (this.isAllSelected) {
-        this.selectedAccounts = [];
+        this.selectedAccounts = []; // Bỏ chọn tất cả
       } else {
-        this.selectedAccounts = this.filteredAccounts.map(account => account._id);
+        this.selectedAccounts = this.filteredAccounts.map(account => account._id); // Chọn tất cả tài khoản
       }
     },
     
     async handleRestore() {
       try {
-        this.loading = true;
-        const response = await accountService.restoreAccounts(this.selectedAccounts);
+        this.loading = true; // Bắt đầu tải
+        const response = await accountService.restoreAccounts(this.selectedAccounts); // Khôi phục tài khoản
         
         if (response.success) {
           eventBus.emit('show-toast', {
@@ -299,8 +299,8 @@ export default {
           
           // Tải lại danh sách sau khi khôi phục
           await this.loadAccounts();
-          this.selectedAccounts = [];
-          this.showRestoreModal = false;
+          this.selectedAccounts = []; // Đặt lại danh sách đã chọn
+          this.showRestoreModal = false; // Đóng modal khôi phục
         } else {
           throw new Error(response.message || 'Không thể khôi phục tài khoản');
         }
@@ -310,25 +310,25 @@ export default {
           message: error.message || 'Không thể khôi phục tài khoản'
         });
       } finally {
-        this.loading = false;
+        this.loading = false; // Kết thúc tải
       }
     },
     
     async handleDelete() {
       try {
-        this.loading = true;
+        this.loading = true; // Bắt đầu tải
         
         // Hiển thị thông báo xác nhận nếu xóa nhiều tài khoản
         if (this.selectedAccounts.length > 1) {
           const confirmed = confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn ${this.selectedAccounts.length} tài khoản đã chọn không? Hành động này không thể hoàn tác!`);
           if (!confirmed) {
-            this.loading = false;
-            this.showDeleteModal = false;
+            this.loading = false; // Kết thúc tải
+            this.showDeleteModal = false; // Đóng modal xóa
             return;
           }
         }
         
-        const response = await accountService.permanentDeleteAccounts(this.selectedAccounts);
+        const response = await accountService.permanentDeleteAccounts(this.selectedAccounts); // Xóa tài khoản vĩnh viễn
         
         if (response.success) {
           eventBus.emit('show-toast', {
@@ -338,8 +338,8 @@ export default {
           
           // Tải lại danh sách sau khi xóa
           await this.loadAccounts();
-          this.selectedAccounts = [];
-          this.showDeleteModal = false;
+          this.selectedAccounts = []; // Đặt lại danh sách đã chọn
+          this.showDeleteModal = false; // Đóng modal xóa
         } else {
           throw new Error(response.message || 'Không thể xóa vĩnh viễn tài khoản');
         }
@@ -349,60 +349,60 @@ export default {
           message: error.message || 'Không thể xóa vĩnh viễn tài khoản'
         });
       } finally {
-        this.loading = false;
+        this.loading = false; // Kết thúc tải
       }
     },
     
     confirmRestore(account) {
       if (account) {
-        this.selectedAccounts = [account._id];
+        this.selectedAccounts = [account._id]; // Đặt tài khoản được chọn để khôi phục
       }
-      this.showRestoreModal = true;
+      this.showRestoreModal = true; // Hiển thị modal khôi phục
     },
     
     confirmDelete(account) {
       if (account) {
-        this.selectedAccounts = [account._id];
+        this.selectedAccounts = [account._id]; // Đặt tài khoản được chọn để xóa
       }
-      this.showDeleteModal = true;
+      this.showDeleteModal = true; // Hiển thị modal xóa
     },
     
     confirmBulkRestore() {
-      this.showRestoreModal = true;
+      this.showRestoreModal = true; // Hiển thị modal khôi phục cho nhiều tài khoản
     },
     
     confirmBulkDelete() {
-      this.showDeleteModal = true;
+      this.showDeleteModal = true; // Hiển thị modal xóa cho nhiều tài khoản
     },
 
     async viewServices(account) {
-      this.showServiceModal = true;
-      this.services = [];
-      this.serviceLoading = true;
-      this.serviceError = null;
+      this.showServiceModal = true; // Hiển thị modal dịch vụ
+      this.services = []; // Đặt lại danh sách dịch vụ
+      this.serviceLoading = true; // Bắt đầu tải dịch vụ
+      this.serviceError = null; // Đặt lại trạng thái lỗi dịch vụ
       try {
         // Giả sử serviceService có hàm getServicesByAccountId
-        const res = await serviceService.getServicesByAccountId(account._id);
+        const res = await serviceService.getServicesByAccountId(account._id); // Lấy dịch vụ theo id tài khoản
         if (res && res.success) {
-          this.services = res.data || [];
+          this.services = res.data || []; // Gán danh sách dịch vụ
         } else {
-          this.serviceError = res.message || 'Không thể tải dịch vụ';
+          this.serviceError = res.message || 'Không thể tải dịch vụ'; // Ghi lại lỗi
         }
       } catch (err) {
-        this.serviceError = err.message || 'Không thể tải dịch vụ';
+        this.serviceError = err.message || 'Không thể tải dịch vụ'; // Ghi lại lỗi
       } finally {
-        this.serviceLoading = false;
+        this.serviceLoading = false; // Kết thúc tải dịch vụ
       }
     }
   },
   created() {
-    this.loadAccounts();
+    this.loadAccounts(); // Tải danh sách tài khoản khi component được tạo
   }
 };
 </script>
 
 <style scoped>
-
+/* Các kiểu CSS cho component */
 @import "@/styles/admin.css";
 
 .trash-accounts {
@@ -413,6 +413,7 @@ export default {
   position: relative;
 }
 
+/* Các kiểu cho chỉ báo tải */
 .loading-overlay {
   position: absolute;
   top: 0;
@@ -439,6 +440,7 @@ export default {
   to { transform: rotate(360deg); }
 }
 
+/* Các kiểu cho phần tiêu đề và hành động */
 .header-actions {
   margin-bottom: 24px;
 }
@@ -484,6 +486,7 @@ export default {
   color: #64748b;
 }
 
+/* Các kiểu cho thông báo lỗi */
 .error-container {
   text-align: center;
   padding: 48px 0;
@@ -509,6 +512,7 @@ export default {
   background: #2563eb;
 }
 
+/* Các kiểu cho bảng */
 .table-container {
   overflow-x: auto;
   border: 1px solid #e2e8f0;
@@ -546,6 +550,7 @@ tr:last-child td {
   border-bottom: none;
 }
 
+/* Các kiểu cho nút hành động hàng loạt */
 .bulk-action-btn {
   padding: 10px 20px;
   border: none;
@@ -577,6 +582,7 @@ tr:last-child td {
   background: #dc2626;
 }
 
+/* Các kiểu cho nút icon */
 .icon-btn {
   padding: 8px;
   border: none;
@@ -613,6 +619,7 @@ tr:last-child td {
   background: #fecaca;
 }
 
+/* Các kiểu cho modal */
 .modal {
   position: fixed;
   top: 0;
@@ -753,7 +760,7 @@ tr:last-child td {
   font-style: italic;
 }
 
-/* Custom checkbox styles */
+/* Các kiểu cho checkbox tùy chỉnh */
 input[type="checkbox"] {
   width: 18px;
   height: 18px;
@@ -781,7 +788,7 @@ input[type="checkbox"]:checked::after {
   font-size: 12px;
 }
 
-/* Responsive design */
+/* Thiết kế responsive */
 @media (max-width: 768px) {
   .trash-accounts {
     padding: 16px;

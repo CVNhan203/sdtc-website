@@ -26,19 +26,19 @@
       </div>
     </div>
 
-    <!-- Loading state -->
+    <!-- Trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>
       <p>Đang tải danh sách tài khoản...</p>
     </div>
 
-    <!-- Error state -->
+    <!-- Trạng thái lỗi -->
     <div v-else-if="error" class="error-container">
       <p class="error-message">{{ error }}</p>
       <button class="retry-btn" @click="loadAccounts">Thử lại</button>
     </div>
 
-    <!-- Content -->
+    <!-- Nội dung chính -->
     <div v-else class="table-container">
       <table class="accounts-table">
         <thead>
@@ -46,8 +46,6 @@
             <th>No.</th>
             <th>Họ tên</th>
             <th>Email</th>
-            <!-- <th>Vai trò</th> -->
-            <!-- <th>Trạng thái</th> -->
             <th class="action-column">Thao tác</th>
           </tr>
         </thead>
@@ -60,26 +58,9 @@
             <td>{{ index + 1 }}</td>
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
-            <!-- <td>
-              <span :class="['role-badge', account.role]">
-                {{ account.role === 'admin' ? 'Quản trị viên' : 'Nhân viên' }}
-              </span>
-            </td>
-            <td>
-              <span :class="['status-badge', account.isDeleted ? 'deleted' : 'active']">
-                {{ account.isDeleted ? 'Đã xóa' : 'Đang hoạt động' }}
-              </span>
-            </td> -->
             <td>
               <div class="actions">
                 <template v-if="!account.isDeleted">
-                  <!-- <router-link
-                    :to="'/admin/accounts/edit/' + account._id"
-                    class="icon-btn edit"
-                    title="Chỉnh sửa"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </router-link> -->
                   <button class="icon-btn delete" title="Xóa" @click="confirmDelete(account)">
                     <i class="fas fa-trash"></i>
                   </button>
@@ -107,7 +88,7 @@
       </table>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Modal xác nhận xóa -->
     <div class="modal" v-if="showDeleteModal">
       <div class="modal-overlay" @click="showDeleteModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -120,7 +101,7 @@
       </div>
     </div>
 
-    <!-- Restore Confirmation Modal -->
+    <!-- Modal xác nhận khôi phục -->
     <div class="modal" v-if="showRestoreModal">
       <div class="modal-overlay" @click="showRestoreModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -133,7 +114,7 @@
       </div>
     </div>
 
-    <!-- Permanent Delete Confirmation Modal -->
+    <!-- Modal xác nhận xóa vĩnh viễn -->
     <div class="modal" v-if="showDeletePermanentModal">
       <div class="modal-overlay" @click="showDeletePermanentModal = false"></div>
       <div class="modal-content" @click.stop>
@@ -192,36 +173,36 @@ export default {
   name: 'AccountList',
   setup() {
     const router = useRouter()
-    const accounts = ref([])
-    const searchQuery = ref('')
-    const filterRole = ref('')
-    const filterStatus = ref('all')
-    const loading = ref(true)
-    const error = ref(null)
-    const showDetailsModal = ref(false)
-    const showDeleteModal = ref(false)
-    const showRestoreModal = ref(false)
-    const showDeletePermanentModal = ref(false)
-    const selectedAccount = ref({})
+    const accounts = ref([]) // Danh sách tài khoản
+    const searchQuery = ref('') // Truy vấn tìm kiếm
+    const filterRole = ref('') // Bộ lọc vai trò
+    const filterStatus = ref('all') // Bộ lọc trạng thái
+    const loading = ref(true) // Trạng thái đang tải
+    const error = ref(null) // Thông báo lỗi
+    const showDetailsModal = ref(false) // Trạng thái hiển thị modal chi tiết
+    const showDeleteModal = ref(false) // Trạng thái hiển thị modal xóa
+    const showRestoreModal = ref(false) // Trạng thái hiển thị modal khôi phục
+    const showDeletePermanentModal = ref(false) // Trạng thái hiển thị modal xóa vĩnh viễn
+    const selectedAccount = ref({}) // Tài khoản được chọn
 
-    // Add these new ref variables
-    const showEditModal = ref(false)
+    // Thêm các biến ref mới
+    const showEditModal = ref(false) // Trạng thái hiển thị modal sửa
     const editFormData = ref({
       _id: '',
       fullName: '',
       email: '',
       role: ''
-    })
-    const editErrors = ref({})
-    const editError = ref(null)
-    const editSuccess = ref(null)
-    const editLoading = ref(false)
+    }) // Dữ liệu form sửa
+    const editErrors = ref({}) // Lỗi form sửa
+    const editError = ref(null) // Thông báo lỗi sửa
+    const editSuccess = ref(null) // Thông báo thành công sửa
+    const editLoading = ref(false) // Trạng thái đang tải khi sửa
 
-    // Computed property for filtered accounts
+    // Thuộc tính computed cho danh sách tài khoản đã lọc
     const filteredAccounts = computed(() => {
       let result = [...accounts.value]
 
-      // Search filter
+      // Bộ lọc tìm kiếm
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
         result = result.filter(
@@ -231,12 +212,12 @@ export default {
         )
       }
 
-      // Role filter
+      // Bộ lọc vai trò
       if (filterRole.value) {
         result = result.filter((account) => account.role === filterRole.value)
       }
 
-      // Status filter
+      // Bộ lọc trạng thái
       if (filterStatus.value !== 'all') {
         const isDeleted = filterStatus.value === 'deleted'
         result = result.filter((account) => account.isDeleted === isDeleted)
@@ -245,7 +226,7 @@ export default {
       return result
     })
 
-    // Load accounts
+    // Tải danh sách tài khoản
     const loadAccounts = async () => {
       loading.value = true
       error.value = null
@@ -253,7 +234,7 @@ export default {
       try {
         const response = await accountService.getAccounts()
         if (response.success) {
-          accounts.value = response.data || []
+          accounts.value = response.data || [] // Cập nhật danh sách tài khoản
         } else {
           throw new Error(response.message || 'Không thể tải danh sách tài khoản')
         }
@@ -269,7 +250,7 @@ export default {
       }
     }
 
-    // Format role display
+    // Định dạng hiển thị vai trò
     const formatRole = (role) => {
       const roles = {
         admin: 'Quản trị viên',
@@ -278,7 +259,7 @@ export default {
       return roles[role] || role
     }
 
-    // Format status display
+    // Định dạng hiển thị trạng thái
     const formatStatus = (status) => {
       const statuses = {
         active: 'Đang hoạt động',
@@ -287,23 +268,23 @@ export default {
       return statuses[status] || status
     }
 
-    // Format date
+    // Định dạng ngày
     const formatDate = (date) => {
       return new Date(date).toLocaleString('vi-VN')
     }
 
-    // Show account details
+    // Hiển thị chi tiết tài khoản
     const showDetails = (account) => {
       selectedAccount.value = account
       showDetailsModal.value = true
     }
 
-    // Edit account
+    // Chỉnh sửa tài khoản
     const editAccount = (account) => {
       router.push(`/admin/tai-khoan/chinh-sua/${account._id}`)
     }
 
-    // Toggle account status
+    // Chuyển đổi trạng thái tài khoản
     const toggleStatus = async (account) => {
       try {
         const newStatus = account.status === 'active' ? 'inactive' : 'active'
@@ -314,7 +295,7 @@ export default {
             type: 'success',
             message: `Đã ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} tài khoản`,
           })
-          await loadAccounts()
+          await loadAccounts() // Tải lại danh sách tài khoản
         } else {
           throw new Error(response.message)
         }
@@ -327,25 +308,25 @@ export default {
       }
     }
 
-    // Confirm delete
+    // Xác nhận xóa
     const confirmDelete = (account) => {
       selectedAccount.value = account
       showDeleteModal.value = true
     }
 
-    // Confirm restore
+    // Xác nhận khôi phục
     const confirmRestore = (account) => {
       selectedAccount.value = account
       showRestoreModal.value = true
     }
 
-    // Confirm permanent delete
+    // Xác nhận xóa vĩnh viễn
     const confirmDeletePermanent = (account) => {
       selectedAccount.value = account
       showDeletePermanentModal.value = true
     }
 
-    // Handle delete
+    // Xử lý xóa
     const handleDelete = async () => {
       try {
         const response = await accountService.deleteAccount(selectedAccount.value._id)
@@ -356,7 +337,7 @@ export default {
             message: 'Đã xóa tài khoản thành công',
           })
           showDeleteModal.value = false
-          loadAccounts() // Reload the accounts list
+          loadAccounts() // Tải lại danh sách tài khoản
         } else {
           throw new Error(response.message || 'Không thể xóa tài khoản')
         }
@@ -368,7 +349,7 @@ export default {
       }
     }
 
-    // Handle restore
+    // Xử lý khôi phục
     const handleRestore = async () => {
       try {
         const response = await accountService.restoreAccount(selectedAccount.value._id)
@@ -379,7 +360,7 @@ export default {
             message: 'Đã khôi phục tài khoản thành công',
           })
           showRestoreModal.value = false
-          loadAccounts() // Reload the accounts list
+          loadAccounts() // Tải lại danh sách tài khoản
         } else {
           throw new Error(response.message || 'Không thể khôi phục tài khoản')
         }
@@ -391,7 +372,7 @@ export default {
       }
     }
 
-    // Handle permanent delete
+    // Xử lý xóa vĩnh viễn
     const handleDeletePermanent = async () => {
       try {
         const response = await accountService.permanentDeleteAccount(selectedAccount.value._id)
@@ -402,7 +383,7 @@ export default {
             message: 'Đã xóa vĩnh viễn tài khoản thành công',
           })
           showDeletePermanentModal.value = false
-          loadAccounts() // Reload the accounts list
+          loadAccounts() // Tải lại danh sách tài khoản
         } else {
           throw new Error(response.message || 'Không thể xóa vĩnh viễn tài khoản')
         }
@@ -414,17 +395,17 @@ export default {
       }
     }
 
-    // Search handler
+    // Xử lý tìm kiếm
     const handleSearch = () => {
-      // Filtering is handled by computed property
+      // Lọc được xử lý bởi thuộc tính computed
     }
 
-    // Filter handler
+    // Xử lý bộ lọc
     const handleFilter = () => {
-      // Filtering is handled by computed property
+      // Lọc được xử lý bởi thuộc tính computed
     }
 
-    // Format ID
+    // Định dạng ID
     const truncateId = (id) => {
       return id.length > 8 ? id.substring(0, 8) + '...' : id
     }
@@ -443,7 +424,7 @@ export default {
       showEditModal.value = true;
     };
 
-    // Validate form sửa
+    // Xác thực form sửa
     const validateEdit = () => {
       const errs = {};
       if (!editFormData.value.fullName.trim()) {
@@ -455,14 +436,14 @@ export default {
         errs.role = 'Vui lòng chọn vai trò';
       }
       editErrors.value = errs;
-      return Object.keys(errs).length === 0;
+      return Object.keys(errs).length === 0; // Trả về true nếu không có lỗi
     };
 
     // Gửi form sửa
     const handleEditSubmit = async () => {
       editError.value = null;
       editSuccess.value = null;
-      if (!validateEdit()) return;
+      if (!validateEdit()) return; // Nếu có lỗi thì không gửi
       editLoading.value = true;
       try {
         const res = await accountService.updateAccount(editFormData.value._id, {
@@ -473,7 +454,7 @@ export default {
           editSuccess.value = 'Cập nhật tài khoản thành công';
           eventBus.emit('show-toast', { type: 'success', message: editSuccess.value });
           showEditModal.value = false;
-          await loadAccounts();
+          await loadAccounts(); // Tải lại danh sách tài khoản
         } else {
           throw new Error(res.message || 'Không thể cập nhật tài khoản');
         }
@@ -485,7 +466,7 @@ export default {
     };
 
     onMounted(() => {
-      loadAccounts()
+      loadAccounts() // Tải danh sách tài khoản khi component được gắn
     })
 
     return {
@@ -531,7 +512,7 @@ export default {
 </script>
 
 <style scoped>
-
+/* Các kiểu dáng cho component */
 @import "@/styles/admin.css";
 
 /* Container */
