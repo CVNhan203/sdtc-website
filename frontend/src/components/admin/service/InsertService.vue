@@ -204,84 +204,43 @@ export default {
       let isValid = true;
       let newErrors = {};
 
-      // Helper function to validate title, summary, and content
-      const validateTextField = (field, fieldName) => {
-        // Trim whitespace
-        const trimmedField = field.trim();
-        
-        // Check for empty field
-        if (!trimmedField) {
-          newErrors[fieldName] = `${fieldName} không được để trống`;
-          isValid = false;
-          return;
-        }
-
-        // Remove internal whitespace
-        const noWhitespaceField = trimmedField.replace(/\s+/g, '');
-        
-        // Check for special characters (allow basic punctuation)
-        const specialCharRegex = /^[a-zA-Z0-9.,!?'" ]*$/; // Adjust as needed for allowed characters
-        if (!specialCharRegex.test(noWhitespaceField)) {
-          newErrors[fieldName] = `${fieldName} không được chứa ký tự đặc biệt`;
-          isValid = false;
-          return;
-        }
-
-        // Check character length after trimming
-        if (trimmedField.length < 10) {
-          newErrors[fieldName] = `${fieldName} phải có ít nhất 10 ký tự`;
-          isValid = false;
-        } else if (trimmedField.length > 200) { // Adjust max length as needed
-          newErrors[fieldName] = `${fieldName} không được vượt quá 200 ký tự`;
-          isValid = false;
-        }
-
-        // Update the original field with the trimmed and cleaned value
-        if (fieldName === 'Tiêu đề') {
-          this.formData.title = trimmedField; // Update title
-        } else if (fieldName === 'Mô tả') {
-          this.formData.content = trimmedField; // Update content
-        }
-      };
-
-      // Validate title
-      validateTextField(this.formData.title, 'Tiêu đề');
-
-      // Validate content
-      validateTextField(this.formData.content, 'Mô tả');
-
-      // Validate type (only alphabetic characters)
-      const typeField = this.formData.type.trim();
-      if (!typeField) {
-        newErrors.type = 'Phân loại không được để trống';
+      // Kiểm tra tiêu đề
+      const titleField = this.formData.title.trim();
+      if (!titleField) {
+        newErrors.title = 'Tiêu đề không được để trống';
         isValid = false;
-      } else if (!/^[a-zA-Z]+$/.test(typeField)) {
-        newErrors.type = 'Phân loại chỉ được chứa ký tự chữ';
+      } else if (titleField.length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
         isValid = false;
-      } else {
-        this.formData.type = typeField; // Update type
+      } else if (titleField.length > 200) {
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
+        isValid = false;
       }
 
-      // Giá validation
-      if (
-        this.formData.price === undefined ||
-        this.formData.price === null ||
-        this.formData.price === ''
-      ) {
-        newErrors.price = 'Giá dịch vụ không được để trống';
-        isValid = false; // Set isValid to false
-      } else {
-        const priceValue = Number(this.formData.price);
-        if (isNaN(priceValue)) {
-          newErrors.price = 'Giá dịch vụ phải là một số';
-          isValid = false; // Set isValid to false
-        } else if (priceValue <= 0) {
-          newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
-          isValid = false; // Set isValid to false
-        } else if (priceValue > 1000000000) {
-          newErrors.price = 'Giá dịch vụ quá lớn';
-          isValid = false; // Set isValid to false
-        }
+      // Kiểm tra mô tả
+      const contentField = this.formData.content.trim();
+      if (!contentField) {
+        newErrors.content = 'Mô tả không được để trống';
+        isValid = false;
+      } else if (contentField.length < 10) {
+        newErrors.content = 'Mô tả phải có ít nhất 10 ký tự';
+        isValid = false;
+      } else if (contentField.length > 2000) {
+        newErrors.content = 'Mô tả không được vượt quá 2000 ký tự';
+        isValid = false;
+      }
+
+      // Kiểm tra loại dịch vụ
+      if (!this.formData.type) {
+        newErrors.type = 'Loại dịch vụ không được để trống';
+        isValid = false;
+      }
+
+      // Kiểm tra giá
+      const priceValue = Number(this.formData.price);
+      if (isNaN(priceValue) || priceValue <= 0 || priceValue > 1000000000) {
+        newErrors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ';
+        isValid = false;
       }
 
       this.errors = newErrors;
