@@ -111,18 +111,22 @@ exports.deleteService = asyncHandler(async (req, res) => {
 })
 
 exports.uploadServiceImage = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    res.status(400)
-    throw new Error('Vui lòng chọn ảnh để tải lên')
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Không có file được tải lên' })
+    }
+
+    const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
+    const imageUrl = `${req.app.locals.BASE_URL}/${imagePath}`
+
+    res.status(200).json({
+      message: 'Tải ảnh lên thành công',
+      imagePath: imageUrl,
+    })
+  } catch (error) {
+    console.error('Lỗi khi upload ảnh:', error)
+    res.status(500).json({ message: 'Lỗi server khi upload ảnh' })
   }
-
-  const imagePath = req.file.path.replace(/\\/g, '/')
-
-  res.status(200).json({
-    success: true,
-    imagePath: imagePath,
-    message: 'Tải ảnh lên thành công',
-  })
 })
 
 // Khôi phục dịch vụ đã xóa

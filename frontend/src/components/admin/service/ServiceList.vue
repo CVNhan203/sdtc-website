@@ -560,103 +560,46 @@ export default {
       let isValid = true;
       let newErrors = {};
 
-      // Tiêu đề validation
-      if (!this.formData.title?.trim()) {
+      // Validate title
+      const titleField = this.formData.title.trim();
+      if (!titleField) {
         newErrors.title = 'Tiêu đề không được để trống';
         isValid = false;
-      } else {
-        const trimmedTitle = this.formData.title.trim();
-        
-        // Kiểm tra khoảng trắng đầu và cuối
-        if (this.formData.title !== trimmedTitle) {
-          newErrors.title = 'Tiêu đề không được có khoảng trắng ở đầu hoặc cuối';
-          isValid = false;
-        }
-        // Kiểm tra độ dài
-        else if (trimmedTitle.length < 3) {
-          newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
-          isValid = false;
-        } else if (trimmedTitle.length > 200) {
-          newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
-          isValid = false;
-        }
-        // Kiểm tra khoảng trắng liên tiếp
-        else if (/\s{2,}/.test(trimmedTitle)) {
-          newErrors.title = 'Tiêu đề không được có nhiều khoảng trắng liên tiếp';
-          isValid = false;
-        }
-        // Kiểm tra ký tự đặc biệt
-        else if (!/^[a-zA-Z0-9À-ỹ\s.,!?-]+$/.test(trimmedTitle)) {
-          newErrors.title = 'Tiêu đề chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?-';
-          isValid = false;
-        }
-      }
-
-      // Loại dịch vụ validation
-      if (!this.formData.type) {
-        newErrors.type = 'Vui lòng chọn loại dịch vụ';
+      } else if (titleField.length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
         isValid = false;
-      } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        newErrors.type = 'Loại dịch vụ không hợp lệ';
+      } else if (titleField.length > 200) {
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
         isValid = false;
       }
 
-      // Giá validation
-      if (
-        this.formData.price === undefined ||
-        this.formData.price === null ||
-        this.formData.price === ''
-      ) {
-        newErrors.price = 'Giá dịch vụ không được để trống';
-        isValid = false;
-      } else {
-        const priceValue = Number(this.formData.price);
-        if (isNaN(priceValue)) {
-          newErrors.price = 'Giá dịch vụ phải là một số';
-          isValid = false;
-        } else if (priceValue <= 0) {
-          newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
-          isValid = false;
-        } else if (priceValue > 1000000000) {
-          newErrors.price = 'Giá dịch vụ quá lớn';
-          isValid = false;
-        }
-      }
-
-      // Mô tả validation
-      const content = this.formData.description;
-
-      if (typeof content !== 'string' || content.trim() === '') {
+      // Validate description
+      const contentField = this.formData.description.trim();
+      if (!contentField) {
         newErrors.description = 'Mô tả không được để trống';
         isValid = false;
-      } else {
-        const trimmedContent = content.trim();
-        
-        if (trimmedContent.length < 10) {
-          newErrors.description = 'Mô tả phải có ít nhất 10 ký tự.';
-          isValid = false;
-        } else if (trimmedContent.length > 1000) {
-          newErrors.description = 'Mô tả không được vượt quá 1000 ký tự.';
-          isValid = false;
-        } else if (/\s{2,}/.test(trimmedContent)) {
-          newErrors.description = 'Mô tả không được có nhiều khoảng trắng liên tiếp.';
-          isValid = false;
-        } else if (!/^[a-zA-Z0-9À-ỹ\s.,!?()]+$/.test(trimmedContent)) {
-          newErrors.description = 'Mô tả chỉ được chứa chữ cái, số, dấu cách và các ký tự .,!?()';
-          isValid = false;
-        } else {
-          this.formData.description = trimmedContent;
-        }
+      } else if (contentField.length < 10) {
+        newErrors.description = 'Mô tả phải có ít nhất 10 ký tự';
+        isValid = false;
+      } else if (contentField.length > 1000) {
+        newErrors.description = 'Mô tả không được vượt quá 1000 ký tự';
+        isValid = false;
       }
 
-      // Ảnh validation - Chỉ kiểm tra khi thêm mới
-      if (!this.isEditing && !this.formData.image && !this.imagePreview) {
-        newErrors.image = 'Vui lòng tải lên ảnh cho dịch vụ';
+      // Validate type
+      if (!this.formData.type) {
+        newErrors.type = 'Loại dịch vụ không được để trống';
+        isValid = false;
+      }
+
+      // Validate price
+      const priceValue = Number(this.formData.price);
+      if (isNaN(priceValue) || priceValue <= 0 || priceValue > 1000000000) {
+        newErrors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ';
         isValid = false;
       }
 
       this.errors = newErrors;
-
       return isValid;
     },
     async handleSubmit() {

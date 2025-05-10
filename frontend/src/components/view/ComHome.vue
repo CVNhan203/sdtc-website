@@ -13,13 +13,13 @@
           />
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
-            <svg viewBox="0 0 500 200" class="wave-svg">
+            <svg viewBox="0 0 500 210" class="wave-svg">
               <path
-                d="M0,100 
-             C50,50 100,50 125,100 
-             C150,150 200,150 225,100 
-             C250,50 300,50 325,100 
-             C350,150 400,150 450,100"
+                d="M0,185 
+             C80,220 80,0 130,110 
+             C200,240 200,220 240,50 
+             C250,0 270,0 310,120
+             C350,240 370,170 400,90"
                 class="wave-path"
               />
             </svg>
@@ -81,7 +81,7 @@
             />
             <div class="rating">
               <span class="star">★</span>
-              <span>1,234+</span>
+              <span class="rate">1,234+</span>
             </div>
           </div>
         </div>
@@ -210,9 +210,9 @@
                   <span class="percent">100%</span>
                   <span class="task-name">Thiết kế hệ thống</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-12.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-1.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-2.png" />
                   </div>
                 </div>
                 <!-- Task 2 -->
@@ -220,12 +220,12 @@
                   <span class="percent">80%</span>
                   <span class="task-name">Phát triển website</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-3.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-4.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-5.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-6.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-7.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-8.png" />
                   </div>
                 </div>
                 <!-- Task 3 -->
@@ -233,9 +233,9 @@
                   <span class="percent">40%</span>
                   <span class="task-name">Tối ưu website</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-9.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-10.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-11.png" />
                   </div>
                 </div>
               </div>
@@ -374,7 +374,19 @@
           />
           <img
             v-for="(img, idx) in inspirationImagesTop"
-            :key="'topdup' + idx"
+            :key="'topdup1' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup2' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup3' + idx"
             :src="img"
             class="marquee-img"
           />
@@ -391,7 +403,19 @@
           />
           <img
             v-for="(img, idx) in inspirationImagesBottom"
-            :key="'botdup' + idx"
+            :key="'botdup1' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup2' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup3' + idx"
             :src="img"
             class="marquee-img"
           />
@@ -450,9 +474,8 @@
       <div class="companion-text">
         <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
         <p>
-          Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá
-          trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng
-          và cam kết của chúng tôi.
+          Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển bền
+          vững với chất lượng vượt trội và sự tin cậy tuyệt đối
         </p>
       </div>
       <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
@@ -624,32 +647,16 @@ const inspirationImagesBottom = [
   font-weight: bold;
   margin-bottom: 0.75rem; /* 12px */
 }
-
-.chart {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.75rem; /* 12px */
-}
-
 .wave-svg {
   width: 100%;
   height: 5rem; /* 80px */
 }
-
 .wave-path {
   fill: none;
   stroke: #5a8dee;
   stroke-width: 0.25rem; /* 4px */
   stroke-linecap: round;
 }
-
-.stats-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
-}
-
 .dot {
   display: inline-block;
   width: 0.8rem;
@@ -657,16 +664,14 @@ const inspirationImagesBottom = [
   border-radius: 50%;
 }
 .dot-red {
-  background: #ff6b6b;
+  background: #ff7777;
 }
 .dot-blue {
-  background: #5a8dee;
+  background: #6389eb;
 }
-
 .number {
   color: #141414;
 }
-
 .percentage {
   display: flex;
   color: #141414;
@@ -677,6 +682,13 @@ const inspirationImagesBottom = [
   font-size: 1rem;
 }
 
+.stats-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 .main-content {
   text-align: center;
   padding: 2rem 0;
@@ -684,11 +696,12 @@ const inspirationImagesBottom = [
 
 .subtitle {
   color: #516371;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 1rem;
 }
 
-h1 {
+.main-content h1 {
+  color: #5d5d5d;
   font-size: 2.2rem;
   margin-bottom: 1rem;
   line-height: 1.3;
@@ -699,9 +712,10 @@ h1 {
 }
 
 .description {
-  color: #666;
+  color: #516371;
   margin-bottom: 1rem;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
 .services {
@@ -714,9 +728,10 @@ h1 {
 
 .services span {
   padding: 0.5rem 1rem;
+  color: #516371;
   background: #f8f9fa;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .wrapper {
@@ -733,7 +748,7 @@ h1 {
 }
 
 .avatar {
-  width: 1.875rem; /* 30px */
+  width: 1.8rem; /* 30px */
   height: 1.875rem;
   border-radius: 50%;
   background: #e0e0e0;
@@ -748,9 +763,13 @@ h1 {
 }
 
 .star {
-  width: 1.375rem; /* 22px */
-  height: 1.375rem;
+  width: 2rem; /* 22px */
+  height: 2.2rem;
   color: #ff8933;
+}
+.rate {
+  font-size: 1rem; /* 16px */
+  color: #516371;
 }
 
 .abc {
@@ -1720,7 +1739,9 @@ h1 {
   padding: 2.5rem 3rem; /* 40px 48px */
   box-sizing: border-box;
 }
-
+.companion-text {
+  width: 42.5rem; /* 680px */
+}
 .companion-text h2 {
   color: #fff;
   font-size: 2rem;
@@ -1755,7 +1776,6 @@ h1 {
   color: #1746a2;
 }
 /*------------------------- Responsive styles for ComHome ------------------------- */
-
 /*------------------------- Tablet: 768px - 1024px -------------------------*/
 @media (max-width: 1024px) {
   /* Hero Section */
@@ -1807,9 +1827,8 @@ h1 {
     height: 2rem;
     z-index: 3;
   }
-
-  .main-content h1 {
-    font-size: 1.8rem;
+  .avatar-group {
+    justify-content: center;
   }
   .services {
     gap: 0.5rem;
@@ -2054,10 +2073,10 @@ h1 {
   }
 
   .image-bottom {
-    width: 5rem;
-    height: 5rem;
-    top: 12rem;
-    left: 7.5rem;
+    width: 7rem;
+    height: 7rem;
+    top: 17.5rem;
+    left: 10rem;
   }
 
   .intro-section {
@@ -2104,7 +2123,7 @@ h1 {
   }
 
   .project-card.small {
-    min-height: 12rem;
+    min-height: 14rem;
   }
 
   .project-overlay {
@@ -2217,7 +2236,6 @@ h1 {
   .companion-section {
     padding-bottom: 2rem;
   }
-
   .companion-content {
     flex-direction: column;
     text-align: center;
@@ -2225,22 +2243,111 @@ h1 {
     border-radius: 1rem;
     min-height: auto;
   }
-
   .companion-text h2 {
     font-size: 1.8rem;
   }
-
   .companion-text p {
     font-size: 0.9rem;
   }
-
   .companion-btn {
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
     font-size: 0.9rem;
   }
 }
-
+@media (width: 1024px) {
+  /* Successfull Section */
+  .projects-group-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    column-gap: 1.5rem;
+    row-gap: 0;
+    max-width: 98vw;
+    margin: 0 auto 2rem auto;
+    align-items: stretch;
+  }
+  .project-card.large {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    min-height: 20rem;
+    min-width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  .project-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 0;
+  }
+  .project-card.small {
+    min-height: 12rem;
+    min-width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  /* Companion Section */
+  .companion-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+    background: #fff;
+  }
+  .companion-content {
+    background: #3976ff;
+    border-radius: 2rem;
+    width: 97%;
+    max-width: 100%;
+    min-height: 8rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2rem;
+    box-sizing: border-box;
+    text-align: left;
+    gap: 1.5rem;
+  }
+  .companion-text {
+    width: 70%;
+    max-width: 100%;
+    text-align: left;
+  }
+  .companion-text h2 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .companion-text p {
+    color: #e6edff;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 400;
+  }
+  .companion-btn {
+    background: #fff;
+    color: #2563eb;
+    font-weight: 700;
+    border: none;
+    border-radius: 1rem;
+    padding: 1.125rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+      background 0.18s,
+      color 0.18s;
+    box-shadow: 0 0.25rem 1.5rem rgba(37, 99, 235, 0.08);
+    margin-top: 0;
+    margin-left: 2rem;
+    min-width: 180px;
+    text-align: center;
+    align-self: center;
+    display: inline-block;
+  }
+}
 /*------------------------- Mobile: < 768px --------------------------*/
 @media (max-width: 768px) {
   /* Hero Section */
@@ -2449,6 +2556,16 @@ h1 {
   }
 
   /* Successfull Section */
+  .project-card.large {
+    min-height: 12rem;
+  }
+
+  .project-card-group {
+    gap: 1rem;
+  }
+  .project-card.small {
+    min-height: 12rem;
+  }
   .successfull-content h2 {
     font-size: 1.8rem;
   }
@@ -2527,7 +2644,6 @@ h1 {
     font-size: 0.9rem;
   }
 }
-
 /* Small Mobile: < 480px */
 @media (max-width: 480px) {
   /* Hero Section */
@@ -2786,9 +2902,12 @@ h1 {
 
   /* Successfull Section */
   .project-card.large {
-    min-height: 20rem;
+    min-height: 12rem;
   }
 
+  .project-card-group {
+    gap: 1rem;
+  }
   .project-card.small {
     min-height: 12rem;
   }
@@ -2839,6 +2958,30 @@ h1 {
   }
   .achievements-arrow.right {
     right: 0;
+  }
+  /* Companion Section */
+  .companion-section {
+    padding-bottom: 1.2rem;
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    background: #ffffff;
+  }
+  companion-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem 0.7rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .companion-text {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 1.2rem;
   }
 }
 @media screen and (width: 425px) {
@@ -2905,7 +3048,6 @@ h1 {
     left: 6.25rem;
   }
 }
-
 /*------------------------- Desktop lớn: >= 1200px -------------------------*/
 @media (min-width: 1200px) {
   .home-container,
@@ -2940,7 +3082,6 @@ h1 {
     height: 260px;
   }
 }
-
 @media (min-width: 1440px) {
   .home-container,
   .cooperation-container,
@@ -2972,7 +3113,6 @@ h1 {
     height: 300px;
   }
 }
-
 /* @media (min-width: 1920px) {
   .home-container,
   .cooperation-container,
@@ -3036,206 +3176,4 @@ h1 {
     height: 400px;
   }
 } */
-
-/* =========================================
- Responsive màn hình lớn: 3000px - 5000px
-   Áp dụng cho toàn bộ section trong ComHome.vue
-========================================= */
-
-@media screen and (min-width: 3000px) {
-  section {
-    max-width: 4600px;
-    margin: 0 auto;
-    padding: 4rem 6rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 4rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 1.8rem;
-    line-height: 2.8rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.4rem;
-    padding: 1.2rem 2.5rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.3);
-  }
-
-  .project-card.large {
-    min-height: 50rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 2rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.4rem;
-  }
-
-  .achievement-logo img {
-    height: 6rem;
-  }
-
-  .achievement-content {
-    max-width: 120rem;
-  }
-
-  .marquee-img {
-    height: 300px;
-    margin-right: 36px;
-  }
-
-  .partner-logos img {
-    height: 4rem;
-  }
-}
-
-@media screen and (min-width: 4000px) {
-  section {
-    max-width: 5400px;
-    padding: 5rem 7rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 4.8rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 2rem;
-    line-height: 3.2rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.6rem;
-    padding: 1.5rem 3rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.5);
-  }
-
-  .project-card.large {
-    min-height: 60rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 2.4rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.6rem;
-  }
-
-  .achievement-logo img {
-    height: 7rem;
-  }
-
-  .marquee-img {
-    height: 360px;
-    margin-right: 40px;
-  }
-
-  .partner-logos img {
-    height: 5rem;
-  }
-}
-
-@media screen and (min-width: 5000px) {
-  section {
-    max-width: 6400px;
-    padding: 6rem 8rem;
-  }
-
-  .hero-title,
-  .commit-title,
-  .successfull-content h2,
-  .achievements-title,
-  .inspiration-title,
-  .companion-text h2 {
-    font-size: 5.5rem;
-  }
-
-  .hero-description,
-  .commit-desc,
-  .successfull-content p,
-  .inspiration-desc,
-  .achievement-content,
-  .companion-text p {
-    font-size: 2.2rem;
-    line-height: 3.6rem;
-  }
-
-  .hero-section .start-btn,
-  .cta-button,
-  .inspiration-btn,
-  .companion-btn {
-    font-size: 1.8rem;
-    padding: 2rem 4rem;
-  }
-
-  .trust-card,
-  .stats-card {
-    transform: scale(1.7);
-  }
-
-  .project-card.large {
-    min-height: 70rem;
-  }
-
-  .project-overlay h3 {
-    font-size: 3rem;
-  }
-
-  .project-overlay p {
-    font-size: 1.8rem;
-  }
-
-  .achievement-logo img {
-    height: 8rem;
-  }
-
-  .marquee-img {
-    height: 400px;
-    margin-right: 50px;
-  }
-
-  .partner-logos img {
-    height: 6rem;
-  }
-}
 </style>

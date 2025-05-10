@@ -65,22 +65,24 @@ exports.getNewsById = asyncHandler(async (req, res) => {
     res.status(404)
     throw new Error('Không tìm thấy bài viết')
   }
-  
-  // Nếu là staff, chỉ cho phép xem bài viết của mình 
+
+  // Nếu là staff, chỉ cho phép xem bài viết của mình
   if (req.user && req.user.role === 'staff' && news.author !== req.user.fullName) {
     res.status(403)
     throw new Error('Bạn không có quyền xem bài viết này')
   }
-  
+
   // Không cho phép xem bài viết đã bị xóa (trừ khi là admin hoặc staff và là tác giả)
-  if (news.isDeleted && 
-      (!req.user || 
-       (req.user.role !== 'admin' && 
-        (req.user.role !== 'staff' || news.author !== req.user.fullName)))) {
+  if (
+    news.isDeleted &&
+    (!req.user ||
+      (req.user.role !== 'admin' &&
+        (req.user.role !== 'staff' || news.author !== req.user.fullName)))
+  ) {
     res.status(404)
     throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
   }
-  
+
   // Tăng lượt xem
   await News.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
 
@@ -233,22 +235,22 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
 
 // Upload ảnh tin tức
 exports.uploadNewsImage = asyncHandler(async (req, res) => {
-  if (!req.file) {
-    res.status(400)
-    throw new Error('Vui lòng chọn ảnh để tải lên')
-  }
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Không có file được tải lên' })
+    }
 
-  const imagePath = req.file.path.replace(/\\/g, '/')
-  
-  // Tạo đường dẫn tuyệt đối bao gồm cả tên miền
-  const host = req.protocol + '://' + req.get('host')
-  const fullImagePath = host + '/' + imagePath
-  
-  res.status(200).json({
-    success: true,
-    imagePath: fullImagePath,
-    message: 'Tải ảnh lên thành công',
-  })
+    const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
+    const imageUrl = `${req.app.locals.BASE_URL}/${imagePath}`
+
+    res.status(200).json({
+      message: 'Tải ảnh lên thành công',
+      imagePath: imageUrl,
+    })
+  } catch (error) {
+    console.error('Lỗi khi upload ảnh:', error)
+    res.status(500).json({ message: 'Lỗi server khi upload ảnh' })
+  }
 })
 
 // Khôi phục bài viết
@@ -261,7 +263,11 @@ exports.restoreNews = asyncHandler(async (req, res) => {
       { new: true }
     )
   } else {
-    news = await News.findByIdAndUpdate(req.params.id, { $set: { isDeleted: false } }, { new: true })
+    news = await News.findByIdAndUpdate(
+      req.params.id,
+      { $set: { isDeleted: false } },
+      { new: true }
+    )
   }
 
   if (!news) {
