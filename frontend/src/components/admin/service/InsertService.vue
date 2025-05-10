@@ -212,7 +212,7 @@ export default {
       } else if (titleField.length < 3) {
         newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
         isValid = false
-      } else if (titleField.length > 200) {
+      } else if (titleField.length > 100) {
         newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
         isValid = false
       }

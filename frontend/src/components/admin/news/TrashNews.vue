@@ -86,7 +86,7 @@
             <td>{{ news.title }}</td>
             <td>{{ formatType(news.type) }}</td>
             <td>{{ news.author }}</td>
-            <td>{{ formatDate(news.deletedAt) }}</td>
+            <td>{{ currentDate }}</td>
             <!-- Các nút thao tác cho từng dòng -->
             <td>
               <div class="actions">
@@ -200,6 +200,16 @@ export default {
         this.filteredNews.length > 0 &&
         this.filteredNews.every((news) => this.selectedNews.includes(news._id))
       )
+    },
+    // New computed property to get the current date
+    currentDate() {
+      return new Date().toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     },
   },
   methods: {
