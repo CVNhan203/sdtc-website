@@ -273,22 +273,22 @@ export default {
       // Validate tiêu đề (title)
       if (!this.formData.title?.trim()) {
         newErrors.title = 'Tiêu đề không được để trống'
-      } else if (this.formData.title.trim().length < 10) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 10 ký tự'
+      } else if (this.formData.title.trim().length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
       } else if (this.formData.title.trim().length > 200) {
         newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
       }
 
-      // Validate tóm tắt (summary)
+      // Validate tóm tắt (summary) giống như mô tả trong InsertService
       if (!this.formData.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (this.formData.summary.trim().length < 20) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
+      } else if (this.formData.summary.trim().length < 10) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự'
       } else if (this.formData.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }
 
-      // Validate nội dung (content)
+      // Validate nội dung (content) giống như mô tả trong InsertService
       if (!this.formData.content?.trim()) {
         newErrors.content = 'Nội dung không được để trống'
       } else if (this.formData.content.trim().length < 100) {
