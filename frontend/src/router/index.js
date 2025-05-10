@@ -10,7 +10,7 @@ import AdminNewsList from '../components/admin/news/NewsList.vue'
 import AdminInsertNews from '../components/admin/news/InsertNews.vue'
 import AdminTrashNews from '../components/admin/news/TrashNews.vue'
 import AdminOrderList from '../components/admin/order/OrderList.vue'
-// import AdminPendingOrders from '../components/admin/order/PendingOrders.vue'
+
 // import AdminOrderHistory from '../components/admin/order/OrderHistory.vue'
 import AdminInsertService from '../components/admin/service/InsertService.vue'
 import AdminTrashService from '../components/admin/service/TrashService.vue'
@@ -86,6 +86,10 @@ const routes = [
     component: AdminDashboard,
     meta: { requiresAuth: true },
     children: [
+      // {
+      //   path: '',
+      //   redirect: 'dashboard'
+      // },
       {
         path: 'dashboard',
         name: 'AdminDashboardHome',
@@ -134,12 +138,7 @@ const routes = [
         component: AdminOrderList,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-      // {
-      //   path: 'don-hang/cho-duyet',
-      //   name: 'AdminPendingOrders',
-      //   component: AdminPendingOrders,
-      //   meta: { requiresAuth: true, requiresAdmin: true },
-      // },
+
       // {
       //   path: 'don-hang/lich-su',
       //   name: 'AdminOrderHistory',

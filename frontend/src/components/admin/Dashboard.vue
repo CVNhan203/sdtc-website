@@ -9,136 +9,85 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
-        <img src="@/assets/logo.png" alt="Logo" class="logo" />
-        <h2>SDTC Admin</h2>
+        <img src="@/assets/sdtc-image/trang-chu/Logo/sdtc.png" alt="Logo" class="logo" />
       </div>
       <!-- Tổng quan Dashboard chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isDashboardActive }">
-          <router-link to="/admin/dashboard" class="nav-item-content" active-class="active">
+        <router-link to="/admin/dashboard" class="nav-item" :class="{ active: isDashboardActive }">
+          <div class="nav-item-content">
             <i class="fas fa-tachometer-alt"></i>
             <span>Tổng quan</span>
-          </router-link>
-        </div>
+          </div>
+        </router-link>
       </div>
       <!-- Quản lý Dịch vụ chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isServiceMenuActive }" @click="toggleServiceMenu">
+        <router-link
+          to="/admin/dich-vu/danh-sach"
+          class="nav-item"
+          :class="{ active: isServiceMenuActive }"
+        >
           <div class="nav-item-content">
             <i class="fas fa-cogs"></i>
             <span>Quản lý Dịch vụ</span>
           </div>
-          <i class="fas" :class="isServiceMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isServiceMenuOpen">
-          <router-link to="/admin/dich-vu/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách dịch vụ</span>
-          </router-link>
-          <router-link to="/admin/dich-vu/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-plus"></i>
-            <span>Thêm dịch vụ mới</span>
-          </router-link>
-          <router-link to="/admin/dich-vu/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-            <!-- <span v-if="deletedServicesCount" class="badge">{{ deletedServicesCount }}</span> -->
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Tin tức hiển thị cho mọi role -->
       <div class="nav-group">
-        <div class="nav-item" :class="{ active: isNewsMenuActive }" @click="toggleNewsMenu">
+        <router-link
+          to="/admin/tin-tuc/danh-sach"
+          class="nav-item"
+          :class="{ active: isNewsMenuActive }"
+        >
           <div class="nav-item-content">
             <i class="fas fa-newspaper"></i>
             <span>Quản lý Tin tức</span>
           </div>
-          <i class="fas" :class="isNewsMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isNewsMenuOpen">
-          <router-link to="/admin/tin-tuc/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách tin tức</span>
-          </router-link>
-          <router-link to="/admin/tin-tuc/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-plus"></i>
-            <span>Thêm tin tức mới</span>
-          </router-link>
-          <router-link to="/admin/tin-tuc/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-            <!-- <span v-if="deletedNewsCount" class="badge">{{ deletedNewsCount }}</span> -->
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Đơn hàng chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isOrderMenuActive }" @click="toggleOrderMenu">
+        <router-link
+          to="/admin/don-hang/danh-sach"
+          class="nav-item"
+          :class="{ active: isOrderMenuActive }"
+        >
           <div class="nav-item-content">
             <i class="fas fa-shopping-cart"></i>
             <span>Quản lý Đơn hàng</span>
           </div>
-          <i class="fas" :class="isOrderMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isOrderMenuOpen">
-          <router-link to="/admin/don-hang/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách đơn hàng</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <!-- Quản lý Đặt lịch chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isBookingMenuActive }" @click="toggleBookingMenu">
+        <router-link
+          to="/admin/dat-lich/danh-sach"
+          class="nav-item"
+          :class="{ active: isBookingMenuActive }"
+        >
           <div class="nav-item-content">
             <i class="fas fa-calendar-check"></i>
             <span>Quản lý Đặt lịch</span>
           </div>
-          <i class="fas" :class="isBookingMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isBookingMenuOpen">
-          <router-link to="/admin/dat-lich/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách đặt lịch</span>
-          </router-link>
-          <router-link to="/admin/dat-lich/cho-xu-ly" class="submenu-item" active-class="active">
-            <i class="fas fa-clock"></i>
-            <span>Đặt lịch chờ xử lý</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
-      <!-- Thêm mục Quản lý Tài khoản chỉ hiển thị cho admin -->
+      <!-- Quản lý Tài khoản chỉ hiển thị cho admin -->
       <div class="nav-group" v-if="userRole === 'admin'">
-        <div class="nav-item" :class="{ active: isAccountMenuActive }" @click="toggleAccountMenu">
+        <router-link
+          to="/admin/tai-khoan/danh-sach"
+          class="nav-item"
+          :class="{ active: isAccountMenuActive }"
+        >
           <div class="nav-item-content">
             <i class="fas fa-users-cog"></i>
             <span>Quản lý Tài khoản</span>
           </div>
-          <i class="fas" :class="isAccountMenuOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
-        </div>
-
-        <div class="submenu" v-show="isAccountMenuOpen">
-          <router-link to="/admin/tai-khoan/danh-sach" class="submenu-item" active-class="active">
-            <i class="fas fa-list"></i>
-            <span>Danh sách tài khoản</span>
-          </router-link>
-          <router-link to="/admin/tai-khoan/them-moi" class="submenu-item" active-class="active">
-            <i class="fas fa-user-plus"></i>
-            <span>Thêm tài khoản mới</span>
-          </router-link>
-          <router-link to="/admin/tai-khoan/thung-rac" class="submenu-item" active-class="active">
-            <i class="fas fa-trash-alt"></i>
-            <span>Thùng rác</span>
-          </router-link>
-        </div>
+        </router-link>
       </div>
 
       <div class="sidebar-footer">
@@ -157,12 +106,16 @@
     <div class="main-content">
       <header class="top-header">
         <div class="header-left">
+          <!-- Add toggle button -->
+          <button class="toggle-sidebar" @click="toggleSidebar">
+            <i class="fas" :class="isSidebarCollapsed ? 'fa-bars' : 'fa-bars-staggered'"></i>
+          </button>
           <h1 class="page-title">{{ currentPageTitle }}</h1>
         </div>
 
         <!-- <div class="header-right">
           <div class="admin-profile">
-            <img src="@/assets/avatar-placeholder.png" alt="Admin" class="avatar" />
+            <img src="@/assets/Logo/sdtc.png" alt="Admin" class="avatar" />
             <span class="admin-name">Admin</span>
           </div>
         </div> -->
@@ -186,7 +139,7 @@ export default {
       isSidebarCollapsed: false,
       isSidebarOpen: false,
       isServiceMenuOpen: false,
-      isNewsMenuOpen: false,
+      isNewsMenuOpen: false, // You can remove this line since we no longer need it
       isOrderMenuOpen: false,
       isAccountMenuOpen: false,
       isBookingMenuOpen: false,
@@ -198,33 +151,33 @@ export default {
   created() {
     // Kiểm tra xác thực và lấy thông tin role của người dùng
     if (authService.isAuthenticated()) {
-      const userInfo = authService.getAdminInfo();
+      const userInfo = authService.getAdminInfo()
       if (userInfo && userInfo.role) {
-        this.userRole = userInfo.role;
+        this.userRole = userInfo.role
       }
-      
+
       // Nếu role là staff, tự động redirect đến phần tin tức nếu không ở đó
       if (this.userRole === 'staff' && !this.$route.path.includes('/admin/tin-tuc')) {
-        this.$router.push('/admin/tin-tuc/danh-sach');
+        this.$router.push('/admin/tin-tuc/danh-sach')
       }
     } else {
-      this.$router.push('/admin');
+      this.$router.push('/admin')
     }
   },
   computed: {
     currentPageTitle() {
-      const path = this.$route.path;
-      
+      const path = this.$route.path
+
       // Xử lý các trường hợp đặc biệt trước
       if (path.includes('/admin/tai-khoan')) {
-        if (path.includes('/danh-sach')) return 'Danh sách tài khoản';
-        if (path.includes('/them-moi')) return 'Thêm tài khoản mới';
-        return 'Quản lý Tài khoản';
+        if (path.includes('/danh-sach')) return 'Danh sách tài khoản'
+        if (path.includes('/them-moi')) return 'Thêm tài khoản mới'
+        return 'Quản lý Tài khoản'
       }
 
       // Xử lý các route khác
       const routeMap = {
-        'dashboard': 'Dashboard',
+        dashboard: 'Dashboard',
         'dich-vu/danh-sach': 'Danh sách dịch vụ',
         'dich-vu/them-moi': 'Thêm dịch vụ mới',
         'tin-tuc/danh-sach': 'Danh sách tin tức',
@@ -234,15 +187,15 @@ export default {
         'don-hang/lich-su': 'Lịch sử đơn hàng',
         'thanh-toan/danh-sach': 'Quản lý thanh toán',
         'dat-lich/danh-sach': 'Danh sách đặt lịch',
-        'dat-lich/cho-xu-ly': 'Đặt lịch chờ xử lý'
-      };
+        'dat-lich/cho-xu-ly': 'Đặt lịch chờ xử lý',
+      }
 
       // Tìm route phù hợp
       for (const [key, value] of Object.entries(routeMap)) {
-        if (path.includes(key)) return value;
+        if (path.includes(key)) return value
       }
 
-      return 'Dashboard';
+      return 'Dashboard'
     },
     isServiceMenuActive() {
       return this.$route.path.includes('/admin/dich-vu')
@@ -251,7 +204,10 @@ export default {
       return this.$route.path.includes('/admin/tin-tuc')
     },
     isOrderMenuActive() {
-      return this.$route.path.includes('/admin/don-hang') || this.$route.path.includes('/admin/thanh-toan')
+      return (
+        this.$route.path.includes('/admin/don-hang') ||
+        this.$route.path.includes('/admin/thanh-toan')
+      )
     },
     isAccountMenuActive() {
       return this.$route.path.includes('/admin/tai-khoan')
@@ -274,14 +230,14 @@ export default {
       } else {
         // On desktop, toggle collapsed state
         this.isSidebarCollapsed = !this.isSidebarCollapsed
+        // Lưu trạng thái sidebar vào localStorage
+        localStorage.setItem('sidebarCollapsed', this.isSidebarCollapsed)
       }
     },
     toggleServiceMenu() {
       this.isServiceMenuOpen = !this.isServiceMenuOpen
     },
-    toggleNewsMenu() {
-      this.isNewsMenuOpen = !this.isNewsMenuOpen
-    },
+    // You can remove the toggleNewsMenu method since we no longer need it
     toggleOrderMenu() {
       this.isOrderMenuOpen = !this.isOrderMenuOpen
     },
@@ -289,14 +245,14 @@ export default {
       this.isAccountMenuOpen = !this.isAccountMenuOpen
     },
     toggleBookingMenu() {
-      this.isBookingMenuOpen = !this.isBookingMenuOpen;
+      this.isBookingMenuOpen = !this.isBookingMenuOpen
     },
     closeMobileMenu() {
       this.isSidebarOpen = false
     },
     handleLogout() {
       authService.logout()
-      this.$router.push('/admin')
+      this.$router.push('/admin/dang-nhap')
     },
   },
   watch: {
@@ -304,66 +260,22 @@ export default {
     '$route.path'(newPath) {
       // Nếu là staff và cố gắng truy cập các trang khác ngoài tin tức, chuyển về tin tức
       if (this.userRole === 'staff' && !newPath.includes('/admin/tin-tuc')) {
-        this.$router.push('/admin/tin-tuc/danh-sach');
+        this.$router.push('/admin/tin-tuc/danh-sach')
       }
+    },
+  },
+  mounted() {
+    // Khôi phục trạng thái sidebar từ localStorage khi component được tạo
+    const savedState = localStorage.getItem('sidebarCollapsed')
+    if (savedState !== null) {
+      this.isSidebarCollapsed = savedState === 'true'
     }
-  }
-};
+  },
+}
 </script>
 
 <style scoped>
-/* Import CSS variables */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
-:root {
-  /* Color variables */
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary-color: #f1f5f9;
-  --secondary-hover: #e2e8f0;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  --success-color: #10b981;
-  --success-hover: #059669;
-
-  /* Text colors */
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
-
-  /* Border colors */
-  --border-color: #e2e8f0;
-  --border-hover: #cbd5e1;
-
-  /* Background colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-
-  /* Spacing variables */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 0.75rem;
-  --spacing-md: 1.25rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 2.5rem;
-
-  /* Border radius */
-  --border-radius-sm: 6px;
-  --border-radius-md: 10px;
-  --border-radius-lg: 14px;
-
-  /* Shadow */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  /* Font sizes */
-  --font-size-xs: 16px;
-  --font-size-sm: 18px;
-  --font-size-md: 20px;
-  --font-size-lg: 22px;
-  --font-size-xl: 24px;
-}
+@import '@/styles/admin.css';
 
 /* Dashboard-specific styles */
 .dashboard-container {
@@ -377,8 +289,8 @@ export default {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 330px;
-  background: #2c3e50;
+  width: 280px;
+  background: #f7f8fa;
   color: white;
   display: flex;
   flex-direction: column;
@@ -410,8 +322,8 @@ export default {
 }
 
 .logo {
-  width: 36px;
-  height: 36px;
+  width: 360px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -436,14 +348,14 @@ export default {
 }
 
 .nav-group {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
+  display: block; /* Change to block */
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  padding: 1rem 2.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -467,11 +379,10 @@ export default {
   font-size: 20px;
   width: 24px;
   text-align: center;
-  color: #fff;
+  color: #000000;
 }
 
-.nav-item a{
-  color: #fff;
+.nav-item a {
   text-decoration: none;
   border: none;
   background: none;
@@ -484,22 +395,23 @@ export default {
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: #000000;
 }
 
 .nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
+  background: #bad4ff;
   font-weight: 500;
-  color: #fff;
+  color: #000000;
 }
 
 .nav-item.active .nav-item-content i,
 .nav-item:hover .nav-item-content i {
-  color: #fff;
+  color: #000000;
 }
 
 .submenu {
   margin-left: 1rem;
+  margin-top: 0.5rem; /* Thêm khoảng cách từ nav-item đến submenu */
   padding-left: 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -525,7 +437,7 @@ export default {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   border-radius: 6px;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem; /* Tăng khoảng cách giữa các submenu-item */
   transition: all 0.3s ease;
   position: relative;
 }
@@ -579,7 +491,7 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: #3b82f6;
   border: none;
   border-radius: 8px;
   color: white;
@@ -592,7 +504,7 @@ export default {
 }
 
 .logout-btn:hover {
-  background: var(--danger-color);
+  background: rgba(255, 0, 0, 0.2);
 }
 
 .logout-btn:active {
@@ -604,11 +516,9 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* Đảm bảo main-content chiếm toàn bộ chiều cao và cuộn độc lập */
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   margin-left: 0;
-  overflow-y: hidden;
 }
 
 .sidebar-collapsed .main-content {
@@ -663,10 +573,9 @@ export default {
 }
 
 .content-area {
-  padding: 2rem;
+  padding: 20px;
   flex: 1;
-  overflow-y: auto;
-  height: 0;
+  overflow: auto;
 }
 
 /* Mobile Overlay */
@@ -699,21 +608,21 @@ export default {
     left: 0;
     z-index: 1000;
   }
-  
+
   .sidebar-open .sidebar {
     transform: translateX(0);
   }
-  
+
   .main-content {
     width: 100%;
     max-width: 100%;
     margin-left: 0 !important;
   }
-  
+
   .sidebar-collapsed .main-content {
     margin-left: 0 !important;
   }
-  
+
   .top-header {
     padding-left: 1rem;
   }
@@ -738,20 +647,91 @@ export default {
 
 /* Add new styles for account management */
 .nav-item i.fa-users-cog {
-  color: #fff;
+  color: #000000;
 }
 
 /* Khi hover vào sidebar, chỉ sidebar cuộn */
-.sidebar:hover {
-  overflow-y: auto;
+.sidebar {
+  overflow: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.sidebar:hover {
+  overflow: auto;
+}
+
 .sidebar:hover ~ .main-content {
-  overflow-y: hidden;
+  overflow: auto;
 }
 
 /* Khi hover vào main-content, chỉ main-content cuộn */
 .main-content:hover {
-  overflow-y: auto;
+  overflow: auto;
 }
 
+/* Thêm style cho nút toggle */
+.toggle-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  display: none; /* Ẩn mặc định trên desktop */
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.toggle-sidebar:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/* Điều chỉnh header left để chứa nút toggle */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+/* Điều chỉnh animation cho sidebar */
+.sidebar {
+  transition: all 0.3s ease;
+}
+
+/* Khi sidebar thu gọn */
+.sidebar-collapsed .sidebar {
+  width: 80px;
+}
+
+.sidebar-collapsed .nav-item span,
+.sidebar-collapsed .sidebar-header h2 {
+  display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .toggle-sidebar {
+    display: block; /* Chỉ hiện trên mobile/tablet */
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: 250px;
+  }
+
+  .sidebar-open .sidebar {
+    left: 0;
+  }
+}
 </style>

@@ -1,13 +1,7 @@
 <template>
   <div class="order-list">
-    <!-- Loading state -->
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p>Đang tải danh sách đơn hàng...</p>
-    </div>
-
     <!-- Error state -->
-    <div v-else-if="error" class="error-container">
+    <div v-if="error" class="error-container">
       <p class="error-message">{{ error }}</p>
       <button class="retry-btn" @click="loadOrders">Thử lại</button>
     </div>
@@ -32,7 +26,7 @@
         <table>
           <thead>
             <tr>
-              <th style="width: 5%">STT</th>
+              <th style="width: 5%">No.</th>
               <th style="width: 15%">Tên KH</th>
               <!-- <th style="width: 10%">SĐT</th>
               <th style="width: 15%">Email</th> -->
@@ -59,13 +53,15 @@
                   {{ getStatusText(order.orderStatus) }}
                 </span>
               </td>
-              <td class="actions" style="height: 120px !important">
-                <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
-                  <i class="fas fa-info-circle"></i>
-                </button>
-                <button class="icon-btn edit" @click="openEditModal(order)" title="Chỉnh sửa">
-                  <i class="fas fa-edit"></i>
-                </button>
+              <td class="actions">
+                <div class="actions">
+                  <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
+                    <i class="fas fa-info-circle"></i>
+                  </button>
+                  <button class="icon-btn edit" @click="openEditModal(order)" title="Chỉnh sửa">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
               </td>
             </tr>
             <tr v-if="filteredOrders.length === 0">
@@ -77,7 +73,8 @@
 
       <!-- Order Details Modal -->
       <div class="modal" v-if="showDetailsModal">
-        <div class="modal-content detail-modal">
+        <div class="modal-overlay" @click="showDetailsModal = false"></div>
+        <div class="modal-content detail-modal" @click.stop>
           <div class="modal-header">
             <h3>Chi tiết đơn hàng</h3>
             <button class="close-btn" @click="showDetailsModal = false">
@@ -94,14 +91,6 @@
                 <label>Tên KH:</label>
                 <p>{{ selectedOrder.fullName }}</p>
               </div>
-              <!-- <div class="detail-item">
-                <label>SĐT:</label>
-                <p>{{ selectedOrder.phone }}</p>
-              </div>
-              <div class="detail-item">
-                <label>Email:</label>
-                <p>{{ selectedOrder.email }}</p>
-              </div> -->
               <div class="detail-item">
                 <label>Loại dịch vụ:</label>
                 <p>{{ selectedOrder.serviceType }}</p>
@@ -124,18 +113,13 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="cancel-btn" @click="showDetailsModal = false">Đóng</button>
-            <button class="edit-btn" @click="openEditModal(selectedOrder)">
-              <i class="fas fa-edit"></i> Chỉnh sửa
-            </button>
-          </div>
         </div>
       </div>
 
       <!-- Edit Order Modal -->
       <div class="modal" v-if="showFormModal">
-        <div class="modal-content">
+        <div class="modal-overlay" @click="closeEditModal"></div>
+        <div class="modal-content" @click.stop>
           <div class="modal-header">
             <h3>Cập nhật trạng thái đơn hàng</h3>
             <button class="close-btn" @click="closeEditModal">
@@ -278,7 +262,6 @@ export default {
         paymentStatus: '',
         paidAmount: '',
       },
-      loading: false,
       submitLoading: false,
       error: null,
     }
@@ -406,7 +389,6 @@ export default {
 
     async loadOrders() {
       try {
-        this.loading = true
         const response = await orderService.getOrders()
         // orderService now ensures data is an array
         this.orders = response.data || []
@@ -419,8 +401,6 @@ export default {
           type: 'error',
           message: 'Không thể tải danh sách đơn hàng',
         })
-      } finally {
-        this.loading = false
       }
     },
 
@@ -617,426 +597,434 @@ export default {
   },
   async created() {
     try {
-      this.loading = true
       await Promise.all([this.loadOrders(), this.loadServices()])
     } catch (error) {
       console.error('Error initializing component:', error)
-    } finally {
-      this.loading = false
     }
   },
 }
 </script>
 
 <style scoped>
-/* Import the admin styles */
 @import '@/styles/admin.css';
 
-/* Component specific overrides */
-
 .order-list {
-  background: var(--bg-primary);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-lg);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 20px;
 }
 
-.filter-box {
-  width: 180px;
+/* Table Styles */
+.table-container {
+  background: #fff;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-top: 20px;
 }
 
-/* Date cell styling */
-.date-cell {
-  min-width: 110px;
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.date-time {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-
-.date-part {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.time-part {
-  font-size: 0.85em;
-  color: var(--text-secondary);
-}
-
-.date-time-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.date-time-detail .date-part {
-  font-size: 1em;
-}
-
-.date-time-detail .time-part {
-  font-size: 0.9em;
-}
-
-/* Order-specific styles */
-.detail-section {
-  margin-bottom: 2rem;
-}
-
-.detail-section h4 {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.order-id {
-  font-family: monospace;
-  font-weight: bold;
-}
-
-.notes {
-  white-space: pre-line;
-  background: var(--bg-secondary);
-  padding: 1rem;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-color);
-}
-
-.no-data {
-  text-align: center;
-  padding: var(--spacing-lg);
-  color: var(--text-tertiary);
-}
-
-.detail-modal {
-  max-width: 600px;
-}
-
-.detail-section {
-  padding: var(--spacing-md);
-  background: var(--bg-secondary);
-  border-radius: var(--border-radius-md);
-  margin-bottom: 1rem;
-}
-
-.detail-item {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.detail-item:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.detail-item label {
-  display: block;
+th {
+  background: #f8fafc;
+  padding: 16px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  color: #1e293b;
+  text-align: center; /* căn giữa tiêu đề cột */
+  border-bottom: 2px solid #e2e8f0;
 }
 
-.detail-item p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 1rem;
+td {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  text-align: center; /* căn giữa nội dung cột */
 }
 
-.modal-footer {
+tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Search Box */
+.search-box {
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.edit-btn {
-  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--success-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  cursor: pointer;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 450px;
   transition: all 0.2s ease;
 }
 
-.edit-btn:hover {
-  background-color: var(--success-hover);
+.search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.cancel-btn {
-  padding: 0.5rem 1rem;
-  background-color: #e5e7eb;
-  color: #374151;
+.search-box input {
   border: none;
+  outline: none;
+  width: 100%;
+  margin-left: 8px;
+  font-size: 0.95rem;
+}
+
+.search-box i {
+  color: #94a3b8;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
   border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn:hover {
-  background-color: #d1d5db;
-}
-
-.amount-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
   font-size: 0.875rem;
   font-weight: 500;
+  display: inline-block;
 }
 
-.warning {
+.pending {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-.success {
+.processing {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.completed {
   background-color: #dcfce7;
   color: #166534;
 }
 
-.danger {
+.cancelled {
   background-color: #fee2e2;
   color: #b91c1c;
 }
 
-.default {
-  background-color: #e5e7eb;
-  color: #374151;
-}
-
-.text-right {
-  text-align: center;
-}
-
-.icon-btn {
-  display: inline-flex;
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative; /* Thêm dòng này */
+  z-index: 1; /* Thêm dòng này */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* Buttons */
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin: 0 4px;
+}
+
+.info {
+  background: #3b82f6;
+  color: white;
+}
+
+.edit {
+  background: #10b981;
+  color: white;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.cancel-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+}
+
+.cancel-btn:hover {
+  background: #e2e8f0;
+}
+
+/* Action Buttons Styling */
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn.info {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.icon-btn.info:hover {
+  background-color: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.icon-btn.edit {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.icon-btn.edit:hover {
+  background-color: #d1fae5;
+  transform: translateY(-1px);
+}
+
+.icon-btn:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .icon-btn i {
   font-size: 1rem;
 }
 
-.icon-btn.info {
-  background-color: #3b82f6;
-  color: white;
+/* Modal Details Styling */
+.detail-item {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
 }
 
-.icon-btn.info:hover {
-  background-color: #2563eb;
+.detail-item label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  padding-top: 4px;
 }
 
-.icon-btn.edit {
-  background-color: #10b981;
-  color: white;
+.detail-item p {
+  font-size: 15px;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  padding: 4px 12px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
 }
 
-.icon-btn.edit:hover {
-  background-color: #059669;
+.detail-item:has(.detail-image) {
+  grid-template-columns: 120px 1fr;
 }
 
-/* Thêm hiệu ứng khi hover */
-.icon-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.detail-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 8px;
 }
 
-/* Hiệu ứng khi click */
-.icon-btn:active {
-  transform: translateY(0);
-  box-shadow: none;
+/* Enhanced Modal Header */
+.modal-header {
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.5rem 2rem;
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  background: linear-gradient(to right, #1e293b, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+/* Enhanced Form Styling */
+.form-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title i {
+  color: #3b82f6;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
+  font-size: 14px;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
+  color: #374151;
+  margin-bottom: 8px;
 }
 
-.form-group input,
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+.form-group input[type='text'],
+.form-group input[type='number'],
 .form-group select {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #1e293b;
-  background-color: white;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #fff;
   transition: all 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
-.form-group input::placeholder {
-  color: #94a3b8;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.submit-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 180px;
-  justify-content: center;
-}
-
-.submit-btn:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.submit-btn:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.submit-btn i {
-  font-size: 1rem;
-}
-
-.edit-form {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.form-row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-.disabled-input {
-  background-color: #f1f5f9;
-  cursor: not-allowed;
-}
-
-.required {
-  color: #dc2626;
-  margin-left: 2px;
+.form-group .error {
+  border-color: #dc2626;
 }
 
 .error-message {
   color: #dc2626;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 12px;
+  margin-top: 4px;
   display: block;
-}
-
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #1e293b;
-  resize: vertical;
-  min-height: 100px;
-}
-
-.form-group textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-  border-color: #dc2626;
-}
-
-.form-group input.error:focus,
-.form-group select.error:focus,
-.form-group textarea.error:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-}
-
-.modal-content {
-  max-width: 800px;
-  width: 90%;
-}
-
-/* Styles mới cho form chỉnh sửa đơn hàng */
-.form-section {
-  background-color: #f8fafc;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
-  padding: 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.section-title {
-  color: #1e293b;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.section-title i {
-  color: #3b82f6;
 }
 
 .input-with-icon {
@@ -1048,53 +1036,168 @@ export default {
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #94a3b8;
-  font-weight: 500;
-  font-size: 0.9rem;
-  pointer-events: none;
-}
-
-.input-with-icon input {
-  padding-right: 60px; /* Space for the icon/text */
-}
-
-.order-info {
-  padding: 1rem;
-  background-color: #edf2f7;
-  border-radius: 8px;
-  margin-top: 0.5rem;
-}
-
-.order-info p {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-  color: #4a5568;
-}
-
-.order-info strong {
-  font-weight: 600;
-  color: #2d3748;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .help-text {
-  font-size: 0.8rem;
-  color: #718096;
-  margin-top: 0.25rem;
+  color: #6b7280;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
+/* Order Info Styling */
+.order-info {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.order-info p {
+  margin: 8px 0;
+  color: #374151;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.order-info strong {
+  color: #1e293b;
+  min-width: 140px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.submit-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.close-btn {
+  color: #6b7280;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+/* Status Badges Enhancement */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amount-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amount-badge.success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.amount-badge.warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.amount-badge.danger {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Enhanced Modal Content */
+.detail-modal .modal-content {
+  max-width: 600px;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* Thêm dòng này */
+}
+
+/* Responsive Adjustments */
 @media (max-width: 640px) {
-  .form-row {
+  .form-section {
+    padding: 16px;
+  }
+
+  .order-info strong {
+    min-width: 100px;
+  }
+
+  .form-actions {
     flex-direction: column;
   }
 
-  .form-section {
-    padding: 1rem;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-height: 90vh;
-    overflow-y: auto;
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
   }
 }
 </style>

@@ -14,33 +14,33 @@
           {{ successMessage }}
         </div>
 
-        <!-- Tiêu đề -->
-        <div class="form-group">
-          <label>Tiêu đề <span class="required">*</span></label>
-          <input
-            type="text"
-            name="title"
-            v-model.trim="formData.title"
-            :class="{ error: errors.title }"
-            :disabled="loading"
-            placeholder="Nhập tiêu đề tin tức"
-            maxlength="200"
-          />
-          <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
-          <span
-            class="character-count"
-            :class="{
-              error:
-                formData.title.length > 200 ||
-                (formData.title.length < 10 && formData.title.length > 0),
-            }"
-          >
-            {{ formData.title.length }}/200 (Tối thiểu 10 ký tự)
-          </span>
-        </div>
-
-        <!-- Phân loại + Ngày -->
+        <!-- Tiêu đề + Phân loại -->
         <div class="info-section">
+          <!-- Tiêu đề -->
+          <div class="form-group">
+            <label>Tiêu đề <span class="required">*</span></label>
+            <input
+              type="text"
+              name="title"
+              v-model.trim="formData.title"
+              :class="{ error: errors.title }"
+              :disabled="loading"
+              placeholder="Nhập tiêu đề tin tức"
+              maxlength="200"
+            />
+            <span class="error-message" v-if="errors.title">{{ errors.title }}</span>
+            <span
+              class="character-count"
+              :class="{
+                error:
+                  formData.title.length > 200 ||
+                  (formData.title.length < 10 && formData.title.length > 0),
+              }"
+            >
+              {{ formData.title.length }}/200 (Tối thiểu 10 ký tự)
+            </span>
+          </div>
+
           <!-- Phân loại -->
           <div class="form-group">
             <label>Phân loại <span class="required">*</span></label>
@@ -58,9 +58,10 @@
               {{ formData.type.length }}/50
             </span>
           </div>
+        </div>
 
-          <!-- Ngày đăng -->
-          <!-- <div class="form-group">
+        <!-- Ngày đăng -->
+        <!-- <div class="form-group">
             <label>Ngày đăng <span class="required">*</span></label>
             <input
               type="date"
@@ -74,7 +75,6 @@
               errors.publishedDate
             }}</span>
           </div> -->
-        </div>
 
         <!-- Ảnh -->
         <div class="form-group">
@@ -92,12 +92,12 @@
               accept="image/*"
               ref="fileInput"
               :disabled="loading"
+              style="display: none"
             />
             <div v-if="!imagePreview" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
-              <span>Tải ảnh lên</span>
-              <p class="upload-hint">Kích thước tối đa: 10MB. Định dạng: JPG, PNG, GIF</p>
-              <p class="upload-hint">Kích thước tối thiểu: 300x200px, tối đa 2000x2000px</p>
+              <span>Nhấp để tải ảnh lên</span>
+              <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
             </div>
             <div v-if="imagePreview" class="image-preview">
               <img :src="imagePreview" alt="Preview" class="preview-img" />
@@ -132,10 +132,10 @@
             :class="{
               error:
                 formData.summary.length > 500 ||
-                (formData.summary.length < 20 && formData.summary.length > 0),
+                (formData.summary.length < 10 && formData.summary.length > 0),
             }"
           >
-            {{ formData.summary.length }}/500 (Tối thiểu 20 ký tự)
+            {{ formData.summary.length }}/500 (Tối thiểu 10 ký tự)
           </span>
         </div>
 
@@ -273,22 +273,22 @@ export default {
       // Validate tiêu đề (title)
       if (!this.formData.title?.trim()) {
         newErrors.title = 'Tiêu đề không được để trống'
-      } else if (this.formData.title.trim().length < 10) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 10 ký tự'
+      } else if (this.formData.title.trim().length < 3) {
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
       } else if (this.formData.title.trim().length > 200) {
         newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
       }
 
-      // Validate tóm tắt (summary)
+      // Validate tóm tắt (summary) giống như mô tả trong InsertService
       if (!this.formData.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (this.formData.summary.trim().length < 20) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
+      } else if (this.formData.summary.trim().length < 10) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự'
       } else if (this.formData.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }
 
-      // Validate nội dung (content)
+      // Validate nội dung (content) giống như mô tả trong InsertService
       if (!this.formData.content?.trim()) {
         newErrors.content = 'Nội dung không được để trống'
       } else if (this.formData.content.trim().length < 100) {
@@ -376,7 +376,7 @@ export default {
         }
 
         // Kiểm tra kích thước tối đa
-        if (img.width > 2000 || img.height > 2000) {
+        if (img.width > 3000 || img.height > 3000) {
           this.errors.image = 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
           this.$refs.fileInput.value = ''
           this.formData.image = null
@@ -546,84 +546,82 @@ export default {
 <style scoped>
 @import '@/styles/admin.css';
 
-/* Component-specific styles that aren't in admin.css */
-.content-section {
-  grid-column: 1 / -1;
+.insert-news {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+input[type='text'],
+input[type='date'],
+textarea {
+  width: 100%;
+  padding: 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+input[type='text']:focus,
+input[type='date']:focus,
+textarea:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .info-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 0;
-  grid-column: 1 / -1;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
 }
 
 .image-upload-container {
-  border: 2px dashed var(--border-color);
+  border: 2px dashed #e5e7eb;
   border-radius: 12px;
-  padding: 16px;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
   position: relative;
-  min-height: 180px;
+  min-height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  background: #f9fafb;
 }
 
 .image-upload-container:hover {
-  border-color: var(--primary-color);
-  background-color: rgba(59, 130, 246, 0.05);
-}
-
-.file-input {
-  display: none;
-}
-
-.image-preview {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.preview-img {
-  max-width: 100%;
-  max-height: 180px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.remove-image {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 2;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.remove-image:hover {
-  background: var(--danger-color);
-  color: white;
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .upload-button {
@@ -631,43 +629,148 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: var(--text-secondary);
+  width: 100%;
+  height: 100%;
+  justify-content: center;
 }
 
 .upload-button i {
-  font-size: 2rem;
-  color: var(--primary-color);
-  margin-bottom: 4px;
+  font-size: 2.5rem;
+  color: #3b82f6;
+  margin-bottom: 8px;
+}
+
+.upload-button span {
+  font-size: 1.1rem;
+  color: #374151;
+  font-weight: 500;
 }
 
 .upload-hint {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-  margin-top: 4px;
-  line-height: 1.3;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.remove-image {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.remove-image:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  display: block;
 }
 
 .character-count {
-  display: block;
+  color: #6b7280;
+  font-size: 0.875rem;
   text-align: right;
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
   margin-top: 6px;
 }
 
 .character-count.error {
-  color: var(--danger-color);
+  color: #dc2626;
 }
 
-.error-border {
-  border-color: var(--danger-color) !important;
-  border-style: solid !important;
+.error-alert,
+.success-alert {
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Responsive adjustments */
+.error-alert {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.success-alert {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
 @media (max-width: 768px) {
+  .insert-news {
+    padding: 20px;
+  }
+
   .form-container {
-    padding: 16px;
+    padding: 20px;
   }
 
   .info-section {
@@ -676,52 +779,23 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .image-upload-container {
-    min-height: 180px;
-    padding: 16px;
-  }
-
-  .preview-img {
-    max-height: 160px;
-  }
-}
-
-@media (max-width: 360px) {
   .insert-news {
-    padding: 8px;
+    padding: 20px;
   }
 
   .form-container {
-    padding: 12px;
-    gap: 16px;
+    padding: 20px;
+    border-radius: 12px;
   }
 
-  input[type='text'],
-  input[type='date'],
-  select,
-  textarea {
-    padding: 8px 10px;
-    font-size: 0.9rem;
-    min-height: 38px;
+  .form-actions {
+    flex-direction: column;
   }
 
-  .form-group label {
-    font-size: 0.85rem;
-  }
-
-  .image-upload-container {
-    min-height: 160px;
-    padding: 12px;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    padding: 10px 18px;
-    font-size: 0.9rem;
-  }
-
-  .upload-button i {
-    font-size: 2em;
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
