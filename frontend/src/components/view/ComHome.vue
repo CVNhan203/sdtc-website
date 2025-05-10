@@ -2162,7 +2162,6 @@ const inspirationImagesBottom = [
   .companion-section {
     padding-bottom: 2rem;
   }
-
   .companion-content {
     flex-direction: column;
     text-align: center;
@@ -2170,15 +2169,12 @@ const inspirationImagesBottom = [
     border-radius: 1rem;
     min-height: auto;
   }
-
   .companion-text h2 {
     font-size: 1.8rem;
   }
-
   .companion-text p {
     font-size: 0.9rem;
   }
-
   .companion-btn {
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
@@ -2196,7 +2192,6 @@ const inspirationImagesBottom = [
   margin: 0 auto 2rem auto;
   align-items: stretch;
 }
-
 .project-card.large {
   grid-column: 1 / 2;
   grid-row: 1 / 3;
@@ -2205,7 +2200,6 @@ const inspirationImagesBottom = [
   max-width: 100%;
   margin: 0;
 }
-
 .project-card-group {
   display: flex;
   flex-direction: column;
@@ -2213,13 +2207,70 @@ const inspirationImagesBottom = [
   width: 100%;
   margin-top: 0;
 }
-
 .project-card.small {
   min-height: 12rem;
   min-width: 100%;
   max-width: 100%;
   margin-bottom: 0;
 }
+/* Companion Section */
+.companion-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+    background: #fff;
+  }
+  .companion-content {
+    background: #3976ff;
+    border-radius: 2rem;
+    width: 97%;
+    max-width: 100%;
+    min-height: 8rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2rem;
+    box-sizing: border-box;
+    text-align: left;
+    gap: 1.5rem;
+  }
+  .companion-text {
+    width: 70%;
+    max-width: 100%;
+    text-align: left;
+  }
+  .companion-text h2 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .companion-text p {
+    color: #e6edff;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 400;
+  }
+  .companion-btn {
+    background: #fff;
+    color: #2563eb;
+    font-weight: 700;
+    border: none;
+    border-radius: 1rem;
+    padding: 1.125rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    box-shadow: 0 0.25rem 1.5rem rgba(37, 99, 235, 0.08);
+    margin-top: 0;
+    margin-left: 2rem;
+    min-width: 180px;
+    text-align: center;
+    align-self: center;
+    display: inline-block;
+  }
 }
 /*------------------------- Mobile: < 768px --------------------------*/
 @media (max-width: 768px) {
@@ -2832,6 +2883,32 @@ const inspirationImagesBottom = [
   .achievements-arrow.right {
     right: 0;
   }
+  /* Companion Section */
+  .companion-section {
+    padding-bottom: 1.2rem;
+    padding-top: 0.5rem;
+    display:flex;
+    justify-content: center;
+    background: #FFFFFF;
+  }
+  companion-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem 0.7rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .companion-text {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 1.2rem;
+  }
+  
+
 }
 @media screen and (width: 425px) {
   .cooperation-section {
