@@ -27,7 +27,7 @@
           <input
             type="text"
             name="title"
-            v-model.trim="formData.title"
+            v-model="formData.title"
             :class="{ error: errors.title }"
             :disabled="loading"
             placeholder="Nhập tiêu đề dịch vụ"
@@ -63,13 +63,13 @@
             <div class="form-group price-group">
               <label>Giá <span class="required">*</span></label>
               <input
-                type="number"
+                type="text"
                 name="price"
                 v-model="formData.price"
                 :class="{ error: errors.price }"
                 :disabled="loading"
                 placeholder="Nhập giá dịch vụ"
-                min="0"
+                @input="validatePrice"
               />
               <span class="error-message" v-if="errors.price">{{ errors.price }}</span>
             </div>
@@ -119,7 +119,7 @@
           <label>Mô tả dịch vụ <span class="required">*</span></label>
           <textarea
             name="content"
-            v-model.trim="formData.content"
+            v-model="formData.content"
             :class="{ error: errors.content }"
             :disabled="loading"
             rows="6"
@@ -192,25 +192,74 @@ export default {
         this.$refs.fileInput.click()
       }
     },
-    validateForm() {
-      const newErrors = {}
-
-      // Tiêu đề validation
-      if (!this.formData.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống'
-      } else if (this.formData.title.trim().length < 3) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
-      } else if (this.formData.title.trim().length > 100) {
-        newErrors.title = 'Tiêu đề không được vượt quá 100 ký tự'
-      } else if (!/^[a-zA-Z0-9\sÀ-ỹ[\]{}()!@#$%^&*,.?-]+$/.test(this.formData.title.trim())) {
-        newErrors.title = 'Tiêu đề chứa ký tự không hợp lệ'
+    validatePrice() {
+      const priceValue = Number(this.formData.price);
+      if (isNaN(priceValue) || priceValue < 0 || priceValue > 1000000000) {
+        this.errors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ';
+      } else {
+        delete this.errors.price; // Clear error if valid
       }
+    },
+    validateForm() {
+      let isValid = true;
+      let newErrors = {};
 
-      // Loại dịch vụ validation
-      if (!this.formData.type) {
-        newErrors.type = 'Vui lòng chọn loại dịch vụ'
-      } else if (!['web', 'app', 'agency'].includes(this.formData.type)) {
-        newErrors.type = 'Loại dịch vụ không hợp lệ'
+      // Helper function to validate title, summary, and content
+      const validateTextField = (field, fieldName) => {
+        // Trim whitespace
+        const trimmedField = field.trim();
+        
+        // Check for empty field
+        if (!trimmedField) {
+          newErrors[fieldName] = `${fieldName} không được để trống`;
+          isValid = false;
+          return;
+        }
+
+        // Remove internal whitespace
+        const noWhitespaceField = trimmedField.replace(/\s+/g, '');
+        
+        // Check for special characters (allow basic punctuation)
+        const specialCharRegex = /^[a-zA-Z0-9.,!?'" ]*$/; // Adjust as needed for allowed characters
+        if (!specialCharRegex.test(noWhitespaceField)) {
+          newErrors[fieldName] = `${fieldName} không được chứa ký tự đặc biệt`;
+          isValid = false;
+          return;
+        }
+
+        // Check character length after trimming
+        if (trimmedField.length < 10) {
+          newErrors[fieldName] = `${fieldName} phải có ít nhất 10 ký tự`;
+          isValid = false;
+        } else if (trimmedField.length > 200) { // Adjust max length as needed
+          newErrors[fieldName] = `${fieldName} không được vượt quá 200 ký tự`;
+          isValid = false;
+        }
+
+        // Update the original field with the trimmed and cleaned value
+        if (fieldName === 'Tiêu đề') {
+          this.formData.title = trimmedField; // Update title
+        } else if (fieldName === 'Mô tả') {
+          this.formData.content = trimmedField; // Update content
+        }
+      };
+
+      // Validate title
+      validateTextField(this.formData.title, 'Tiêu đề');
+
+      // Validate content
+      validateTextField(this.formData.content, 'Mô tả');
+
+      // Validate type (only alphabetic characters)
+      const typeField = this.formData.type.trim();
+      if (!typeField) {
+        newErrors.type = 'Phân loại không được để trống';
+        isValid = false;
+      } else if (!/^[a-zA-Z]+$/.test(typeField)) {
+        newErrors.type = 'Phân loại chỉ được chứa ký tự chữ';
+        isValid = false;
+      } else {
+        this.formData.type = typeField; // Update type
       }
 
       // Giá validation
@@ -219,44 +268,24 @@ export default {
         this.formData.price === null ||
         this.formData.price === ''
       ) {
-        newErrors.price = 'Giá dịch vụ không được để trống'
+        newErrors.price = 'Giá dịch vụ không được để trống';
+        isValid = false; // Set isValid to false
       } else {
-        const priceValue = Number(this.formData.price)
+        const priceValue = Number(this.formData.price);
         if (isNaN(priceValue)) {
-          newErrors.price = 'Giá dịch vụ phải là một số'
+          newErrors.price = 'Giá dịch vụ phải là một số';
+          isValid = false; // Set isValid to false
         } else if (priceValue <= 0) {
-          newErrors.price = 'Giá dịch vụ phải lớn hơn 0'
+          newErrors.price = 'Giá dịch vụ phải lớn hơn 0';
+          isValid = false; // Set isValid to false
         } else if (priceValue > 1000000000) {
-          newErrors.price = 'Giá dịch vụ quá lớn'
+          newErrors.price = 'Giá dịch vụ quá lớn';
+          isValid = false; // Set isValid to false
         }
       }
 
-      // Mô tả validation
-      if (!this.formData.content?.trim()) {
-        newErrors.content = 'Mô tả không được để trống'
-      } else {
-        const lines = this.formData.content.split('\n').filter((line) => line.trim())
-        if (lines.length === 0) {
-          newErrors.content = 'Mô tả không được để trống'
-        } else {
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim()
-            if (line.length < 10) {
-              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả phải có ít nhất 10 ký tự`
-              break
-            } else if (line.length > 500) {
-              newErrors.content = `Dòng ${i + 1}: Mỗi dòng mô tả không được vượt quá 500 ký tự`
-              break
-            }
-          }
-        }
-      }
-
-      // Ảnh validation is now optional - only validate if an image is provided
-      // No validation needed if no image is provided
-
-      this.errors = newErrors
-      return Object.keys(newErrors).length === 0
+      this.errors = newErrors;
+      return isValid;
     },
     handleImageUpload(event) {
       const file = event.target.files[0]
@@ -327,18 +356,21 @@ export default {
       }
     },
     async handleSubmit() {
+      // Trim whitespace from title
+      this.formData.title = this.formData.title.trim();
+
       // Perform validation
       if (!this.validateForm()) {
         // Focus on the first field with an error
-        const errorFields = Object.keys(this.errors)
+        const errorFields = Object.keys(this.errors);
         if (errorFields.length > 0) {
-          const firstErrorField = errorFields[0]
-          const element = document.querySelector(`[name="${firstErrorField}"]`)
+          const firstErrorField = errorFields[0];
+          const element = document.querySelector(`[name="${firstErrorField}"]`);
           if (element) {
-            element.focus()
+            element.focus();
           }
         }
-        return
+        return;
       }
 
       if (this.loading) return
@@ -373,8 +405,8 @@ export default {
         // Prepare service data according to backend model
         this.uploadStatus = 'Đang xử lý...'
         const serviceData = {
-          title: this.formData.title.trim(),
-          description: this.formData.content
+          title: this.formData.title,
+          description: this.formData.content  
             .trim()
             .split('\n')
             .filter((line) => line.trim() !== '')
@@ -517,7 +549,7 @@ select{
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url(data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 8px center;
   background-size: 16px;

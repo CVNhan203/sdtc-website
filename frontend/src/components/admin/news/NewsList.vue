@@ -235,19 +235,24 @@
               </div>
               <div class="form-group">
                 <label>Ảnh</label>
-                <div class="image-upload">
-                  <!-- Input chọn file ảnh -->
-                  <input type="file" accept="image/*" @change="handleImageUpload" />
-                  <!-- Hiển thị xem trước ảnh đã chọn -->
-                  <div v-if="imagePreview" class="image-preview">
+                <div class="image-upload" @click="triggerFileInput">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    @change="handleImageUpload" 
+                    ref="fileInput"
+                    style="display: none;"
+                  />
+                  <div v-if="imagePreview" class="image-preview" @click.stop>
                     <img :src="imagePreview" alt="Preview" />
-                    <button type="button" class="remove-image" @click="imagePreview = null">
+                    <button type="button" class="remove-image" @click.stop="removeImage">
                       <i class="fas fa-times"></i>
                     </button>
                   </div>
-                  <!-- Hiển thị thanh tiến trình khi đang tải ảnh lên -->
-                  <div v-if="uploadProgress > 0 && uploadProgress < 100" class="upload-progress">
-                    <div class="progress-bar" :style="{ width: `${uploadProgress}%` }"></div>
+                  <div v-else class="upload-placeholder">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="upload-text">Nhấp để tải ảnh lên</div>
+                    <div class="upload-subtext">Định dạng: JPG, PNG, GIF</div>
                   </div>
                 </div>
               </div>
@@ -377,6 +382,7 @@ export default {
     const baseImageUrl = ref('http://localhost:3000') // URL cơ sở cho hình ảnh
     const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
     const selectedNewsIds = ref([]) // Danh sách ID tin tức được chọn
+    const fileInput = ref(null)
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -466,13 +472,7 @@ export default {
       return canEditNews(news);
     }
     
-    // Hiển thị thông báo lỗi khi không có quyền
-    const showPermissionError = (action) => {
-      eventBus.emit('show-toast', {
-        type: 'error',
-        message: `Bạn không có quyền ${action} bài viết này.`
-      });
-    }
+  
 
     // Xử lý sự kiện tìm kiếm
     const handleSearch = () => {
@@ -505,8 +505,15 @@ export default {
             isDeleted: newsDetail.isDeleted || false
           }
           
+          // Cập nhật xử lý hiển thị ảnh
           if (newsDetail.image) {
-            imagePreview.value = getImageUrl(newsDetail.image)
+            const imageUrl = getImageUrl(newsDetail.image)
+            if (imageUrl) {
+              imagePreview.value = imageUrl
+            } else {
+              imagePreview.value = null
+              console.error('Không thể tạo URL cho ảnh:', newsDetail.image)
+            }
           } else {
             imagePreview.value = null
           }
@@ -674,9 +681,21 @@ export default {
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
       if (!imagePath) return null
+      
+      // Nếu đã là URL đầy đủ
       if (imagePath.startsWith('http')) return imagePath
-      const cleanPath = imagePath.replace(/^[/\\]+/, '')
-      return `${baseImageUrl.value}/${cleanPath}`
+      
+      // Nếu là đường dẫn tương đối
+      try {
+        // Loại bỏ các ký tự / ở đầu và cuối
+        const cleanPath = imagePath.replace(/^[/\\]+|[/\\]+$/g, '')
+        // Tạo URL đầy đủ
+        const fullUrl = `${baseImageUrl.value}/${cleanPath}`
+        return fullUrl
+      } catch (error) {
+        console.error('Error creating image URL:', error)
+        return null
+      }
     }
 
     // Định dạng hiển thị ngày tháng
@@ -753,13 +772,17 @@ export default {
           await newsService.updateNews(selectedNews.value._id, newsData);
           eventBus.emit('show-toast', {
             type: 'success',
-            message: 'Cập nhật tin tức thành công!'
+            message: 'Cập nhật tin tức thành công!',
+            icon: 'fas fa-check-circle',
+            duration: 3000
           });
         } else {
           await newsService.createNews(newsData);
           eventBus.emit('show-toast', {
             type: 'success',
-            message: 'Tạo tin tức mới thành công!'
+            message: 'Tạo tin tức mới thành công!',
+            icon: 'fas fa-check-circle',
+            duration: 3000
           });
         }
 
@@ -820,6 +843,30 @@ export default {
         const modal = document.querySelector('.modal-content')
         if (modal) modal.classList.remove('no-animation')
       }, 300)
+    }
+
+    // Thêm hàm xóa ảnh
+    const removeImage = () => {
+      imagePreview.value = null
+      formData.value.image = null
+      if (fileInput.value) {
+        fileInput.value.value = ''
+      }
+    }
+
+    // Thêm hàm trigger để mở dialog chọn file
+    const triggerFileInput = () => {
+      if (fileInput.value) {
+        fileInput.value.click()
+      }
+    }
+
+    // Thêm hàm hiển thị thông báo lỗi quyền
+    const showPermissionError = (action) => {
+      eventBus.emit('show-toast', {
+        type: 'error',
+        message: `Bạn không có quyền ${action} bài viết này`
+      })
     }
 
     // Gọi khi component được tạo
@@ -889,6 +936,9 @@ export default {
       toggleSelect,
       toggleSelectAll,
       closeFormModal,
+      removeImage,
+      fileInput,
+      triggerFileInput,
     }
   },
 }
@@ -1248,8 +1298,8 @@ tr:hover {
   border-radius: 8px;
   padding: 24px;
   text-align: center;
-  cursor: pointer;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .image-upload:hover {
@@ -1257,8 +1307,27 @@ tr:hover {
   background-color: #f8fafc;
 }
 
-.image-upload input[type="file"] {
-  display: none;
+.choose-file-btn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.choose-file-btn:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.choose-file-btn i {
+  font-size: 1.1em;
 }
 
 .image-preview {
@@ -1677,4 +1746,41 @@ td input[type="checkbox"] {
   width: 18px;
   height: 18px;
 }
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  background: #f8fbff;
+  border-radius: 8px;
+  padding: 32px 0 20px 0;
+  cursor: pointer;
+  min-height: 120px;
+}
+
+.upload-icon {
+  font-size: 38px;
+  color: #3b82f6;
+  margin-bottom: 8px;
+}
+
+.upload-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.upload-subtext {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.upload-subtext span {
+  color: #2563eb;
+  font-weight: 500;
+}
+
 </style>
