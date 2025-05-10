@@ -239,7 +239,7 @@ export default {
   max-width: 640px;
 }
 .map-container h3 {
-  color: #409eff;
+  color: #5DBBFF;
   margin-bottom: 12px;
 }
 .map-container iframe {
