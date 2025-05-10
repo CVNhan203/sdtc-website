@@ -28,7 +28,7 @@
       </div>
 
       <div v-if="loading" class="loading-container">
-        <div class="loading-spinner"></div>
+        <!-- <div class="loading-spinner"></div> -->
         <div>Đang tải dữ liệu...</div>
       </div>
       <div v-else-if="error" class="error-container">
@@ -360,7 +360,8 @@ export default {
   background: white; /* Màu nền của bảng */
   border-radius: 12px; /* Bo tròn góc */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
-  overflow: hidden; /* Ẩn phần tràn ra ngoài */
+  overflow: auto; /* Cho phép cuộn khi nội dung vượt quá chiều cao */
+  max-height: 400px; /* Chiều cao tối đa cho bảng, có thể điều chỉnh */
 }
 
 table {

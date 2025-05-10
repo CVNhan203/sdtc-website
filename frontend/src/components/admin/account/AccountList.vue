@@ -28,7 +28,7 @@
 
     <!-- Trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
+      <!-- <div class="loading-spinner"></div> -->
       <p>Đang tải danh sách tài khoản...</p>
     </div>
 
@@ -39,7 +39,8 @@
     </div>
 
     <!-- Nội dung chính -->
-    <div v-else class="table-container">
+     <!-- dùng để hiển thị phần tử nếu điều kiện v-if hoặc v-else-if trước đó không được thỏa mãn. -->
+    <div v-else class="table-container"> 
       <table class="accounts-table">
         <thead>
           <tr>
@@ -212,16 +213,16 @@ export default {
         )
       }
 
-      // Bộ lọc vai trò
-      if (filterRole.value) {
-        result = result.filter((account) => account.role === filterRole.value)
-      }
+      // // Bộ lọc vai trò
+      // if (filterRole.value) {
+      //   result = result.filter((account) => account.role === filterRole.value)
+      // }
 
-      // Bộ lọc trạng thái
-      if (filterStatus.value !== 'all') {
-        const isDeleted = filterStatus.value === 'deleted'
-        result = result.filter((account) => account.isDeleted === isDeleted)
-      }
+      // // Bộ lọc trạng thái
+      // if (filterStatus.value !== 'all') {
+      //   const isDeleted = filterStatus.value === 'deleted'
+      //   result = result.filter((account) => account.isDeleted === isDeleted)
+      // }
 
       return result
     })
@@ -241,10 +242,14 @@ export default {
       } catch (err) {
         console.error('Error loading accounts:', err)
         error.value = err.message || 'Không thể tải danh sách tài khoản. Vui lòng thử lại sau.'
+        //Cách giao tiếp giữa các component qua các sự kiện
+        //Thư viện nhỏ giúp bạn dễ dàng tạo và quản lý eventBus
+        // Phát sự kiện để hiển thị Toast
         eventBus.emit('show-toast', {
           type: 'error',
           message: error.value,
         })
+        //đảm bảo rằng một đoạn mã nhất định sẽ luôn được thực thi
       } finally {
         loading.value = false
       }
