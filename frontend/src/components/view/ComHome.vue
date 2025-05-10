@@ -1622,8 +1622,9 @@ const inspirationImagesBottom = [
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 0.5rem;
 }
 .achievement-visual {
   position: relative;
@@ -1661,11 +1662,13 @@ const inspirationImagesBottom = [
   font-size: 1.5rem;
   color: #555;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 2rem;
   margin-top: 0.5rem;
   line-height: 1.5;
   font-weight: 400;
-  max-width: 90rem;
+  max-width: 70rem;
 }
 
 .achievement-author {
