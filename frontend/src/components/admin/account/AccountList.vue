@@ -66,6 +66,7 @@
                     :to="'/admin/accounts/edit/' + account._id"
                     class="icon-btn edit"
                     title="Chỉnh sửa"
+                    @click="openEditModal(account)"
                   >
                     <i class="fas fa-edit"></i>
                   </router-link> -->
@@ -132,6 +133,46 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal sửa tài khoản -->
+    <div class="modal" v-if="showEditModal">
+      <div class="modal-content">
+        <h3>Chỉnh sửa tài khoản</h3>
+        <form @submit.prevent="handleEditSubmit">
+          <div v-if="editError" class="error-alert">{{ editError }}</div>
+          <div v-if="editSuccess" class="success-alert">{{ editSuccess }}</div>
+          <div class="form-group">
+            <label>Họ tên <span class="required">*</span></label>
+            <input
+              type="text"
+              v-model.trim="editFormData.fullName"
+              :class="{ error: editErrors.fullName }"
+              maxlength="50"
+            />
+            <span class="error-message" v-if="editErrors.fullName">{{ editErrors.fullName }}</span>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" v-model="editFormData.email" readonly />
+          </div>
+          <div class="form-group">
+            <label>Vai trò <span class="required">*</span></label>
+            <select v-model="editFormData.role" :class="{ error: editErrors.role }">
+              <option value="admin">Quản trị viên</option>
+              <option value="staff">Nhân viên</option>
+            </select>
+            <span class="error-message" v-if="editErrors.role">{{ editErrors.role }}</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" @click="showEditModal = false">Hủy</button>
+            <button type="submit" class="submit-btn" :disabled="editLoading">
+              {{ editLoading ? 'Đang lưu...' : 'Lưu thay đổi' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -156,6 +197,18 @@ export default {
     const showRestoreModal = ref(false)
     const showDeletePermanentModal = ref(false)
     const selectedAccount = ref({})
+    const showEditModal = ref(false)
+    const editFormData = ref({
+      _id: '',
+      fullName: '',
+      email: '',
+      role: 'staff',
+      status: 'active',
+    })
+    const editErrors = ref({})
+    const editLoading = ref(false)
+    const editError = ref(null)
+    const editSuccess = ref(null)
 
     // Computed property for filtered accounts
     const filteredAccounts = computed(() => {
@@ -369,6 +422,63 @@ export default {
       return id.length > 8 ? id.substring(0, 8) + '...' : id
     }
 
+    // Mở modal sửa
+    const openEditModal = (account) => {
+      editFormData.value = {
+        _id: account._id,
+        fullName: account.fullName,
+        email: account.email,
+        role: account.role,
+        status: account.status || 'active',
+      }
+      editErrors.value = {}
+      editError.value = null
+      editSuccess.value = null
+      showEditModal.value = true
+    }
+
+    // Validate form sửa
+    const validateEdit = () => {
+      const errs = {}
+      if (!editFormData.value.fullName.trim()) {
+        errs.fullName = 'Họ tên không được để trống'
+      } else if (editFormData.value.fullName.length < 3) {
+        errs.fullName = 'Họ tên phải có ít nhất 3 ký tự'
+      }
+      if (!editFormData.value.role) {
+        errs.role = 'Vui lòng chọn vai trò'
+      }
+      editErrors.value = errs
+      return Object.keys(errs).length === 0
+    }
+
+    // Gửi form sửa
+    const handleEditSubmit = async () => {
+      editError.value = null
+      editSuccess.value = null
+      if (!validateEdit()) return
+      editLoading.value = true
+      try {
+        const res = await accountService.updateAccount(editFormData.value._id, {
+          fullName: editFormData.value.fullName,
+          role: editFormData.value.role,
+          status: editFormData.value.status,
+        })
+        if (res.success) {
+          editSuccess.value = 'Cập nhật tài khoản thành công'
+          eventBus.emit('show-toast', { type: 'success', message: editSuccess.value })
+          showEditModal.value = false
+          await loadAccounts()
+        } else {
+          throw new Error(res.message || 'Không thể cập nhật tài khoản')
+        }
+      } catch (err) {
+        editError.value = err.message || 'Có lỗi xảy ra khi cập nhật'
+      } finally {
+        editLoading.value = false
+      }
+    }
+
     onMounted(() => {
       loadAccounts()
     })
@@ -402,6 +512,15 @@ export default {
       handleSearch,
       handleFilter,
       truncateId,
+      showEditModal,
+      editFormData,
+      editErrors,
+      editLoading,
+      editError,
+      editSuccess,
+      openEditModal,
+      validateEdit,
+      handleEditSubmit,
     }
   },
 }
@@ -410,7 +529,8 @@ export default {
 <style scoped>
 @import '@/styles/admin.css';
 
-/* Component specific styles */
+/* Chỉ giữ lại các style đặc biệt nếu cần, xóa style modal-content, form-group, form-actions, submit-btn, cancel-btn... để dùng style từ admin.css */
+
 .role-badge {
   padding: 6px 12px;
   border-radius: 20px;
@@ -447,15 +567,10 @@ export default {
   background-color: #dc2626;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-  .search-filter {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .search-filter select {
-    width: 100%;
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 8px 2px !important;
+    max-width: 98vw;
   }
 }
 </style>

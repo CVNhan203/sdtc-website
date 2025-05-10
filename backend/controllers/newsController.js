@@ -240,9 +240,13 @@ exports.uploadNewsImage = asyncHandler(async (req, res) => {
 
   const imagePath = req.file.path.replace(/\\/g, '/')
   
+  // Tạo đường dẫn tuyệt đối bao gồm cả tên miền
+  const host = req.protocol + '://' + req.get('host')
+  const fullImagePath = host + '/' + imagePath
+  
   res.status(200).json({
     success: true,
-    imagePath: imagePath,
+    imagePath: fullImagePath,
     message: 'Tải ảnh lên thành công',
   })
 })

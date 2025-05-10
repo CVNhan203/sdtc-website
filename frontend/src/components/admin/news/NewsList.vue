@@ -75,10 +75,10 @@
                     <i class="fas fa-info-circle"></i>
                   </button>
                   <!-- Nút chỉnh sửa - kiểm tra quyền sửa dựa vào tác giả -->
-                  <button 
-                    class="icon-btn edit" 
+                  <button
+                    class="icon-btn edit"
                     @click="canEditNews(news) ? openEditModal(news) : showPermissionError('sửa')"
-                    :class="{ 'disabled': !canEditNews(news) }"
+                    :class="{ disabled: !canEditNews(news) }"
                     :title="canEditNews(news) ? 'Chỉnh sửa' : 'Bạn không có quyền sửa bài viết này'"
                   >
                     <i class="fas fa-edit"></i>
@@ -87,9 +87,15 @@
                   <button
                     v-if="!news.isDeleted"
                     class="icon-btn delete"
-                    @click="canDeleteNews(news) ? confirmSoftDelete(news) : showPermissionError('xóa')"
-                    :class="{ 'disabled': !canDeleteNews(news) }"
-                    :title="canDeleteNews(news) ? 'Chuyển vào thùng rác' : 'Bạn không có quyền xóa bài viết này'"
+                    @click="
+                      canDeleteNews(news) ? confirmSoftDelete(news) : showPermissionError('xóa')
+                    "
+                    :class="{ disabled: !canDeleteNews(news) }"
+                    :title="
+                      canDeleteNews(news)
+                        ? 'Chuyển vào thùng rác'
+                        : 'Bạn không có quyền xóa bài viết này'
+                    "
                   >
                     <i class="fas fa-trash"></i>
                   </button>
@@ -97,9 +103,13 @@
                   <button
                     v-else
                     class="icon-btn restore"
-                    @click="canEditNews(news) ? confirmRestore(news) : showPermissionError('khôi phục')"
-                    :class="{ 'disabled': !canEditNews(news) }"
-                    :title="canEditNews(news) ? 'Khôi phục' : 'Bạn không có quyền khôi phục bài viết này'"
+                    @click="
+                      canEditNews(news) ? confirmRestore(news) : showPermissionError('khôi phục')
+                    "
+                    :class="{ disabled: !canEditNews(news) }"
+                    :title="
+                      canEditNews(news) ? 'Khôi phục' : 'Bạn không có quyền khôi phục bài viết này'
+                    "
                   >
                     <i class="fas fa-trash-restore"></i>
                   </button>
@@ -107,9 +117,15 @@
                   <button
                     v-if="news.isDeleted"
                     class="icon-btn permanent-delete"
-                    @click="canDeleteNews(news) ? confirmPermanentDelete(news) : showPermissionError('xóa vĩnh viễn')"
-                    :class="{ 'disabled': !canDeleteNews(news) }"
-                    :title="canDeleteNews(news) ? 'Xóa vĩnh viễn' : 'Bạn không có quyền xóa bài viết này'"
+                    @click="
+                      canDeleteNews(news)
+                        ? confirmPermanentDelete(news)
+                        : showPermissionError('xóa vĩnh viễn')
+                    "
+                    :class="{ disabled: !canDeleteNews(news) }"
+                    :title="
+                      canDeleteNews(news) ? 'Xóa vĩnh viễn' : 'Bạn không có quyền xóa bài viết này'
+                    "
                   >
                     <i class="fas fa-trash-alt"></i>
                   </button>
@@ -207,12 +223,12 @@
               </div>
               <div class="form-group">
                 <label>Phân loại</label>
-                <input 
-                  type="text" 
-                  v-model="formData.type" 
+                <input
+                  type="text"
+                  v-model="formData.type"
                   placeholder="Nhập phân loại tin tức"
                   maxlength="50"
-                  required 
+                  required
                 />
                 <span class="character-count" v-if="formData.type">
                   {{ formData.type.length }}/50
@@ -407,34 +423,34 @@ export default {
     // Kiểm tra xem người dùng có quyền chỉnh sửa bài viết không
     const canEditNews = (news) => {
       // Lấy thông tin người dùng từ localStorage
-      const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
-      
+      const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}')
+
       // Kiểm tra xem người dùng có phải là admin không (admin có thể sửa mọi bài viết)
       if (adminInfo.role === 'admin') {
-        return true;
+        return true
       }
-      
+
       // Staff chỉ có thể sửa bài viết của chính mình
       if (adminInfo.role === 'staff' && news.author === adminInfo.fullName) {
-        return true;
+        return true
       }
-      
+
       // Không có quyền sửa
-      return false;
+      return false
     }
-    
+
     // Kiểm tra xem người dùng có quyền xóa bài viết không
     const canDeleteNews = (news) => {
       // Xử lý tương tự như canEditNews
-      return canEditNews(news);
+      return canEditNews(news)
     }
-    
+
     // Hiển thị thông báo lỗi khi không có quyền
     const showPermissionError = (action) => {
       eventBus.emit('show-toast', {
         type: 'error',
-        message: `Bạn không có quyền ${action} bài viết này.`
-      });
+        message: `Bạn không có quyền ${action} bài viết này.`,
+      })
     }
 
     // Xử lý sự kiện tìm kiếm
@@ -465,17 +481,19 @@ export default {
             content: newsDetail.content || '',
             type: newsDetail.type || '',
             author: newsDetail.author || '',
-            publishedDate: newsDetail.publishedDate ? new Date(newsDetail.publishedDate).toISOString().split('T')[0] : '',
+            publishedDate: newsDetail.publishedDate
+              ? new Date(newsDetail.publishedDate).toISOString().split('T')[0]
+              : '',
             image: newsDetail.image || null,
-            isDeleted: newsDetail.isDeleted || false
+            isDeleted: newsDetail.isDeleted || false,
           }
-          
+
           if (newsDetail.image) {
             imagePreview.value = getImageUrl(newsDetail.image)
           } else {
             imagePreview.value = null
           }
-          
+
           isEditing.value = true
           showFormModal.value = true
         }
@@ -483,7 +501,7 @@ export default {
         console.error('Error fetching news details:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Không thể tải thông tin tin tức. Vui lòng thử lại sau.'
+          message: 'Không thể tải thông tin tin tức. Vui lòng thử lại sau.',
         })
       }
     }
@@ -510,26 +528,26 @@ export default {
     const handleSoftDelete = async () => {
       try {
         // Gọi API để cập nhật trạng thái isDeleted thành true trong database
-        await newsService.deleteNews(selectedNews.value._id);
-        
+        await newsService.deleteNews(selectedNews.value._id)
+
         // Làm mới danh sách tin tức sau khi xóa
-        await loadNews();
-        
-        showSoftDeleteModal.value = false;
-        eventBus.emit('update-deleted-news-count');
+        await loadNews()
+
+        showSoftDeleteModal.value = false
+        eventBus.emit('update-deleted-news-count')
 
         eventBus.emit('show-toast', {
           type: 'success',
           message: 'Đã chuyển tin tức vào thùng rác',
-        });
+        })
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error)
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Có lỗi xảy ra khi chuyển tin tức vào thùng rác',
-        });
+        })
       }
-    };
+    }
 
     // Xử lý khôi phục tin tức từ thùng rác
     const handleRestore = async () => {
@@ -557,58 +575,58 @@ export default {
     const handleImageUpload = (event) => {
       const file = event.target.files[0]
       if (!file) return
-      
+
       // Kiểm tra kích thước file (10MB limit)
       const maxFileSize = 10 * 1024 * 1024 // 10MB
       if (file.size > maxFileSize) {
         eventBus.emit('show-toast', {
           type: 'error',
-          message: `Kích thước file không được vượt quá 10MB`
+          message: `Kích thước file không được vượt quá 10MB`,
         })
         event.target.value = ''
         return
       }
-      
+
       // Kiểm tra loại file
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
       if (!allowedTypes.includes(file.type)) {
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF'
+          message: 'Chỉ chấp nhận file ảnh định dạng JPG, PNG hoặc GIF',
         })
         event.target.value = ''
         return
       }
-      
+
       // Kiểm tra kích thước ảnh
       const img = new Image()
       img.onload = () => {
         URL.revokeObjectURL(img.src)
-        
+
         // Kiểm tra kích thước tối thiểu
         if (img.width < 300 || img.height < 200) {
           eventBus.emit('show-toast', {
             type: 'error',
-            message: 'Kích thước ảnh quá nhỏ (tối thiểu 300x200 pixels)'
+            message: 'Kích thước ảnh quá nhỏ (tối thiểu 300x200 pixels)',
           })
           event.target.value = ''
           formData.value.image = null
           imagePreview.value = null
           return
         }
-        
+
         // Kiểm tra kích thước tối đa
         if (img.width > 2000 || img.height > 2000) {
           eventBus.emit('show-toast', {
             type: 'error',
-            message: 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)'
+            message: 'Kích thước ảnh quá lớn (tối đa 2000x2000 pixels)',
           })
           event.target.value = ''
           formData.value.image = null
           imagePreview.value = null
           return
         }
-        
+
         // Lưu ảnh vào form data
         formData.value.image = file
         if (imagePreview.value) {
@@ -616,18 +634,18 @@ export default {
         }
         imagePreview.value = URL.createObjectURL(file)
       }
-      
+
       img.onerror = () => {
         URL.revokeObjectURL(img.src)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'File không phải là ảnh hợp lệ'
+          message: 'File không phải là ảnh hợp lệ',
         })
         event.target.value = ''
         formData.value.image = null
         imagePreview.value = null
       }
-      
+
       img.src = URL.createObjectURL(file)
     }
 
@@ -689,63 +707,63 @@ export default {
           content: formData.value.content.trim(),
           type: formData.value.type.trim(),
           publishedDate: formData.value.publishedDate,
-          author: formData.value.author.trim() || 'Admin'
-        };
+          author: formData.value.author.trim() || 'Admin',
+        }
 
         // Xử lý ảnh
         if (formData.value.image instanceof File) {
           // Nếu là file mới, upload ảnh trước
-          const imageFormData = new FormData();
-          imageFormData.append('image', formData.value.image);
-          
+          const imageFormData = new FormData()
+          imageFormData.append('image', formData.value.image)
+
           try {
-            const uploadResponse = await newsService.uploadImage(imageFormData);
+            const uploadResponse = await newsService.uploadImage(imageFormData)
             if (uploadResponse && uploadResponse.imagePath) {
-              newsData.image = uploadResponse.imagePath;
+              newsData.image = uploadResponse.imagePath
             } else {
-              throw new Error('Không nhận được đường dẫn ảnh sau khi upload');
+              throw new Error('Không nhận được đường dẫn ảnh sau khi upload')
             }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError);
+            console.error('Error uploading image:', uploadError)
             eventBus.emit('show-toast', {
               type: 'error',
-              message: 'Lỗi khi tải ảnh lên. Vui lòng thử lại.'
-            });
-            return;
+              message: 'Lỗi khi tải ảnh lên. Vui lòng thử lại.',
+            })
+            return
           }
         } else if (typeof formData.value.image === 'string') {
           // Nếu là đường dẫn ảnh đã có, giữ nguyên
-          newsData.image = formData.value.image;
+          newsData.image = formData.value.image
         }
 
         // Gửi dữ liệu lên server
         if (isEditing.value) {
-          await newsService.updateNews(selectedNews.value._id, newsData);
+          await newsService.updateNews(selectedNews.value._id, newsData)
           eventBus.emit('show-toast', {
             type: 'success',
-            message: 'Cập nhật tin tức thành công!'
-          });
+            message: 'Cập nhật tin tức thành công!',
+          })
         } else {
-          await newsService.createNews(newsData);
+          await newsService.createNews(newsData)
           eventBus.emit('show-toast', {
             type: 'success',
-            message: 'Tạo tin tức mới thành công!'
-          });
+            message: 'Tạo tin tức mới thành công!',
+          })
         }
-        
+
         // Cập nhật lại danh sách tin tức
-        await loadNews();
-        showFormModal.value = false;
-        imagePreview.value = null;
-        uploadProgress.value = 0;
+        await loadNews()
+        showFormModal.value = false
+        imagePreview.value = null
+        uploadProgress.value = 0
       } catch (err) {
-        console.error('Error:', err);
+        console.error('Error:', err)
         eventBus.emit('show-toast', {
           type: 'error',
           message: isEditing.value
             ? 'Không thể cập nhật tin tức. Vui lòng thử lại sau.'
-            : 'Không thể tạo tin tức mới. Vui lòng thử lại sau.'
-        });
+            : 'Không thể tạo tin tức mới. Vui lòng thử lại sau.',
+        })
       }
     }
 

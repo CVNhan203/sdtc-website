@@ -67,9 +67,38 @@ exports.getDeletedStaffs = asyncHandler(async (req, res) => {
 // Tạo staff
 exports.createStaff = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body
-  const staff = new Admin({ fullName, email, password, role: 'staff' })
-  await staff.save()
-  res.status(201).json({ success: true, data: staff })
+  
+  // Kiểm tra email đã tồn tại chưa
+  const existingAdminByEmail = await Admin.findOne({ email })
+  if (existingAdminByEmail) {
+    return res.status(400).json({ success: false, message: 'Email đã được sử dụng' })
+  }
+  
+  // Kiểm tra fullName đã tồn tại chưa
+  const existingAdminByName = await Admin.findOne({ fullName })
+  if (existingAdminByName) {
+    return res.status(400).json({ success: false, message: 'Tên đầy đủ đã được sử dụng' })
+  }
+  
+  try {
+    const staff = new Admin({ fullName, email, password, role: 'staff' })
+    await staff.save()
+    res.status(201).json({ success: true, data: staff })
+  } catch (error) {
+    // Bắt lỗi trùng lặp từ MongoDB (phòng trường hợp race condition)
+    if (error.code === 11000) {
+      // Kiểm tra lỗi trùng lặp là do trường nào
+      if (error.keyPattern && error.keyPattern.fullName) {
+        return res.status(400).json({ success: false, message: 'Tên đầy đủ đã được sử dụng' })
+      } else if (error.keyPattern && error.keyPattern.email) {
+        return res.status(400).json({ success: false, message: 'Email đã được sử dụng' })
+      } else {
+        return res.status(400).json({ success: false, message: 'Thông tin đã tồn tại trong hệ thống' })
+      }
+    }
+    // Ném lỗi để express-async-handler xử lý
+    throw error
+  }
 })
 // Lấy chi tiết staff
 exports.getStaffById = asyncHandler(async (req, res) => {

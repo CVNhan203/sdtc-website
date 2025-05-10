@@ -21,7 +21,7 @@ app.use(express.json())
 // Cấu hình CORS cho phép frontend truy cập API
 app.use(
   cors({
-    origin: 'http://localhost:8080', // Cho phép frontend truy cập
+    origin: '*', // Cho phép tất cả các nguồn truy cập
     credentials: true, // Nếu cần gửi cookie, xác thực
   })
 )

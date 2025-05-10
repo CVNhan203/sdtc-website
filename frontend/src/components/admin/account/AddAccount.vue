@@ -1,9 +1,13 @@
 <template>
   <div class="add-account">
     <div class="form-container">
+      <div v-if="errorMessage" class="error-alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
       <form @submit.prevent="handleSubmit" class="account-form" novalidate>
-        <!-- Full Name -->
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.fullName }">
           <label for="fullName">Họ tên <span class="required">*</span></label>
           <input
             type="text"
@@ -14,8 +18,7 @@
           <span class="error-message" v-if="errors.fullName">{{ errors.fullName }}</span>
         </div>
 
-        <!-- Email -->
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.email }">
           <label for="email">Email <span class="required">*</span></label>
           <input
             type="email"
@@ -26,8 +29,7 @@
           <span class="error-message" v-if="errors.email">{{ errors.email }}</span>
         </div>
 
-        <!-- Password -->
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.password }">
           <label for="password">Mật khẩu <span class="required">*</span></label>
           <div class="password-input">
             <input
@@ -43,8 +45,7 @@
           <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
         </div>
 
-        <!-- Confirm Password -->
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.confirmPassword }">
           <label for="confirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
           <div class="password-input">
             <input
@@ -66,8 +67,7 @@
           }}</span>
         </div>
 
-        <!-- Role -->
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': errors.role }">
           <label for="role">Vai trò <span class="required">*</span></label>
           <select id="role" v-model="formData.role" :class="{ error: errors.role }">
             <option value="">Chọn vai trò</option>
@@ -77,23 +77,6 @@
           <span class="error-message" v-if="errors.role">{{ errors.role }}</span>
         </div>
 
-        <!-- Status -->
-        <!-- <div class="form-group">
-          <label for="status">Trạng thái</label>
-          <div class="toggle-switch">
-            <input
-              type="checkbox"
-              id="status"
-              v-model="formData.status"
-              :class="{ 'error': errors.status }"
-            />
-            <label for="status" class="switch-label"></label>
-            <span class="status-text">{{ formData.status ? 'Đang hoạt động' : 'Không hoạt động' }}</span>
-          </div>
-          <span class="error-message" v-if="errors.status">{{ errors.status }}</span>
-        </div> -->
-
-        <!-- Form Actions -->
         <div class="form-actions">
           <button type="button" class="cancel-btn" @click="$router.back()">Hủy</button>
           <button type="submit" class="submit-btn" :disabled="isSubmitting">
@@ -140,6 +123,8 @@ export default {
       role: '',
       status: '',
     })
+
+    const errorMessage = ref('')
 
     const validateForm = () => {
       let isValid = true
@@ -213,6 +198,9 @@ export default {
       formData.fullName = formData.fullName.trim()
       formData.email = formData.email.trim()
 
+      // Reset thông báo lỗi
+      errorMessage.value = ''
+
       if (!validateForm()) {
         const firstErrorField = Object.keys(errors).find((key) => errors[key])
         if (firstErrorField) {
@@ -253,40 +241,61 @@ export default {
             })
           }, 500)
         } else {
-          throw new Error(response.message || 'Không thể tạo tài khoản')
+          // Xử lý lỗi trả về từ accountService
+          handleApiErrors(response)
         }
       } catch (error) {
-        let errorMessage = 'Không thể tạo tài khoản'
-
-        if (error.response?.data?.message) {
-          errorMessage = error.response.data.message
-          // Handle specific backend validation errors
-          if (error.response.data.errors) {
-            const backendErrors = error.response.data.errors
-            Object.keys(backendErrors).forEach((key) => {
-              if (errors[key] !== undefined) {
-                errors[key] = Array.isArray(backendErrors[key])
-                  ? backendErrors[key][0]
-                  : backendErrors[key]
-              }
-            })
-          }
-        } else if (error.message) {
-          errorMessage = error.message
-        }
-
-        eventBus.emit('show-toast', {
-          type: 'error',
-          message: errorMessage,
-        })
+        // Xử lý lỗi nếu có exception
+        errorMessage.value = 'Có lỗi xảy ra khi tạo tài khoản'
+        console.error('Error in handleSubmit:', error)
       } finally {
         isSubmitting.value = false
       }
     }
 
+    // Xử lý lỗi từ API
+    const handleApiErrors = (response) => {
+      // Reset các lỗi hiện tại
+      Object.keys(errors).forEach((key) => (errors[key] = ''))
+
+      // Xử lý lỗi theo mã
+      if (response.code === 'EMAIL_EXISTS') {
+        errorMessage.value = 'Email này đã được sử dụng'
+        errors.email = 'Email đã tồn tại'
+      } else if (response.code === 'USERNAME_EXISTS') {
+        errorMessage.value = 'Tên tài khoản này đã tồn tại'
+        errors.fullName = 'Tên đã được sử dụng'
+      } else {
+        errorMessage.value = response.message || 'Có lỗi khi tạo tài khoản'
+      }
+
+      // Xử lý lỗi validation
+      if (response.errors && Object.keys(response.errors).length > 0) {
+        Object.entries(response.errors).forEach(([field, message]) => {
+          if (errors[field] !== undefined) {
+            errors[field] = Array.isArray(message) ? message[0] : message
+          }
+        })
+      }
+
+      // Focus vào trường lỗi đầu tiên
+      const firstErrorField = Object.keys(errors).find((key) => errors[key])
+      if (firstErrorField) {
+        const element = document.getElementById(firstErrorField)
+        if (element) element.focus()
+      }
+
+      // Hiển thị thông báo lỗi
+      eventBus.emit('show-toast', {
+        type: 'error',
+        message: errorMessage.value,
+      })
+    }
+
     return {
       formData,
       errors,
+      errorMessage,
       isSubmitting,
       showPassword,
       showConfirmPassword,
@@ -299,10 +308,46 @@ export default {
 <style scoped>
 @import '@/styles/admin.css';
 
-/* Component specific styles */
 .add-account {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.error-alert {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border-left: 4px solid #ef4444;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.error-alert i {
+  margin-right: 8px;
+}
+
+.has-error label {
+  color: #ef4444;
+}
+
+.has-error input,
+.has-error select {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 20px;
 }
 
 .toggle-password {
@@ -320,53 +365,6 @@ export default {
   position: relative;
 }
 
-.toggle-switch {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.toggle-switch input[type='checkbox'] {
-  display: none;
-}
-
-.switch-label {
-  position: relative;
-  display: inline-block;
-  width: 46px;
-  height: 24px;
-  background-color: #e5e7eb;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.switch-label::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.2s;
-}
-
-input[type='checkbox']:checked + .switch-label {
-  background-color: #10b981;
-}
-
-input[type='checkbox']:checked + .switch-label::after {
-  transform: translateX(22px);
-}
-
-.status-text {
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .form-container {
     padding: 16px;
