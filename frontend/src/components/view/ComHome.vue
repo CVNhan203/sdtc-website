@@ -3,20 +3,23 @@
   <section class="hero-section">
     <div class="home-container">
       <div class="content-wrapper">
-
         <!---------------------------------------- Nội dung bên trái ---------------------------------------->
         <div class="stats-card">
-        <!-- Icon SVG phía trên stats-card -->
-        <img src="@/assets/sdtc-image/icon/Vector 587.svg" alt="Arrow Icon" class="icon-above-card icon-left"/>
+          <!-- Icon SVG phía trên stats-card -->
+          <img
+            src="@/assets/sdtc-image/icon/Vector 587.svg"
+            alt="Arrow Icon"
+            class="icon-above-card icon-left"
+          />
           <h3>Tăng trưởng hàng tuần</h3>
           <div class="growth-chart">
-            <svg viewBox="0 0 500 200" class="wave-svg">
+            <svg viewBox="0 0 500 210" class="wave-svg">
               <path
-                d="M0,100 
-             C50,50 100,50 125,100 
-             C150,150 200,150 225,100 
-             C250,50 300,50 325,100 
-             C350,150 400,150 450,100"
+                d="M0,185 
+             C80,220 80,0 130,110 
+             C200,240 200,220 240,50 
+             C250,0 270,0 310,120
+             C350,240 370,170 400,90"
                 class="wave-path"
               />
             </svg>
@@ -43,8 +46,12 @@
         </div>
         <!---------------------------------------- Nội dung bên phải ---------------------------------------->
         <div class="trust-card">
-        <!-- Icon SVG phía trên trust-card -->
-        <img src="@/assets/sdtc-image/icon/Vector 588.svg" alt="Arrow Icon" class="icon-above-card icon-right"/>
+          <!-- Icon SVG phía trên trust-card -->
+          <img
+            src="@/assets/sdtc-image/icon/Vector 588.svg"
+            alt="Arrow Icon"
+            class="icon-above-card icon-right"
+          />
           <h3>Khách hàng tin tưởng</h3>
           <div class="avatar-group">
             <img
@@ -74,7 +81,7 @@
             />
             <div class="rating">
               <span class="star">★</span>
-              <span>1,234+</span>
+              <span class="rate">1,234+</span>
             </div>
           </div>
         </div>
@@ -168,7 +175,7 @@
           </p>
         </div>
         <div class="commit-timeline">
-         <div class="timeline">
+          <div class="timeline">
             <div class="timeline-header">
               <h2>Timeline</h2>
               <div class="legend">
@@ -203,9 +210,9 @@
                   <span class="percent">100%</span>
                   <span class="task-name">Thiết kế hệ thống</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-12.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-1.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-2.png" />
                   </div>
                 </div>
                 <!-- Task 2 -->
@@ -213,12 +220,12 @@
                   <span class="percent">80%</span>
                   <span class="task-name">Phát triển website</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image13.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image14.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image15.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-3.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-4.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-5.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-6.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-7.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-8.png" />
                   </div>
                 </div>
                 <!-- Task 3 -->
@@ -226,9 +233,9 @@
                   <span class="percent">40%</span>
                   <span class="task-name">Tối ưu website</span>
                   <div class="avatars">
-                    <img src="@/assets/sdtc-image/trang-chu/people/image17.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
-                    <img src="@/assets/sdtc-image/trang-chu/people/image16.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-9.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-10.png" />
+                    <img src="@/assets/sdtc-image/trang-chu/people/image-11.png" />
                   </div>
                 </div>
               </div>
@@ -270,142 +277,210 @@
           theo thời gian.
         </p>
 
-        <router-link to="/bang-gia"><button class="cta-button">Bắt đầu ngay</button></router-link>
+        <router-link to="/team"><button class="cta-button">Bắt đầu ngay</button></router-link>
       </div>
     </div>
   </section>
 
-<!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
-<section class="successfull">
-  <div class="successfull-content">
-    <p>Dự án</p>
-    <h2>Thành công vượt bậc</h2>
-    <p>
-      Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam kết của chúng tôi.
-    </p>
-  </div>
-  <div class="projects-group-grid">
-    <div class="project-card large">
-      <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
-      <div class="project-overlay">
-        <h3>Website Thẩm mỹ</h3>
-        <p>Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút</p>
-      </div>
-    </div>
-
-    <div class="project-card-group">
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-2.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website bán hàng</h3>
-          <p>Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán nhanh chóng, giúp tối ưu doanh số.</p>
-        </div>
-      </div>
-      
-      <div class="project-card small">
-        <img src="@/assets/sdtc-image/trang-chu/project/project-3.png" alt="" class="project-img" />
-        <div class="project-overlay">
-          <h3>Website phong thuỷ</h3>
-          <p>Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong thuỷ sâu sắc</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <router-link to="/team"><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link>
-
-</section>
-
-<!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
-<section class="inspiration-section">
-  <div class="inspiration-header">
-    <div>
-      <p class="inspiration-label">Nguồn cảm hứng</p>
-      <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
-      <p class="inspiration-desc">
-        Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc, giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự kết nối tự nhiên nhất.
-      </p>
-    </div>
-    <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
-  </div>
-<!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
-
-  <div class="marquee-wrapper">
-    <!-- Hàng trên: trái sang phải -->
-    <div class="marquee marquee-normal">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'top'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesTop" :key="'topdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-    <!-- Hàng dưới: phải sang trái -->
-    <div class="marquee marquee-reverse">
-      <div class="marquee-group">
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'bot'+idx" :src="img" class="marquee-img" />
-        <img v-for="(img, idx) in inspirationImagesBottom" :key="'botdup'+idx" :src="img" class="marquee-img" />
-      </div>
-    </div>
-  </div>
-</section>
-
-<!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
-<section class="achievements">
-  <div class="achievements-header">
-    <p class="achievements-label">Những gì khách hàng nhận xét</p>
-    <h2 class="achievements-title">Thành tựu nổi bật</h2>
-    <p class="achievements-desc">
-      Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
-    </p>
-  </div>
-  <div class="achievements-carousel-wrapper">
-    <button class="achievements-arrow left" @click="prevAchievement">
-      <span>←</span>
-    </button>
-    <Carousel
-      ref="achievementsCarousel"
-      :itemsToShow="1"
-      :wrapAround="true"
-      :mouseDrag="false"
-      :touchDrag="false"
-      :paginationEnabled="false"
-      class="achievements-carousel">
-      <Slide v-for="(item, idx) in achievements" :key="idx">
-        <div class="achievement-slide">
-        
-    <div class="achievement-visual">
-      <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
-      <div class="achievement-logo">
-        <img :src="item.logo" :alt="item.company" />
-      </div>
-    </div>
-    <p class="achievement-content">{{ item.content }}</p>
-    <div class="achievement-author">
-      <div class="author-name">{{ item.author }}</div>
-      <div class="author-role">{{ item.role }}</div>
-    </div>
-  </div>
-</Slide>
-    </Carousel>
-    <button class="achievements-arrow right" @click="nextAchievement">
-      <span>→</span>
-    </button>
-  </div>
-</section>
-
-<!---------------------------------------- Section bạn đồng hành ---------------------------------------->
-<section class="companion-section">
-  <div class="companion-content">
-    <div class="companion-text">
-      <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+  <!---------------------------------------- Section Thành công vượt bậc  ---------------------------------------->
+  <section class="successfull">
+    <div class="successfull-content">
+      <p>Dự án</p>
+      <h2>Thành công vượt bậc</h2>
       <p>
         Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
         thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
         kết của chúng tôi.
       </p>
     </div>
-    <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
-  </div>
-</section>
+    <div class="projects-group-grid">
+      <div class="project-card large">
+        <img src="@/assets/sdtc-image/trang-chu/project/project-1.png" alt="" class="project-img" />
+        <div class="project-overlay">
+          <h3>Website Thẩm mỹ</h3>
+          <p>
+            Giao diện sang trọng, tinh tế, tôn vinh vẻ đẹp và thương hiệu. Tối ưu trải nghiệm người
+            dùng với hình ảnh chất lượng cao, bố cục hài hoà và màu sắc thu hút
+          </p>
+        </div>
+      </div>
+
+      <div class="project-card-group">
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-2.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website bán hàng</h3>
+            <p>
+              Giao diện hiện đại, thu hút với bố cục tinh gọn, dễ sử dụng. Màu sắc hài hòa, tạo cảm
+              giác tin cậy và thúc đẩy hành vi mua sắm. Tích hợp giỏ hàng thông minh, thanh toán
+              nhanh chóng, giúp tối ưu doanh số.
+            </p>
+          </div>
+        </div>
+
+        <div class="project-card small">
+          <img
+            src="@/assets/sdtc-image/trang-chu/project/project-3.png"
+            alt=""
+            class="project-img"
+          />
+          <div class="project-overlay">
+            <h3>Website phong thuỷ</h3>
+            <p>
+              Thiết kế trang nhã, cân bằng giữa yếu tố truyền thống và hiện đại. Gam màu xanh biển
+              ấm tạo cảm giác bình yên, tin cậy, giúp khách hàng dễ tiếp cận những giá trị phong
+              thuỷ sâu sắc
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <router-link to="/team"
+      ><button class="custom-button">Khám phá dự án của chúng tôi</button></router-link
+    >
+  </section>
+
+  <!---------------------------------------- Section Nguồn cảm hứng ---------------------------------------->
+  <section class="inspiration-section">
+    <div class="inspiration-header">
+      <div>
+        <p class="inspiration-label">Nguồn cảm hứng</p>
+        <h2 class="inspiration-title">Khám phá thiết kế Ui</h2>
+        <p class="inspiration-desc">
+          Chúng tôi mang đến những thiết kế UI vừa hiện đại, sáng tạo, vừa giữ được nét quen thuộc,
+          giúp người dùng ở mọi lứa tuổi cảm thấy thoải mái và dễ dàng trải nghiệm. Kết hợp giữa
+          công nghệ tiên tiến và giá trị truyền thống, mọi giao diện đều được tối ưu để tạo nên sự
+          kết nối tự nhiên nhất.
+        </p>
+      </div>
+      <router-link to="/procedure"><button class="inspiration-btn">Xem dự án</button></router-link>
+    </div>
+    <!---------------------------------- Phần Hiệu ứng cuộn ảnh liên tục ---------------------------------->
+
+    <div class="marquee-wrapper">
+      <!-- Hàng trên: trái sang phải -->
+      <div class="marquee marquee-normal">
+        <div class="marquee-group">
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'top' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup1' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup2' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesTop"
+            :key="'topdup3' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+        </div>
+      </div>
+      <!-- Hàng dưới: phải sang trái -->
+      <div class="marquee marquee-reverse">
+        <div class="marquee-group">
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'bot' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup1' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup2' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+          <img
+            v-for="(img, idx) in inspirationImagesBottom"
+            :key="'botdup3' + idx"
+            :src="img"
+            class="marquee-img"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!---------------------------------------- Section Thành tựu nổi bật ---------------------------------------->
+  <section class="achievements">
+    <div class="achievements-header">
+      <p class="achievements-label">Những gì khách hàng nhận xét</p>
+      <h2 class="achievements-title">Thành tựu nổi bật</h2>
+      <p class="achievements-desc">
+        Những cột mốc quan trọng, khẳng định chất lượng và sự tin tưởng của khách hàng
+      </p>
+    </div>
+    <div class="achievements-carousel-wrapper">
+      <button class="achievements-arrow left" @click="prevAchievement">
+        <span>←</span>
+      </button>
+      <Carousel
+        ref="achievementsCarousel"
+        :itemsToShow="1"
+        :wrapAround="true"
+        :mouseDrag="false"
+        :touchDrag="false"
+        :paginationEnabled="false"
+        class="achievements-carousel"
+      >
+        <Slide v-for="(item, idx) in achievements" :key="idx">
+          <div class="achievement-slide">
+            <div class="achievement-visual">
+              <img class="big-quote-svg" src="@/assets/sdtc-image/icon/quote.svg" alt="quote" />
+              <div class="achievement-logo">
+                <img :src="item.logo" :alt="item.company" />
+              </div>
+            </div>
+            <p class="achievement-content">{{ item.content }}</p>
+            <div class="achievement-author">
+              <div class="author-name">{{ item.author }}</div>
+              <div class="author-role">{{ item.role }}</div>
+            </div>
+          </div>
+        </Slide>
+      </Carousel>
+      <button class="achievements-arrow right" @click="nextAchievement">
+        <span>→</span>
+      </button>
+    </div>
+  </section>
+
+  <!---------------------------------------- Section bạn đồng hành ---------------------------------------->
+  <section class="companion-section">
+    <div class="companion-content">
+      <div class="companion-text">
+        <h2>Đồng Hành Cùng Sea Dragon Technology</h2>
+        <p>
+          Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, giúp bạn phát triển bền
+          vững với chất lượng vượt trội và sự tin cậy tuyệt đối
+        </p>
+      </div>
+      <router-link to="/advise"><button class="companion-btn">Đặt lịch tư vấn</button></router-link>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -420,6 +495,8 @@ export default {
     return {
       inspirationImagesTop: [],
       inspirationImagesBottom: [],
+      autoSlideInterval: null,
+
       achievements: [
         {
           logo: require('@/assets/sdtc-image/trang-chu/Logo/google.png'),
@@ -451,13 +528,23 @@ export default {
   mounted() {
     this.inspirationImagesTop = inspirationImagesTop
     this.inspirationImagesBottom = inspirationImagesBottom
+    this.startAutoSlide()
   },
+  beforeUnmount() {
+    clearInterval(this.autoSlideInterval) // Xoá interval khi component huỷ
+  },
+
   methods: {
     nextAchievement() {
       this.$refs.achievementsCarousel.next()
     },
     prevAchievement() {
       this.$refs.achievementsCarousel.prev()
+    },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextAchievement()
+      }, 4000)
     },
   },
 }
@@ -497,7 +584,7 @@ const inspirationImagesBottom = [
 }
 /*-------------------------------------- Hai cái vector  --------------------------------------*/
 .icon-above-card {
- position: absolute;
+  position: absolute;
   left: 50%;
   top: -2.2rem; /* hoặc điều chỉnh -2.5rem, -2rem tuỳ ý */
   transform: translateX(-50%);
@@ -505,15 +592,15 @@ const inspirationImagesBottom = [
   height: 2.5rem;
   z-index: 2;
 }
-.icon-left{
+.icon-left {
   position: absolute;
   left: 65%;
   top: -4rem;
 }
-.icon-right{
+.icon-right {
   position: absolute;
   left: 35%;
-  top: -3rem; 
+  top: -3rem;
 }
 
 .content-wrapper {
@@ -560,23 +647,39 @@ const inspirationImagesBottom = [
   font-weight: bold;
   margin-bottom: 0.75rem; /* 12px */
 }
-
-.chart {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.75rem; /* 12px */
-}
-
 .wave-svg {
   width: 100%;
   height: 5rem; /* 80px */
 }
-
 .wave-path {
   fill: none;
   stroke: #5a8dee;
   stroke-width: 0.25rem; /* 4px */
   stroke-linecap: round;
+}
+.dot {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+.dot-red {
+  background: #ff7777;
+}
+.dot-blue {
+  background: #6389eb;
+}
+.number {
+  color: #141414;
+}
+.percentage {
+  display: flex;
+  color: #141414;
+}
+.percentage i {
+  padding-top: 0.5rem;
+  color: #ff8933;
+  font-size: 1rem;
 }
 
 .stats-info {
@@ -586,33 +689,6 @@ const inspirationImagesBottom = [
   gap: 0.8rem;
 }
 
-.dot {
-  display: inline-block;
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
-}
-.dot-red {
-  background: #ff6b6b;
-}
-.dot-blue {
-  background: #5a8dee;
-}
-
-.number {
-  color: #141414;
-}
-
-.percentage {
-  display: flex;
-  color: #141414;
-}
-.percentage i {
-  padding-top: 0.5rem;
-  color:#FF8933;
-  font-size: 1rem;
-}
-
 .main-content {
   text-align: center;
   padding: 2rem 0;
@@ -620,11 +696,12 @@ const inspirationImagesBottom = [
 
 .subtitle {
   color: #516371;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 1rem;
 }
 
-h1 {
+.main-content h1 {
+  color: #5d5d5d;
   font-size: 2.2rem;
   margin-bottom: 1rem;
   line-height: 1.3;
@@ -635,9 +712,10 @@ h1 {
 }
 
 .description {
-  color: #666;
+  color: #516371;
   margin-bottom: 1rem;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
 .services {
@@ -650,9 +728,10 @@ h1 {
 
 .services span {
   padding: 0.5rem 1rem;
+  color: #516371;
   background: #f8f9fa;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .wrapper {
@@ -669,7 +748,7 @@ h1 {
 }
 
 .avatar {
-  width: 1.875rem; /* 30px */
+  width: 1.8rem; /* 30px */
   height: 1.875rem;
   border-radius: 50%;
   background: #e0e0e0;
@@ -684,9 +763,13 @@ h1 {
 }
 
 .star {
-  width: 1.375rem; /* 22px */
-  height: 1.375rem;
+  width: 2rem; /* 22px */
+  height: 2.2rem;
   color: #ff8933;
+}
+.rate {
+  font-size: 1rem; /* 16px */
+  color: #516371;
 }
 
 .abc {
@@ -1174,7 +1257,6 @@ h1 {
   z-index: 1;
 }
 
-
 /* Vị trí ảnh trung bình bên trái */
 .image-left {
   width: 13.75rem; /* 220px */
@@ -1432,7 +1514,7 @@ h1 {
   box-shadow: 0 0.75rem 1.75rem rgba(0, 87, 255, 0.35); /* 12px 28px */
   transform: translateY(-0.125rem); /* -2px */
 }
- 
+
 /*-------------------------------- Hiệu ứng cuộn ảnh liên tục -------------------------------- */
 
 .marquee-wrapper {
@@ -1452,7 +1534,8 @@ h1 {
 .marquee-group {
   display: flex;
   align-items: center;
-  animation: marquee 32s linear infinite;
+  animation: marquee 64s linear infinite;
+  min-width: max-content;
 }
 .marquee-img {
   height: 220px;
@@ -1539,8 +1622,9 @@ h1 {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 0.5rem;
 }
 .achievement-visual {
   position: relative;
@@ -1578,11 +1662,13 @@ h1 {
   font-size: 1.5rem;
   color: #555;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 2rem;
   margin-top: 0.5rem;
   line-height: 1.5;
   font-weight: 400;
-  max-width: 90rem;
+  max-width: 70rem;
 }
 
 .achievement-author {
@@ -1616,7 +1702,10 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.2s;
   box-shadow: none;
 }
 
@@ -1653,7 +1742,9 @@ h1 {
   padding: 2.5rem 3rem; /* 40px 48px */
   box-sizing: border-box;
 }
-
+.companion-text {
+  width: 42.5rem; /* 680px */
+}
 .companion-text h2 {
   color: #fff;
   font-size: 2rem;
@@ -1688,7 +1779,6 @@ h1 {
   color: #1746a2;
 }
 /*------------------------- Responsive styles for ComHome ------------------------- */
-
 /*------------------------- Tablet: 768px - 1024px -------------------------*/
 @media (max-width: 1024px) {
   /* Hero Section */
@@ -1702,7 +1792,7 @@ h1 {
     align-items: center;
     padding: 0 1rem; /* Thêm padding ngang */
   }
-  .wrapper{
+  .wrapper {
     margin-bottom: 0.4rem;
   }
 
@@ -1794,6 +1884,9 @@ h1 {
     min-width: 0;
     max-width: 100%;
   }
+  .banner-content {
+    width: 50%;
+  }
 
   .cooperation-info {
     flex: 1.4 1 0;
@@ -1810,7 +1903,7 @@ h1 {
   }
 
   .banner-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .banner-content .subtitle-1,
@@ -1819,7 +1912,7 @@ h1 {
   }
 
   .banner-image {
-    width: 7rem;
+    width: 10rem;
     border-radius: 1rem;
   }
 
@@ -2033,7 +2126,7 @@ h1 {
   }
 
   .project-card.small {
-    min-height: 12rem;
+    min-height: 14rem;
   }
 
   .project-overlay {
@@ -2146,7 +2239,6 @@ h1 {
   .companion-section {
     padding-bottom: 2rem;
   }
-
   .companion-content {
     flex-direction: column;
     text-align: center;
@@ -2154,22 +2246,111 @@ h1 {
     border-radius: 1rem;
     min-height: auto;
   }
-
   .companion-text h2 {
     font-size: 1.8rem;
   }
-
   .companion-text p {
     font-size: 0.9rem;
   }
-
   .companion-btn {
     margin-top: 1rem;
     padding: 0.8rem 1.5rem;
     font-size: 0.9rem;
   }
 }
-
+@media (width: 1024px) {
+  /* Successfull Section */
+  .projects-group-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    column-gap: 1.5rem;
+    row-gap: 0;
+    max-width: 98vw;
+    margin: 0 auto 2rem auto;
+    align-items: stretch;
+  }
+  .project-card.large {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    min-height: 20rem;
+    min-width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  .project-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 0;
+  }
+  .project-card.small {
+    min-height: 12rem;
+    min-width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+  /* Companion Section */
+  .companion-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+    background: #fff;
+  }
+  .companion-content {
+    background: #3976ff;
+    border-radius: 2rem;
+    width: 97%;
+    max-width: 100%;
+    min-height: 8rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2rem;
+    box-sizing: border-box;
+    text-align: left;
+    gap: 1.5rem;
+  }
+  .companion-text {
+    width: 70%;
+    max-width: 100%;
+    text-align: left;
+  }
+  .companion-text h2 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .companion-text p {
+    color: #e6edff;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 400;
+  }
+  .companion-btn {
+    background: #fff;
+    color: #2563eb;
+    font-weight: 700;
+    border: none;
+    border-radius: 1rem;
+    padding: 1.125rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+      background 0.18s,
+      color 0.18s;
+    box-shadow: 0 0.25rem 1.5rem rgba(37, 99, 235, 0.08);
+    margin-top: 0;
+    margin-left: 2rem;
+    min-width: 180px;
+    text-align: center;
+    align-self: center;
+    display: inline-block;
+  }
+}
 /*------------------------- Mobile: < 768px --------------------------*/
 @media (max-width: 768px) {
   /* Hero Section */
@@ -2227,7 +2408,7 @@ h1 {
     height: 2rem;
   }
 
-  .partners{
+  .partners {
     margin-top: 2rem;
   }
   .partner-logos {
@@ -2243,7 +2424,7 @@ h1 {
   /* Cooperation Section */
   .cooperation-container {
     display: grid;
-    grid-template-columns: 0.6fr 1.4fr; /* Two columns side by side */
+    grid-template-columns: 0.8fr 1.2fr; /* Two columns side by side */
     gap: 1rem;
     align-items: stretch;
   }
@@ -2251,6 +2432,9 @@ h1 {
     width: 100%;
     padding: 1rem;
     min-width: 0;
+  }
+  .banner-content {
+    width: 50%;
   }
   .banner-content h1 {
     font-size: 1.5rem;
@@ -2260,7 +2444,7 @@ h1 {
     font-size: 0.8rem;
   }
   .banner-image {
-    width: 6rem;
+    width: 9.3rem;
   }
   .cooperation-info {
     padding: 1rem;
@@ -2325,7 +2509,7 @@ h1 {
     width: 1.2rem;
     height: 1.2rem;
   }
-  .legend{
+  .legend {
     font-size: 0.9rem;
   }
 
@@ -2375,6 +2559,16 @@ h1 {
   }
 
   /* Successfull Section */
+  .project-card.large {
+    min-height: 12rem;
+  }
+
+  .project-card-group {
+    gap: 1rem;
+  }
+  .project-card.small {
+    min-height: 12rem;
+  }
   .successfull-content h2 {
     font-size: 1.8rem;
   }
@@ -2453,7 +2647,6 @@ h1 {
     font-size: 0.9rem;
   }
 }
-
 /* Small Mobile: < 480px */
 @media (max-width: 480px) {
   /* Hero Section */
@@ -2526,8 +2719,9 @@ h1 {
     width: 2rem;
     height: 2rem;
   }
-  .partners h3{
-    font-size: 0.8rem;
+  .partners h3 {
+    padding-top: 4rem;
+    font-size: 0.9rem;
   }
 
   .partner-logos {
@@ -2540,7 +2734,7 @@ h1 {
   }
   /* Cooperation Section */
   .cooperation-section {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 
   .cooperation-container {
@@ -2551,21 +2745,23 @@ h1 {
   .cooperation-banner {
     width: 100%;
     height: auto;
-    padding: 1rem;
+    padding: 1.6rem;
     border-radius: 1rem;
   }
 
   .banner-content h1 {
     font-size: 1.2rem;
   }
-
+  .banner-content {
+    width: 45%;
+  }
   .banner-content .subtitle-1,
   .banner-content .description-1 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .banner-image {
-    width: 8rem;
+    width: 10rem;
   }
 
   .cooperation-info {
@@ -2618,7 +2814,7 @@ h1 {
     flex-direction: column;
     gap: 1rem;
   }
-  .timeline-content{
+  .timeline-content {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
@@ -2656,7 +2852,7 @@ h1 {
   .legend {
     font-size: 0.6rem;
   }
-  .timeline-task.done{
+  .timeline-task.done {
     width: 10rem;
   }
   .timeline-task .percent {
@@ -2670,48 +2866,51 @@ h1 {
     width: 1.3rem;
     height: 1.5rem;
   }
-  .timeline-task .progress{
+  .timeline-task .progress {
     width: 6rem;
   }
   /* Customer Trust Section */
   .circle-layout {
-    width: 12rem;
-    height: 12rem;
+    width: 14rem;
+    height: 14rem;
   }
 
   .image-main {
-    width: 5.5rem;
-    height: 5.5rem;
-    left: 6rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    left: 7.5rem;
   }
 
   .image-left {
-    width: 4.5rem;
-    height: 4.5rem;
-    top: 1.5rem;
-    left: 1rem;
+    width: 5.5rem;
+    height: 5.5rem;
+    top: 2rem;
+    left: 1.5rem;
   }
 
   .badge-center {
-    width: 4rem;
-    height: 4rem;
-    top: 3.5rem;
-    left: 4rem;
-    font-size: 0.6rem;
+    width: 4.75rem;
+    height: 4.75rem;
+    top: 4rem;
+    left: 5rem;
+    font-size: 0.75rem;
   }
 
   .image-bottom {
-    width: 2.5rem;
-    height: 2.5rem;
-    top: 7rem;
-    left: 4.5rem;
+    width: 3rem;
+    height: 3rem;
+    top: 8rem;
+    left: 5.5rem;
   }
 
   /* Successfull Section */
   .project-card.large {
-    min-height: 20rem;
+    min-height: 12rem;
   }
 
+  .project-card-group {
+    gap: 1rem;
+  }
   .project-card.small {
     min-height: 12rem;
   }
@@ -2763,8 +2962,95 @@ h1 {
   .achievements-arrow.right {
     right: 0;
   }
+  /* Companion Section */
+  .companion-section {
+    padding-bottom: 1.2rem;
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    background: #ffffff;
+  }
+  companion-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem 0.7rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .companion-text {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    margin-bottom: 1.2rem;
+  }
 }
+@media screen and (width: 425px) {
+  .cooperation-section {
+    padding: 2.5rem;
+  }
 
+  .cooperation-container {
+    grid-template-columns: 1fr; /* Xếp cột để tránh chồng lấn */
+    gap: 1rem;
+  }
+
+  .cooperation-banner {
+    width: 100%;
+    height: auto;
+    padding: 1.6rem;
+    border-radius: 1rem;
+  }
+
+  .banner-content h1 {
+    font-size: 1.2rem;
+  }
+
+  .banner-content .subtitle-1,
+  .banner-content .description-1 {
+    font-size: 0.9rem;
+  }
+
+  .banner-image {
+    width: 10rem;
+  }
+
+  /* Customer Trust Section */
+  .circle-layout {
+    width: 16rem;
+    height: 16rem;
+  }
+
+  .image-main {
+    width: 7.5rem;
+    height: 7.5rem;
+    left: 8.5rem;
+  }
+
+  .image-left {
+    width: 6.5rem;
+    height: 6.5rem;
+    top: 2.5rem;
+    left: 1.25rem;
+  }
+
+  .badge-center {
+    width: 5.25rem;
+    height: 5.25rem;
+    top: 4.75rem;
+    left: 6rem;
+    font-size: 0.85rem;
+  }
+
+  .image-bottom {
+    width: 4rem;
+    height: 4rem;
+    top: 9.25rem;
+    left: 6.25rem;
+  }
+}
 /*------------------------- Desktop lớn: >= 1200px -------------------------*/
 @media (min-width: 1200px) {
   .home-container,
@@ -2799,9 +3085,7 @@ h1 {
     height: 260px;
   }
 }
-
-
-/* @media (min-width: 1440px) {
+@media (min-width: 1440px) {
   .home-container,
   .cooperation-container,
   .customer-trust-container,
@@ -2831,9 +3115,7 @@ h1 {
   .marquee-img {
     height: 300px;
   }
-} */
-
-
+}
 /* @media (min-width: 1920px) {
   .home-container,
   .cooperation-container,

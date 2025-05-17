@@ -1,10 +1,9 @@
+// frontend/src/api/services/serviceService.js
 import api from '../config'
 
 const serviceService = {
-  // Lấy danh sách dịch vụ
   async getServices(params) {
     try {
-      // Use params for querying if provided
       const response = await api.get('/services', { params })
       return {
         data: response.data.data || [],
@@ -17,7 +16,6 @@ const serviceService = {
     }
   },
 
-  // Lấy chi tiết một dịch vụ
   async getServiceById(id) {
     try {
       const response = await api.get(`/services/${id}`)
@@ -28,45 +26,66 @@ const serviceService = {
     }
   },
 
-  // Tạo dịch vụ mới
   async createService(serviceData) {
     try {
-      // Đảm bảo gửi dữ liệu dưới dạng JSON
-      const response = await api.post('/services', JSON.stringify(serviceData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      serviceData.description = Array.isArray(serviceData.description)
+        ? serviceData.description
+        : typeof serviceData.description === 'string'
+          ? serviceData.description
+              .split('\n')
+              .map((line) => line.trim())
+              .filter((line) => line.length >= 10)
+          : ['Mô tả dịch vụ mặc định']
+
+      if (!serviceData.description.length) {
+        serviceData.description = ['Mô tả dịch vụ mặc định']
+      }
+
+      serviceData.type = serviceData.type || 'web'
+      serviceData.title =
+        serviceData.title?.trim() || 'Dịch vụ mới ' + new Date().toLocaleDateString()
+
+      console.log('Sending service data to backend:', serviceData)
+      const response = await api.post('/services', serviceData)
+      console.log('Service created successfully:', response.data)
       return response.data
     } catch (error) {
       console.error('Error creating service:', error)
+      console.error('Error response:', error.response?.data)
       throw error
     }
   },
 
-  // Cập nhật dịch vụ
   async updateService(id, serviceData) {
     try {
-      const response = await api.put(`/services/${id}`, JSON.stringify(serviceData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      serviceData.description = Array.isArray(serviceData.description)
+        ? serviceData.description
+        : typeof serviceData.description === 'string'
+          ? serviceData.description
+              .split('\n')
+              .map((line) => line.trim())
+              .filter((line) => line.length >= 10)
+          : ['Mô tả dịch vụ mặc định']
+
+      if (!serviceData.description.length) {
+        serviceData.description = ['Mô tả dịch vụ mặc định']
+      }
+
+      console.log('Updating service data:', serviceData)
+      const response = await api.put(`/services/${id}`, serviceData)
 
       if (!response.data.success) {
         throw new Error(response.data.message || 'Không thể cập nhật dịch vụ')
       }
 
+      console.log('Service updated successfully:', response.data)
       return response.data
     } catch (error) {
       console.error('Error updating service:', error)
-      throw error.response?.data?.message
-        ? new Error(error.response.data.message)
-        : new Error('Không thể cập nhật dịch vụ')
+      throw new Error(error.response?.data?.message || 'Không thể cập nhật dịch vụ')
     }
   },
 
-  // Xóa dịch vụ
   async deleteService(id) {
     try {
       const response = await api.delete(`/services/${id}`)
@@ -77,19 +96,34 @@ const serviceService = {
     }
   },
 
-  // Upload ảnh dịch vụ
+  async restoreService(id) {
+    try {
+      const response = await api.patch(`/services/${id}/restore`, { isDeleted: false })
+      return response.data
+    } catch (error) {
+      console.error('Error restoring service:', error)
+      throw error
+    }
+  },
+
+  async permanentDeleteService(id) {
+    try {
+      const response = await api.delete(`/services/${id}/permanent`)
+      return response.data
+    } catch (error) {
+      console.error('Error permanently deleting service:', error)
+      throw error
+    }
+  },
+
   async uploadImage(formData) {
     try {
       const response = await api.post('/services/upload', formData, {
-        headers: {
-          // Không cần set Content-Type khi upload file,
-          // để browser tự động set với boundary đúng
-        },
-        maxContentLength: 5 * 1024 * 1024, // 5MB
+        maxContentLength: 5 * 1024 * 1024,
         maxBodyLength: 5 * 1024 * 1024,
       })
 
-      if (!response.data || !response.data.imagePath) {
+      if (!response.data?.imagePath) {
         throw new Error('Không nhận được đường dẫn ảnh từ server')
       }
 

@@ -38,7 +38,7 @@
         </div>
         <div class="contact-item">
           <i class="fa-solid fa-envelope"></i>
-          <a href="mailto:congngherongbien@gmail.com"> congngherongbien@gmail.com </a>
+          <a href="mailto:congngherongbien@gmail.com"> Email: congngherongbien@gmail.com </a>
         </div>
         <div class="contact-item">
           <i class="fa-solid fa-phone"></i>
@@ -93,7 +93,7 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
-  max-width: 1440px;
+  max-width: 1700px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
   text-align: left;
@@ -103,12 +103,12 @@ export default {
 .company-info {
   flex: 1;
   min-width: 250px;
+  max-width: 350px;
 }
 .dmca-badge {
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  margin-top: 32px;
   margin-bottom: 0; 
 }
 .dmca-badge img {
@@ -121,7 +121,7 @@ export default {
 }
 
 .logo img {
-  width: 150px;
+  width: 250px;
   /* margin-bottom: 10px; */
 }
 
@@ -178,8 +178,8 @@ export default {
 .policy-info h3,
 .map-container h3 {
   color: #5dbbff;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 25px;
+  font-weight: 700;
   margin-top: 24px;
   margin-bottom: 24px;
 }
@@ -187,6 +187,7 @@ export default {
 .contact-info {
   flex: 1;
   min-width: 250px;
+  max-width: 400px;
 }
 .contact-item {
   display: flex;
@@ -196,14 +197,14 @@ export default {
 }
 
 .contact-item i {
-  color: #5dbbff;
-  font-size: 16px;
-  margin-top: 4px;
+  color: #5DBBFF;
+  font-size: 24px;
+  margin-top: 6px;
 }
 
 .contact-item a {
   text-decoration: none;
-  line-height: 1.6;
+  line-height: 1.9;
   color: #333;
 }
 
@@ -235,10 +236,10 @@ export default {
 /* Map Container */
 .map-container {
   flex: 1 1 300px;
-  max-width: 300px;
+  max-width: 640px;
 }
 .map-container h3 {
-  color: #409eff;
+  color: #5DBBFF;
   margin-bottom: 12px;
 }
 .map-container iframe {
@@ -412,6 +413,62 @@ export default {
 
   .map-container iframe {
     height: 160px;
+  }
+}
+@media screen and (width: 1024px) {
+  .map-container {
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .map-container h3 {
+    margin-left: 8px;
+    margin-bottom: 12px;
+  }
+  .map-container iframe {
+    width: 100%;
+    min-width: 0;
+    height: 220px;
+    border-radius: 12px;
+    display: block;
+  }
+}
+@media screen and (width: 1440px) {
+  .footer-container {
+    max-width: 1440px;
+    gap: 20px;
+  }
+  .contact-info{
+    min-width: 260px;
+    max-width: 390px;
+  }
+  .policy-info{
+    min-width: 130px;
+    max-width: 200px;
+  }
+  .company-info,
+  .map-container {
+    min-width: 250px;
+    max-width: 300px;
+  }
+  .description {
+    font-size: 1.1rem;
+  }
+  .contact-info {
+    font-size: 1.1rem;
+  }
+  .policy-info a {
+    font-size: 1.1rem;
+  }
+  .map-container iframe {
+    height: 210px;
+  }
+  .dmca-badge img {
+    margin-left: 65px;
+    width: 100px;
   }
 }
 </style>

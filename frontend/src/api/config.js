@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+// Tự động phát hiện địa chỉ IP hoặc hostname của máy đang truy cập
+const currentHost = window.location.hostname;
+
+// Nếu đang truy cập từ localhost, sử dụng localhost, nếu không thì sử dụng địa chỉ hiện tại
+const apiHost = currentHost === 'localhost' ? 'localhost' : currentHost;
+
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api',
+    baseURL: `http://${apiHost}:3000/api`,
     headers: {
         'Content-Type': 'application/json'
     }

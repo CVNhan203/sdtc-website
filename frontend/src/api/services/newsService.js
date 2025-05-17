@@ -4,6 +4,7 @@ const newsService = {
   async getNews() {
     try {
       const response = await api.get('/news')
+      console.log('API Response:', response.data) // Thêm dòng này để debug
       return {
         data: response.data.data || [],
         pagination: response.data.pagination || null,
@@ -81,7 +82,7 @@ const newsService = {
   // Khôi phục tin tức
   async restoreNews(id) {
     try {
-      const response = await api.patch(`/news/${id}/restore`)
+      const response = await api.patch(`/news/${id}/restore`, { isDeleted: false })
       return response.data
     } catch (error) {
       console.error('Error restoring news:', error)
@@ -92,13 +93,29 @@ const newsService = {
   // Xóa vĩnh viễn tin tức
   async permanentDeleteNews(id) {
     try {
-      const response = await api.delete(`/news/${id}`)
+      const response = await api.delete(`/news/${id}/permanent`)
       return response.data
     } catch (error) {
       console.error('Error permanently deleting news:', error)
       throw error
     }
   },
+
+  // Lấy tin tức trong thùng rác
+  async getNewsInTrash() {
+    try {
+      const response = await api.get('/news/trash')
+      return {
+        data: response.data.data || [],
+        pagination: response.data.pagination || null,
+        message: response.data.message || '',
+      }
+    } catch (error) {
+      console.error('Error fetching news in trash:', error)
+      throw error
+    }
+  },
 }
 
 export default newsService
+      

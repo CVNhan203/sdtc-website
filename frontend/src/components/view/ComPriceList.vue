@@ -29,7 +29,7 @@
           <div class="price">{{ service.price }}đ</div>
         </div>
 
-        <button class="btn-detail">Bắt đầu</button>
+        <button class="btn-detail" @click="startPayment(service._id)">Bắt đầu</button>
 
         <!-- Danh sách tính năng của dịch vụ -->
         <div class="features-container">
@@ -116,6 +116,9 @@ export default {
       if (!image) return ''
       if (image.startsWith('http')) return image
       return `http://localhost:3000/${image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')}`
+    },
+    startPayment(serviceId) {
+      this.$router.push(`/thanh-toan/${serviceId}`)
     },
   },
 }
