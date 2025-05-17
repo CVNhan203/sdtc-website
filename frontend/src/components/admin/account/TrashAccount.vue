@@ -7,7 +7,6 @@
 
     <div class="header-actions">
       <div class="current-date">
-        Ngày hiện tại: {{ currentDate }}
       </div>
       <div class="actions-header">
         <div class="search-filter">
@@ -77,7 +76,6 @@
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
             <td>{{ currentDate }}</td>
-            <!-- <td>{{ formatDate(account.deletedAt || account.updatedAt) }}</td> -->
             <td>
               <div class="actions">
                 <button 
@@ -258,17 +256,6 @@ export default {
     
     handleSearch() {
       // Xử lý tìm kiếm, đã được xử lý qua computed property
-    },
-    
-    formatDate(date) {
-      if (!date) return ''; // Nếu không có ngày, trả về chuỗi rỗng
-      return new Date(date).toLocaleString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      }); // Định dạng ngày theo kiểu Việt Nam
     },
     
     truncateId(id) {

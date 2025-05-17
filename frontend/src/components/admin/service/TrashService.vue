@@ -228,7 +228,7 @@ export default {
       const year = d.getFullYear()
       const hour = d.getHours().toString().padStart(2, '0')
       const minute = d.getMinutes().toString().padStart(2, '0')
-      return `${day}/${month}/${year}, ${hour}:${minute}`
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
     getImageUrl(imagePath) {
       if (!imagePath) return null
@@ -308,38 +308,34 @@ export default {
     async handleDelete() {
       try {
         for (const id of this.selectedServices) {
-          // Xóa vĩnh viễn từ backend
-          await serviceService.permanentDeleteService(id)
+          // Call the API to permanently delete the service
+          await serviceService.deleteService(id);
 
-          // Xóa khỏi danh sách đã xóa trong localStorage
-          const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
-          const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id)
-          localStorage.setItem('deletedServices', JSON.stringify(updatedDeletedServices))
+          // Remove from the deleted services list in localStorage
+          const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]');
+          const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id);
+          localStorage.setItem('deletedServices', JSON.stringify(updatedDeletedServices));
 
-          const deletedServicesInfo = JSON.parse(
-            localStorage.getItem('deletedServicesInfo') || '[]'
-          )
-          const updatedDeletedServicesInfo = deletedServicesInfo.filter(
-            (service) => service._id !== id
-          )
-          localStorage.setItem('deletedServicesInfo', JSON.stringify(updatedDeletedServicesInfo))
+          const deletedServicesInfo = JSON.parse(localStorage.getItem('deletedServicesInfo') || '[]');
+          const updatedDeletedServicesInfo = deletedServicesInfo.filter((service) => service._id !== id);
+          localStorage.setItem('deletedServicesInfo', JSON.stringify(updatedDeletedServicesInfo));
 
-          // Cập nhật danh sách hiện tại
-          this.services = this.services.filter((service) => service._id !== id)
+          // Update the current services list
+          this.services = this.services.filter((service) => service._id !== id);
         }
-        this.selectedServices = []
-        this.showDeleteModal = false
-        eventBus.emit('update-deleted-services-count')
+        this.selectedServices = [];
+        this.showDeleteModal = false;
+        eventBus.emit('update-deleted-services-count');
         eventBus.emit('show-toast', {
           type: 'success',
           message: 'Xóa vĩnh viễn dịch vụ thành công'
-        })
+        });
       } catch (error) {
-        console.error('Error deleting services:', error)
+        console.error('Error deleting services:', error);
         eventBus.emit('show-toast', {
           type: 'error',
           message: 'Có lỗi xảy ra khi xóa vĩnh viễn dịch vụ'
-        })
+        });
       }
     },
     handleFilter() {
@@ -391,7 +387,6 @@ export default {
 }
 
 .search-box input {
-  width: 100%;
   padding: 10px 16px 10px 40px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
