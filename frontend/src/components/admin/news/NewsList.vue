@@ -712,9 +712,7 @@ export default {
     const getImageUrl = (imagePath) => {
       // Danh sách ảnh mặc định từ uploads folder
       const defaultImages = [
-        'http://localhost:3000/uploads/images/1746678408588.png',
-        'http://localhost:3000/uploads/images/1746678511693.png',
-        'http://localhost:3000/uploads/images/1746678606025.png'
+        'http://localhost:3000/uploads/images/1746863140024.png',
       ]
       
       // Nếu không có ảnh, trả về một ảnh mặc định ngẫu nhiên
@@ -970,9 +968,7 @@ export default {
     // Trả về một trong ba ảnh cố định dựa trên index
     const getFixedImage = (index) => {
       const fixedImages = [
-        'http://localhost:3000/uploads/images/1746678408588.png',
-        'http://localhost:3000/uploads/images/1746678511693.png',
-        'http://localhost:3000/uploads/images/1746678606025.png'
+        'http://localhost:3000/uploads/images/1746863140024.png',
       ]
       return fixedImages[index % fixedImages.length]
     }

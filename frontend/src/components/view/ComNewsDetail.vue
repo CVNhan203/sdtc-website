@@ -113,9 +113,7 @@ export default {
     
     // Định nghĩa đường dẫn hình ảnh từ uploads folder
     const uploadImages = [
-      '/uploads/images/1746678408588.png',
-      '/uploads/images/1746678511693.png',
-      '/uploads/images/1746678606025.png'
+      '/uploads/images/1746863140024.png',
     ]
 
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
