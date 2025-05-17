@@ -60,9 +60,7 @@ export default {
       allNewsItems: [],
       error: '',
       localImages: [
-        'http://localhost:3000/uploads/images/1746678408588.png',
-        'http://localhost:3000/uploads/images/1746678511693.png',
-        'http://localhost:3000/uploads/images/1746678606025.png'
+        'http://localhost:3000/uploads/images/1746863140024.png',
       ]
     }
   },
