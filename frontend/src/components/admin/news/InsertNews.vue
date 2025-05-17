@@ -34,10 +34,10 @@
               :class="{
                 error:
                   formData.title.length > 200 ||
-                  (formData.title.length < 10 && formData.title.length > 0),
+                  (formData.title.length < 3 && formData.title.length > 0),
               }"
             >
-              {{ formData.title.length }}/200 (Tối thiểu 10 ký tự)
+              {{ formData.title.length }}/200
             </span>
           </div>
 
@@ -78,7 +78,7 @@
 
         <!-- Ảnh -->
         <div class="form-group">
-          <label>Ảnh <span class="required">*</span></label>
+          <label>Ảnh</label>
           <div
             class="image-upload-container"
             @click="triggerFileInput"
@@ -96,7 +96,7 @@
             />
             <div v-if="!imagePreview" class="upload-button">
               <i class="fas fa-cloud-upload-alt"></i>
-              <span>Nhấp để tải ảnh lên</span>
+              <span>Nhấp để tải ảnh lên (không bắt buộc)</span>
               <p class="upload-hint">Định dạng: JPG, PNG, GIF</p>
             </div>
             <div v-if="imagePreview" class="image-preview">
@@ -160,7 +160,7 @@
                 (formData.content.length < 100 && formData.content.length > 0),
             }"
           >
-            {{ formData.content.length }}/5000 (Tối thiểu 100 ký tự)
+            {{ formData.content.length }}/5000
           </span>
         </div>
 
@@ -323,10 +323,10 @@ export default {
         }
       }
 
-      // Validate ảnh (image)
-      if (!this.formData.image && !this.imagePreview) {
-        newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
-      }
+      // Ảnh không còn bắt buộc
+      // if (!this.formData.image && !this.imagePreview) {
+      //   newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
+      // }
 
       // Validate tác giả (author) nếu có
       if (this.formData.author && this.formData.author.trim() !== '') {
@@ -405,7 +405,8 @@ export default {
       if (this.$refs.fileInput) {
         this.$refs.fileInput.value = ''
       }
-      this.errors.image = 'Vui lòng chọn ảnh cho tin tức'
+      // Ảnh không còn bắt buộc, không cần hiển thị lỗi
+      delete this.errors.image
     },
     async handleSubmit() {
       this.error = null
@@ -426,7 +427,7 @@ export default {
       this.loading = true
 
       try {
-        let imageUrl = null
+        let imageUrl = null;
 
         // Upload ảnh trước nếu có
         if (this.formData.image instanceof File) {
@@ -451,6 +452,15 @@ export default {
             this.loading = false
             return
           }
+        } else {
+          // Nếu không có ảnh, sử dụng một trong những ảnh mặc định
+          const defaultImages = [
+            '/uploads/images/1746678408588.png',
+            '/uploads/images/1746678511693.png',
+            '/uploads/images/1746678606025.png'
+          ];
+          const randomIndex = Math.floor(Math.random() * defaultImages.length);
+          imageUrl = defaultImages[randomIndex];
         }
 
         // Chuẩn bị dữ liệu tin tức
@@ -467,9 +477,8 @@ export default {
           author: this.formData.author.trim() || 'Admin',
         }
 
-        if (imageUrl) {
-          newsData.image = imageUrl
-        }
+        // Luôn gán ảnh (đã upload hoặc ảnh mặc định)
+        newsData.image = imageUrl;
 
         // Tạo tin tức
         const response = await newsService.createNews(newsData)

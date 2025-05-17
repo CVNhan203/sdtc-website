@@ -73,14 +73,10 @@
             <td>
               <div class="image-container">
                 <img
-                  v-if="news.image"
-                  :src="getImageUrl(news.image)"
+                  :src="getFixedImage(index)"
                   alt="News image"
                   class="news-image"
                 />
-                <div v-else class="no-image">
-                  <i class="fas fa-image"></i>
-                </div>
               </div>
             </td>
             <td>{{ news.title }}</td>
@@ -203,13 +199,13 @@ export default {
     },
     // New computed property to get the current date
     currentDate() {
-      return new Date().toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      const d = new Date(); // Get the current date
+      const day = d.getDate().toString().padStart(2, '0'); // Get day and pad with zero if needed
+      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Get month (0-indexed) and pad
+      const year = d.getFullYear(); // Get full year
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
   },
   methods: {
@@ -265,6 +261,15 @@ export default {
       if (imagePath.startsWith('http')) return imagePath
       const cleanPath = imagePath.replace(/^[/\\]+/, '')
       return `${this.baseImageUrl}/${cleanPath}`
+    },
+    // Trả về một trong ba ảnh cố định dựa trên index
+    getFixedImage(index) {
+      const fixedImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
+      return fixedImages[index % fixedImages.length]
     },
     // Kiểm tra xem một tin tức có đang được chọn không
     isSelected(id) {
@@ -428,7 +433,6 @@ export default {
 }
 
 .search-box input {
-  width: 100%;
   padding: 10px 16px 10px 40px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;

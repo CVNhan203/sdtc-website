@@ -745,10 +745,43 @@ input.error {
 @media (max-width: 768px) {
   .payment-content {
     flex-direction: column;
+    gap: 20px;
+  }
+
+  .service-info,
+  .customer-info {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .service-image img {
+    height: auto;
+    max-width: 100%;
+  }
+
+  .payment-header h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .btn-cancel,
+  .btn-submit,
+  .btn-confirm {
+    width: 100%;
+    padding: 12px;
   }
 
   .payment-method {
+    flex: 1;
     min-width: 100px;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: 400px;
   }
 }
 </style>

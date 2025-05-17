@@ -3,7 +3,7 @@
   <div class="news-list">
     <!-- Hiển thị trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
+      <!-- <div class="loading-spinner"></div> -->
       <p>Đang tải danh sách tin tức...</p>
     </div>
 
@@ -82,15 +82,11 @@
               <td>
                 <div class="image-container">
                   <img
-                    v-if="news.image"
-                    :src="getImageUrl(news.image)"
+                    :src="getFixedImage(index)"
                     alt="News image"
                     class="news-image"
                     @error="handleImageError($event, news._id)"
                   />
-                  <div v-else class="no-image">
-                    <i class="fas fa-image"></i>
-                  </div>
                 </div>
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
@@ -187,12 +183,10 @@
             <div class="detail-item">
               <label>Ảnh:</label>
               <img
-                v-if="selectedNews.image"
-                :src="getImageUrl(selectedNews.image)"
+                :src="getFixedImage(selectedNews._id ? selectedNews._id.toString().charCodeAt(0) % 3 : 0)"
                 alt="News image"
                 class="detail-image"
               />
-              <span v-else class="no-image">No image</span>
             </div>
             <div class="detail-item">
               <label>Tiêu đề:</label>
@@ -247,9 +241,9 @@
               </div>
               <div class="form-group">
                 <label>Phân loại</label>
-                <input
-                  type="text"
-                  v-model="formData.type"
+                <input 
+                  type="text" 
+                  v-model="formData.type" 
                   :class="{ error: errors.type }"
                   placeholder="Nhập phân loại tin tức"
                   maxlength="50"
@@ -716,22 +710,23 @@ export default {
 
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return null
-
-      // Nếu đã là URL đầy đủ
-      if (imagePath.startsWith('http')) return imagePath
-
-      // Nếu là đường dẫn tương đối
-      try {
-        // Loại bỏ các ký tự / ở đầu và cuối
-        const cleanPath = imagePath.replace(/^[/\\]+|[/\\]+$/g, '')
-        // Tạo URL đầy đủ
-        const fullUrl = `${baseImageUrl.value}/${cleanPath}`
-        return fullUrl
-      } catch (error) {
-        console.error('Error creating image URL:', error)
-        return null
+      // Danh sách ảnh mặc định từ uploads folder
+      const defaultImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
+      
+      // Nếu không có ảnh, trả về một ảnh mặc định ngẫu nhiên
+      if (!imagePath) {
+        const randomIndex = Math.floor(Math.random() * defaultImages.length)
+        return defaultImages[randomIndex]
       }
+      
+      // Thay đổi: Luôn sử dụng một trong ba ảnh mặc định dựa trên index của news
+      const newsIndex = news.value.findIndex(item => item.image === imagePath)
+      const imageIndex = newsIndex >= 0 ? newsIndex % defaultImages.length : 0
+      return defaultImages[imageIndex]
     }
 
     // Định dạng hiển thị ngày tháng
@@ -774,61 +769,61 @@ export default {
 
     // Validation method
     const validateForm = () => {
-      const newErrors = {}
+      const newErrors = {};
 
       // Validate title
       if (!formData.value.title?.trim()) {
-        newErrors.title = 'Tiêu đề không được để trống'
+        newErrors.title = 'Tiêu đề không được để trống';
       } else if (formData.value.title.trim().length < 3) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
       } else if (formData.value.title.trim().length > 200) {
-        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
       }
 
       // Validate summary
       if (!formData.value.summary?.trim()) {
-        newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (formData.value.summary.trim().length < 10) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự'
+        newErrors.summary = 'Tóm tắt không được để trống';
+      } else if (formData.value.summary.trim().length < 20) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự';
       } else if (formData.value.summary.trim().length > 500) {
-        newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
+        newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự';
       }
 
       // Validate content
       if (!formData.value.content?.trim()) {
-        newErrors.content = 'Nội dung không được để trống'
+        newErrors.content = 'Nội dung không được để trống';
       } else if (formData.value.content.trim().length < 100) {
-        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự'
+        newErrors.content = 'Nội dung phải có ít nhất 100 ký tự';
       } else if (formData.value.content.trim().length > 5000) {
-        newErrors.content = 'Nội dung không được vượt quá 5000 ký tự'
+        newErrors.content = 'Nội dung không được vượt quá 5000 ký tự';
       }
 
       // Validate type
       if (!formData.value.type?.trim()) {
-        newErrors.type = 'Phân loại không được để trống'
+        newErrors.type = 'Phân loại không được để trống';
       } else if (formData.value.type.trim().length > 50) {
-        newErrors.type = 'Phân loại không được vượt quá 50 ký tự'
+        newErrors.type = 'Phân loại không được vượt quá 50 ký tự';
       }
 
       // Validate image if necessary
       if (!formData.value.image && !imagePreview.value) {
-        newErrors.image = 'Vui lòng chọn ảnh cho tin tức'
+        newErrors.image = 'Vui lòng chọn ảnh cho tin tức';
       }
 
-      errors.value = newErrors // Update the errors reactive object
-      return Object.keys(newErrors).length === 0 // Return true if no errors
-    }
+      errors.value = newErrors; // Update the errors reactive object
+      return Object.keys(newErrors).length === 0; // Return true if no errors
+    };
 
     // Update handleSubmit to include validation
     const handleSubmit = async () => {
       if (!validateForm()) {
         // Focus on the first error field
-        const firstErrorField = Object.keys(errors.value)[0]
-        const element = document.querySelector(`[name="${firstErrorField}"]`)
+        const firstErrorField = Object.keys(errors.value)[0];
+        const element = document.querySelector(`[name="${firstErrorField}"]`);
         if (element) {
-          element.focus()
+          element.focus();
         }
-        return
+        return;
       }
 
       try {
@@ -972,6 +967,16 @@ export default {
       })
     }
 
+    // Trả về một trong ba ảnh cố định dựa trên index
+    const getFixedImage = (index) => {
+      const fixedImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
+      return fixedImages[index % fixedImages.length]
+    }
+
     // Gọi khi component được tạo
     onMounted(() => {
       loadNews()
@@ -1045,6 +1050,7 @@ export default {
       triggerFileInput,
       errors,
       validateForm,
+      getFixedImage,
     }
   },
 }

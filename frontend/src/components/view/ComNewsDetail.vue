@@ -110,6 +110,13 @@ export default {
     const currentNews = ref({})
     const allNews = ref([])
     const error = ref('')
+    
+    // Định nghĩa đường dẫn hình ảnh từ uploads folder
+    const uploadImages = [
+      '/uploads/images/1746678408588.png',
+      '/uploads/images/1746678511693.png',
+      '/uploads/images/1746678606025.png'
+    ]
 
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
@@ -129,26 +136,32 @@ export default {
       try {
         // Lấy danh sách tin tức gần đây
         const { data } = await newsService.getNews()
-        allNews.value = data.map((news) => ({
-          ...news,
-          imageUrl: getImageUrl(news.image),
-          date: formatDate(news.publishedDate), // Thêm ngày đăng cho từng bài viết
-        }))
+        
+        // Map hình ảnh uploads vào tin tức
+        allNews.value = data.map((news, index) => {
+          // Gán hình ảnh từ uploads, luân phiên theo chỉ số
+          const imageIndex = index % uploadImages.length
+          return {
+            ...news,
+            imageUrl: `http://localhost:3000${uploadImages[imageIndex]}`,
+            date: formatDate(news.publishedDate)
+          }
+        })
+        
         // Lấy chi tiết tin tức
         const newsDetail = await newsService.getNewsById(route.params.id)
+        
+        // Tìm chỉ số của tin tức hiện tại và gán hình ảnh tương ứng
+        const newsIndex = data.findIndex(item => (item._id || item.id) == route.params.id)
+        const imageIndex = newsIndex >= 0 ? newsIndex % uploadImages.length : 0
+        
         currentNews.value = {
           ...newsDetail,
-          imageUrl: getImageUrl(newsDetail.image),
+          imageUrl: `http://localhost:3000${uploadImages[imageIndex]}`
         }
       } catch (e) {
         error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
       }
-    }
-
-    const getImageUrl = (image) => {
-      if (!image) return ''
-      if (image.startsWith('http')) return image
-      return `http://localhost:3000/${image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')}`
     }
 
     const goToNewsDetail = (news) => {
@@ -333,6 +346,7 @@ export default {
   width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  text-align: justify;
 }
 
 /* Post Navigation */
