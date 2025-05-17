@@ -59,13 +59,25 @@ export default {
       searchQuery: '',
       allNewsItems: [],
       error: '',
+      localImages: [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
     }
   },
   async mounted() {
     try {
       const response = await newsService.getNews()
-      console.log('Mounted news data:', response.data) // Thêm dòng này để debug
-      this.allNewsItems = response.data
+      console.log('Mounted news data:', response.data)
+      // Assign local images to news items
+      this.allNewsItems = response.data.map((item, index) => {
+        const imageIndex = index % this.localImages.length
+        return {
+          ...item,
+          imageUrl: this.localImages[imageIndex]
+        }
+      })
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
     }
@@ -90,6 +102,15 @@ export default {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
     getImageUrl(imagePath) {
+      // If we have a custom imageUrl property, use that
+      if (this.allNewsItems.some(news => news.image === imagePath && news.imageUrl)) {
+        const newsItem = this.allNewsItems.find(news => news.image === imagePath)
+        if (newsItem && newsItem.imageUrl) {
+          return newsItem.imageUrl
+        }
+      }
+      
+      // Fallback to original method
       if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
       if (imagePath.startsWith('http')) return imagePath
       return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`

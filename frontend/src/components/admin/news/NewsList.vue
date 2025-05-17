@@ -82,15 +82,11 @@
               <td>
                 <div class="image-container">
                   <img
-                    v-if="news.image"
-                    :src="getImageUrl(news.image)"
+                    :src="getFixedImage(index)"
                     alt="News image"
                     class="news-image"
                     @error="handleImageError($event, news._id)"
                   />
-                  <div v-else class="no-image">
-                    <i class="fas fa-image"></i>
-                  </div>
                 </div>
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
@@ -168,12 +164,10 @@
             <div class="detail-item">
               <label>Ảnh:</label>
               <img
-                v-if="selectedNews.image"
-                :src="getImageUrl(selectedNews.image)"
+                :src="getFixedImage(selectedNews._id ? selectedNews._id.toString().charCodeAt(0) % 3 : 0)"
                 alt="News image"
                 class="detail-image"
               />
-              <span v-else class="no-image">No image</span>
             </div>
             <div class="detail-item">
               <label>Tiêu đề:</label>
@@ -698,22 +692,23 @@ export default {
 
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return null
+      // Danh sách ảnh mặc định từ uploads folder
+      const defaultImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
       
-      // Nếu đã là URL đầy đủ
-      if (imagePath.startsWith('http')) return imagePath
-      
-      // Nếu là đường dẫn tương đối
-      try {
-        // Loại bỏ các ký tự / ở đầu và cuối
-        const cleanPath = imagePath.replace(/^[/\\]+|[/\\]+$/g, '')
-        // Tạo URL đầy đủ
-        const fullUrl = `${baseImageUrl.value}/${cleanPath}`
-        return fullUrl
-      } catch (error) {
-        console.error('Error creating image URL:', error)
-        return null
+      // Nếu không có ảnh, trả về một ảnh mặc định ngẫu nhiên
+      if (!imagePath) {
+        const randomIndex = Math.floor(Math.random() * defaultImages.length)
+        return defaultImages[randomIndex]
       }
+      
+      // Thay đổi: Luôn sử dụng một trong ba ảnh mặc định dựa trên index của news
+      const newsIndex = news.value.findIndex(item => item.image === imagePath)
+      const imageIndex = newsIndex >= 0 ? newsIndex % defaultImages.length : 0
+      return defaultImages[imageIndex]
     }
 
     // Định dạng hiển thị ngày tháng
@@ -944,6 +939,16 @@ export default {
       })
     }
 
+    // Trả về một trong ba ảnh cố định dựa trên index
+    const getFixedImage = (index) => {
+      const fixedImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
+      return fixedImages[index % fixedImages.length]
+    }
+
     // Gọi khi component được tạo
     onMounted(() => {
       loadNews()
@@ -1016,6 +1021,7 @@ export default {
       triggerFileInput,
       errors,
       validateForm,
+      getFixedImage,
     }
   },
 }

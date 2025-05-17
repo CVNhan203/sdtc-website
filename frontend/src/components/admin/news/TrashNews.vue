@@ -73,14 +73,10 @@
             <td>
               <div class="image-container">
                 <img
-                  v-if="news.image"
-                  :src="getImageUrl(news.image)"
+                  :src="getFixedImage(index)"
                   alt="News image"
                   class="news-image"
                 />
-                <div v-else class="no-image">
-                  <i class="fas fa-image"></i>
-                </div>
               </div>
             </td>
             <td>{{ news.title }}</td>
@@ -265,6 +261,15 @@ export default {
       if (imagePath.startsWith('http')) return imagePath
       const cleanPath = imagePath.replace(/^[/\\]+/, '')
       return `${this.baseImageUrl}/${cleanPath}`
+    },
+    // Trả về một trong ba ảnh cố định dựa trên index
+    getFixedImage(index) {
+      const fixedImages = [
+        'http://localhost:3000/uploads/images/1746678408588.png',
+        'http://localhost:3000/uploads/images/1746678511693.png',
+        'http://localhost:3000/uploads/images/1746678606025.png'
+      ]
+      return fixedImages[index % fixedImages.length]
     },
     // Kiểm tra xem một tin tức có đang được chọn không
     isSelected(id) {
