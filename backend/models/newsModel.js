@@ -12,7 +12,7 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Tóm tắt bài viết là bắt buộc'],
     trim: true,
-    minLength: [20, 'Tóm tắt phải có ít nhất 20 ký tự'],
+    minLength: [10, 'Tóm tắt phải có ít nhất 10 ký tự'],
     maxLength: [500, 'Tóm tắt không được vượt quá 500 ký tự'],
   },
   content: {
@@ -40,7 +40,7 @@ const newsSchema = new mongoose.Schema({
     trim: true,
     minlength: [3, 'Tên tác giả phải có ít nhất 3 ký tự'],
     maxlength: [50, 'Tên tác giả không được vượt quá 50 ký tự'],
-    match: [/^[a-zA-Z\s]/, 'Tên tác giả chỉ được chứa chữ cái và khoảng trắng'],
+    match: [/^[a-zA-Z\s]/, 'Tên tác giả chỉ được chứa chữ cái và khoảng cách'],
   },
   views: {
     type: Number,

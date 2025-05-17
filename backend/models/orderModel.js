@@ -5,21 +5,13 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Service",
     required: [true, "Gói dịch vụ là bắt buộc"],
-    validate: {
-      validator: async function (v) {
-        const service = await mongoose.model("Service").findById(v);
-        return !!service;
-      },
-      message: "Gói dịch vụ không tồn tại",
-    },
   },
   fullName: {
     type: String,
     required: [true, "Họ và tên là bắt buộc"],
     trim: true,
-    minlength: [3, "Họ và tên phải có ít nhất 3 ký tự"],
+    minlength: [2, "Họ và tên phải có ít nhất 2 ký tự"],
     maxlength: [50, "Họ và tên không được vượt quá 50 ký tự"],
-    match: [/^[a-zA-Z\s]/, "Họ và tên chỉ được chứa chữ cái và khoảng trắng"],
   },
   phone: {
     type: String,
@@ -47,7 +39,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     enum: ["MOMO", "VNPAY"],
-    required: [true, "Phương thức thanh toán phải là 'MOMO' hoặc 'VNPAY'"],
+    required: [true, "Phương thức thanh toán phải là 'MOMO', 'VNPAY'"],
   },
   paymentStatus: {
     type: String,
@@ -56,6 +48,17 @@ const orderSchema = new mongoose.Schema({
       message: "Trạng thái thanh toán phải là 'pending', 'paid', hoặc 'failed'",
     },
     default: "pending",
+  },
+  paymentAmount: {
+    type: Number,
+    default: 0,
+  },
+  paymentDate: {
+    type: Date,
+  },
+  paymentTransactionId: {
+    type: String,
+    trim: true,
   },
   orderStatus: {
     type: String,
@@ -70,6 +73,22 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+// Middleware để cập nhật updatedAt trước khi lưu
+orderSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+// Middleware để cập nhật updatedAt trước khi cập nhật
+orderSchema.pre('findOneAndUpdate', function(next) {
+  this.set({ updatedAt: Date.now() });
+  next();
 });
 
 module.exports = mongoose.model("Order", orderSchema);
