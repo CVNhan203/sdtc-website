@@ -27,7 +27,7 @@
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" />
+          <img :src="getImageUrl(currentNews.image)" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
@@ -73,7 +73,7 @@
               @click="goToNewsDetail(post)"
             >
               <div class="post-image">
-                <img :src="post.imageUrl" />
+                <img :src="getImageUrl(post.image)" />
               </div>
               <div class="post-info">
                 <div class="post-date">{{ post.date }}</div>
@@ -91,6 +91,11 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import newsService from '@/api/services/newsService'
+
+// Import các hình ảnh từ thư mục assets
+import img1 from '@/assets/1746863140024.png'
+import img2 from '@/assets/1746678606025.png'
+import img3 from '@/assets/1746678511693.png'
 
 export default {
   name: 'ComNewsDetail',
@@ -111,11 +116,9 @@ export default {
     const allNews = ref([])
     const error = ref('')
     
-    // Định nghĩa đường dẫn hình ảnh từ uploads folder
-    const uploadImages = [
-      '/uploads/images/1746863140024.png',
-    ]
-
+    // Danh sách ảnh cố định
+    const fixedImages = [img1, img2, img3]
+    
     // Lọc danh sách tin tức dựa trên từ khóa tìm kiếm và loại bỏ bài viết hiện tại
     const filteredNews = computed(() => {
       const currentId = route.params.id
@@ -129,34 +132,32 @@ export default {
       return filtered.filter((news) => news.title.toLowerCase().includes(query))
     })
 
+    // Function to get image URL
+    const getImageUrl = (imagePath) => {
+      // Luôn trả về một trong 3 hình cố định nếu không có hình hoặc hình bị lỗi
+      if (!imagePath) {
+        const randomIndex = Math.floor(Math.random() * fixedImages.length)
+        return fixedImages[randomIndex]
+      }
+      
+      // Luôn ưu tiên sử dụng hình cố định đã import
+      // Sử dụng hash của đường dẫn để chọn hình cố định
+      const hash = (imagePath || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      return fixedImages[hash % fixedImages.length]
+    }
+
     // Tải dữ liệu động
     const loadData = async () => {
       try {
         // Lấy danh sách tin tức gần đây
         const { data } = await newsService.getNews()
         
-        // Map hình ảnh uploads vào tin tức
-        allNews.value = data.map((news, index) => {
-          // Gán hình ảnh từ uploads, luân phiên theo chỉ số
-          const imageIndex = index % uploadImages.length
-          return {
-            ...news,
-            imageUrl: `http://localhost:3000${uploadImages[imageIndex]}`,
-            date: formatDate(news.publishedDate)
-          }
-        })
+        // Use the imageUrl from the API response
+        allNews.value = data
         
         // Lấy chi tiết tin tức
         const newsDetail = await newsService.getNewsById(route.params.id)
-        
-        // Tìm chỉ số của tin tức hiện tại và gán hình ảnh tương ứng
-        const newsIndex = data.findIndex(item => (item._id || item.id) == route.params.id)
-        const imageIndex = newsIndex >= 0 ? newsIndex % uploadImages.length : 0
-        
-        currentNews.value = {
-          ...newsDetail,
-          imageUrl: `http://localhost:3000${uploadImages[imageIndex]}`
-        }
+        currentNews.value = newsDetail
       } catch (e) {
         error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
       }
@@ -205,6 +206,7 @@ export default {
       goToNextPost,
       error,
       formatDate,
+      getImageUrl,
     }
   }
 }
