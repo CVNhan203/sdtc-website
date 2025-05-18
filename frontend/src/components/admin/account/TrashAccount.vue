@@ -6,32 +6,30 @@
     </div>
 
     <div class="header-actions">
-      <div class="current-date">
-        Ngày hiện tại: {{ currentDate }}
-      </div>
+      <div class="current-date"></div>
       <div class="actions-header">
         <div class="search-filter">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input 
-              type="text" 
-              v-model="searchQuery" 
+            <input
+              type="text"
+              v-model="searchQuery"
               placeholder="Tìm kiếm theo tên hoặc email..."
               @input="handleSearch"
-            >
+            />
           </div>
         </div>
-        <button 
-          v-if="selectedAccounts.length > 0" 
-          class="bulk-action-btn restore" 
+        <button
+          v-if="selectedAccounts.length > 0"
+          class="bulk-action-btn restore"
           @click="confirmBulkRestore"
         >
           <i class="fas fa-rotate-left"></i>
           Khôi phục đã chọn
         </button>
-        <button 
-          v-if="selectedAccounts.length > 0" 
-          class="bulk-action-btn delete" 
+        <button
+          v-if="selectedAccounts.length > 0"
+          class="bulk-action-btn delete"
           @click="confirmBulkDelete"
         >
           <i class="fas fa-trash"></i>
@@ -51,11 +49,7 @@
         <thead>
           <tr>
             <th width="50px">
-              <input 
-                type="checkbox" 
-                :checked="isAllSelected"
-                @change="toggleSelectAll"
-              >
+              <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" />
             </th>
             <th>No.</th>
             <th>Họ tên</th>
@@ -67,40 +61,33 @@
         <tbody>
           <tr v-for="(account, index) in filteredAccounts" :key="account._id">
             <td>
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 :checked="isSelected(account._id)"
                 @change="toggleSelect(account._id)"
-              >
+              />
             </td>
             <td>{{ index + 1 }}</td>
             <td>{{ account.fullName }}</td>
             <td>{{ account.email }}</td>
             <td>{{ currentDate }}</td>
-            <!-- <td>{{ formatDate(account.deletedAt || account.updatedAt) }}</td> -->
             <td>
               <div class="actions">
-                <button 
-                  class="icon-btn restore" 
-                  @click="confirmRestore(account)"
-                  title="Khôi phục"
-                >
+                <button class="icon-btn restore" @click="confirmRestore(account)" title="Khôi phục">
                   <i class="fas fa-rotate-left"></i>
                 </button>
-                <button 
-                  class="icon-btn delete" 
+                <button
+                  class="icon-btn delete"
                   @click="confirmDelete(account)"
                   title="Xóa vĩnh viễn"
                 >
                   <i class="fas fa-trash"></i>
-                </button>                
+                </button>
               </div>
             </td>
           </tr>
           <tr v-if="filteredAccounts.length === 0">
-            <td colspan="6" class="empty-message">
-              Không có tài khoản nào trong thùng rác
-            </td>
+            <td colspan="6" class="empty-message">Không có tài khoản nào trong thùng rác</td>
           </tr>
         </tbody>
       </table>
@@ -117,9 +104,14 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Bạn có chắc chắn muốn khôi phục {{ selectedAccounts.length > 1 ? 'những' : '' }} tài khoản đã chọn không?</p>
+          <p>
+            Bạn có chắc chắn muốn khôi phục {{ selectedAccounts.length > 1 ? 'những' : '' }} tài
+            khoản đã chọn không?
+          </p>
           <div class="form-actions">
-            <button class="cancel-btn" @click="showRestoreModal = false" :disabled="loading">Hủy</button>
+            <button class="cancel-btn" @click="showRestoreModal = false" :disabled="loading">
+              Hủy
+            </button>
             <button class="submit-btn" @click="handleRestore" :disabled="loading">
               <i class="fas fa-spinner fa-spin" v-if="loading"></i>
               Khôi phục
@@ -141,9 +133,14 @@
         </div>
         <div class="modal-body">
           <p class="warning-text">Cảnh báo: Hành động này không thể hoàn tác!</p>
-          <p>Bạn có chắc chắn muốn xóa vĩnh viễn {{ selectedAccounts.length > 1 ? 'những' : '' }} tài khoản đã chọn không?</p>
+          <p>
+            Bạn có chắc chắn muốn xóa vĩnh viễn {{ selectedAccounts.length > 1 ? 'những' : '' }} tài
+            khoản đã chọn không?
+          </p>
           <div class="form-actions">
-            <button class="cancel-btn" @click="showDeleteModal = false" :disabled="loading">Hủy</button>
+            <button class="cancel-btn" @click="showDeleteModal = false" :disabled="loading">
+              Hủy
+            </button>
             <button class="delete-btn" @click="handleDelete" :disabled="loading">
               <i class="fas fa-spinner fa-spin" v-if="loading"></i>
               Xóa vĩnh viễn
@@ -164,7 +161,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <div v-if="serviceLoading" style="text-align:center;padding:24px;">
+          <div v-if="serviceLoading" style="text-align: center; padding: 24px">
             <i class="fas fa-spinner fa-spin"></i> Đang tải dịch vụ...
           </div>
           <div v-else-if="serviceError" class="error-message">{{ serviceError }}</div>
@@ -184,9 +181,9 @@
 </template>
 
 <script>
-import eventBus from '@/eventBus';
-import accountService from '@/api/services/accountService';
-import serviceService from '@/api/services/serviceService';
+import eventBus from '@/eventBus'
+import accountService from '@/api/services/accountService'
+import serviceService from '@/api/services/serviceService'
 
 export default {
   name: 'AdminTrashAccounts',
@@ -208,213 +205,209 @@ export default {
   },
   computed: {
     filteredAccounts() {
-      if (!this.searchQuery) return this.accounts; // Nếu không có tìm kiếm, trả về tất cả tài khoản
-      
-      const query = this.searchQuery.toLowerCase(); // Chuyển chuỗi tìm kiếm thành chữ thường
-      return this.accounts.filter(account => 
-        (account.fullName?.toLowerCase().includes(query) || 
-         account.email?.toLowerCase().includes(query)) // Lọc tài khoản theo tên hoặc email
-      );
+      if (!this.searchQuery) return this.accounts // Nếu không có tìm kiếm, trả về tất cả tài khoản
+
+      const query = this.searchQuery.toLowerCase() // Chuyển chuỗi tìm kiếm thành chữ thường
+      return this.accounts.filter(
+        (account) =>
+          account.fullName?.toLowerCase().includes(query) ||
+          account.email?.toLowerCase().includes(query) // Lọc tài khoản theo tên hoặc email
+      )
     },
     isAllSelected() {
-      return this.filteredAccounts.length > 0 && 
-             this.filteredAccounts.every(account => this.selectedAccounts.includes(account._id)); // Kiểm tra xem tất cả tài khoản đã chọn
+      return (
+        this.filteredAccounts.length > 0 &&
+        this.filteredAccounts.every((account) => this.selectedAccounts.includes(account._id))
+      ) // Kiểm tra xem tất cả tài khoản đã chọn
     },
     currentDate() {
-      return new Date().toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
+      const d = new Date() // Get the current date
+      const day = d.getDate().toString().padStart(2, '0') // Get day and pad with zero if needed
+      const month = (d.getMonth() + 1).toString().padStart(2, '0') // Get month (0-indexed) and pad
+      const year = d.getFullYear() // Get full year
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
   },
   methods: {
     async loadAccounts() {
       try {
-        this.loading = true; // Bắt đầu tải
-        this.error = null; // Đặt lại trạng thái lỗi
-        
+        this.loading = true // Bắt đầu tải
+        this.error = null // Đặt lại trạng thái lỗi
+
         // Sử dụng phương thức có sẵn để lấy tài khoản đã xóa
-        const response = await accountService.getDeletedAccounts();
-        
+        const response = await accountService.getDeletedAccounts()
+
         if (response.success) {
           // Gán trực tiếp dữ liệu đã được lọc từ service
-          this.accounts = response.data || []; // Gán danh sách tài khoản đã xóa
-          console.log('Tài khoản đã xóa:', this.accounts);
+          this.accounts = response.data || [] // Gán danh sách tài khoản đã xóa
+          console.log('Tài khoản đã xóa:', this.accounts)
         } else {
-          throw new Error(response.message || 'Không thể tải danh sách tài khoản đã xóa');
+          throw new Error(response.message || 'Không thể tải danh sách tài khoản đã xóa')
         }
       } catch (error) {
-        console.error('Lỗi khi tải tài khoản đã xóa:', error);
-        this.error = error.message || 'Không thể tải danh sách tài khoản đã xóa'; // Ghi lại lỗi
+        console.error('Lỗi khi tải tài khoản đã xóa:', error)
+        this.error = error.message || 'Không thể tải danh sách tài khoản đã xóa' // Ghi lại lỗi
         eventBus.emit('show-toast', {
           type: 'error',
-          message: this.error
-        });
+          message: this.error,
+        })
       } finally {
-        this.loading = false; // Kết thúc tải
+        this.loading = false // Kết thúc tải
       }
     },
-    
+
     handleSearch() {
       // Xử lý tìm kiếm, đã được xử lý qua computed property
     },
-    
-    formatDate(date) {
-      if (!date) return ''; // Nếu không có ngày, trả về chuỗi rỗng
-      return new Date(date).toLocaleString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      }); // Định dạng ngày theo kiểu Việt Nam
-    },
-    
+
     truncateId(id) {
-      if (!id) return ''; // Nếu không có id, trả về chuỗi rỗng
-      return id.length > 8 ? id.substring(0, 8) + '...' : id; // Cắt ngắn id nếu dài hơn 8 ký tự
+      if (!id) return '' // Nếu không có id, trả về chuỗi rỗng
+      return id.length > 8 ? id.substring(0, 8) + '...' : id // Cắt ngắn id nếu dài hơn 8 ký tự
     },
-    
+
     isSelected(id) {
-      return this.selectedAccounts.includes(id); // Kiểm tra xem tài khoản đã được chọn hay chưa
+      return this.selectedAccounts.includes(id) // Kiểm tra xem tài khoản đã được chọn hay chưa
     },
-    
+
     toggleSelect(id) {
-      const index = this.selectedAccounts.indexOf(id);
+      const index = this.selectedAccounts.indexOf(id)
       if (index === -1) {
-        this.selectedAccounts.push(id); // Thêm tài khoản vào danh sách đã chọn
+        this.selectedAccounts.push(id) // Thêm tài khoản vào danh sách đã chọn
       } else {
-        this.selectedAccounts.splice(index, 1); // Xóa tài khoản khỏi danh sách đã chọn
+        this.selectedAccounts.splice(index, 1) // Xóa tài khoản khỏi danh sách đã chọn
       }
     },
-    
+
     toggleSelectAll() {
       if (this.isAllSelected) {
-        this.selectedAccounts = []; // Bỏ chọn tất cả
+        this.selectedAccounts = [] // Bỏ chọn tất cả
       } else {
-        this.selectedAccounts = this.filteredAccounts.map(account => account._id); // Chọn tất cả tài khoản
+        this.selectedAccounts = this.filteredAccounts.map((account) => account._id) // Chọn tất cả tài khoản
       }
     },
-    
+
     async handleRestore() {
       try {
-        this.loading = true; // Bắt đầu tải
-        const response = await accountService.restoreAccounts(this.selectedAccounts); // Khôi phục tài khoản
-        
+        this.loading = true // Bắt đầu tải
+        const response = await accountService.restoreAccounts(this.selectedAccounts) // Khôi phục tài khoản
+
         if (response.success) {
           eventBus.emit('show-toast', {
             type: 'success',
-            message: response.message || 'Khôi phục tài khoản thành công'
-          });
-          
+            message: response.message || 'Khôi phục tài khoản thành công',
+          })
+
           // Tải lại danh sách sau khi khôi phục
-          await this.loadAccounts();
-          this.selectedAccounts = []; // Đặt lại danh sách đã chọn
-          this.showRestoreModal = false; // Đóng modal khôi phục
+          await this.loadAccounts()
+          this.selectedAccounts = [] // Đặt lại danh sách đã chọn
+          this.showRestoreModal = false // Đóng modal khôi phục
         } else {
-          throw new Error(response.message || 'Không thể khôi phục tài khoản');
+          throw new Error(response.message || 'Không thể khôi phục tài khoản')
         }
       } catch (error) {
         eventBus.emit('show-toast', {
           type: 'error',
-          message: error.message || 'Không thể khôi phục tài khoản'
-        });
+          message: error.message || 'Không thể khôi phục tài khoản',
+        })
       } finally {
-        this.loading = false; // Kết thúc tải
+        this.loading = false // Kết thúc tải
       }
     },
-    
+
     async handleDelete() {
       try {
-        this.loading = true; // Bắt đầu tải
-        
+        this.loading = true // Bắt đầu tải
+
         // Hiển thị thông báo xác nhận nếu xóa nhiều tài khoản
         if (this.selectedAccounts.length > 1) {
-          const confirmed = confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn ${this.selectedAccounts.length} tài khoản đã chọn không? Hành động này không thể hoàn tác!`);
+          const confirmed = confirm(
+            `Bạn có chắc chắn muốn xóa vĩnh viễn ${this.selectedAccounts.length} tài khoản đã chọn không? Hành động này không thể hoàn tác!`
+          )
           if (!confirmed) {
-            this.loading = false; // Kết thúc tải
-            this.showDeleteModal = false; // Đóng modal xóa
-            return;
+            this.loading = false // Kết thúc tải
+            this.showDeleteModal = false // Đóng modal xóa
+            return
           }
         }
-        
-        const response = await accountService.permanentDeleteAccounts(this.selectedAccounts); // Xóa tài khoản vĩnh viễn
-        
+
+        const response = await accountService.permanentDeleteAccounts(this.selectedAccounts) // Xóa tài khoản vĩnh viễn
+
         if (response.success) {
           eventBus.emit('show-toast', {
             type: 'success',
-            message: response.message || 'Xóa vĩnh viễn tài khoản thành công'
-          });
-          
+            message: response.message || 'Xóa vĩnh viễn tài khoản thành công',
+          })
+
           // Tải lại danh sách sau khi xóa
-          await this.loadAccounts();
-          this.selectedAccounts = []; // Đặt lại danh sách đã chọn
-          this.showDeleteModal = false; // Đóng modal xóa
+          await this.loadAccounts()
+          this.selectedAccounts = [] // Đặt lại danh sách đã chọn
+          this.showDeleteModal = false // Đóng modal xóa
         } else {
-          throw new Error(response.message || 'Không thể xóa vĩnh viễn tài khoản');
+          throw new Error(response.message || 'Không thể xóa vĩnh viễn tài khoản')
         }
       } catch (error) {
         eventBus.emit('show-toast', {
           type: 'error',
-          message: error.message || 'Không thể xóa vĩnh viễn tài khoản'
-        });
+          message: error.message || 'Không thể xóa vĩnh viễn tài khoản',
+        })
       } finally {
-        this.loading = false; // Kết thúc tải
+        this.loading = false // Kết thúc tải
       }
     },
-    
+
     confirmRestore(account) {
       if (account) {
-        this.selectedAccounts = [account._id]; // Đặt tài khoản được chọn để khôi phục
+        this.selectedAccounts = [account._id] // Đặt tài khoản được chọn để khôi phục
       }
-      this.showRestoreModal = true; // Hiển thị modal khôi phục
+      this.showRestoreModal = true // Hiển thị modal khôi phục
     },
-    
+
     confirmDelete(account) {
       if (account) {
-        this.selectedAccounts = [account._id]; // Đặt tài khoản được chọn để xóa
+        this.selectedAccounts = [account._id] // Đặt tài khoản được chọn để xóa
       }
-      this.showDeleteModal = true; // Hiển thị modal xóa
+      this.showDeleteModal = true // Hiển thị modal xóa
     },
-    
+
     confirmBulkRestore() {
-      this.showRestoreModal = true; // Hiển thị modal khôi phục cho nhiều tài khoản
+      this.showRestoreModal = true // Hiển thị modal khôi phục cho nhiều tài khoản
     },
-    
+
     confirmBulkDelete() {
-      this.showDeleteModal = true; // Hiển thị modal xóa cho nhiều tài khoản
+      this.showDeleteModal = true // Hiển thị modal xóa cho nhiều tài khoản
     },
 
     async viewServices(account) {
-      this.showServiceModal = true; // Hiển thị modal dịch vụ
-      this.services = []; // Đặt lại danh sách dịch vụ
-      this.serviceLoading = true; // Bắt đầu tải dịch vụ
-      this.serviceError = null; // Đặt lại trạng thái lỗi dịch vụ
+      this.showServiceModal = true // Hiển thị modal dịch vụ
+      this.services = [] // Đặt lại danh sách dịch vụ
+      this.serviceLoading = true // Bắt đầu tải dịch vụ
+      this.serviceError = null // Đặt lại trạng thái lỗi dịch vụ
       try {
         // Giả sử serviceService có hàm getServicesByAccountId
-        const res = await serviceService.getServicesByAccountId(account._id); // Lấy dịch vụ theo id tài khoản
+        const res = await serviceService.getServicesByAccountId(account._id) // Lấy dịch vụ theo id tài khoản
         if (res && res.success) {
-          this.services = res.data || []; // Gán danh sách dịch vụ
+          this.services = res.data || [] // Gán danh sách dịch vụ
         } else {
-          this.serviceError = res.message || 'Không thể tải dịch vụ'; // Ghi lại lỗi
+          this.serviceError = res.message || 'Không thể tải dịch vụ' // Ghi lại lỗi
         }
       } catch (err) {
-        this.serviceError = err.message || 'Không thể tải dịch vụ'; // Ghi lại lỗi
+        this.serviceError = err.message || 'Không thể tải dịch vụ' // Ghi lại lỗi
       } finally {
-        this.serviceLoading = false; // Kết thúc tải dịch vụ
+        this.serviceLoading = false // Kết thúc tải dịch vụ
       }
-    }
+    },
   },
   created() {
-    this.loadAccounts(); // Tải danh sách tài khoản khi component được tạo
-  }
-};
+    this.loadAccounts() // Tải danh sách tài khoản khi component được tạo
+  },
+}
 </script>
 
 <style scoped>
 /* Các kiểu CSS cho component */
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .trash-accounts {
   background: #fff;
@@ -448,7 +441,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Các kiểu cho phần tiêu đề và hành động */
@@ -645,8 +640,11 @@ tr:last-child td {
 }
 .modal-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 .modal-content {
@@ -684,7 +682,10 @@ tr:last-child td {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   font-size: 24px;
   margin-left: auto;
   box-shadow: none;
@@ -712,7 +713,9 @@ tr:last-child td {
   margin-top: 24px;
 }
 
-.submit-btn, .delete-btn, .cancel-btn {
+.submit-btn,
+.delete-btn,
+.cancel-btn {
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
@@ -772,7 +775,7 @@ tr:last-child td {
 }
 
 /* Các kiểu cho checkbox tùy chỉnh */
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -784,12 +787,12 @@ input[type="checkbox"] {
   background: white;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background: #3b82f6;
   border-color: #3b82f6;
 }
 
-input[type="checkbox"]:checked::after {
+input[type='checkbox']:checked::after {
   content: '✓';
   color: white;
   position: absolute;

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const News = require('../models/newsModel')
+const path = require('path')
 
 // Lấy danh sách bài viết
 
@@ -66,21 +67,15 @@ exports.getNewsById = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy bài viết')
   }
 
-  // Nếu là staff, chỉ cho phép xem bài viết của mình
-  if (req.user && req.user.role === 'staff' && news.author !== req.user.fullName) {
-    res.status(403)
-    throw new Error('Bạn không có quyền xem bài viết này')
-  }
-
-  // Không cho phép xem bài viết đã bị xóa (trừ khi là admin hoặc staff và là tác giả)
-  if (
-    news.isDeleted &&
-    (!req.user ||
-      (req.user.role !== 'admin' &&
-        (req.user.role !== 'staff' || news.author !== req.user.fullName)))
-  ) {
-    res.status(404)
-    throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
+  // Không cho phép xem bài viết đã bị xóa nếu không đăng nhập hoặc không có quyền
+  if (news.isDeleted) {
+    // Kiểm tra xem người dùng đã đăng nhập và có quyền xem bài viết bị xóa không
+    if (!req.user || 
+        (req.user.role !== 'admin' && 
+         (req.user.role !== 'staff' || news.author !== req.user.fullName))) {
+      res.status(404)
+      throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
+    }
   }
 
   // Tăng lượt xem
@@ -240,10 +235,35 @@ exports.uploadNewsImage = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: 'Không có file được tải lên' })
     }
 
-    const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
-    const imageUrl = `${req.app.locals.BASE_URL}/${imagePath}`
+    // Chuẩn hóa đường dẫn và đảm bảo định dạng nhất quán
+    const imagePath = req.file.path.replace(/\\/g, '/') // Thay thế backslash bằng forward slash
+    
+    // Sử dụng BASE_URL từ app.locals
+    const baseUrl = req.app.locals.BASE_URL
+    
+    // Thêm log để debug
+    console.log('File path:', req.file.path)
+    console.log('Image path:', imagePath)
+    console.log('Base URL:', baseUrl)
+    console.log('Filename:', req.file.filename)
+    
+    // Lấy chỉ tên file
+    const filename = req.file.filename
+    // Tạo đường dẫn tương đối - luôn sử dụng đường dẫn trong backend
+    const relativePath = 'uploads/images/' + filename
+    // Tạo URL đầy đủ
+    const imageUrl = `${baseUrl}/${relativePath}`
+    
+    console.log('Đường dẫn ảnh đã tạo:', imageUrl)
+    
+    // Kiểm tra tệp tồn tại
+    const fs = require('fs')
+    const fullPath = path.join(__dirname, '..', relativePath)
+    const exists = fs.existsSync(fullPath)
+    console.log('File exists check:', exists, 'at path:', fullPath)
 
     res.status(200).json({
+      success: true,
       message: 'Tải ảnh lên thành công',
       imagePath: imageUrl,
     })

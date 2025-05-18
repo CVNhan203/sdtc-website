@@ -38,16 +38,16 @@
       <table>
         <thead>
           <tr>
-            <th width="50px" style="text-align: center;">
+            <th width="50px" style="text-align: center">
               <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" />
             </th>
-            <th style="width: 60px; text-align: center;">STT</th>
-            <th style="width: 70px; text-align: center;">Ảnh</th>
-            <th style="width: 30%; text-align: center;">Tiêu đề</th>
-            <th style="width: 15%; text-align: center;">Giá</th>
-            <th style="width: 10%; text-align: center;">Loại</th>
-            <th style="width: 15%; text-align: center;">Ngày xóa</th>
-            <th class="action-column" style="width: 15%; text-align: center;">Thao tác</th>
+            <th style="width: 60px; text-align: center">STT</th>
+            <th style="width: 70px; text-align: center">Ảnh</th>
+            <th style="width: 30%; text-align: center">Tiêu đề</th>
+            <th style="width: 15%; text-align: center">Giá</th>
+            <th style="width: 15%; text-align: center">Loại</th>
+            <th style="width: 20%; text-align: center">Ngày xóa</th>
+            <th class="action-column" style="width: 15%; text-align: center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -271,8 +271,8 @@ export default {
       try {
         for (const id of this.selectedServices) {
           // Gọi API để khôi phục dịch vụ trong database
-          await serviceService.restoreService(id);
-          
+          await serviceService.restoreService(id)
+
           // Xóa khỏi danh sách đã xóa trong localStorage
           const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
           const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id)
@@ -295,13 +295,13 @@ export default {
         eventBus.emit('update-deleted-services-count')
         eventBus.emit('show-toast', {
           type: 'success',
-          message: 'Khôi phục dịch vụ thành công'
+          message: 'Khôi phục dịch vụ thành công',
         })
       } catch (error) {
         console.error('Error restoring services:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi khôi phục dịch vụ'
+          message: 'Có lỗi xảy ra khi khôi phục dịch vụ',
         })
       }
     },
@@ -332,13 +332,13 @@ export default {
         eventBus.emit('update-deleted-services-count')
         eventBus.emit('show-toast', {
           type: 'success',
-          message: 'Xóa vĩnh viễn dịch vụ thành công'
+          message: 'Xóa vĩnh viễn dịch vụ thành công',
         })
       } catch (error) {
         console.error('Error deleting services:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi xóa vĩnh viễn dịch vụ'
+          message: 'Có lỗi xảy ra khi xóa vĩnh viễn dịch vụ',
         })
       }
     },
@@ -358,8 +358,7 @@ export default {
 </script>
 
 <style scoped>
-
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .trash-service {
   background: #fff;
@@ -391,7 +390,6 @@ export default {
 }
 
 .search-box input {
-  width: 100%;
   padding: 10px 16px 10px 40px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -425,7 +423,8 @@ table {
   border-spacing: 0;
 }
 
-th, td {
+th,
+td {
   text-align: center;
   vertical-align: middle;
 }
@@ -582,7 +581,9 @@ tr:hover {
   padding-top: 20px;
 }
 
-.submit-btn, .delete-btn, .cancel-btn {
+.submit-btn,
+.delete-btn,
+.cancel-btn {
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
@@ -666,7 +667,7 @@ tr:hover {
 }
 
 /* Custom checkbox styles */
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -678,12 +679,12 @@ input[type="checkbox"] {
   background: white;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background: #3b82f6;
   border-color: #3b82f6;
 }
 
-input[type="checkbox"]:checked::after {
+input[type='checkbox']:checked::after {
   content: '✓';
   color: white;
   position: absolute;
@@ -704,7 +705,10 @@ input[type="checkbox"]:checked::after {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   font-size: 24px;
   margin-left: auto;
   box-shadow: none;

@@ -26,7 +26,11 @@
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img :src="getImageUrl(news.image)" class="news-image" />
+        <img 
+          :src="getImageUrl(news.image)" 
+          class="news-image" 
+          @error="handleImageError" 
+        />
         <div class="news-content">
           <p class="news-category">{{ news.type || news.category || 'Không có danh mục' }}</p>
           <h3 class="news-card-title">{{ news.title }}</h3>
@@ -47,6 +51,7 @@
 <script>
 import { useRouter } from 'vue-router'
 import newsService from '@/api/services/newsService'
+import { baseMediaUrl } from '@/api/config'
 
 export default {
   name: 'ComNews',
@@ -59,6 +64,7 @@ export default {
       searchQuery: '',
       allNewsItems: [],
       error: '',
+      baseMediaUrl,
     }
   },
   async mounted() {
@@ -89,10 +95,25 @@ export default {
     goToNewsDetail(news) {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
+    handleImageError(event) {
+      // Khi ảnh không tải được, thay thế bằng ảnh mặc định
+      if (event && event.target) {
+        console.error('Failed to load image:', event.target.src)
+        // Sử dụng ảnh có sẵn trên server thay vì placeholder
+        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+      }
+    },
     getImageUrl(imagePath) {
-      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
+      if (!imagePath) return 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+      
+      // Nếu đã là URL đầy đủ, sử dụng trực tiếp
       if (imagePath.startsWith('http')) return imagePath
-      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`
+      
+      // Lấy tên file từ đường dẫn
+      const filename = imagePath.split('/').pop().split('\\').pop()
+      
+      // Tạo đường dẫn tuyệt đối đến backend
+      return `${this.baseMediaUrl}/uploads/images/${filename}`
     },
   },
 }

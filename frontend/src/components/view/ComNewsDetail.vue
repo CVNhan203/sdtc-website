@@ -27,7 +27,7 @@
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" />
+          <img :src="currentNews.imageUrl" @error="handleImageError($event)" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
@@ -91,6 +91,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import newsService from '@/api/services/newsService'
+import { baseMediaUrl } from '@/api/config'
 
 export default {
   name: 'ComNewsDetail',
@@ -146,9 +147,25 @@ export default {
     }
 
     const getImageUrl = (image) => {
-      if (!image) return ''
+      if (!image) return 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+      
+      // Nếu đã là URL đầy đủ, sử dụng trực tiếp
       if (image.startsWith('http')) return image
-      return `http://localhost:3000/${image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')}`
+      
+      // Lấy tên file từ đường dẫn
+      const filename = image.split('/').pop().split('\\').pop()
+      
+      // Tạo đường dẫn tuyệt đối đến backend
+      return `${baseMediaUrl}/uploads/images/${filename}`
+    }
+
+    const handleImageError = (event) => {
+      // Khi ảnh không tải được, thay thế bằng ảnh mặc định
+      if (event && event.target) {
+        console.error('Failed to load image:', event.target.src)
+        // Sử dụng ảnh có sẵn trên server thay vì placeholder
+        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+      }
     }
 
     const goToNewsDetail = (news) => {
@@ -194,6 +211,7 @@ export default {
       goToNextPost,
       error,
       formatDate,
+      handleImageError
     }
   },
 }
@@ -322,10 +340,9 @@ export default {
 .content-paragraph {
   color: #333;
   font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 16px;
+  line-height: 1.8;
+  margin-bottom: 1.5em;
   text-align: justify;
-  word-break: break-word;
 }
 
 /* Nội dung văn bản của bài viết */
@@ -333,6 +350,52 @@ export default {
   width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  text-align: justify;
+  padding: 20px 0;
+}
+
+.news-content p {
+  margin-bottom: 1.5em;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.news-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px auto;
+  display: block;
+}
+
+.news-content h1,
+.news-content h2,
+.news-content h3,
+.news-content h4,
+.news-content h5,
+.news-content h6 {
+  margin: 1.5em 0 1em;
+  line-height: 1.4;
+  color: #1f2b6c;
+  text-align: left;
+}
+
+.news-content ul,
+.news-content ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.news-content li {
+  margin-bottom: 0.5em;
+  text-align: justify;
+}
+
+.news-content blockquote {
+  margin: 1.5em 0;
+  padding: 1em 2em;
+  border-left: 4px solid #004aad;
+  background: #f5f5f5;
+  font-style: italic;
 }
 
 /* Post Navigation */

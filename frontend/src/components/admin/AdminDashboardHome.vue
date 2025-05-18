@@ -46,9 +46,28 @@
 <script>
 import api from '@/api/config'
 import { Bar, Line, Pie, Doughnut } from 'vue-chartjs'
-import { Chart, BarElement, LineElement, ArcElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from 'chart.js'
+import {
+  Chart,
+  BarElement,
+  LineElement,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from 'chart.js'
 
-Chart.register(BarElement, LineElement, ArcElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
+Chart.register(
+  BarElement,
+  LineElement,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend
+)
 
 export default {
   name: 'AdminDashboardHome',
@@ -69,44 +88,52 @@ export default {
     ordersChartData() {
       return {
         labels: ['Đơn hàng'],
-        datasets: [{
-          label: 'Đơn hàng',
-          data: [this.stats.orders],
-          backgroundColor: '#3498db',
-        }]
+        datasets: [
+          {
+            label: 'Đơn hàng',
+            data: [this.stats.orders],
+            backgroundColor: '#3498db',
+          },
+        ],
       }
     },
     servicesChartData() {
       return {
         labels: ['Dịch vụ'],
-        datasets: [{
-          label: 'Dịch vụ',
-          data: [this.stats.services],
-          borderColor: '#27ae60',
-          backgroundColor: 'rgba(39,174,96,0.2)',
-          fill: true,
-          tension: 0.4,
-        }]
+        datasets: [
+          {
+            label: 'Dịch vụ',
+            data: [this.stats.services],
+            borderColor: '#27ae60',
+            backgroundColor: 'rgba(39,174,96,0.2)',
+            fill: true,
+            tension: 0.4,
+          },
+        ],
       }
     },
     newsChartDataPie() {
       return {
         labels: ['Tin tức', 'Khác'],
-        datasets: [{
-          label: 'Tin tức',
-          data: [this.stats.news, Math.max(1, 100 - this.stats.news)],
-          backgroundColor: ['#e67e22', '#eee'],
-        }]
+        datasets: [
+          {
+            label: 'Tin tức',
+            data: [this.stats.news, Math.max(1, 100 - this.stats.news)],
+            backgroundColor: ['#e67e22', '#eee'],
+          },
+        ],
       }
     },
     bookingsChartDataDoughnut() {
       return {
         labels: ['Lịch đặt', 'Khác'],
-        datasets: [{
-          label: 'Lịch đặt',
-          data: [this.stats.bookings, Math.max(1, 100 - this.stats.bookings)],
-          backgroundColor: ['#9b59b6', '#eee'],
-        }]
+        datasets: [
+          {
+            label: 'Lịch đặt',
+            data: [this.stats.bookings, Math.max(1, 100 - this.stats.bookings)],
+            backgroundColor: ['#9b59b6', '#eee'],
+          },
+        ],
       }
     },
     chartOptions() {
@@ -118,8 +145,8 @@ export default {
         },
         scales: {
           y: { beginAtZero: true, ticks: { precision: 0 } },
-          x: { grid: { display: false } }
-        }
+          x: { grid: { display: false } },
+        },
       }
     },
     pieOptions() {
@@ -128,9 +155,9 @@ export default {
         plugins: {
           legend: { display: true, position: 'bottom' },
           tooltip: { enabled: true },
-        }
+        },
       }
-    }
+    },
   },
   mounted() {
     this.fetchDashboardStats()
@@ -157,11 +184,10 @@ export default {
 </script>
 
 <style scoped>
-
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .admin-dashboard-home {
-  padding: 2rem;
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -199,7 +225,9 @@ export default {
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .stat-card:hover {

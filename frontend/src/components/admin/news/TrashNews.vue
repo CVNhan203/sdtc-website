@@ -77,6 +77,7 @@
                   :src="getImageUrl(news.image)"
                   alt="News image"
                   class="news-image"
+                  @error="handleImageError"
                 />
                 <div v-else class="no-image">
                   <i class="fas fa-image"></i>
@@ -159,6 +160,7 @@
 <script>
 import eventBus from '@/eventBus'
 import newsService from '@/api/services/newsService'
+import { baseMediaUrl } from '@/api/config'
 
 export default {
   name: 'AdminTrashNews',
@@ -171,7 +173,7 @@ export default {
       showDeleteModal: false, // Điều khiển hiển thị modal xóa
       loading: false, // Trạng thái đang tải
       error: null, // Lưu thông tin lỗi nếu có
-      baseImageUrl: 'http://localhost:3000', // URL cơ sở để hiển thị hình ảnh
+      baseImageUrl: baseMediaUrl, // URL cơ sở để hiển thị hình ảnh
       filterType: '', // Lọc theo loại tin tức
     }
   },
@@ -203,13 +205,13 @@ export default {
     },
     // New computed property to get the current date
     currentDate() {
-      return new Date().toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      const d = new Date() // Get the current date
+      const day = d.getDate().toString().padStart(2, '0') // Get day and pad with zero if needed
+      const month = (d.getMonth() + 1).toString().padStart(2, '0') // Get month (0-indexed) and pad
+      const year = d.getFullYear() // Get full year
+      const hour = d.getHours().toString().padStart(2, '0')
+      const minute = d.getMinutes().toString().padStart(2, '0')
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
   },
   methods: {
@@ -263,8 +265,19 @@ export default {
     getImageUrl(imagePath) {
       if (!imagePath) return null
       if (imagePath.startsWith('http')) return imagePath
-      const cleanPath = imagePath.replace(/^[/\\]+/, '')
-      return `${this.baseImageUrl}/${cleanPath}`
+      
+      // Lấy tên file từ đường dẫn
+      const filename = imagePath.split('/').pop().split('\\').pop()
+      
+      // Tạo đường dẫn tuyệt đối đến backend
+      return `${this.baseImageUrl}/uploads/images/${filename}`
+    },
+    // Xử lý lỗi khi tải hình ảnh
+    handleImageError(event) {
+      if (event && event.target) {
+        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+        console.error('Failed to load image:', event.target.src)
+      }
     },
     // Kiểm tra xem một tin tức có đang được chọn không
     isSelected(id) {
@@ -315,9 +328,9 @@ export default {
         // Gọi API để khôi phục các tin tức đã chọn
         for (const id of this.selectedNews) {
           try {
-            await newsService.restoreNews(id);
+            await newsService.restoreNews(id)
           } catch (err) {
-            console.error('Error restoring news:', err);
+            console.error('Error restoring news:', err)
           }
         }
 
@@ -354,14 +367,14 @@ export default {
             console.error('Error deleting news:', err)
           }
         }
-        
+
         // Cập nhật danh sách
         await this.loadNews()
-        
+
         // Reset selection và đóng modal
         this.selectedNews = []
         this.showDeleteModal = false
-        
+
         // Thông báo thành công
         eventBus.emit('show-toast', {
           type: 'success',
@@ -395,8 +408,7 @@ export default {
 </script>
 
 <style scoped>
-
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .trash-news {
   background: #fff;
@@ -428,7 +440,6 @@ export default {
 }
 
 .search-box input {
-  width: 100%;
   padding: 10px 16px 10px 40px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -554,8 +565,11 @@ tr:last-child td {
 }
 .modal-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
 .modal-content {
@@ -593,7 +607,9 @@ tr:last-child td {
   margin-top: 24px;
 }
 
-.submit-btn, .delete-btn, .cancel-btn {
+.submit-btn,
+.delete-btn,
+.cancel-btn {
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
@@ -643,7 +659,7 @@ tr:last-child td {
 }
 
 /* Custom checkbox styles */
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -653,7 +669,7 @@ input[type="checkbox"] {
   transition: all 0.2s;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background: #3b82f6;
   border-color: #3b82f6;
 }
@@ -669,7 +685,10 @@ input[type="checkbox"]:checked {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   font-size: 24px;
   margin-left: auto;
   box-shadow: none;
@@ -713,7 +732,6 @@ input[type="checkbox"]:checked {
 
 th,
 td {
-
   text-align: center;
   vertical-align: middle;
 }
@@ -737,8 +755,8 @@ tr {
 }
 
 /* Căn giữa checkbox */
-td input[type="checkbox"],
-th input[type="checkbox"] {
+td input[type='checkbox'],
+th input[type='checkbox'] {
   display: block;
   margin: 0 auto;
 }
