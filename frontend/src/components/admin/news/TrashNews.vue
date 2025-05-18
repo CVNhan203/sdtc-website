@@ -156,6 +156,11 @@
 import eventBus from '@/eventBus'
 import newsService from '@/api/services/newsService'
 
+// Import các hình ảnh từ thư mục assets
+import img1 from '@/assets/1746863140024.png'
+import img2 from '@/assets/1746678606025.png'
+import img3 from '@/assets/1746678511693.png'
+
 export default {
   name: 'AdminTrashNews',
   data() {
@@ -264,11 +269,7 @@ export default {
     },
     // Trả về một trong ba ảnh cố định dựa trên index
     getFixedImage(index) {
-      const fixedImages = [
-        'http://localhost:3000/uploads/images/1746678408588.png',
-        'http://localhost:3000/uploads/images/1746678511693.png',
-        'http://localhost:3000/uploads/images/1746678606025.png'
-      ]
+      const fixedImages = [img1, img2, img3]
       return fixedImages[index % fixedImages.length]
     },
     // Kiểm tra xem một tin tức có đang được chọn không

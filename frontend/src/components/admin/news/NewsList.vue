@@ -383,6 +383,11 @@ import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import newsService from '@/api/services/newsService'
 import eventBus from '@/eventBus'
 
+// Import các hình ảnh từ thư mục assets
+import img1 from '@/assets/1746863140024.png'
+import img2 from '@/assets/1746678606025.png'
+import img3 from '@/assets/1746678511693.png'
+
 export default {
   name: 'NewsList',
   setup() {
@@ -912,12 +917,13 @@ export default {
     // Xử lý lỗi khi tải hình ảnh
     const handleImageError = (event, newsId) => {
       if (event) {
-        event.target.src = '' // Xóa nguồn ảnh bị lỗi
-        event.target.style.display = 'none' // Ẩn ảnh bị lỗi
-        const parent = event.target.parentElement
-        if (parent) {
-          parent.classList.add('no-image')
-          parent.innerHTML = '<i class="fas fa-image"></i>'
+        // Lấy chỉ số của tin và sử dụng hình cố định thay thế
+        const newsIndex = news.value.findIndex(item => item._id === newsId)
+        if (newsIndex >= 0) {
+          event.target.src = getFixedImage(newsIndex)
+        } else {
+          // Nếu không tìm thấy tin, sử dụng hình đầu tiên
+          event.target.src = getFixedImage(0)
         }
       }
       imageLoadError.value[newsId] = true
@@ -967,9 +973,7 @@ export default {
 
     // Trả về một trong ba ảnh cố định dựa trên index
     const getFixedImage = (index) => {
-      const fixedImages = [
-        'http://localhost:3000/uploads/images/1746863140024.png',
-      ]
+      const fixedImages = [img1, img2, img3]
       return fixedImages[index % fixedImages.length]
     }
 

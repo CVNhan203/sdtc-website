@@ -27,15 +27,14 @@ exports.getNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ])
 
-  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào từng bài viết (đường dẫn tương đối)
   const newsWithImageUrl = news.map((n) => {
     let imageUrl = ''
     if (n.image) {
       if (n.image.startsWith('http')) {
         imageUrl = n.image
       } else {
-        const host = req.protocol + '://' + req.get('host')
-        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
       }
     }
     return { ...n, imageUrl }
@@ -66,34 +65,33 @@ exports.getNewsById = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy bài viết')
   }
 
-  // Nếu là staff, chỉ cho phép xem bài viết của mình
+  // Nếu bài viết đã bị xóa, chỉ cho phép admin và staff (tác giả) xem
+  if (news.isDeleted) {
+    // Nếu người dùng không đăng nhập hoặc không phải admin/staff tác giả
+    if (!req.user || 
+        (req.user.role !== 'admin' && 
+         (req.user.role !== 'staff' || news.author !== req.user.fullName))) {
+      res.status(404)
+      throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
+    }
+  }
+  
+  // Nếu người dùng là staff, chỉ cho phép xem bài viết của mình
   if (req.user && req.user.role === 'staff' && news.author !== req.user.fullName) {
     res.status(403)
     throw new Error('Bạn không có quyền xem bài viết này')
   }
 
-  // Không cho phép xem bài viết đã bị xóa (trừ khi là admin hoặc staff và là tác giả)
-  if (
-    news.isDeleted &&
-    (!req.user ||
-      (req.user.role !== 'admin' &&
-        (req.user.role !== 'staff' || news.author !== req.user.fullName)))
-  ) {
-    res.status(404)
-    throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
-  }
-
   // Tăng lượt xem
   await News.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
 
-  // Tự thêm trường imageUrl vào object trả về (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào object trả về (đường dẫn tương đối)
   let imageUrl = ''
   if (news.image) {
     if (news.image.startsWith('http')) {
       imageUrl = news.image
     } else {
-      const host = req.protocol + '://' + req.get('host')
-      imageUrl = host + '/' + news.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+      imageUrl = '/' + news.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
     }
   }
   const newsWithImageUrl = { ...news, imageUrl }
@@ -241,7 +239,8 @@ exports.uploadNewsImage = asyncHandler(async (req, res) => {
     }
 
     const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
-    const imageUrl = `${req.app.locals.BASE_URL}/${imagePath}`
+    // Trả về đường dẫn tương đối thay vì URL tuyệt đối
+    const imageUrl = `/${imagePath}`
 
     res.status(200).json({
       message: 'Tải ảnh lên thành công',
@@ -326,15 +325,14 @@ exports.getTrashNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ])
 
-  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào từng bài viết (đường dẫn tương đối)
   const newsWithImageUrl = news.map((n) => {
     let imageUrl = ''
     if (n.image) {
       if (n.image.startsWith('http')) {
         imageUrl = n.image
       } else {
-        const host = req.protocol + '://' + req.get('host')
-        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
       }
     }
     return { ...n, imageUrl }
