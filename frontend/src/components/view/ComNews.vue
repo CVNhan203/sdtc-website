@@ -48,6 +48,11 @@
 import { useRouter } from 'vue-router'
 import newsService from '@/api/services/newsService'
 
+// Import các hình ảnh từ thư mục assets
+import img1 from '@/assets/1746863140024.png'
+import img2 from '@/assets/1746678606025.png'
+import img3 from '@/assets/1746678511693.png'
+
 export default {
   name: 'ComNews',
   setup() {
@@ -59,23 +64,15 @@ export default {
       searchQuery: '',
       allNewsItems: [],
       error: '',
-      localImages: [
-        'http://localhost:3000/uploads/images/1746863140024.png',
-      ]
+      fixedImages: [img1, img2, img3]
     }
   },
   async mounted() {
     try {
       const response = await newsService.getNews()
       console.log('Mounted news data:', response.data)
-      // Assign local images to news items
-      this.allNewsItems = response.data.map((item, index) => {
-        const imageIndex = index % this.localImages.length
-        return {
-          ...item,
-          imageUrl: this.localImages[imageIndex]
-        }
-      })
+      // Use the imageUrl provided by the API
+      this.allNewsItems = response.data
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
     }
@@ -100,18 +97,16 @@ export default {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
     getImageUrl(imagePath) {
-      // If we have a custom imageUrl property, use that
-      if (this.allNewsItems.some(news => news.image === imagePath && news.imageUrl)) {
-        const newsItem = this.allNewsItems.find(news => news.image === imagePath)
-        if (newsItem && newsItem.imageUrl) {
-          return newsItem.imageUrl
-        }
+      // Luôn trả về một trong 3 hình cố định nếu không có hình hoặc hình bị lỗi
+      if (!imagePath) {
+        const randomIndex = Math.floor(Math.random() * this.fixedImages.length)
+        return this.fixedImages[randomIndex]
       }
       
-      // Fallback to original method
-      if (!imagePath) return 'https://via.placeholder.com/392x280?text=No+Image'
-      if (imagePath.startsWith('http')) return imagePath
-      return `http://localhost:3000/${imagePath.replace(/^[/\\]+/, '')}`
+      // Luôn ưu tiên sử dụng hình cố định đã import
+      // Sử dụng hash của đường dẫn để chọn hình cố định nhằm đảm bảo một tin tức luôn sử dụng cùng một hình
+      const hash = (imagePath || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      return this.fixedImages[hash % this.fixedImages.length]
     },
   },
 }
