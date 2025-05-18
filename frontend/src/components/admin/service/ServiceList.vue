@@ -33,25 +33,24 @@
         </router-link>
       </div>
     </div>
-
+    <div v-if="loading" class="loading-container">
+      <!-- <div class="loading-spinner"></div> -->
+      <p>Đang tải danh sách tin tức...</p>
+    </div>
     <!-- Service Table -->
     <div class="table-container responsive-table">
       <table>
         <thead>
           <tr>
-            <th style="width: 40px; text-align: center;">
-              <input
-                type="checkbox"
-                :checked="isAllSelected"
-                @change="toggleSelectAll"
-              />
+            <th style="width: 40px; text-align: center">
+              <input type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" />
             </th>
-            <th style="width: 60px; text-align: center;">No.</th>
-            <th style="width: 70px; text-align: center;">Ảnh</th>
-            <th style="width: 30%; text-align: center;">Tiêu đề</th>
-            <th style="width: 15%; text-align: center;">Giá</th>
-            <th style="width: 15%; text-align: center;">Loại</th>
-            <th style="width: 20%; text-align: center;">Thao tác</th>
+            <th style="width: 60px; text-align: center">No.</th>
+            <th style="width: 70px; text-align: center">Ảnh</th>
+            <th style="width: 30%; text-align: center">Tiêu đề</th>
+            <th style="width: 15%; text-align: center">Giá</th>
+            <th style="width: 15%; text-align: center">Loại</th>
+            <th style="width: 20%; text-align: center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -122,7 +121,7 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>Chi tiết dịch vụ</h3>
-          
+
           <button class="close-btn" @click="showDetailsModal = false">
             <i class="fas fa-times"></i>
           </button>
@@ -152,7 +151,9 @@
           </div>
           <div class="detail-item">
             <label>Mô tả:</label>
-            <p style="white-space: pre-line;">{{ formatDescriptionNoBullet(selectedService.description) }}</p>
+            <p style="white-space: pre-line">
+              {{ formatDescriptionNoBullet(selectedService.description) }}
+            </p>
           </div>
           <div class="detail-item">
             <label>Loại:</label>
@@ -557,92 +558,92 @@ export default {
       }
     },
     validateForm() {
-      let isValid = true;
-      let newErrors = {};
+      let isValid = true
+      let newErrors = {}
 
       // Validate title
-      const titleField = this.formData.title.trim();
+      const titleField = this.formData.title.trim()
       if (!titleField) {
-        newErrors.title = 'Tiêu đề không được để trống';
-        isValid = false;
+        newErrors.title = 'Tiêu đề không được để trống'
+        isValid = false
       } else if (titleField.length < 3) {
-        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự';
-        isValid = false;
+        newErrors.title = 'Tiêu đề phải có ít nhất 3 ký tự'
+        isValid = false
       } else if (titleField.length > 200) {
-        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự';
-        isValid = false;
+        newErrors.title = 'Tiêu đề không được vượt quá 200 ký tự'
+        isValid = false
       }
 
       // Validate description
-      const contentField = this.formData.description.trim();
+      const contentField = this.formData.description.trim()
       if (!contentField) {
-        newErrors.description = 'Mô tả không được để trống';
-        isValid = false;
+        newErrors.description = 'Mô tả không được để trống'
+        isValid = false
       } else if (contentField.length < 10) {
-        newErrors.description = 'Mô tả phải có ít nhất 10 ký tự';
-        isValid = false;
+        newErrors.description = 'Mô tả phải có ít nhất 10 ký tự'
+        isValid = false
       } else if (contentField.length > 1000) {
-        newErrors.description = 'Mô tả không được vượt quá 1000 ký tự';
-        isValid = false;
+        newErrors.description = 'Mô tả không được vượt quá 1000 ký tự'
+        isValid = false
       }
 
       // Validate type
       if (!this.formData.type) {
-        newErrors.type = 'Loại dịch vụ không được để trống';
-        isValid = false;
+        newErrors.type = 'Loại dịch vụ không được để trống'
+        isValid = false
       }
 
       // Validate price
-      const priceValue = Number(this.formData.price);
+      const priceValue = Number(this.formData.price)
       if (isNaN(priceValue) || priceValue <= 0 || priceValue > 1000000000) {
-        newErrors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ';
-        isValid = false;
+        newErrors.price = 'Giá dịch vụ phải là một số không âm và không vượt quá 1 tỷ'
+        isValid = false
       }
 
-      this.errors = newErrors;
-      return isValid;
+      this.errors = newErrors
+      return isValid
     },
     async handleSubmit() {
       // Basic trimming and data preparation
-      this.formData.title = this.formData.title.trim();
+      this.formData.title = this.formData.title.trim()
 
       // Validate the form before proceeding with the update
       if (!this.validateForm()) {
         // Focus on the first field with an error
-        const errorFields = Object.keys(this.errors);
+        const errorFields = Object.keys(this.errors)
         if (errorFields.length > 0) {
-          const firstErrorField = errorFields[0];
-          const element = document.querySelector(`[name="${firstErrorField}"]`);
+          const firstErrorField = errorFields[0]
+          const element = document.querySelector(`[name="${firstErrorField}"]`)
           if (element) {
-            element.focus();
+            element.focus()
           }
         }
-        return; // Stop the update process if validation fails
+        return // Stop the update process if validation fails
       }
 
       try {
-        this.submitLoading = true;
-        this.submitError = null;
+        this.submitLoading = true
+        this.submitError = null
 
-        let imageUrl = null;
+        let imageUrl = null
         if (this.formData.image instanceof File) {
-          const imageFormData = new FormData();
-          imageFormData.append('image', this.formData.image);
+          const imageFormData = new FormData()
+          imageFormData.append('image', this.formData.image)
 
           try {
-            this.uploadStatus = 'Đang tải ảnh lên...';
-            const uploadResponse = await serviceService.uploadImage(imageFormData);
+            this.uploadStatus = 'Đang tải ảnh lên...'
+            const uploadResponse = await serviceService.uploadImage(imageFormData)
             if (uploadResponse && uploadResponse.imagePath) {
-              imageUrl = uploadResponse.imagePath;
-              this.uploadStatus = 'Tải ảnh thành công!';
+              imageUrl = uploadResponse.imagePath
+              this.uploadStatus = 'Tải ảnh thành công!'
             } else {
-              throw new Error('Không nhận được đường dẫn ảnh');
+              throw new Error('Không nhận được đường dẫn ảnh')
             }
           } catch (uploadError) {
-            console.error('Error uploading image:', uploadError);
-            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định');
-            this.submitLoading = false;
-            return;
+            console.error('Error uploading image:', uploadError)
+            this.submitError = 'Lỗi khi tải ảnh lên: ' + (uploadError.message || 'Không xác định')
+            this.submitLoading = false
+            return
           }
         }
 
@@ -654,30 +655,30 @@ export default {
           type: this.formData.type,
           // Include imageUrl if it was uploaded
           ...(imageUrl && { image: imageUrl }),
-        };
+        }
 
         // Call the update service API
-        await serviceService.updateService(this.formData._id, serviceData);
-        this.successMessage = 'Cập nhật dịch vụ thành công!';
+        await serviceService.updateService(this.formData._id, serviceData)
+        this.successMessage = 'Cập nhật dịch vụ thành công!'
 
         // Reset form and reload services
         setTimeout(() => {
-          this.loadServices();
-          this.showFormModal = false;
-          this.resetForm();
-        }, 1000);
+          this.loadServices()
+          this.showFormModal = false
+          this.resetForm()
+        }, 1000)
       } catch (error) {
-        console.error('Error updating service:', error);
-        this.submitError = 'Có lỗi xảy ra khi cập nhật dịch vụ. Vui lòng thử lại!';
+        console.error('Error updating service:', error)
+        this.submitError = 'Có lỗi xảy ra khi cập nhật dịch vụ. Vui lòng thử lại!'
       } finally {
-        this.submitLoading = false;
+        this.submitLoading = false
       }
     },
     async handleSoftDelete() {
       try {
         // Gọi API để cập nhật trạng thái isDeleted trong database
         await serviceService.deleteService(this.selectedService._id)
-        
+
         const serviceIndex = this.services.findIndex((s) => s._id === this.selectedService._id)
         if (serviceIndex !== -1) {
           // Lưu ID service đã xóa vào localStorage
@@ -706,7 +707,7 @@ export default {
         console.error('Error:', error)
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi xóa dịch vụ'
+          message: 'Có lỗi xảy ra khi xóa dịch vụ',
         })
       }
     },
@@ -873,11 +874,9 @@ export default {
 </script>
 
 <style scoped>
-
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 
 .service-list {
-  
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -997,7 +996,8 @@ table {
   font-size: 14px;
 }
 
-th, td {
+th,
+td {
   text-align: center;
   vertical-align: middle;
   padding: 20px;
@@ -1092,13 +1092,19 @@ tr:hover {
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
   animation: modalFadeIn 0.3s;
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(-20px);}
-  to { opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -1130,7 +1136,9 @@ tr:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .close-btn:hover {
@@ -1153,7 +1161,6 @@ tr:hover {
   font-weight: 600;
   margin-bottom: 12px;
 }
-
 
 .cancel-btn {
   background: #f3f4f6;
@@ -1180,7 +1187,9 @@ tr:hover {
   padding: 10px 22px;
   font-weight: 600;
   font-size: 1rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .delete-btn:hover:not(:disabled),
@@ -1239,9 +1248,11 @@ tr:hover {
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   position: relative; /* Thêm dòng này */
-  z-index: 1;         /* Thêm dòng này */
+  z-index: 1; /* Thêm dòng này */
 }
 
 .modal-header {
@@ -1600,8 +1611,8 @@ tr:hover {
   margin-left: 4px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="number"],
+.form-group input[type='text'],
+.form-group input[type='number'],
 .form-group select,
 .form-group textarea {
   width: 100%;
@@ -1829,7 +1840,7 @@ button:disabled {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -1841,12 +1852,12 @@ input[type="checkbox"] {
   background: white;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background: #3b82f6;
   border-color: #3b82f6;
 }
 
-input[type="checkbox"]:checked::after {
+input[type='checkbox']:checked::after {
   content: '✓';
   color: white;
   position: absolute;

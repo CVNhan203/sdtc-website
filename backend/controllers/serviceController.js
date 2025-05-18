@@ -116,10 +116,33 @@ exports.uploadServiceImage = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: 'Không có file được tải lên' })
     }
 
+    // Chuẩn hóa đường dẫn và đảm bảo định dạng nhất quán
     const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
-    const imageUrl = `${req.app.locals.BASE_URL}/${imagePath}`
+    
+    // Lấy thông tin đầy đủ về file
+    console.log('File info:', req.file)
+    console.log('File path:', req.file.path)
+    console.log('Image path after normalization:', imagePath)
+    
+    const baseUrl = req.app.locals.BASE_URL
+    console.log('Base URL:', baseUrl)
+    
+    // Lấy chỉ tên file
+    const filename = req.file.filename
+    // Tạo đường dẫn tương đối
+    const relativePath = 'uploads/images/' + filename
+    // Tạo URL đầy đủ
+    const imageUrl = `${baseUrl}/${relativePath}`
+    
+    console.log('Đường dẫn ảnh đã tạo:', imageUrl)
+
+    // Kiểm tra file có tồn tại không
+    const fullPath = path.join(__dirname, '..', relativePath)
+    const exists = fs.existsSync(fullPath)
+    console.log('File exists check:', exists, 'at path:', fullPath)
 
     res.status(200).json({
+      success: true,
       message: 'Tải ảnh lên thành công',
       imagePath: imageUrl,
     })

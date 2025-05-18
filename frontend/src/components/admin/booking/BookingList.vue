@@ -315,7 +315,7 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url(data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 8px center;
     background-size: 16px;
@@ -352,7 +352,7 @@ export default {
   background: white;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow-x: auto; /* Changed from overflow: hidden to enable horizontal scrolling */
 }
 
 table {
@@ -623,5 +623,16 @@ tr:hover {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  table {
+    min-width: 600px; /* Ensure table has a minimum width to show all content */
+  }
 }
 </style>

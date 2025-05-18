@@ -745,10 +745,97 @@ input.error {
 @media (max-width: 768px) {
   .payment-content {
     flex-direction: column;
+    gap: 20px;
   }
 
   .payment-method {
     min-width: 100px;
+  }
+  
+  .payment-header {
+    margin-bottom: 20px;
+  }
+  
+  .payment-header h2 {
+    font-size: 24px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .service-image {
+    height: 200px;
+  }
+  
+  .service-image img {
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn-cancel, .btn-submit, .btn-confirm {
+    width: 100%;
+    padding: 14px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    max-height: 80vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-container {
+    padding: 20px 12px;
+  }
+  
+  .payment-form {
+    padding: 15px;
+  }
+  
+  .service-details {
+    padding: 15px;
+  }
+  
+  .service-details h4 {
+    font-size: 18px;
+  }
+  
+  .service-price {
+    font-size: 20px;
+  }
+  
+  input {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .payment-methods {
+    gap: 10px;
+  }
+  
+  .payment-method {
+    padding: 10px;
+  }
+  
+  .payment-logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+  
+  .qr-code img {
+    max-width: 150px;
   }
 }
 </style>

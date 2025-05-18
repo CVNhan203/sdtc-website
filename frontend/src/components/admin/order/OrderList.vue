@@ -54,7 +54,7 @@
                 </span>
               </td>
               <td class="actions">
-                <div class="actions">
+                <div class="actions" style="height: 120px !important">
                   <button class="icon-btn info" @click="showDetails(order)" title="Xem chi tiết">
                     <i class="fas fa-info-circle"></i>
                   </button>
@@ -639,7 +639,6 @@ th {
 }
 
 td {
-  padding: 16px;
   border-bottom: 1px solid #e2e8f0;
   vertical-align: middle;
   text-align: center; /* căn giữa nội dung cột */
@@ -844,6 +843,7 @@ tr:hover td {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: auto !important; /* Remove fixed height */
 }
 
 .icon-btn {
@@ -925,6 +925,10 @@ tr:hover td {
   min-height: 32px;
   display: flex;
   align-items: center;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  overflow: hidden;
 }
 
 .detail-item:has(.detail-image) {

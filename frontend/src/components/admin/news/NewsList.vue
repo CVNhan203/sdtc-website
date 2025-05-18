@@ -3,7 +3,7 @@
   <div class="news-list">
     <!-- Hiển thị trạng thái đang tải -->
     <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
+      <!-- <div class="loading-spinner"></div> -->
       <p>Đang tải danh sách tin tức...</p>
     </div>
 
@@ -62,6 +62,7 @@
               <th>Ảnh</th>
               <th style="max-width: 250px">Tiêu đề</th>
               <th>Loại</th>
+              <th>Tác giả</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -95,6 +96,7 @@
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
               <td class="type-cell">{{ news.type }}</td>
+              <td>{{ news.author }}</td>
               <td class="actions-cell" style="height: 120px !important">
                 <div class="actions">
                   <!-- Nút xem chi tiết -->
@@ -209,6 +211,10 @@
             <div class="detail-item">
               <label>Loại:</label>
               <p>{{ selectedNews.type }}</p>
+            </div>
+            <div class="detail-item">
+              <label>Tác giả:</label>
+              <p>{{ selectedNews.author }}</p>
             </div>
             <div class="detail-item">
               <label>Trạng thái:</label>
@@ -388,6 +394,7 @@
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import newsService from '@/api/services/newsService'
 import eventBus from '@/eventBus'
+import { baseMediaUrl } from '@/api/config'
 
 export default {
   name: 'NewsList',
@@ -415,7 +422,7 @@ export default {
     const loading = ref(false) // Trạng thái đang tải
     const error = ref(null) // Thông báo lỗi nếu có
     const isEditing = ref(false) // Trạng thái đang chỉnh sửa hay thêm mới
-    const baseImageUrl = ref('http://localhost:3000') // URL cơ sở cho hình ảnh
+    const baseImageUrl = ref(baseMediaUrl) // URL cơ sở cho hình ảnh
     const imageLoadError = ref({}) // Lưu các lỗi khi tải hình ảnh
     const selectedNewsIds = ref([]) // Danh sách ID tin tức được chọn
     const fileInput = ref(null)
@@ -716,21 +723,20 @@ export default {
 
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return null
+      if (!imagePath) return `${baseImageUrl.value}/uploads/images/1746862099720.png`
 
       // Nếu đã là URL đầy đủ
       if (imagePath.startsWith('http')) return imagePath
 
-      // Nếu là đường dẫn tương đối
       try {
-        // Loại bỏ các ký tự / ở đầu và cuối
-        const cleanPath = imagePath.replace(/^[/\\]+|[/\\]+$/g, '')
-        // Tạo URL đầy đủ
-        const fullUrl = `${baseImageUrl.value}/${cleanPath}`
-        return fullUrl
+        // Lấy tên file từ đường dẫn
+        const filename = imagePath.split('/').pop().split('\\').pop()
+        
+        // Tạo đường dẫn tuyệt đối đến backend
+        return `${baseImageUrl.value}/uploads/images/${filename}`
       } catch (error) {
         console.error('Error creating image URL:', error)
-        return null
+        return `${baseImageUrl.value}/uploads/images/1746862099720.png`
       }
     }
 
@@ -919,15 +925,13 @@ export default {
     // Xử lý lỗi khi tải hình ảnh
     const handleImageError = (event, newsId) => {
       if (event) {
-        event.target.src = '' // Xóa nguồn ảnh bị lỗi
-        event.target.style.display = 'none' // Ẩn ảnh bị lỗi
-        const parent = event.target.parentElement
-        if (parent) {
-          parent.classList.add('no-image')
-          parent.innerHTML = '<i class="fas fa-image"></i>'
-        }
+        // Thay thế bằng ảnh mặc định
+        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png' 
+        
+        // Ghi nhớ lỗi cho newsId này
+        imageLoadError.value[newsId] = true
+        console.error('Failed to load image for news ID:', newsId)
       }
-      imageLoadError.value[newsId] = true
     }
 
     const openEditFromDetails = () => {
