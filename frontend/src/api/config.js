@@ -1,13 +1,13 @@
 import axios from 'axios'; // Nhập thư viện axios để thực hiện các yêu cầu HTTP
 
-// Tự động phát hiện địa chỉ IP hoặc hostname của máy đang truy cập
+// Lấy hostname hiện tại
 const currentHost = window.location.hostname;
 
-// Nếu đang truy cập từ localhost, sử dụng localhost, nếu không thì sử dụng địa chỉ hiện tại
-const apiHost = currentHost === 'localhost' ? 'localhost' : currentHost;
+// Tạo baseURL cho API
+const API_BASE_URL = `http://${currentHost}:3000/api`;
 
 const api = axios.create({
-    baseURL: `http://${apiHost}:3000/api`,
+    baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json' // Đặt header Content-Type mặc định là application/json
     }
@@ -35,10 +35,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response, // Trả về phản hồi nếu không có lỗi
     (error) => {
-        if (error.response?.status === 401) { // Kiểm tra nếu mã trạng thái là 401 (Unauthorized)
+        // Kiểm tra nếu là API của admin và trả về lỗi 401
+        if (error.response?.status === 401 && error.config.url.includes('/admin/')) {
             localStorage.removeItem('adminToken'); // Xóa token khỏi localStorage
             localStorage.removeItem('adminInfo'); // Xóa thông tin admin khỏi localStorage
-            window.location.href = '/admin/dashboard'; // Chuyển hướng đến trang dashboard
+            // window.location.href = '/admin/dashboard'; // Chỉ chuyển hướng nếu là API của admin
         }
         return Promise.reject(error); // Ném lỗi nếu có
     }
