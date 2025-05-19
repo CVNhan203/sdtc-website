@@ -136,13 +136,17 @@ export default {
 .news-header {
   position: relative;
   background: rgba(0, 123, 255, 1);
-  width: 1240;
+  width: 100%; /* Sửa lại width */
   height: 200px; /* Reduced height since we removed the title */
-  top: 184;
-  left: 356;
+  top: 0; /* Sửa lại top */
+  left: 0; /* Sửa lại left */
   border-radius: 20px;
   text-align: center;
   background-image: url('@/assets/sdtc-image/brsearch.png');
+  background-size: cover;
+  background-position: center;
+  overflow: visible; /* Cho phép các phần tử con lấn ra ngoài */
+  margin-bottom: 60px; /* Thêm margin bottom để tránh đè lên content */
 }
 
 /* Wrapper cho thanh tìm kiếm */
@@ -152,23 +156,21 @@ export default {
   max-width: 600px;
   width: 90%;
   left: 50%;
-  bottom: 0;
-  transform: translate(-50%, 35%);
+  bottom: -40px; /* Điều chỉnh vị trí */
+  transform: translateX(-50%); /* Chỉ căn giữa theo chiều ngang */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
+  border-radius: 20px; /* Thêm bo tròn góc */
 }
 
 /* Thanh tìm kiếm với hiệu ứng bóng đổ */
 .search-bar {
-  background: rgba(255, 255, 255, 1);
+  background: #ffffff;
   border-radius: 20px;
-  padding-top: 33px;
-  padding-right: 17px;
-  padding-bottom: 33px;
-  padding-left: 17px;
-  gap: 23px;
-
+  padding: 20px;
   display: flex;
   align-items: center;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0; /* Thêm viền */
 }
 
 /* Icon kính lúp trong thanh tìm kiếm */
@@ -229,6 +231,12 @@ export default {
 .news-card:hover .news-image {
   filter: grayscale(70%) brightness(105%);
   opacity: 0.7;
+}
+
+
+.news-content {
+  margin-left: 15px; 
+  margin-top: 15px; 
 }
 
 /* Phân loại tin tức (category) */
@@ -372,7 +380,8 @@ export default {
   }
 
   .news-content {
-    padding: 15px;
+    padding: 20px;
+    max-width: 20px;
   }
 }
 
