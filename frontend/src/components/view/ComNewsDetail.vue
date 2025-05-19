@@ -146,25 +146,28 @@ export default {
       }
     }
 
-    const getImageUrl = (image) => {
-      if (!image) return 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+    // Function to get image URL
+    const getImageUrl = (imagePath) => {
+      // Nếu không có đường dẫn ảnh, trả về ảnh mặc định
+      if (!imagePath) return `${baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
       
       // Nếu đã là URL đầy đủ, sử dụng trực tiếp
-      if (image.startsWith('http')) return image
+      if (imagePath.startsWith('http')) return `${imagePath}?t=${new Date().getTime()}`
       
       // Lấy tên file từ đường dẫn
-      const filename = image.split('/').pop().split('\\').pop()
+      const filename = imagePath.split('/').pop().split('\\').pop()
       
-      // Tạo đường dẫn tuyệt đối đến backend
-      return `${baseMediaUrl}/uploads/images/${filename}`
+      // Tạo đường dẫn tuyệt đối đến backend với timestamp để tránh cache
+      return `${baseMediaUrl}/uploads/images/${filename}?t=${new Date().getTime()}`
     }
 
+    // Xử lý khi ảnh không tải được
     const handleImageError = (event) => {
       // Khi ảnh không tải được, thay thế bằng ảnh mặc định
       if (event && event.target) {
         console.error('Failed to load image:', event.target.src)
-        // Sử dụng ảnh có sẵn trên server thay vì placeholder
-        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+        // Sử dụng ảnh có sẵn trên server với timestamp để tránh cache
+        event.target.src = `${baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
       }
     }
 

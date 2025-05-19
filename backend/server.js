@@ -9,6 +9,7 @@ const orderRoutes = require('./routes/orderRoutes')
 const serviceRoutes = require('./routes/serviceRoutes')
 const bookingRoutes = require('./routes/bookingRoutes')
 const adminRoutes = require('./routes/adminRoutes')
+const fs = require('fs')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -21,14 +22,14 @@ app.use(express.json())
 
 // Cấu hình CORS cho phép frontend truy cập API
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://192.168.2.34:8080'],
+  origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-// Định nghĩa BASE_URL cho server - sử dụng địa chỉ IP
-const BASE_URL = 'http://192.168.2.34:3000'
+// Định nghĩa BASE_URL cho server - sử dụng localhost
+const BASE_URL = 'http://localhost:3000'
 app.locals.BASE_URL = BASE_URL
 console.log('Server BASE_URL:', BASE_URL)
 
@@ -40,6 +41,11 @@ app.use('/uploads', (req, res, next) => {
   // Thêm CORS headers cho file tĩnh
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  
+  // Cấu hình kiểm soát cache để đảm bảo ảnh luôn được cập nhật
+  res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
+  res.setHeader('Expires', '0');
+  res.setHeader('Pragma', 'no-cache');
   
   // Log yêu cầu để debug
   console.log('Request to static file:', req.url);
@@ -53,37 +59,30 @@ app.use('/uploads', (req, res, next) => {
     res.setHeader('Content-Type', contentType);
   }
   
-  express.static(uploadsPath)(req, res, next);
-});
+  next();
+}, express.static(uploadsPath));
 
 // Đảm bảo đường dẫn cụ thể cho hình ảnh
 const imagesPath = path.join(__dirname, 'uploads', 'images')
 console.log('Thư mục images đầy đủ:', imagesPath)
 
-app.use('/uploads/images', (req, res, next) => {
-  // Thêm CORS headers cho file tĩnh
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  
-  // Log yêu cầu để debug
-  console.log('Request to image:', req.url);
-  
-  // Thiết lập Content-Type nếu là hình ảnh
-  if (req.url.match(/\.(jpg|jpeg|png|gif)$/i)) {
-    const ext = path.extname(req.url).toLowerCase();
-    let contentType = 'image/jpeg';
-    if (ext === '.png') contentType = 'image/png';
-    if (ext === '.gif') contentType = 'image/gif';
-    res.setHeader('Content-Type', contentType);
-  }
-  
-  express.static(imagesPath)(req, res, next);
-});
+// Thêm route để test thư mục uploads
+app.get('/test-uploads', (req, res) => {
+  const files = fs.readdirSync(uploadsPath)
+  res.json({
+    uploadsPath,
+    files
+  })
+})
 
-// In ra một số đường dẫn ảnh mẫu để kiểm tra
-const sampleImage = path.join(__dirname, 'uploads', 'images', '1746862099720.png')
-console.log('Sample image path:', sampleImage)
-console.log('Sample image URL:', `${BASE_URL}/uploads/images/1746862099720.png`)
+// Thêm route để test thư mục images
+app.get('/test-images', (req, res) => {
+  const files = fs.readdirSync(imagesPath)
+  res.json({
+    imagesPath,
+    files
+  })
+})
 
 // Routes
 app.use('/api/emails', emailRoutes)
