@@ -22,7 +22,7 @@ app.use(express.json())
 
 // Cấu hình CORS cho phép frontend truy cập API
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:8080'],
+  origin: ['https://tansanh.github.io','http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']

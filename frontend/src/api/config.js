@@ -6,12 +6,12 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 // Base URL cho API requests
 const baseApiUrl = isProduction 
-  ? 'https://sdtc-website.onrender.com'
+  ? 'https://sdtc-website.onrender.com/api'  // URL từ Render dashboard
   : 'http://localhost:3000/api'
 
 // Base URL cho media (hình ảnh, video, vv...)
 export const baseMediaUrl = isProduction
-  ? 'https://sdtc-website.onrender.com'
+  ? 'https://sdtc-website.onrender.com'  // URL từ Render dashboard
   : 'http://localhost:3000'
 
 const api = axios.create({
