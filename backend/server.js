@@ -30,7 +30,13 @@ app.use(cors({
 
 // Thiết lập CORS middleware bổ sung để đảm bảo header luôn được gửi
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://tansanh.github.io');
+  const allowedOrigins = ['https://tansanh.github.io', 'http://localhost:8080', 'http://127.0.0.1:8080'];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
