@@ -94,6 +94,23 @@ app.use('/api/bookings', bookingRoutes)
 // Admin routes
 app.use('/api/admin', adminRoutes)
 
+// API chẩn đoán
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'online',
+    timestamp: new Date().toISOString(),
+    uploads: {
+      path: uploadsPath,
+      exists: fs.existsSync(uploadsPath)
+    },
+    imagesPath: {
+      path: imagesPath,
+      exists: fs.existsSync(imagesPath)
+    },
+    images: fs.existsSync(imagesPath) ? fs.readdirSync(imagesPath) : []
+  });
+});
+
 // Thêm route kiểm tra trực tiếp cho hình ảnh
 app.get('/test-image/:filename', (req, res) => {
   const filename = req.params.filename

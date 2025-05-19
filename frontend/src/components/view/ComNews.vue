@@ -26,10 +26,10 @@
         class="news-card"
         @click="goToNewsDetail(news)"
       >
-        <img 
-          :src="getImageUrl(news.image)" 
-          class="news-image" 
-          @error="handleImageError(null, news._id)" 
+        <img
+          :src="getImageUrl(news.image)"
+          class="news-image"
+          @error="handleImageError(null, news._id)"
         />
         <div class="news-content">
           <p class="news-category">{{ news.type || news.category || 'Không có danh mục' }}</p>
@@ -70,7 +70,8 @@ export default {
   async mounted() {
     try {
       const response = await newsService.getNews()
-      console.log('Mounted news data:', response.data) // Thêm dòng này để debug
+      console.log('Mounted news data:', response.data)
+      // Use the imageUrl provided by the API
       this.allNewsItems = response.data
     } catch (e) {
       this.error = 'Không thể tải danh sách tin tức. Vui lòng thử lại sau.'
@@ -104,7 +105,8 @@ export default {
       }
     },
     getImageUrl(imagePath) {
-      if (!imagePath) return `${this.baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
+      if (!imagePath)
+        return `${this.baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
 
       // Nếu đã là URL đầy đủ, sử dụng trực tiếp
       if (imagePath.startsWith('http')) return `${imagePath}?t=${new Date().getTime()}`

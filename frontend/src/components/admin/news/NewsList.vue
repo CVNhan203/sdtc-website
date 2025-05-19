@@ -83,15 +83,11 @@
               <td>
                 <div class="image-container">
                   <img
-                    v-if="news.image"
-                    :src="getImageUrl(news.image)"
+                    :src="news.imageUrl"
                     alt="News image"
                     class="news-image"
                     @error="handleImageError($event, news._id)"
                   />
-                  <div v-else class="no-image">
-                    <i class="fas fa-image"></i>
-                  </div>
                 </div>
               </td>
               <td class="truncate-text" style="max-width: 250px">{{ news.title }}</td>
@@ -189,12 +185,10 @@
             <div class="detail-item">
               <label>Ảnh:</label>
               <img
-                v-if="selectedNews.image"
-                :src="getImageUrl(selectedNews.image)"
+                :src="selectedNews.imageUrl"
                 alt="News image"
                 class="detail-image"
               />
-              <span v-else class="no-image">No image</span>
             </div>
             <div class="detail-item">
               <label>Tiêu đề:</label>
@@ -396,6 +390,11 @@ import newsService from '@/api/services/newsService'
 import eventBus from '@/eventBus'
 import { baseMediaUrl } from '@/api/config'
 
+// Import các hình ảnh từ thư mục assets
+// const img1 = '@/assets/1746863140024.png'
+// const img2 = '@/assets/1746678606025.png'
+// const img3 = '@/assets/1746678511693.png'
+
 export default {
   name: 'NewsList',
   setup() {
@@ -427,6 +426,9 @@ export default {
     const selectedNewsIds = ref([]) // Danh sách ID tin tức được chọn
     const fileInput = ref(null)
     const errors = ref({}) // Add a reactive object for errors
+    
+    // Định nghĩa mảng ảnh mặc định
+    // const defaultImages = [img1, img2, img3]
 
     // Tính toán danh sách tin đã lọc
     const filteredNews = computed(() => {
@@ -723,7 +725,7 @@ export default {
 
     // Lấy URL đầy đủ của ảnh
     const getImageUrl = (imagePath) => {
-      if (!imagePath) return `${baseImageUrl.value}/uploads/images/1746862099720.png`
+      if (!imagePath) return `${baseImageUrl.value}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
 
       // Nếu đã là URL đầy đủ
       if (imagePath.startsWith('http')) return imagePath
@@ -732,11 +734,11 @@ export default {
         // Lấy tên file từ đường dẫn
         const filename = imagePath.split('/').pop().split('\\').pop()
         
-        // Tạo đường dẫn tuyệt đối đến backend
-        return `${baseImageUrl.value}/uploads/images/${filename}`
+        // Tạo đường dẫn tuyệt đối đến backend với timestamp để tránh cache
+        return `${baseImageUrl.value}/uploads/images/${filename}?t=${new Date().getTime()}`
       } catch (error) {
         console.error('Error creating image URL:', error)
-        return `${baseImageUrl.value}/uploads/images/1746862099720.png`
+        return `${baseImageUrl.value}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
       }
     }
 
@@ -794,8 +796,8 @@ export default {
       // Validate summary
       if (!formData.value.summary?.trim()) {
         newErrors.summary = 'Tóm tắt không được để trống'
-      } else if (formData.value.summary.trim().length < 10) {
-        newErrors.summary = 'Tóm tắt phải có ít nhất 10 ký tự'
+      } else if (formData.value.summary.trim().length < 20) {
+        newErrors.summary = 'Tóm tắt phải có ít nhất 20 ký tự'
       } else if (formData.value.summary.trim().length > 500) {
         newErrors.summary = 'Tóm tắt không được vượt quá 500 ký tự'
       }
@@ -925,9 +927,9 @@ export default {
     // Xử lý lỗi khi tải hình ảnh
     const handleImageError = (event, newsId) => {
       if (event) {
-        // Thay thế bằng ảnh mặc định
-        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png' 
-        
+        // Thay thế bằng ảnh mặc định với timestamp để tránh cache
+        event.target.src = `${baseImageUrl.value}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
+
         // Ghi nhớ lỗi cho newsId này
         imageLoadError.value[newsId] = true
         console.error('Failed to load image for news ID:', newsId)

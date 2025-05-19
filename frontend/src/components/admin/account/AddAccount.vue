@@ -1,12 +1,14 @@
 <template>
   <div class="add-account">
     <div class="form-container">
+      <!-- Hiển thị thông báo lỗi nếu có -->
       <div v-if="errorMessage" class="error-alert">
         <i class="fas fa-exclamation-circle"></i>
         <span>{{ errorMessage }}</span>
       </div>
 
       <form @submit.prevent="handleSubmit" class="account-form" novalidate>
+        <!-- Nhập họ tên -->
         <div class="form-group" :class="{ 'has-error': errors.fullName }">
           <label for="fullName">Họ tên <span class="required">*</span></label>
           <input
@@ -18,6 +20,7 @@
           <span class="error-message" v-if="errors.fullName">{{ errors.fullName }}</span>
         </div>
 
+        <!-- Nhập email -->
         <div class="form-group" :class="{ 'has-error': errors.email }">
           <label for="email">Email <span class="required">*</span></label>
           <input
@@ -29,6 +32,7 @@
           <span class="error-message" v-if="errors.email">{{ errors.email }}</span>
         </div>
 
+        <!-- Nhập mật khẩu -->
         <div class="form-group" :class="{ 'has-error': errors.password }">
           <label for="password">Mật khẩu <span class="required">*</span></label>
           <div class="password-input">
@@ -45,6 +49,7 @@
           <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
         </div>
 
+        <!-- Nhập xác nhận mật khẩu -->
         <div class="form-group" :class="{ 'has-error': errors.confirmPassword }">
           <label for="confirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
           <div class="password-input">
@@ -62,11 +67,10 @@
               <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
           </div>
-          <span class="error-message" v-if="errors.confirmPassword">{{
-            errors.confirmPassword
-          }}</span>
+          <span class="error-message" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</span>
         </div>
 
+        <!-- Chọn vai trò -->
         <div class="form-group" :class="{ 'has-error': errors.role }">
           <label for="role">Vai trò <span class="required">*</span></label>
           <select id="role" v-model="formData.role" :class="{ error: errors.role }">
@@ -102,10 +106,11 @@ export default {
   name: 'AddAccount',
   setup() {
     const router = useRouter()
-    const isSubmitting = ref(false)
-    const showPassword = ref(false)
-    const showConfirmPassword = ref(false)
+    const isSubmitting = ref(false) // Trạng thái gửi form
+    const showPassword = ref(false) // Trạng thái hiển thị mật khẩu
+    const showConfirmPassword = ref(false) // Trạng thái hiển thị xác nhận mật khẩu
 
+    // Dữ liệu form
     const formData = reactive({
       fullName: '',
       email: '',
@@ -115,6 +120,7 @@ export default {
       status: true,
     })
 
+    // Lỗi form
     const errors = reactive({
       fullName: '',
       email: '',
@@ -124,14 +130,15 @@ export default {
       status: '',
     })
 
-    const errorMessage = ref('')
+    const errorMessage = ref('') // Thông báo lỗi chung
 
+    // Hàm xác thực form
     const validateForm = () => {
       let isValid = true
-      // Reset errors
+      // Reset lỗi
       Object.keys(errors).forEach((key) => (errors[key] = ''))
 
-      // Validate fullName
+      // Xác thực họ tên
       if (!formData.fullName.trim()) {
         errors.fullName = 'Vui lòng nhập họ tên'
         isValid = false
@@ -146,16 +153,16 @@ export default {
         isValid = false
       }
 
-      // Validate email
+      // Xác thực email
       if (!formData.email.trim()) {
         errors.email = 'Vui lòng nhập email'
         isValid = false
       } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email.trim())) {
-        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: nam.vuphanhoai@gmail.com)'
+        errors.email = 'Vui lòng nhập email hợp lệ (ví dụ: sea.dragon@gmail.com)'
         isValid = false
       }
 
-      // Validate password
+      // Xác thực mật khẩu
       if (!formData.password) {
         errors.password = 'Vui lòng nhập mật khẩu'
         isValid = false
@@ -172,7 +179,7 @@ export default {
         isValid = false
       }
 
-      // Validate confirmPassword
+      // Xác thực xác nhận mật khẩu
       if (!formData.confirmPassword) {
         errors.confirmPassword = 'Vui lòng xác nhận mật khẩu'
         isValid = false
@@ -181,7 +188,7 @@ export default {
         isValid = false
       }
 
-      // Validate role
+      // Xác thực vai trò
       if (!formData.role) {
         errors.role = 'Vui lòng chọn vai trò'
         isValid = false
@@ -190,11 +197,12 @@ export default {
         isValid = false
       }
 
-      return isValid
+      return isValid // Trả về true nếu form hợp lệ
     }
 
+    // Hàm xử lý gửi form
     const handleSubmit = async () => {
-      // Trim input fields to handle leading/trailing spaces
+      // Trim các trường nhập để xử lý khoảng trắng
       formData.fullName = formData.fullName.trim()
       formData.email = formData.email.trim()
 
@@ -206,7 +214,7 @@ export default {
         if (firstErrorField) {
           const element = document.getElementById(firstErrorField)
           if (element) {
-            element.focus()
+            element.focus() // Tập trung vào trường lỗi đầu tiên
           }
         }
 
@@ -217,7 +225,7 @@ export default {
         return
       }
 
-      isSubmitting.value = true
+      isSubmitting.value = true // Đặt trạng thái gửi form
       try {
         const accountData = {
           fullName: formData.fullName,
@@ -227,7 +235,7 @@ export default {
           isDeleted: !formData.status,
         }
 
-        const response = await accountService.createAccount(accountData)
+        const response = await accountService.createAccount(accountData) // Gọi API tạo tài khoản
 
         if (response.success) {
           eventBus.emit('show-toast', {
@@ -239,7 +247,7 @@ export default {
               name: 'AccountList',
               query: { refresh: 'true' },
             })
-          }, 500)
+          }, 500) // Chuyển hướng về danh sách tài khoản
         } else {
           // Xử lý lỗi trả về từ accountService
           handleApiErrors(response)
@@ -249,7 +257,7 @@ export default {
         errorMessage.value = 'Có lỗi xảy ra khi tạo tài khoản'
         console.error('Error in handleSubmit:', error)
       } finally {
-        isSubmitting.value = false
+        isSubmitting.value = false // Đặt lại trạng thái gửi form
       }
     }
 
@@ -281,7 +289,10 @@ export default {
 
       // Xử lý lỗi validation
       if (response && response.errors && Object.keys(response.errors).length > 0) {
+        //entries trả về đối tượng có thể lặp
+        //forEach lặp qua các phần tử
         Object.entries(response.errors).forEach(([field, message]) => {
+          //undefined đại diện 1 giá trị chưa được xác định
           if (errors[field] !== undefined) {
             errors[field] = Array.isArray(message) ? message[0] : message
             hasError = true
@@ -294,7 +305,7 @@ export default {
         errorMessage.value = (response && response.message) || 'Có lỗi khi tạo tài khoản'
       }
 
-      // Focus vào trường lỗi đầu tiên
+      // Tập trung vào trường lỗi đầu tiên
       const firstErrorField = Object.keys(errors).find((key) => errors[key])
       if (firstErrorField) {
         const element = document.getElementById(firstErrorField)
@@ -322,12 +333,12 @@ export default {
 </script>
 
 <style scoped>
-@import '@/styles/admin.css';
+@import "@/styles/admin.css";
 
 .add-account {
   padding: 24px;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto; /* Căn giữa */
 }
 
 .form-container {
@@ -340,7 +351,7 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 24px; /* Khoảng cách giữa các nhóm form */
 }
 
 .form-group label {
@@ -351,7 +362,7 @@ export default {
 }
 
 .required {
-  color: #dc2626;
+  color: #dc2626; /* Màu đỏ cho các trường bắt buộc */
   margin-left: 4px;
 }
 
@@ -365,21 +376,21 @@ select {
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #f9fafb;
+  background: #f9fafb; /* Màu nền cho các trường nhập */
 }
 
 input[type='text']:focus,
 input[type='email']:focus,
 input[type='password']:focus,
 select:focus {
-  border-color: #3b82f6;
-  background: #fff;
+  border-color: #3b82f6; /* Màu viền khi trường được chọn */
+  background: #fff; /* Màu nền khi trường được chọn */
   outline: none;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .password-input {
-  position: relative;
+  position: relative; /* Để đặt nút hiển thị mật khẩu */
 }
 
 .toggle-password {
@@ -396,11 +407,11 @@ select:focus {
 }
 
 .toggle-password:hover {
-  color: #3b82f6;
+  color: #3b82f6; /* Màu khi hover */
 }
 
 .error-message {
-  color: #dc2626;
+  color: #dc2626; /* Màu đỏ cho thông báo lỗi */
   font-size: 0.875rem;
   margin-top: 6px;
   display: block;
@@ -408,11 +419,11 @@ select:focus {
 
 .form-actions {
   display: flex;
-  gap: 16px;
-  justify-content: flex-end;
+  gap: 16px; /* Khoảng cách giữa các nút */
+  justify-content: flex-end; /* Căn phải */
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #e5e7eb; /* Đường viền trên cùng */
 }
 
 .submit-btn,
@@ -423,62 +434,63 @@ select:focus {
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 8px; /* Khoảng cách giữa biểu tượng và văn bản */
 }
 
 .submit-btn {
-  background: #3b82f6;
+  background: #3b82f6; /* Màu nền cho nút gửi */
   color: white;
   border: none;
 }
 
 .submit-btn:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
+  background: #2563eb; /* Màu nền khi hover */
+  transform: translateY(-1px); /* Hiệu ứng nhấn */
 }
 
 .cancel-btn {
-  background: #f3f4f6;
+  background: #f3f4f6; /* Màu nền cho nút hủy */
   color: #4b5563;
   border: 1px solid #e5e7eb;
 }
 
 .cancel-btn:hover {
-  background: #e5e7eb;
+  background: #e5e7eb; /* Màu nền khi hover */
 }
 
 .error {
-  border-color: #dc2626;
+  border-color: #dc2626; /* Màu viền cho trường có lỗi */
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .add-account {
-    padding: 16px;
+    padding: 16px; /* Giảm padding cho màn hình nhỏ */
   }
 
   .form-container {
-    padding: 24px;
+    padding: 24px; /* Giảm padding cho màn hình nhỏ */
   }
 }
 
 @media (max-width: 480px) {
   .add-account {
-    padding: 12px;
+    padding: 12px; /* Giảm padding cho màn hình rất nhỏ */
   }
 
   .form-container {
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 12px; /* Giảm bo góc cho màn hình nhỏ */
   }
 
   .form-actions {
-    flex-direction: column;
+    flex-direction: column; /* Đặt các nút theo chiều dọc */
   }
 
   .submit-btn,
   .cancel-btn {
-    width: 100%;
-    justify-content: center;
+    width: 100%; /* Đặt chiều rộng 100% cho các nút */
+    justify-content: center; /* Căn giữa văn bản trong nút */
   }
 }
 </style>

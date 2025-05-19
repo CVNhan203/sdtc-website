@@ -13,6 +13,15 @@ export const baseMediaUrl = `http://${backendHost}:${backendPort}`
 // Thêm log để kiểm tra cấu hình
 console.log('Backend URLs:', { baseApiUrl, baseMediaUrl })
 
+// Thêm kiểm tra kết nối đến server
+fetch(baseMediaUrl)
+  .then(response => {
+    console.log('🟢 Kết nối đến backend thành công:', response.status);
+  })
+  .catch(error => {
+    console.error('🔴 Lỗi kết nối đến backend:', error);
+  });
+
 const api = axios.create({
   baseURL: baseApiUrl,
   timeout: 10000, // Timeout 10 giây
@@ -21,6 +30,7 @@ const api = axios.create({
   },
 })
 
+// Thêm interceptor cho yêu cầu
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('adminToken')

@@ -28,15 +28,18 @@ exports.getNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ])
 
-  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào từng bài viết với đường dẫn tuyệt đối và timestamp
+  const timestamp = new Date().getTime()
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
   const newsWithImageUrl = news.map((n) => {
     let imageUrl = ''
     if (n.image) {
       if (n.image.startsWith('http')) {
-        imageUrl = n.image
+        imageUrl = `${n.image}?t=${timestamp}`
       } else {
-        const host = req.protocol + '://' + req.get('host')
-        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        const cleanPath = n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = `${baseUrl}/${cleanPath}?t=${timestamp}`
       }
     }
     return { ...n, imageUrl }
@@ -70,25 +73,36 @@ exports.getNewsById = asyncHandler(async (req, res) => {
   // Không cho phép xem bài viết đã bị xóa nếu không đăng nhập hoặc không có quyền
   if (news.isDeleted) {
     // Kiểm tra xem người dùng đã đăng nhập và có quyền xem bài viết bị xóa không
-    if (!req.user || 
-        (req.user.role !== 'admin' && 
-         (req.user.role !== 'staff' || news.author !== req.user.fullName))) {
+    if (
+      !req.user ||
+      (req.user.role !== 'admin' &&
+        (req.user.role !== 'staff' || news.author !== req.user.fullName))
+    ) {
       res.status(404)
       throw new Error('Bài viết này không tồn tại hoặc đã bị xóa')
     }
   }
 
+  // Nếu người dùng là staff, chỉ cho phép xem bài viết của mình
+  if (req.user && req.user.role === 'staff' && news.author !== req.user.fullName) {
+    res.status(403)
+    throw new Error('Bạn không có quyền xem bài viết này')
+  }
+
   // Tăng lượt xem
   await News.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
 
-  // Tự thêm trường imageUrl vào object trả về (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào object trả về với đường dẫn tuyệt đối và timestamp
+  const timestamp = new Date().getTime()
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
   let imageUrl = ''
   if (news.image) {
     if (news.image.startsWith('http')) {
-      imageUrl = news.image
+      imageUrl = `${news.image}?t=${timestamp}`
     } else {
-      const host = req.protocol + '://' + req.get('host')
-      imageUrl = host + '/' + news.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+      const cleanPath = news.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+      imageUrl = `${baseUrl}/${cleanPath}?t=${timestamp}`
     }
   }
   const newsWithImageUrl = { ...news, imageUrl }
@@ -228,49 +242,31 @@ exports.deleteNewsMany = asyncHandler(async (req, res) => {
   })
 })
 
-// Upload ảnh tin tức
+// Upload ảnh
 exports.uploadNewsImage = asyncHandler(async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'Không có file được tải lên' })
-    }
-
-    // Chuẩn hóa đường dẫn và đảm bảo định dạng nhất quán
-    const imagePath = req.file.path.replace(/\\/g, '/') // Thay thế backslash bằng forward slash
-    
-    // Sử dụng BASE_URL từ app.locals
-    const baseUrl = req.app.locals.BASE_URL
-    
-    // Thêm log để debug
-    console.log('File path:', req.file.path)
-    console.log('Image path:', imagePath)
-    console.log('Base URL:', baseUrl)
-    console.log('Filename:', req.file.filename)
-    
-    // Lấy chỉ tên file
-    const filename = req.file.filename
-    // Tạo đường dẫn tương đối - luôn sử dụng đường dẫn trong backend
-    const relativePath = 'uploads/images/' + filename
-    // Tạo URL đầy đủ
-    const imageUrl = `${baseUrl}/${relativePath}`
-    
-    console.log('Đường dẫn ảnh đã tạo:', imageUrl)
-    
-    // Kiểm tra tệp tồn tại
-    const fs = require('fs')
-    const fullPath = path.join(__dirname, '..', relativePath)
-    const exists = fs.existsSync(fullPath)
-    console.log('File exists check:', exists, 'at path:', fullPath)
-
-    res.status(200).json({
-      success: true,
-      message: 'Tải ảnh lên thành công',
-      imagePath: imageUrl,
-    })
-  } catch (error) {
-    console.error('Lỗi khi upload ảnh:', error)
-    res.status(500).json({ message: 'Lỗi server khi upload ảnh' })
+  if (!req.file) {
+    res.status(400)
+    throw new Error('Vui lòng tải lên một file ảnh')
   }
+
+  // Lấy đường dẫn tương đối của file, phù hợp để lưu vào db
+  const relativePath = path.join('uploads', 'images', req.file.filename).replace(/\\/g, '/')
+  
+  // Thêm timestamp vào đường dẫn để tránh cache
+  const timestamp = new Date().getTime()
+  
+  // Lấy BASE_URL từ app.locals
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
+  // Tạo đường dẫn đầy đủ với BASE_URL và timestamp
+  const fullPath = `${baseUrl}/${relativePath}?t=${timestamp}`
+
+  res.status(200).json({
+    success: true,
+    imagePath: relativePath,
+    fullPath: fullPath,
+    message: 'Tải ảnh lên thành công',
+  })
 })
 
 // Khôi phục bài viết
@@ -346,15 +342,14 @@ exports.getTrashNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ])
 
-  // Tự thêm trường imageUrl vào từng bài viết (URL tuyệt đối)
+  // Tự thêm trường imageUrl vào từng bài viết (đường dẫn tương đối)
   const newsWithImageUrl = news.map((n) => {
     let imageUrl = ''
     if (n.image) {
       if (n.image.startsWith('http')) {
         imageUrl = n.image
       } else {
-        const host = req.protocol + '://' + req.get('host')
-        imageUrl = host + '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
       }
     }
     return { ...n, imageUrl }
