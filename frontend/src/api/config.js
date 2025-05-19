@@ -1,14 +1,18 @@
 import axios from 'axios'
 
 // Cấu hình kết nối đến backend
-const backendHost = 'localhost'
-const backendPort = '3000'
+// Kiểm tra môi trường để sử dụng URL phù hợp
+const isProduction = process.env.NODE_ENV === 'production'
 
 // Base URL cho API requests
-const baseApiUrl = `http://${backendHost}:${backendPort}/api`
+const baseApiUrl = isProduction 
+  ? 'https://sdtc-website.onrender.com'
+  : 'http://localhost:3000/api'
 
 // Base URL cho media (hình ảnh, video, vv...)
-export const baseMediaUrl = `http://${backendHost}:${backendPort}`
+export const baseMediaUrl = isProduction
+  ? 'https://sdtc-website.onrender.com'
+  : 'http://localhost:3000'
 
 const api = axios.create({
   baseURL: baseApiUrl,
