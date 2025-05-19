@@ -86,10 +86,10 @@ const routes = [
     component: AdminDashboard,
     meta: { requiresAuth: true },
     children: [
-      // {
-      //   path: '',
-      //   redirect: 'dashboard'
-      // },
+      {
+        path: '',
+        redirect: 'dashboard'
+      },
       {
         path: 'dashboard',
         name: 'AdminDashboardHome',
@@ -138,13 +138,6 @@ const routes = [
         component: AdminOrderList,
         meta: { requiresAuth: true, requiresAdmin: true },
       },
-
-      // {
-      //   path: 'don-hang/lich-su',
-      //   name: 'AdminOrderHistory',
-      //   component: AdminOrderHistory,
-      //   meta: { requiresAuth: true, requiresAdmin: true },
-      // },
       {
         path: 'tai-khoan/danh-sach',
         name: 'AccountList',
@@ -180,10 +173,23 @@ const routes = [
     name: 'AdminLogin',
     component: AdminLogin,
   },
+  // Thêm route để chuyển hướng từ URL gốc của GitHub Pages
+  {
+    path: '/sdtc-website',
+    redirect: '/'
+  },
+  // Thêm route 404 để chuyển về trang chủ
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  }
 ]
 
+// Sử dụng cùng base URL với publicPath trong vue.config.js
+const baseUrl = process.env.NODE_ENV === 'production' ? '/sdtc-website/' : '/'
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(baseUrl),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // Nếu có vị trí scroll đã lưu (như khi nhấn nút back/forward)
@@ -198,11 +204,14 @@ const router = createRouter({
 
 // Route guard
 router.beforeEach((to, from, next) => {
-  // Check authentication for admin routes
-  if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
+  // Kiểm tra xem đường dẫn có chứa '/admin' không 
+  // (loại trừ /admin/login để cho phép truy cập vào trang đăng nhập)
+  if ((to.path.includes('/admin') && !to.path.includes('/admin/login')) || 
+      (to.matched.some(record => record.meta.requiresAuth))) {
     const token = localStorage.getItem('adminToken')
     if (!token) {
-      return next('/admin/login')
+      // Chuyển hướng đến trang đăng nhập admin, sử dụng đường dẫn tuyệt đối
+      return next({ path: '/admin/login' })
     }
 
     // Check role permissions
