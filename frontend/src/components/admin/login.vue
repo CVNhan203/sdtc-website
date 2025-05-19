@@ -1,53 +1,78 @@
 <template>
-  <div class="login-container">
-    <div class="login-form">
-      <div class="form-header">
-        <h2>Đăng nhập Admin</h2>
-        <p>Vui lòng đăng nhập để quản lý hệ thống!</p>
-      </div>
-      <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="credentials.email"
-            :class="{ error: emailError }"
-            @input="validateEmail"
-            placeholder="Nhập email của bạn"
-            required
-          />
-          <span class="error-text" v-if="emailError">{{ emailError }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Mật khẩu</label>
-          <div class="password-container">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              id="password"
-              v-model="credentials.password"
-              :class="{ error: passwordError }"
-              @input="validatePassword"
-              placeholder="Nhập mật khẩu"
-              required
-            />
-            <button type="button" class="show-password" @click="showPassword = !showPassword">
-              {{ showPassword ? 'Ẩn' : 'Hiện' }}
-            </button>
+  <div class="admin-login">
+    <div class="login-split">
+      <div class="brand-panel">
+        <div class="brand-content">
+          <div class="brand-logo">
+            <img src="@/assets/sdtc-image/trang-chu/Logo/sdtc.png" alt="Sea Dragon Technology" class="logo-image">
           </div>
-          <span class="error-text" v-if="passwordError">{{ passwordError }}</span>
+          <h2>Hệ thống quản trị</h2>
+          <p>Quản lý nội dung và dữ liệu của ứng dụng</p>
         </div>
+      </div>
+      
+      <div class="form-panel">
+        <div class="form-container">
+          <div class="form-header">
+            <h1>Đăng nhập</h1>
+            <p>Vui lòng đăng nhập để tiếp tục</p>
+          </div>
+          
+          <form @submit.prevent="handleSubmit" class="login-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                v-model="credentials.email"
+                :class="{ error: emailError }"
+                @input="validateEmail"
+                placeholder="admin@example.com"
+                required
+                autocomplete="email"
+              />
+              <span class="error-message" v-if="emailError">{{ emailError }}</span>
+            </div>
 
-        <div v-if="loginMessage" :class="['message', loginMessage.type]">
-          {{ loginMessage.text }}
+            <div class="form-group">
+              <label for="password">Mật khẩu</label>
+              <div class="password-field">
+                <input
+                  :type="showPassword ? 'text' : 'password'"
+                  id="password"
+                  v-model="credentials.password"
+                  :class="{ error: passwordError }"
+                  @input="validatePassword"
+                  placeholder="••••••••"
+                  required
+                  autocomplete="current-password"
+                />
+                <button 
+                  type="button" 
+                  class="toggle-password" 
+                  @click="showPassword = !showPassword"
+                >
+                  {{ showPassword ? 'Ẩn' : 'Hiện' }}
+                </button>
+              </div>
+              <span class="error-message" v-if="passwordError">{{ passwordError }}</span>
+            </div>
+
+            <div v-if="loginMessage" :class="['message', loginMessage.type]">
+              {{ loginMessage.text }}
+            </div>
+
+            <button type="submit" :disabled="!isFormValid || isLoading" class="login-button">
+              <span v-if="!isLoading">Đăng nhập</span>
+              <span v-else>Đang xử lý...</span>
+            </button>
+          </form>
+          
+          <div class="login-footer">
+            <p>© 2025 SDTC Admin - Bản quyền thuộc về nhóm 2</p>
+          </div>
         </div>
-
-        <button type="submit" :disabled="!isFormValid || isLoading" class="login-button">
-          <span v-if="!isLoading">Đăng nhập</span>
-          <span v-else>Đang xử lý...</span>
-        </button>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -146,175 +171,288 @@ export default {
 </script>
 
 <style scoped>
-
 @import "@/styles/admin.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Login Page Styles */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.admin-login {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem;
-  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f5ff;
+  font-family: 'Inter', sans-serif;
 }
 
-.login-form {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.login-split {
+  display: flex;
+  width: 900px;
+  height: 600px;
+  max-width: 100%;
+  max-height: 90vh;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.brand-panel {
+  flex: 0 0 40%;
+  background-color: #00275f;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.brand-panel::before {
+  content: '';
+  position: absolute;
+  top: 5%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.brand-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.brand-content {
+  text-align: center;
+  padding: 0 30px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand-logo {
+  margin: 0 auto 30px;
+  width: 180px;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.brand-content h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.brand-content p {
+  font-size: 15px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.form-panel {
+  flex: 0 0 60%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
   width: 100%;
-  max-width: 420px;
-  backdrop-filter: blur(10px);
+  max-width: 360px;
+  padding: 40px 20px;
 }
 
 .form-header {
-  text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 28px;
 }
 
-.form-header h2 {
-  color: #1e293b;
-  font-size: 2rem;
+.form-header h1 {
+  font-size: 28px;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: #0052cc;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 .form-header p {
-  color: #64748b;
-  font-size: 1rem;
+  color: #6b7280;
+  font-size: 15px;
 }
 
-/* Form Elements */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #64748b;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  font-size: 15px;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #0052cc;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
 }
 
 .form-group input.error {
   border-color: #ef4444;
+  background-color: #fef2f2;
 }
 
-.error-text {
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+.toggle-password:hover {
+  color: #374151;
+}
+
+.error-message {
   color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 13px;
+  margin-top: 6px;
   display: block;
 }
 
-/* Message Styles */
 .message {
-  padding: 0.75rem 1rem;
+  padding: 12px 16px;
   border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.message.success {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.message.error {
-  background-color: #fee2e2;
-  color: #b91c1c;
-}
-
-/* Button Styles */
-.login-button {
-  width: 100%;
-  padding: 0.875rem;
-  background: linear-gradient(to right, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.login-button:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.login-button:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Password Container */
-.password-container {
-  position: relative;
-  display: flex;
-}
-
-.password-container input {
-  width: 100%;
-}
-
-.show-password {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  padding: 0 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #666;
+  margin-bottom: 20px;
   font-size: 14px;
 }
 
-.show-password:hover {
-  color: #333;
+.message.success {
+  background-color: #ecfdf5;
+  color: #047857;
 }
 
-/* Responsive Styles */
+.message.error {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #9ca3af;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #6b7280;
+}
+
+.login-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.login-footer p {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .login-split {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    max-width: 420px;
+  }
+  
+  .brand-panel {
+    flex: 0 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .form-panel {
+    flex: 0 0 auto;
+  }
+  
+  .form-container {
+    padding: 30px 20px;
+  }
+  
+  .brand-logo {
+    width: 160px;
+    margin-bottom: 20px;
+  }
+}
+
 @media (max-width: 480px) {
-  .login-form {
-    padding: 1.5rem;
-    margin: 0.5rem;
+  .brand-logo {
+    width: 140px;
+    margin-bottom: 16px;
   }
-
-  .form-header h2 {
-    font-size: 1.5rem;
+  
+  .brand-content h2 {
+    font-size: 22px;
   }
-
-  .form-header p {
-    font-size: 0.875rem;
+  
+  .form-container {
+    padding: 24px 16px;
   }
-
-  .login-button {
-    padding: 0.75rem;
+  
+  .form-header h1 {
+    font-size: 24px;
+  }
+  
+  .form-group {
+    margin-bottom: 18px;
   }
 }
 </style>

@@ -73,15 +73,11 @@
             <td>
               <div class="image-container">
                 <img
-                  v-if="news.image"
-                  :src="getImageUrl(news.image)"
+                  :src="getFixedImage(index)"
                   alt="News image"
                   class="news-image"
                   @error="handleImageError"
                 />
-                <div v-else class="no-image">
-                  <i class="fas fa-image"></i>
-                </div>
               </div>
             </td>
             <td>{{ news.title }}</td>
@@ -161,6 +157,11 @@
 import eventBus from '@/eventBus'
 import newsService from '@/api/services/newsService'
 import { baseMediaUrl } from '@/api/config'
+
+// Import các hình ảnh từ thư mục assets
+import img1 from '@/assets/1746863140024.png'
+import img2 from '@/assets/1746678606025.png'
+import img3 from '@/assets/1746678511693.png'
 
 export default {
   name: 'AdminTrashNews',
@@ -265,10 +266,10 @@ export default {
     getImageUrl(imagePath) {
       if (!imagePath) return null
       if (imagePath.startsWith('http')) return imagePath
-      
+
       // Lấy tên file từ đường dẫn
       const filename = imagePath.split('/').pop().split('\\').pop()
-      
+
       // Tạo đường dẫn tuyệt đối đến backend
       return `${this.baseImageUrl}/uploads/images/${filename}`
     },
@@ -278,6 +279,11 @@ export default {
         event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
         console.error('Failed to load image:', event.target.src)
       }
+    },
+    // Trả về một trong ba ảnh cố định dựa trên index
+    getFixedImage(index) {
+      const fixedImages = [img1, img2, img3]
+      return fixedImages[index % fixedImages.length]
     },
     // Kiểm tra xem một tin tức có đang được chọn không
     isSelected(id) {

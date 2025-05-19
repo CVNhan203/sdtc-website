@@ -228,7 +228,7 @@ export default {
       const year = d.getFullYear()
       const hour = d.getHours().toString().padStart(2, '0')
       const minute = d.getMinutes().toString().padStart(2, '0')
-      return `${day}/${month}/${year}, ${hour}:${minute}`
+      return `${day}/${month}/${year} - ${hour}:${minute}`
     },
     getImageUrl(imagePath) {
       if (!imagePath) return null
@@ -308,10 +308,10 @@ export default {
     async handleDelete() {
       try {
         for (const id of this.selectedServices) {
-          // Xóa vĩnh viễn từ backend
-          await serviceService.permanentDeleteService(id)
+          // Call the API to permanently delete the service
+          await serviceService.deleteService(id)
 
-          // Xóa khỏi danh sách đã xóa trong localStorage
+          // Remove from the deleted services list in localStorage
           const deletedServices = JSON.parse(localStorage.getItem('deletedServices') || '[]')
           const updatedDeletedServices = deletedServices.filter((serviceId) => serviceId !== id)
           localStorage.setItem('deletedServices', JSON.stringify(updatedDeletedServices))
@@ -324,7 +324,7 @@ export default {
           )
           localStorage.setItem('deletedServicesInfo', JSON.stringify(updatedDeletedServicesInfo))
 
-          // Cập nhật danh sách hiện tại
+          // Update the current services list
           this.services = this.services.filter((service) => service._id !== id)
         }
         this.selectedServices = []

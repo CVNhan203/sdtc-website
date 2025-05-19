@@ -288,9 +288,8 @@
       <p>Dự án</p>
       <h2>Thành công vượt bậc</h2>
       <p>
-        Chúng tôi tự hào khi mỗi dự án hoàn thành không chỉ đáp ứng yêu cầu mà còn mang lại giá trị
-        thực tế cho khách hàng. Thành công của dự án là sự kết hợp giữa sáng tạo, chất lượng và cam
-        kết của chúng tôi.
+        Chúng tôi cam kết mang đến những giải pháp công nghệ tiên tiến, 
+        giúp bạn phát triển bền vững với chất lượng vượt trội và sự tin cậy tuyệt đối
       </p>
     </div>
     <div class="projects-group-grid">
@@ -535,11 +534,11 @@ export default {
   },
 
   methods: {
-    nextAchievement() {
-      this.$refs.achievementsCarousel.next()
+   nextAchievement() {
+      this.$refs.achievementsCarousel.next();
     },
     prevAchievement() {
-      this.$refs.achievementsCarousel.prev()
+      this.$refs.achievementsCarousel.prev();
     },
     startAutoSlide() {
       this.autoSlideInterval = setInterval(() => {
@@ -2903,7 +2902,6 @@ const inspirationImagesBottom = [
     left: 5.5rem;
   }
 
-  /* Successfull Section */
   .project-card.large {
     min-height: 12rem;
   }
@@ -2912,7 +2910,11 @@ const inspirationImagesBottom = [
     gap: 1rem;
   }
   .project-card.small {
-    min-height: 12rem;
+    min-height: 18rem;
+  }
+
+  .marquee-img {
+    height: 260px;
   }
   /* achievements section */
   .achievements-carousel-wrapper {

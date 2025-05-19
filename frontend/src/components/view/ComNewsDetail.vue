@@ -73,7 +73,7 @@
               @click="goToNewsDetail(post)"
             >
               <div class="post-image">
-                <img :src="post.imageUrl" />
+                <img :src="getImageUrl(post.image)" />
               </div>
               <div class="post-info">
                 <div class="post-date">{{ post.date }}</div>
@@ -125,27 +125,6 @@ export default {
       return filtered.filter((news) => news.title.toLowerCase().includes(query))
     })
 
-    // Tải dữ liệu động
-    const loadData = async () => {
-      try {
-        // Lấy danh sách tin tức gần đây
-        const { data } = await newsService.getNews()
-        allNews.value = data.map((news) => ({
-          ...news,
-          imageUrl: getImageUrl(news.image),
-          date: formatDate(news.publishedDate), // Thêm ngày đăng cho từng bài viết
-        }))
-        // Lấy chi tiết tin tức
-        const newsDetail = await newsService.getNewsById(route.params.id)
-        currentNews.value = {
-          ...newsDetail,
-          imageUrl: getImageUrl(newsDetail.image),
-        }
-      } catch (e) {
-        error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
-      }
-    }
-
     // Function to get image URL
     const getImageUrl = (imagePath) => {
       // Nếu không có đường dẫn ảnh, trả về ảnh mặc định
@@ -168,6 +147,23 @@ export default {
         console.error('Failed to load image:', event.target.src)
         // Sử dụng ảnh có sẵn trên server với timestamp để tránh cache
         event.target.src = `${baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
+      }
+    }
+
+    // Tải dữ liệu động
+    const loadData = async () => {
+      try {
+        // Lấy danh sách tin tức gần đây
+        const { data } = await newsService.getNews()
+
+        // Use the imageUrl from the API response
+        allNews.value = data
+
+        // Lấy chi tiết tin tức
+        const newsDetail = await newsService.getNewsById(route.params.id)
+        currentNews.value = newsDetail
+      } catch (e) {
+        error.value = 'Không thể tải dữ liệu tin tức. Vui lòng thử lại sau.'
       }
     }
 
@@ -206,15 +202,16 @@ export default {
     )
 
     return {
-      searchQuery,
       currentNews,
+      searchQuery,
       filteredNews,
       goToNewsDetail,
       goToPreviousPost,
       goToNextPost,
       error,
       formatDate,
-      handleImageError
+      handleImageError,
+      getImageUrl,
     }
   },
 }

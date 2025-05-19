@@ -28,7 +28,7 @@
       </div>
 
       <div v-if="loading" class="loading-container">
-        <div class="loading-spinner"></div>
+        <!-- <div class="loading-spinner"></div> -->
         <div>Đang tải dữ liệu...</div>
       </div>
       <div v-else-if="error" class="error-container">
@@ -69,7 +69,11 @@
                 <td>{{ formatDate(booking.createdAt) }}</td>
                 <td class="actions-cell">
                   <div class="actions">
-                    <button @click="viewDetails(booking)" class="icon-btn info" title="Xem chi tiết">
+                    <button
+                      @click="viewDetails(booking)"
+                      class="icon-btn info"
+                      title="Xem chi tiết"
+                    >
                       <i class="fas fa-info-circle"></i>
                     </button>
                   </div>
@@ -131,123 +135,126 @@ export default {
   name: 'BookingList',
   data() {
     return {
-      bookings: [],
-      selectedBooking: null,
-      loading: false,
-      error: null,
-      search: '',
-      statusFilter: 'all',
+      bookings: [], // Danh sách đặt lịch
+      selectedBooking: null, // Đặt lịch được chọn để xem chi tiết
+      loading: false, // Trạng thái tải dữ liệu
+      error: null, // Thông báo lỗi nếu có
+      search: '', // Giá trị tìm kiếm
+      statusFilter: 'all', // Bộ lọc trạng thái
     }
   },
   computed: {
     filteredBookings() {
       let filtered = this.bookings.filter(
-        (b) => b.status === 'completed' || b.status === 'cancelled'
+        (b) => b.status === 'completed' || b.status === 'cancelled' // Lọc các đặt lịch đã hoàn thành hoặc đã hủy
       )
       if (this.statusFilter !== 'all') {
-        filtered = filtered.filter((b) => b.status === this.statusFilter)
+        filtered = filtered.filter((b) => b.status === this.statusFilter) // Lọc theo trạng thái nếu không phải 'all'
       }
       if (this.search) {
-        const s = this.search.toLowerCase()
+        const s = this.search.toLowerCase() // Chuyển giá trị tìm kiếm thành chữ thường
         filtered = filtered.filter(
           (b) =>
-            (b.fullName && b.fullName.toLowerCase().includes(s)) ||
-            (b.email && b.email.toLowerCase().includes(s)) ||
-            (b.phone && b.phone.toLowerCase().includes(s)) ||
-            (b.service && b.service.toLowerCase().includes(s))
+            (b.fullName && b.fullName.toLowerCase().includes(s)) || // Lọc theo họ tên
+            (b.email && b.email.toLowerCase().includes(s)) || // Lọc theo email
+            (b.phone && b.phone.toLowerCase().includes(s)) || // Lọc theo số điện thoại
+            (b.service && b.service.toLowerCase().includes(s)) // Lọc theo dịch vụ
         )
       }
-      return filtered
+      return filtered // Trả về danh sách đã lọc
     },
   },
   methods: {
     async fetchBookings() {
       try {
-        this.loading = true
-        this.error = null
-        const response = await bookingService.getAllBookings()
-        this.bookings = response.data || []
+        this.loading = true // Bắt đầu tải dữ liệu
+        this.error = null // Đặt lại thông báo lỗi
+        const response = await bookingService.getAllBookings() // Gọi dịch vụ để lấy danh sách đặt lịch
+        this.bookings = response.data || [] // Cập nhật danh sách đặt lịch
       } catch (error) {
-        console.error('Error fetching bookings:', error)
-        this.error = 'Không thể tải danh sách đặt lịch. Vui lòng thử lại sau.'
+        console.error('Error fetching bookings:', error) // Ghi log lỗi
+        this.error = 'Không thể tải danh sách đặt lịch. Vui lòng thử lại sau.' // Cập nhật thông báo lỗi
       } finally {
-        this.loading = false
+        this.loading = false // Kết thúc quá trình tải dữ liệu
       }
     },
     viewDetails(booking) {
-      this.selectedBooking = booking
+      this.selectedBooking = booking // Đặt lịch được chọn để xem chi tiết
     },
     getStatusText(status) {
       const statusMap = {
-        processing: 'Đang xử lý',
-        completed: 'Đã hoàn thành',
-        cancelled: 'Đã hủy',
+        processing: 'Đang xử lý', // Trạng thái đang xử lý
+        completed: 'Đã hoàn thành', // Trạng thái đã hoàn thành
+        cancelled: 'Đã hủy', // Trạng thái đã hủy
       }
-      return statusMap[status] || status
+      return statusMap[status] || status // Trả về văn bản trạng thái tương ứng
     },
     formatDate(date) {
-      const dateObj = new Date(date)
+      const dateObj = new Date(date) // Chuyển đổi chuỗi ngày thành đối tượng Date
       const dateString = dateObj.toLocaleDateString('vi-VN', {
         day: '2-digit',
         month: '2-digit',
-        year: 'numeric'
-      })
+        year: 'numeric',
+      }) // Định dạng ngày
       const timeString = dateObj.toLocaleTimeString('vi-VN', {
         hour: '2-digit',
-        minute: '2-digit'
-      })
-      return `${dateString} - ${timeString}`
+        minute: '2-digit',
+      }) // Định dạng giờ
+      return `${dateString} - ${timeString}` // Trả về chuỗi ngày và giờ
     },
   },
   created() {
-    this.fetchBookings()
+    this.fetchBookings() // Gọi hàm để tải danh sách đặt lịch khi component được tạo
   },
 }
 </script>
 
 <style scoped>
-
-@import "@/styles/admin.css";
+/* Các kiểu dáng cho component */
+@import '@/styles/admin.css';
 
 .admin-container {
   background: #fff;
-  min-height: 100vh;
+  min-height: 100vh; /* Chiều cao tối thiểu của container */
 }
 
+/* Các kiểu dáng cho header của danh sách đặt lịch */
 .actions-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
   gap: 20px;
-  flex-wrap: wrap; /* Thêm dòng này để cho phép xuống dòng khi thiếu không gian */
+  flex-wrap: wrap; /* Cho phép xuống dòng khi thiếu không gian */
 }
 
+/* Các kiểu dáng cho phần tìm kiếm */
 .search-section {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex-direction: row-reverse; /* Reverse the order of search and filter */
+  flex-direction: row-reverse; /* Đảo ngược thứ tự của tìm kiếm và bộ lọc */
   flex-wrap: wrap; /* Cho phép xuống dòng khi không đủ chỗ */
 }
 
+/* Các kiểu dáng cho phần bên phải của header */
 .right-section {
   display: flex;
   align-items: center;
-  /* Thêm thuộc tính này để tránh tràn ra ngoài */
-  flex-shrink: 0;
-  min-width: 180px;
+  flex-shrink: 0; /* Ngăn không cho phần này co lại */
+  min-width: 180px; /* Chiều rộng tối thiểu */
   margin-top: 12px;
 }
 
+/* Các kiểu dáng cho responsive */
 @media (max-width: 900px) {
   .actions-header {
-    flex-direction: column;
+    flex-direction: column; /* Đặt các phần theo chiều dọc */
     align-items: stretch;
     gap: 12px;
   }
   .search-section {
-    width: 100%;
+    width: 100%; /* Chiều rộng 100% */
     justify-content: flex-start;
     gap: 10px;
   }
@@ -258,13 +265,14 @@ export default {
   }
 }
 
+/* Các kiểu dáng cho responsive trên màn hình nhỏ hơn 600px */
 @media (max-width: 600px) {
   .search-box {
-    width: 100%;
+    width: 100%; /* Chiều rộng 100% */
     min-width: 0;
   }
   .filter-box {
-    width: 100%;
+    width: 100%; /* Chiều rộng 100% */
     min-width: 0;
   }
   .right-section {
@@ -273,356 +281,380 @@ export default {
   }
 }
 
+/* Các kiểu dáng cho ô tìm kiếm */
 .search-box {
   position: relative;
-  width: 360px;
+  width: 360px; /* Chiều rộng của ô tìm kiếm */
 }
 
 .search-box input {
-  width: 100%;
-  padding: 12px 16px 12px 40px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  width: 100%; /* Chiều rộng 100% */
+  padding: 12px 16px 12px 40px; /* Padding cho ô nhập */
+  border: 1px solid #e2e8f0; /* Đường viền */
+  border-radius: 8px; /* Bo tròn góc */
+  font-size: 14px; /* Kích thước chữ */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển tiếp */
 }
 
 .search-box input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none; /* Không có viền khi ô nhập được chọn */
+  border-color: #3b82f6; /* Đổi màu viền khi chọn */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Hiệu ứng bóng */
 }
 
 .search-box i {
   position: absolute;
-  left: 14px;
+  left: 14px; /* Vị trí biểu tượng tìm kiếm */
   top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
+  transform: translateY(-50%); /* Căn giữa biểu tượng */
+  color: #64748b; /* Màu sắc biểu tượng */
 }
 
+/* Các kiểu dáng cho bộ lọc */
 .filter-box {
-  width: 200px;
+  width: 200px; /* Chiều rộng của bộ lọc */
 }
 
 .filter-box select {
-    padding: 10px 32px 10px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 14px;
-    background-color: white;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
+  padding: 10px 32px 10px 12px; /* Padding cho ô chọn */
+  border: 1px solid #e5e7eb; /* Đường viền */
+  border-radius: 8px; /* Bo tròn góc */
+  font-size: 14px; /* Kích thước chữ */
+  background-color: white; /* Màu nền */
+  cursor: pointer; /* Con trỏ khi di chuột */
+  -webkit-appearance: none; /* Ẩn kiểu mặc định của trình duyệt */
+  -moz-appearance: none; /* Ẩn kiểu mặc định của trình duyệt */
+  appearance: none; /* Ẩn kiểu mặc định của trình duyệt */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); /* Biểu tượng mũi tên */
+  background-repeat: no-repeat; /* Không lặp lại biểu tượng */
+  background-position: right 8px center; /* Vị trí biểu tượng */
+  background-size: 16px; /* Kích thước biểu tượng */
 }
 
 .filter-box select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none; /* Không có viền khi ô chọn được chọn */
+  border-color: #3b82f6; /* Đổi màu viền khi chọn */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Hiệu ứng bóng */
 }
 
+/* Các kiểu dáng cho nút chờ xử lý */
 .pending-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
+  gap: 8px; /* Khoảng cách giữa biểu tượng và chữ */
+  padding: 12px 20px; /* Padding cho nút */
+  background-color: #3b82f6; /* Màu nền */
+  color: white; /* Màu chữ */
+  border: none; /* Không có đường viền */
+  border-radius: 8px; /* Bo tròn góc */
+  font-size: 14px; /* Kích thước chữ */
+  font-weight: 500; /* Độ đậm của chữ */
+  cursor: pointer; /* Con trỏ khi di chuột */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển tiếp */
+  text-decoration: none; /* Không có gạch chân */
 }
 
 .pending-btn:hover {
-  background-color: #2563eb;
-  transform: translateY(-1px);
+  background-color: #2563eb; /* Đổi màu nền khi di chuột */
+  transform: translateY(-1px); /* Hiệu ứng nhấc lên khi di chuột */
 }
 
+/* Các kiểu dáng cho bảng */
 .table-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* Changed from overflow: hidden to enable horizontal scrolling */
+  background: white; /* Màu nền của bảng */
+  border-radius: 12px; /* Bo tròn góc */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+  overflow: auto; /* Cho phép cuộn khi nội dung vượt quá chiều cao */
+  max-height: 400px; /* Chiều cao tối đa cho bảng, có thể điều chỉnh */
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
+  width: 100%; /* Chiều rộng 100% */
+  border-collapse: collapse; /* Gộp các đường viền */
 }
 
-th, td {
-  padding: 16px;
-  text-align: center; /* căn giữa nội dung */
-  border-bottom: 1px solid #e2e8f0;
+th,
+td {
+  padding: 16px; /* Padding cho ô */
+  text-align: center; /* Căn giữa nội dung */
+  border-bottom: 1px solid #e2e8f0; /* Đường viền dưới */
 }
 
 th {
-  background-color: #f9fafb;
-  font-weight: 600;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb; /* Màu nền của tiêu đề */
+  font-weight: 600; /* Độ đậm của chữ */
+  padding: 12px 16px; /* Padding cho tiêu đề */
+  border-bottom: 1px solid #e5e7eb; /* Đường viền dưới tiêu đề */
 }
 
-/* căn giữa các nút thao tác */
+/* Căn giữa các nút thao tác */
 .actions-cell {
-  width: 100px;
-  text-align: center; /* căn giữa cell */
+  width: 100px; /* Chiều rộng của ô thao tác */
+  text-align: center; /* Căn giữa cell */
 }
 
 .actions {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center; /* căn giữa các nút */
-  align-items: center;
+  gap: 0.5rem; /* Khoảng cách giữa các nút */
+  justify-content: center; /* Căn giữa các nút */
+  align-items: center; /* Căn giữa theo chiều dọc */
 }
 
 tr:hover {
-  background-color: #f9fafb;
+  background-color: #f9fafb; /* Đổi màu nền khi di chuột qua hàng */
 }
 
+/* Các kiểu dáng cho nhãn trạng thái */
 .status-badge {
   display: inline-flex;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 6px 12px; /* Padding cho nhãn */
+  border-radius: 999px; /* Bo tròn hoàn toàn */
+  font-size: 13px; /* Kích thước chữ */
+  font-weight: 500; /* Độ đậm của chữ */
 }
 
 .status-badge.completed {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #dcfce7; /* Màu nền cho trạng thái đã hoàn thành */
+  color: #166534; /* Màu chữ cho trạng thái đã hoàn thành */
 }
 
 .status-badge.cancelled {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: #fee2e2; /* Màu nền cho trạng thái đã hủy */
+  color: #991b1b; /* Màu chữ cho trạng thái đã hủy */
 }
 
+/* Các kiểu dáng cho nút biểu tượng */
 .icon-btn {
-  padding: 0.5rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 36px;
-  height: 36px;
+  padding: 0.5rem; /* Padding cho nút */
+  border: none; /* Không có đường viền */
+  border-radius: 6px; /* Bo tròn góc */
+  cursor: pointer; /* Con trỏ khi di chuột */
+  transition: all 0.2s ease; /* Hiệu ứng chuyển tiếp */
+  width: 36px; /* Chiều rộng của nút */
+  height: 36px; /* Chiều cao của nút */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
 }
 
 .icon-btn.info {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: #dbeafe; /* Màu nền cho nút thông tin */
+  color: #2563eb; /* Màu chữ cho nút thông tin */
 }
 
 .icon-btn:hover {
-  background-color: #f1f5f9;
+  background-color: #f1f5f9; /* Đổi màu nền khi di chuột */
 }
 
-/* Modal and Details Styling */
+/* Các kiểu dáng cho modal và chi tiết */
 .modal {
-  position: fixed;
+  position: fixed; /* Đặt modal ở vị trí cố định */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 24px;
-  animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(4px);
+  width: 100%; /* Chiều rộng 100% */
+  height: 100%; /* Chiều cao 100% */
+  background: rgba(0, 0, 0, 0.5); /* Nền mờ */
+  display: flex; /* Hiển thị dưới dạng flex */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  z-index: 1000; /* Đặt z-index cao để hiển thị trên các phần khác */
+  padding: 24px; /* Padding cho modal */
+  animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng xuất hiện */
+  backdrop-filter: blur(4px); /* Làm mờ nền phía sau modal */
 }
 .modal-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 1;
+  position: absolute; /* Đặt overlay ở vị trí tuyệt đối */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; /* Đặt overlay phủ toàn bộ modal */
+  background: rgba(0, 0, 0, 0.5); /* Nền mờ cho overlay */
+  z-index: 1; /* Đặt z-index cho overlay */
 }
 .modal-content {
-  position: relative;
-  z-index: 2;
-  background: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; /* Đặt nội dung modal ở vị trí tương đối */
+  z-index: 2; /* Đặt z-index cho nội dung modal */
+  background: white; /* Màu nền trắng cho nội dung modal */
+  border-radius: 16px; /* Bo tròn góc */
+  width: 100%; /* Chiều rộng 100% */
+  max-width: 700px; /* Chiều rộng tối đa */
+  max-height: 90vh; /* Chiều cao tối đa */
+  overflow-y: auto; /* Cuộn dọc nếu nội dung vượt quá chiều cao */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Hiệu ứng bóng */
+  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng trượt vào */
 }
 
 .modal-header {
-  background: linear-gradient(to right, #f8fafc, #f1f5f9);
-  border-bottom: 1px solid #e2e8f0;
-  padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: linear-gradient(to right, #f8fafc, #f1f5f9); /* Nền gradient cho header */
+  border-bottom: 1px solid #e2e8f0; /* Đường viền dưới */
+  padding: 1.5rem 2rem; /* Padding cho header */
+  display: flex; /* Hiển thị dưới dạng flex */
+  justify-content: space-between; /* Căn giữa các phần tử */
+  align-items: center; /* Căn giữa theo chiều dọc */
 }
 
 .modal-header h3 {
-  font-size: 1.5rem;
-  background: linear-gradient(to right, #1e293b, #334155);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 700;
-  margin: 0;
-  letter-spacing: -0.025em;
+  font-size: 1.5rem; /* Kích thước chữ cho tiêu đề */
+  background: linear-gradient(to right, #1e293b, #334155); /* Nền gradient cho chữ */
+  -webkit-background-clip: text; /* Cắt nền cho chữ */
+  -webkit-text-fill-color: transparent; /* Làm cho chữ trong suốt */
+  font-weight: 700; /* Độ đậm của chữ */
+  margin: 0; /* Không có margin */
+  letter-spacing: -0.025em; /* Khoảng cách giữa các chữ */
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 20px; /* Padding cho nội dung modal */
 }
 
 .detail-item {
-  margin-bottom: 24px;
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 16px;
-  align-items: start;
-  padding: 12px;
-  background-color: #f8fafc;
-  border-radius: 8px;
-  width: 100%;
-  overflow: hidden; /* Ngăn nội dung lấn ra ngoài */
+  margin-bottom: 24px; /* Khoảng cách dưới mỗi mục chi tiết */
+  display: grid; /* Hiển thị dưới dạng lưới */
+  grid-template-columns: 120px 1fr; /* Định nghĩa lưới với 2 cột */
+  gap: 16px; /* Khoảng cách giữa các cột */
+  align-items: start; /* Căn trên cho các mục */
+  padding: 12px; /* Padding cho mục chi tiết */
+  background-color: #f8fafc; /* Nền cho mục chi tiết */
+  border-radius: 8px; /* Bo tròn góc */
+  width: 100%; /* Chiều rộng 100% */
+  overflow: hidden; /* Ẩn phần tràn ra ngoài */
 }
 
 .detail-item p {
-  font-size: 15px;
-  color: #334155;
-  line-height: 1.6;
-  margin: 0;
-  padding: 12px 16px;
-  background: white;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  min-height: 32px;
-  display: block;
-  word-break: break-word; /* Thay đổi từ word-wrap sang word-break */
-  white-space: pre-wrap;
-  max-width: 100%;
-  height: auto;
+  font-size: 15px; /* Kích thước chữ cho nội dung */
+  color: #334155; /* Màu chữ cho nội dung */
+  line-height: 1.6; /* Khoảng cách dòng */
+  margin: 0; /* Không có margin */
+  padding: 12px 16px; /* Padding cho nội dung */
+  background: white; /* Nền trắng cho nội dung */
+  border-radius: 6px; /* Bo tròn góc */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Hiệu ứng bóng */
+  min-height: 32px; /* Chiều cao tối thiểu */
+  display: block; /* Hiển thị dưới dạng khối */
+  word-break: break-word; /* Ngăn từ bị cắt */
+  white-space: pre-wrap; /* Giữ nguyên khoảng trắng */
+  max-width: 100%; /* Chiều rộng tối đa */
+  height: auto; /* Chiều cao tự động */
   overflow-x: hidden; /* Ngăn cuộn ngang */
   width: 100%; /* Đảm bảo chiều rộng 100% trong container */
   box-sizing: border-box; /* Tính padding vào width */
 }
 
 .close-btn {
-  background: white;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  background: white; /* Nền trắng cho nút đóng */
+  border: 1px solid #e2e8f0; /* Đường viền */
+  color: #64748b; /* Màu chữ */
+  width: 36px; /* Chiều rộng của nút */
+  height: 36px; /* Chiều cao của nút */
+  border-radius: 50%; /* Bo tròn hoàn toàn */
+  display: flex; /* Hiển thị dưới dạng flex */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  cursor: pointer; /* Con trỏ khi di chuột */
+  transition: all 0.2s ease; /* Hiệu ứng chuyển tiếp */
 }
 
 .close-btn:hover {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
-  transform: rotate(90deg);
+  background: #ef4444; /* Đổi màu nền khi di chuột */
+  color: white; /* Đổi màu chữ khi di chuột */
+  border-color: #ef4444; /* Đổi màu viền khi di chuột */
+  transform: rotate(90deg); /* Hiệu ứng xoay khi di chuột */
 }
 
+/* Hiệu ứng cho modal */
 @keyframes modalFadeIn {
   from {
-    opacity: 0;
-    backdrop-filter: blur(0);
+    opacity: 0; /* Bắt đầu với độ mờ 0 */
+    backdrop-filter: blur(0); /* Bắt đầu với nền không mờ */
   }
   to {
-    opacity: 1;
-    backdrop-filter: blur(4px);
+    opacity: 1; /* Kết thúc với độ mờ 1 */
+    backdrop-filter: blur(4px); /* Kết thúc với nền mờ */
   }
 }
 
+/* Hiệu ứng trượt cho modal */
 @keyframes modalSlideIn {
   from {
-    transform: translateY(-50px) scale(0.95);
-    opacity: 0;
+    transform: translateY(-50px) scale(0.95); /* Bắt đầu từ vị trí trên và nhỏ lại */
+    opacity: 0; /* Bắt đầu với độ mờ 0 */
   }
   to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
+    transform: translateY(0) scale(1); /* Kết thúc ở vị trí ban đầu và kích thước bình thường */
+    opacity: 1; /* Kết thúc với độ mờ 1 */
   }
 }
 
+/* Các kiểu dáng cho phần tải dữ liệu */
 .loading-container {
-  text-align: center;
-  padding: 48px;
-  color: #64748b;
+  text-align: center; /* Căn giữa nội dung */
+  padding: 48px; /* Padding cho phần tải */
+  color: #64748b; /* Màu chữ */
 }
 
+/* Hiệu ứng cho vòng quay tải */
 .loading-spinner {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3b82f6;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
+  border: 3px solid #f3f3f3; /* Đường viền cho vòng quay */
+  border-top: 3px solid #3b82f6; /* Đường viền trên màu khác */
+  border-radius: 50%; /* Bo tròn hoàn toàn */
+  width: 40px; /* Chiều rộng của vòng quay */
+  height: 40px; /* Chiều cao của vòng quay */
+  animation: spin 1s linear infinite; /* Hiệu ứng quay */
+  margin: 0 auto 16px; /* Căn giữa và khoảng cách dưới */
 }
 
+/* Các kiểu dáng cho thông báo lỗi */
 .error-container {
-  text-align: center;
-  padding: 48px;
-  color: #ef4444;
+  text-align: center; /* Căn giữa nội dung */
+  padding: 48px; /* Padding cho phần lỗi */
+  color: #ef4444; /* Màu chữ cho thông báo lỗi */
 }
 
+/* Các kiểu dáng cho nút thử lại */
 .retry-btn {
-  margin-top: 16px;
-  padding: 8px 16px;
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: 16px; /* Khoảng cách trên */
+  padding: 8px 16px; /* Padding cho nút */
+  background-color: #ef4444; /* Màu nền cho nút */
+  color: white; /* Màu chữ cho nút */
+  border: none; /* Không có đường viền */
+  border-radius: 6px; /* Bo tròn góc */
+  cursor: pointer; /* Con trỏ khi di chuột */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển tiếp */
 }
 
 .retry-btn:hover {
-  background-color: #dc2626;
+  background-color: #dc2626; /* Đổi màu nền khi di chuột */
 }
 
+/* Các kiểu dáng cho trạng thái không có dữ liệu */
 .empty-state {
-  text-align: center;
-  padding: 48px;
-  color: #64748b;
+  text-align: center; /* Căn giữa nội dung */
+  padding: 48px; /* Padding cho phần không có dữ liệu */
+  color: #64748b; /* Màu chữ */
 }
 
 .empty-state i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  display: block;
+  font-size: 48px; /* Kích thước biểu tượng */
+  margin-bottom: 16px; /* Khoảng cách dưới biểu tượng */
+  display: block; /* Hiển thị dưới dạng khối */
 }
 
+/* Hiệu ứng quay */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  } /* Bắt đầu từ 0 độ */
+  100% {
+    transform: rotate(360deg);
+  } /* Kết thúc ở 360 độ */
 }
 
+/* Các kiểu dáng cho danh sách tài khoản */
 .account-list {
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Padding cho danh sách tài khoản */
+  background: #fff; /* Màu nền trắng */
+  border-radius: 12px; /* Bo tròn góc */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
 }
 
 @media (max-width: 768px) {
@@ -630,7 +662,7 @@ tr:hover {
     overflow-x: auto;
     width: 100%;
   }
-  
+
   table {
     min-width: 600px; /* Ensure table has a minimum width to show all content */
   }

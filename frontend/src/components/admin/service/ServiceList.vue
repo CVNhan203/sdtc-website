@@ -114,7 +114,10 @@
         </tbody>
       </table>
     </div>
-
+    <div v-if="loading" class="loading-container">
+      <!-- <div class="loading-spinner"></div> -->
+      <p>Đang tải danh sách tin tức...</p>
+    </div>
     <!-- Service Details Modal -->
     <div class="modal" v-if="showDetailsModal">
       <div class="modal-overlay" @click="showDetailsModal = false"></div>
@@ -875,7 +878,12 @@ export default {
 
 <style scoped>
 @import '@/styles/admin.css';
-
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 2rem;
+}
 .service-list {
   background: #ffffff;
   border-radius: 12px;
@@ -1539,10 +1547,13 @@ tr:hover {
 }
 
 .detail-image {
-  max-width: 100%;
+  width: 100%;
+  max-width: 300px;
   height: auto;
-  border-radius: 4px;
-  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 8px;
 }
 
 .status-badge {
