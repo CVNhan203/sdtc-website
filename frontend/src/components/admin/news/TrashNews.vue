@@ -22,9 +22,11 @@
           v-if="selectedNews.length > 0"
           class="bulk-action-btn restore"
           @click="confirmBulkRestore"
+          :disabled="loading"
         >
-          <i class="fas fa-rotate-left"></i>
-          Khôi phục đã chọn
+          <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+          <i v-else class="fas fa-rotate-left"></i>
+          {{ loading ? 'Đang xử lý...' : 'Khôi phục đã chọn' }}
         </button>
 
         <!-- Nút xóa vĩnh viễn hàng loạt - chỉ hiển thị khi có mục được chọn -->
@@ -73,7 +75,7 @@
             <td>
               <div class="image-container">
                 <img
-                  :src="getFixedImage(index)"
+                  :src="news.imageUrl || getImageUrl(news.image)"
                   alt="News image"
                   class="news-image"
                   @error="handleImageError"
@@ -87,10 +89,11 @@
             <!-- Các nút thao tác cho từng dòng -->
             <td>
               <div class="actions">
-                <button class="icon-btn restore" @click="confirmRestore(news)" title="Khôi phục">
-                  <i class="fas fa-rotate-left"></i>
+                <button class="icon-btn restore" @click="confirmRestore(news)" title="Khôi phục" :disabled="loading">
+                  <i v-if="loading && selectedNews.includes(news._id)" class="fas fa-spinner fa-spin"></i>
+                  <i v-else class="fas fa-rotate-left"></i>
                 </button>
-                <button class="icon-btn delete" @click="confirmDelete(news)" title="Xóa vĩnh viễn">
+                <button class="icon-btn delete" @click="confirmDelete(news)" title="Xóa vĩnh viễn" :disabled="loading">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -120,8 +123,11 @@
             chọn không?
           </p>
           <div class="form-actions">
-            <button class="cancel-btn" @click="showRestoreModal = false">Hủy</button>
-            <button class="submit-btn" @click="handleRestore">Khôi phục</button>
+            <button class="cancel-btn" @click="showRestoreModal = false" :disabled="loading">Hủy</button>
+            <button class="submit-btn" @click="handleRestore" :disabled="loading">
+              <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+              {{ loading ? 'Đang xử lý...' : 'Khôi phục' }}
+            </button>
           </div>
         </div>
       </div>
@@ -264,20 +270,30 @@ export default {
     },
     // Lấy đường dẫn đầy đủ của hình ảnh
     getImageUrl(imagePath) {
-      if (!imagePath) return null
-      if (imagePath.startsWith('http')) return imagePath
+      if (!imagePath) return `${this.baseImageUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
+      
+      // Nếu đã là URL đầy đủ, sử dụng trực tiếp với timestamp
+      if (imagePath.startsWith('http')) return `${imagePath}?t=${new Date().getTime()}`
 
       // Lấy tên file từ đường dẫn
       const filename = imagePath.split('/').pop().split('\\').pop()
 
-      // Tạo đường dẫn tuyệt đối đến backend
-      return `${this.baseImageUrl}/uploads/images/${filename}`
+      // Tạo đường dẫn tuyệt đối đến backend với timestamp để tránh cache
+      return `${this.baseImageUrl}/uploads/images/${filename}?t=${new Date().getTime()}`
     },
     // Xử lý lỗi khi tải hình ảnh
     handleImageError(event) {
       if (event && event.target) {
-        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
-        console.error('Failed to load image:', event.target.src)
+        // Kiểm tra xem đã xử lý lỗi cho ảnh này chưa
+        if (event.target.getAttribute('data-error-handled')) {
+          return; // Ngăn xử lý lỗi lặp lại
+        }
+        
+        // Đánh dấu đã xử lý lỗi
+        event.target.setAttribute('data-error-handled', 'true');
+        
+        // Sử dụng baseImageUrl thay vì hardcode IP và thêm timestamp để tránh cache
+        event.target.src = `${this.baseImageUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
       }
     },
     // Trả về một trong ba ảnh cố định dựa trên index
@@ -331,34 +347,40 @@ export default {
     // Xử lý khôi phục tin tức
     async handleRestore() {
       try {
+        this.loading = true;
         // Gọi API để khôi phục các tin tức đã chọn
         for (const id of this.selectedNews) {
           try {
-            await newsService.restoreNews(id)
+            await newsService.restoreNews(id);
           } catch (err) {
-            console.error('Error restoring news:', err)
+            console.error(`Lỗi khôi phục tin tức ID ${id}:`, err);
+            throw err; // Ném lỗi để xử lý ở catch bên ngoài
           }
         }
 
         // Cập nhật danh sách
-        await this.loadNews()
+        await this.loadNews();
 
         // Reset selection
-        this.selectedNews = []
-        this.showRestoreModal = false
+        this.selectedNews = [];
+        this.showRestoreModal = false;
+        this.loading = false;
 
         // Thông báo thành công
         eventBus.emit('show-toast', {
           type: 'success',
           message: 'Khôi phục tin tức thành công',
-        })
-        eventBus.emit('update-deleted-news-count')
+        });
+        eventBus.emit('update-deleted-news-count');
       } catch (error) {
-        console.error('Error restoring news:', error)
+        this.loading = false;
+        console.error('Lỗi khôi phục tin tức:', error);
+        // Hiển thị thông báo lỗi cụ thể từ server nếu có
+        const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra khi khôi phục tin tức';
         eventBus.emit('show-toast', {
           type: 'error',
-          message: 'Có lỗi xảy ra khi khôi phục tin tức',
-        })
+          message: errorMessage,
+        });
       }
     },
     // Xử lý xóa vĩnh viễn tin tức

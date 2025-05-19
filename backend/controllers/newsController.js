@@ -271,32 +271,37 @@ exports.uploadNewsImage = asyncHandler(async (req, res) => {
 
 // Khôi phục bài viết
 exports.restoreNews = asyncHandler(async (req, res) => {
-  let news
-  if (req.user && req.user.role === 'staff') {
-    news = await News.findOneAndUpdate(
-      { _id: req.params.id, author: req.user.fullName },
-      { $set: { isDeleted: false } },
-      { new: true }
-    )
-  } else {
-    news = await News.findByIdAndUpdate(
-      req.params.id,
-      { $set: { isDeleted: false } },
-      { new: true }
-    )
-  }
+  try {
+    let news;
+    if (req.user && req.user.role === 'staff') {
+      news = await News.findOneAndUpdate(
+        { _id: req.params.id, author: req.user.fullName, isDeleted: true },
+        { $set: { isDeleted: false } },
+        { new: true }
+      );
+    } else {
+      news = await News.findOneAndUpdate(
+        { _id: req.params.id, isDeleted: true },
+        { $set: { isDeleted: false } },
+        { new: true }
+      );
+    }
+    
+    if (!news) {
+      res.status(404);
+      throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền khôi phục bài viết này');
+    }
 
-  if (!news) {
-    res.status(404)
-    throw new Error('Không tìm thấy bài viết hoặc bạn không có quyền khôi phục bài viết này')
+    res.status(200).json({
+      success: true,
+      data: news,
+      message: 'Khôi phục bài viết thành công',
+    });
+  } catch (error) {
+    console.error(`Lỗi khôi phục: ${error.message}`);
+    throw error;
   }
-
-  res.status(200).json({
-    success: true,
-    data: news,
-    message: 'Khôi phục bài viết thành công',
-  })
-})
+});
 
 // Xóa vĩnh viễn bài viết
 exports.permanentDeleteNews = asyncHandler(async (req, res) => {
@@ -342,14 +347,18 @@ exports.getTrashNews = asyncHandler(async (req, res) => {
     News.countDocuments(query),
   ])
 
-  // Tự thêm trường imageUrl vào từng bài viết (đường dẫn tương đối)
+  // Tự thêm trường imageUrl vào từng bài viết với đường dẫn tuyệt đối và timestamp
+  const timestamp = new Date().getTime()
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
   const newsWithImageUrl = news.map((n) => {
     let imageUrl = ''
     if (n.image) {
       if (n.image.startsWith('http')) {
-        imageUrl = n.image
+        imageUrl = `${n.image}?t=${timestamp}`
       } else {
-        imageUrl = '/' + n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        const cleanPath = n.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = `${baseUrl}/${cleanPath}?t=${timestamp}`
       }
     }
     return { ...n, imageUrl }

@@ -19,42 +19,32 @@ const adminMiddleware = require('../middleware/adminMiddleware')
 const authMiddleware = require('../middleware/authMiddleware')
 const adminOrStaffMiddleware = require('../middleware/adminOrStaffMiddleware')
 
-// Routes công khai - không yêu cầu đăng nhập
-router.get('/', getNews)
-router.get('/:id', getNewsById)
-
 // Route upload ảnh - công khai cho admin/staff
 router.post('/upload', upload.single('image'), uploadNewsImage)
 
-// Routes yêu cầu xác thực Admin hoặc Staff
-router.use(authMiddleware)
-router.use(adminOrStaffMiddleware)
+// Đặt route thùng rác TRƯỚC route /:id để tránh xung đột
+router.get('/trash', authMiddleware, adminOrStaffMiddleware, getTrashNews)
 
-// Route cho thùng rác phải đặt trước các route có pattern /:id
-router.get('/trash', getTrashNews)
+// Route khôi phục bài viết (quan trọng - phải đặt trước các route ID)
+router.patch('/:id/restore', authMiddleware, adminOrStaffMiddleware, restoreNews)
 
-// Routes thao tác nhiều items
-router.post('/delete-many', deleteNewsMany)
+// Route xóa vĩnh viễn cũng quan trọng - phải đặt trước route /:id
+router.delete('/:id/permanent', authMiddleware, adminOrStaffMiddleware, permanentDeleteNews)
+
+// Routes thao tác nhiều items - phải đặt trước /:id
+router.post('/delete-many', authMiddleware, adminOrStaffMiddleware, deleteNewsMany)
+router.delete('/many', authMiddleware, adminOrStaffMiddleware, deleteNewsMany)
 
 // Routes CRUD cơ bản
-router.post('/', createNews)
+router.post('/', authMiddleware, adminOrStaffMiddleware, createNews)
 
-// Tạo bài viết mới (yêu cầu admin hoặc staff)
-router.post('/', adminOrStaffMiddleware, createNews)
+// Routes cần xác thực
+router.put('/:id', authMiddleware, adminOrStaffMiddleware, updateNews)
+router.delete('/:id', authMiddleware, adminOrStaffMiddleware, deleteNews)
 
-// Cập nhật bài viết (yêu cầu admin hoặc staff)
-router.put('/:id', adminOrStaffMiddleware, updateNews)
-
-//Xóa nhiều bài viết (yêu cầu admin hoặc staff)
-router.delete('/many', adminOrStaffMiddleware, deleteNewsMany)
-
-// Xóa bài viết (yêu cầu admin hoặc staff)
-router.delete('/:id', adminOrStaffMiddleware, deleteNews)
-
-// Khôi phục bài viết (yêu cầu admin hoặc staff)
-router.patch('/:id/restore', adminOrStaffMiddleware, restoreNews)
-
-// Xóa vĩnh viễn bài viết (yêu cầu admin hoặc staff)
-router.delete('/:id/permanent', adminOrStaffMiddleware, permanentDeleteNews)
+// Routes công khai - không yêu cầu đăng nhập
+router.get('/', getNews)
+// Route /:id phải đặt CUỐI CÙNG để tránh xung đột với các route khác
+router.get('/:id', getNewsById)
 
 module.exports = router

@@ -24,11 +24,28 @@ exports.getServices = asyncHandler(async (req, res) => {
 
   const [services, total] = await Promise.all([servicesQuery.lean(), Service.countDocuments(query)])
 
+  // Thêm trường imageUrl vào từng dịch vụ với đường dẫn tuyệt đối và timestamp
+  const timestamp = new Date().getTime()
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
+  const servicesWithImageUrl = services.map((s) => {
+    let imageUrl = ''
+    if (s.image) {
+      if (s.image.startsWith('http')) {
+        imageUrl = `${s.image}?t=${timestamp}`
+      } else {
+        const cleanPath = s.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+        imageUrl = `${baseUrl}/${cleanPath}?t=${timestamp}`
+      }
+    }
+    return { ...s, imageUrl }
+  })
+
   const totalPages = Math.ceil(total / Number(limit))
 
   res.status(200).json({
     success: true,
-    data: services,
+    data: servicesWithImageUrl,
     pagination: {
       total,
       totalPages,
@@ -50,9 +67,24 @@ exports.getServiceById = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy dịch vụ')
   }
 
+  // Thêm trường imageUrl với đường dẫn tuyệt đối và timestamp
+  const timestamp = new Date().getTime()
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
+  let imageUrl = ''
+  if (service.image) {
+    if (service.image.startsWith('http')) {
+      imageUrl = `${service.image}?t=${timestamp}`
+    } else {
+      const cleanPath = service.image.replace(/^\\+|^\/+/, '').replace(/\\/g, '/')
+      imageUrl = `${baseUrl}/${cleanPath}?t=${timestamp}`
+    }
+  }
+  const serviceWithImageUrl = { ...service, imageUrl }
+
   res.status(200).json({
     success: true,
-    data: service,
+    data: serviceWithImageUrl,
     message: 'Lấy chi tiết dịch vụ thành công',
   })
 })
@@ -111,45 +143,29 @@ exports.deleteService = asyncHandler(async (req, res) => {
 })
 
 exports.uploadServiceImage = asyncHandler(async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'Không có file được tải lên' })
-    }
-
-    // Chuẩn hóa đường dẫn và đảm bảo định dạng nhất quán
-    const imagePath = req.file.path.replace(/\\/g, '/') // Chuẩn hóa đường dẫn với dấu /
-    
-    // Lấy thông tin đầy đủ về file
-    console.log('File info:', req.file)
-    console.log('File path:', req.file.path)
-    console.log('Image path after normalization:', imagePath)
-    
-    const baseUrl = req.app.locals.BASE_URL
-    console.log('Base URL:', baseUrl)
-    
-    // Lấy chỉ tên file
-    const filename = req.file.filename
-    // Tạo đường dẫn tương đối
-    const relativePath = 'uploads/images/' + filename
-    // Tạo URL đầy đủ
-    const imageUrl = `${baseUrl}/${relativePath}`
-    
-    console.log('Đường dẫn ảnh đã tạo:', imageUrl)
-
-    // Kiểm tra file có tồn tại không
-    const fullPath = path.join(__dirname, '..', relativePath)
-    const exists = fs.existsSync(fullPath)
-    console.log('File exists check:', exists, 'at path:', fullPath)
-
-    res.status(200).json({
-      success: true,
-      message: 'Tải ảnh lên thành công',
-      imagePath: imageUrl,
-    })
-  } catch (error) {
-    console.error('Lỗi khi upload ảnh:', error)
-    res.status(500).json({ message: 'Lỗi server khi upload ảnh' })
+  if (!req.file) {
+    res.status(400)
+    throw new Error('Vui lòng tải lên một file ảnh')
   }
+
+  // Lấy đường dẫn tương đối của file, phù hợp để lưu vào db
+  const relativePath = path.join('uploads', 'images', req.file.filename).replace(/\\/g, '/')
+  
+  // Thêm timestamp vào đường dẫn để tránh cache
+  const timestamp = new Date().getTime()
+  
+  // Lấy BASE_URL từ app.locals
+  const baseUrl = req.app.locals.BASE_URL || 'http://localhost:3000'
+  
+  // Tạo đường dẫn đầy đủ với BASE_URL và timestamp
+  const fullPath = `${baseUrl}/${relativePath}?t=${timestamp}`
+
+  res.status(200).json({
+    success: true,
+    imagePath: relativePath,
+    fullPath: fullPath,
+    message: 'Tải ảnh lên thành công',
+  })
 })
 
 // Khôi phục dịch vụ đã xóa

@@ -4,20 +4,24 @@
       <div class="brand-panel">
         <div class="brand-content">
           <div class="brand-logo">
-            <img src="@/assets/sdtc-image/trang-chu/Logo/sdtc.png" alt="Sea Dragon Technology" class="logo-image">
+            <img
+              src="@/assets/sdtc-image/trang-chu/Logo/sdtc.png"
+              alt="Sea Dragon Technology"
+              class="logo-image"
+            />
           </div>
           <h2>Hệ thống quản trị</h2>
           <p>Quản lý nội dung và dữ liệu của ứng dụng</p>
         </div>
       </div>
-      
+
       <div class="form-panel">
         <div class="form-container">
           <div class="form-header">
             <h1>Đăng nhập</h1>
             <p>Vui lòng đăng nhập để tiếp tục</p>
           </div>
-          
+
           <form @submit.prevent="handleSubmit" class="login-form">
             <div class="form-group">
               <label for="email">Email</label>
@@ -47,11 +51,7 @@
                   required
                   autocomplete="current-password"
                 />
-                <button 
-                  type="button" 
-                  class="toggle-password" 
-                  @click="showPassword = !showPassword"
-                >
+                <button type="button" class="toggle-password" @click="showPassword = !showPassword">
                   {{ showPassword ? 'Ẩn' : 'Hiện' }}
                 </button>
               </div>
@@ -67,7 +67,7 @@
               <span v-else>Đang xử lý...</span>
             </button>
           </form>
-          
+
           <div class="login-footer">
             <p>© 2025 SDTC Admin - Bản quyền thuộc về nhóm 2</p>
           </div>
@@ -171,7 +171,7 @@ export default {
 </script>
 
 <style scoped>
-@import "@/styles/admin.css";
+@import '@/styles/admin.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 .admin-login {
@@ -196,7 +196,7 @@ export default {
 
 .brand-panel {
   flex: 0 0 40%;
-  background-color: #00275f;
+  background-color: #0d1624;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -313,7 +313,9 @@ export default {
   font-size: 15px;
   background-color: #f9fafb;
   color: #111827;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .form-group input:focus {
@@ -413,20 +415,20 @@ export default {
     width: 100%;
     max-width: 420px;
   }
-  
+
   .brand-panel {
     flex: 0 0 auto;
     padding: 40px 20px;
   }
-  
+
   .form-panel {
     flex: 0 0 auto;
   }
-  
+
   .form-container {
     padding: 30px 20px;
   }
-  
+
   .brand-logo {
     width: 160px;
     margin-bottom: 20px;
@@ -438,19 +440,19 @@ export default {
     width: 140px;
     margin-bottom: 16px;
   }
-  
+
   .brand-content h2 {
     font-size: 22px;
   }
-  
+
   .form-container {
     padding: 24px 16px;
   }
-  
+
   .form-header h1 {
     font-size: 24px;
   }
-  
+
   .form-group {
     margin-bottom: 18px;
   }

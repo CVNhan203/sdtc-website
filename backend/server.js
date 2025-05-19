@@ -24,31 +24,27 @@ app.use(express.json())
 app.use(cors({
   origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:8080'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-// Định nghĩa BASE_URL cho server - sử dụng localhost
-const BASE_URL = 'http://localhost:3000'
+// Tạo BASE_URL cho server - để đảm bảo đường dẫn ảnh hoạt động đúng
+const BASE_URL = `http://localhost:${port}`
 app.locals.BASE_URL = BASE_URL
-console.log('Server BASE_URL:', BASE_URL)
 
 // Cấu hình để phục vụ tệp tĩnh từ thư mục uploads
 const uploadsPath = path.join(__dirname, 'uploads')
-console.log('Thư mục uploads đầy đủ:', uploadsPath)
 
 app.use('/uploads', (req, res, next) => {
   // Thêm CORS headers cho file tĩnh
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
   
   // Cấu hình kiểm soát cache để đảm bảo ảnh luôn được cập nhật
   res.setHeader('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
   res.setHeader('Expires', '0');
   res.setHeader('Pragma', 'no-cache');
-  
-  // Log yêu cầu để debug
-  console.log('Request to static file:', req.url);
   
   // Thiết lập Content-Type nếu là hình ảnh
   if (req.url.match(/\.(jpg|jpeg|png|gif)$/i)) {
@@ -62,27 +58,14 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(uploadsPath));
 
-// Đảm bảo đường dẫn cụ thể cho hình ảnh
-const imagesPath = path.join(__dirname, 'uploads', 'images')
-console.log('Thư mục images đầy đủ:', imagesPath)
-
-// Thêm route để test thư mục uploads
-app.get('/test-uploads', (req, res) => {
-  const files = fs.readdirSync(uploadsPath)
-  res.json({
-    uploadsPath,
-    files
-  })
-})
-
-// Thêm route để test thư mục images
-app.get('/test-images', (req, res) => {
-  const files = fs.readdirSync(imagesPath)
-  res.json({
-    imagesPath,
-    files
-  })
-})
+// Đảm bảo các thư mục uploads tồn tại
+const imagesDir = path.join(uploadsPath, 'images')
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true })
+}
+if (!fs.existsSync(imagesDir)) {
+  fs.mkdirSync(imagesDir, { recursive: true })
+}
 
 // Routes
 app.use('/api/emails', emailRoutes)
@@ -94,51 +77,32 @@ app.use('/api/bookings', bookingRoutes)
 // Admin routes
 app.use('/api/admin', adminRoutes)
 
-// API chẩn đoán
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'online',
-    timestamp: new Date().toISOString(),
-    uploads: {
-      path: uploadsPath,
-      exists: fs.existsSync(uploadsPath)
-    },
-    imagesPath: {
-      path: imagesPath,
-      exists: fs.existsSync(imagesPath)
-    },
-    images: fs.existsSync(imagesPath) ? fs.readdirSync(imagesPath) : []
-  });
-});
-
-// Thêm route kiểm tra trực tiếp cho hình ảnh
-app.get('/test-image/:filename', (req, res) => {
-  const filename = req.params.filename
-  const imagePath = path.join(uploadsPath, 'images', filename)
-  
-  console.log('Testing image path:', imagePath)
-  
-  // Kiểm tra file tồn tại
-  if (require('fs').existsSync(imagePath)) {
-    res.sendFile(imagePath)
-  } else {
-    res.status(404).send('Image not found')
-  }
+// Xử lý lỗi 404 - khi không tìm thấy route
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: 'Route not found',
+  })
 })
 
-// Bổ sung route để kiểm tra tệp tĩnh
-app.get('/check-image/:filename', (req, res) => {
-  const filename = req.params.filename
-  const imagePath = path.join(uploadsPath, 'images', filename)
-  
-  // Kiểm tra file tồn tại
-  if (require('fs').existsSync(imagePath)) {
-    res.json({ exists: true, path: imagePath, url: `${BASE_URL}/uploads/images/${filename}` })
-  } else {
-    res.json({ exists: false })
-  }
+// Error middleware
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err.message)
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode
+  res.status(statusCode).json({
+    message: err.message,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+  })
 })
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server đang chạy tại ${BASE_URL}`)
+const server = app.listen(port, () => {
+  console.log(`Server đang chạy tại http://localhost:${port}`)
+})
+
+// Xử lý khi bị crash
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', promise, 'reason:', reason)
+  // Đóng server gracefully
+  server.close(() => {
+    process.exit(1)
+  })
 })

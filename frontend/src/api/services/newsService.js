@@ -4,10 +4,8 @@ import api from '../config'
 const newsService = {
   // Lấy danh sách tin tức
   async getNews() {
-    console.log('🔍 Đang gọi API getNews...');
     try {
       const response = await api.get('/news') // Gửi yêu cầu GET đến API để lấy danh sách tin tức
-      console.log('✅ Kết quả API getNews:', response.data) // Thêm dòng này để debug
       return {
         data: response.data.data || [], // Trả về dữ liệu tin tức, nếu không có thì trả về mảng rỗng
                                        // Mỗi item trong data sẽ có thuộc tính imageUrl được thêm vào từ API
@@ -15,52 +13,36 @@ const newsService = {
         message: response.data.message || '', // Trả về thông điệp, nếu không có thì trả về chuỗi rỗng
       }
     } catch (error) {
-      console.error('❌ Lỗi getNews:', error) // In ra lỗi chi tiết
-      if (error.response) {
-        console.error('  - Status:', error.response.status);
-        console.error('  - Data:', error.response.data);
-      } else if (error.request) {
-        console.error('  - No response received');
-      } else {
-        console.error('  - Error setting up request:', error.message);
-      }
+      console.error('Lỗi getNews:', error) // Giữ lại log lỗi cơ bản
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
 
   // Lấy chi tiết tin tức
   async getNewsById(id) {
-    console.log('🔍 Đang gọi API getNewsById với id:', id);
     try {
       // Sử dụng cùng cách gọi API như getNews để đảm bảo nhất quán
       const response = await api.get(`/news/${id}`)
-      console.log('✅ Kết quả API getNewsById:', response.data)
       // data.data sẽ có thuộc tính imageUrl được tạo từ API
       return response.data.data
     } catch (error) {
-      console.error('❌ Lỗi getNewsById:', error)
-      if (error.response) {
-        console.error('  - Status:', error.response.status);
-        console.error('  - Data:', error.response.data);
-      }
+      console.error('Lỗi getNewsById:', error)
       
       // Nếu lỗi 401, thử lấy dữ liệu thông qua API listing và lọc theo ID
       if (error.response && error.response.status === 401) {
         try {
-          console.log('🔄 Thử lấy tin tức từ danh sách...')
           // Lấy danh sách tin tức và tìm bài viết cụ thể theo ID
           const newsListResponse = await api.get('/news')
           const newsList = newsListResponse.data.data || []
           const newsItem = newsList.find(item => (item._id || item.id) == id)
           
           if (newsItem) {
-            console.log('✅ Đã tìm thấy tin tức từ danh sách:', newsItem)
             return newsItem
           } else {
-            console.error('❌ Không tìm thấy tin tức với id:', id)
+            console.error('Không tìm thấy tin tức với id:', id)
           }
         } catch (listError) {
-          console.error('❌ Lỗi khi lấy tin tức từ danh sách:', listError)
+          console.error('Lỗi khi lấy tin tức từ danh sách:', listError)
         }
       }
       
@@ -78,7 +60,7 @@ const newsService = {
       })
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error creating news:', error) // In ra lỗi nếu có
+      console.error('Lỗi tạo tin tức:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -93,7 +75,7 @@ const newsService = {
       })
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error updating news:', error) // In ra lỗi nếu có
+      console.error('Lỗi cập nhật tin tức:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -104,7 +86,7 @@ const newsService = {
       const response = await api.delete(`/news/${id}`) // Gửi yêu cầu DELETE để xóa tin tức
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error deleting news:', error) // In ra lỗi nếu có
+      console.error('Lỗi xóa tin tức:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -115,7 +97,7 @@ const newsService = {
       const response = await api.post('/news/upload', formData) // Gửi yêu cầu POST để upload ảnh
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error uploading image:', error) // In ra lỗi nếu có
+      console.error('Lỗi upload ảnh:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -123,10 +105,11 @@ const newsService = {
   // Khôi phục tin tức
   async restoreNews(id) {
     try {
-      const response = await api.patch(`/news/${id}/restore`, { isDeleted: false }) // Gửi yêu cầu PATCH để khôi phục tin tức
+      // Gửi yêu cầu PATCH không kèm body data
+      const response = await api.patch(`/news/${id}/restore`)
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error restoring news:', error) // In ra lỗi nếu có
+      console.error('Lỗi khôi phục tin tức:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -137,7 +120,7 @@ const newsService = {
       const response = await api.delete(`/news/${id}/permanent`) // Gửi yêu cầu DELETE để xóa vĩnh viễn tin tức
       return response.data // Trả về dữ liệu từ phản hồi
     } catch (error) {
-      console.error('Error permanently deleting news:', error) // In ra lỗi nếu có
+      console.error('Lỗi xóa vĩnh viễn tin tức:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },
@@ -152,7 +135,7 @@ const newsService = {
         message: response.data.message || '', // Trả về thông điệp, nếu không có thì trả về chuỗi rỗng
       }
     } catch (error) {
-      console.error('Error fetching news in trash:', error) // In ra lỗi nếu có
+      console.error('Lỗi lấy tin tức trong thùng rác:', error) // In ra lỗi nếu có
       throw error // Ném lỗi ra ngoài để xử lý
     }
   },

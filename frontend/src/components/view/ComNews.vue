@@ -42,7 +42,7 @@
 
     <!-- Hiển thị khi không có kết quả tìm kiếm -->
     <div v-else class="no-results">
-      <p>Không tìm thấy tin tức nào phù hợp với từ khóa "{{ searchQuery }}"</p>
+      <p>Không tìm thấy tin tức "{{ searchQuery }}"</p>
       <button @click="clearSearch" class="clear-search-btn">Xóa tìm kiếm</button>
     </div>
   </div>
