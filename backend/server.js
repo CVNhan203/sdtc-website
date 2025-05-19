@@ -22,14 +22,28 @@ app.use(express.json())
 
 // Cấu hình CORS cho phép frontend truy cập API
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:8080'],
+  origin: ['https://tansanh.github.io', 'http://localhost:8080', 'http://127.0.0.1:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
+// Thiết lập CORS middleware bổ sung để đảm bảo header luôn được gửi
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://tansanh.github.io');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Tạo BASE_URL cho server - để đảm bảo đường dẫn ảnh hoạt động đúng
-const BASE_URL = `http://localhost:${port}`
+const BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://sdtc-website.onrender.com'
+  : `http://localhost:${port}`
 app.locals.BASE_URL = BASE_URL
 
 // Cấu hình để phục vụ tệp tĩnh từ thư mục uploads
@@ -95,7 +109,7 @@ app.use((err, req, res, next) => {
 })
 
 const server = app.listen(port, () => {
-  console.log(`Server đang chạy tại http://localhost:${port}`)
+  console.log(`Server đang chạy tại ${BASE_URL}`)
 })
 
 // Xử lý khi bị crash
