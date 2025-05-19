@@ -29,7 +29,7 @@
         <img 
           :src="getImageUrl(news.image)" 
           class="news-image" 
-          @error="handleImageError" 
+          @error="handleImageError(null, news._id)" 
         />
         <div class="news-content">
           <p class="news-category">{{ news.type || news.category || 'Không có danh mục' }}</p>
@@ -95,25 +95,25 @@ export default {
     goToNewsDetail(news) {
       this.router.push({ path: `/tin-tuc/${news._id || news.id}` })
     },
-    handleImageError(event) {
+    handleImageError(event, newsId) {
       // Khi ảnh không tải được, thay thế bằng ảnh mặc định
       if (event && event.target) {
-        console.error('Failed to load image:', event.target.src)
-        // Sử dụng ảnh có sẵn trên server thay vì placeholder
-        event.target.src = 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
+        console.error('Failed to load image for news ID:', newsId)
+        // Sử dụng ảnh có sẵn trên server với timestamp để tránh cache
+        event.target.src = `${this.baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
       }
     },
     getImageUrl(imagePath) {
-      if (!imagePath) return 'http://192.168.2.34:3000/uploads/images/1746862099720.png'
-      
+      if (!imagePath) return `${this.baseMediaUrl}/uploads/images/1746862099720.png?t=${new Date().getTime()}`
+
       // Nếu đã là URL đầy đủ, sử dụng trực tiếp
-      if (imagePath.startsWith('http')) return imagePath
-      
+      if (imagePath.startsWith('http')) return `${imagePath}?t=${new Date().getTime()}`
+
       // Lấy tên file từ đường dẫn
       const filename = imagePath.split('/').pop().split('\\').pop()
-      
-      // Tạo đường dẫn tuyệt đối đến backend
-      return `${this.baseMediaUrl}/uploads/images/${filename}`
+
+      // Tạo đường dẫn tuyệt đối đến backend với timestamp để tránh cache
+      return `${this.baseMediaUrl}/uploads/images/${filename}?t=${new Date().getTime()}`
     },
   },
 }

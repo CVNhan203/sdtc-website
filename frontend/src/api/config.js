@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // Cấu hình kết nối đến backend
-const backendHost = '192.168.2.34'
+const backendHost = 'localhost'
 const backendPort = '3000'
 
 // Base URL cho API requests
@@ -9,6 +9,9 @@ const baseApiUrl = `http://${backendHost}:${backendPort}/api`
 
 // Base URL cho media (hình ảnh, video, vv...)
 export const baseMediaUrl = `http://${backendHost}:${backendPort}`
+
+// Thêm log để kiểm tra cấu hình
+console.log('Backend URLs:', { baseApiUrl, baseMediaUrl })
 
 const api = axios.create({
   baseURL: baseApiUrl,
