@@ -180,10 +180,15 @@ const routes = [
     name: 'AdminLogin',
     component: AdminLogin,
   },
+  // Thêm redirect cho trang mặc định và cho 404
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.NODE_ENV === 'production' ? '/sdtc-website/' : '/'),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // Nếu có vị trí scroll đã lưu (như khi nhấn nút back/forward)
