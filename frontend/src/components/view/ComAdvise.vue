@@ -29,15 +29,19 @@
         <form @submit.prevent="submitForm">
           <div class="form-group">
             <input type="text" v-model="form.fullName" placeholder="Họ tên (*)" />
+            <span class="text-danger" v-if="fieldErrors.fullName">{{ fieldErrors.fullName }}</span>
           </div>
           <div class="form-group">
             <input type="tel" v-model="form.phone" placeholder="Số điện thoại (*)" />
+            <span class="text-danger" v-if="fieldErrors.phone">{{ fieldErrors.phone }}</span>
           </div>
           <div class="form-group">
-            <input type="email" v-model="form.email" placeholder="Địa chỉ email" />
+            <input type="email" v-model="form.email" placeholder="Địa chỉ email (*)" />
+            <span class="text-danger" v-if="fieldErrors.email">{{ fieldErrors.email }}</span>
           </div>
           <div class="form-group">
             <input type="text" v-model="form.service" placeholder="Dịch vụ cần tư vấn (*)" />
+            <span class="text-danger" v-if="fieldErrors.service">{{ fieldErrors.service }}</span>
           </div>
           <div class="form-group">
             <textarea v-model="form.note" placeholder="Ghi chú" rows="4"></textarea>
@@ -73,6 +77,12 @@ export default {
         service: '',
         note: '',
       },
+        fieldErrors: {
+        fullName: '',
+        phone: '',
+        email: '',
+        service: '',
+      },
       success: '',
       error: '',
       errorList: [],
@@ -81,10 +91,54 @@ export default {
   },
   methods: {
     async submitForm() {
-      this.loading = true
       this.error = ''
       this.success = ''
       this.errorList = []
+      this.fieldErrors = {
+        fullName: '',
+        phone: '',
+        email: '',
+        service: '',
+      }
+
+      let hasError = false
+
+      // Phần validation
+       if (!this.form.fullName.trim()) {
+    this.fieldErrors.fullName = 'Vui lòng nhập họ và tên.'
+    hasError = true
+  }
+
+  const phonePattern = /^[0-9]{9,11}$/
+  if (!this.form.phone.trim()) {
+    this.fieldErrors.phone = 'Vui lòng nhập số điện thoại.'
+    hasError = true
+  } else if (!phonePattern.test(this.form.phone)) {
+    this.fieldErrors.phone = 'Số điện thoại không hợp lệ.'
+    hasError = true
+  }
+
+  if (!this.form.email.trim()) {
+    this.fieldErrors.email = 'Vui lòng nhập địa chỉ email.'
+    hasError = true
+  } else {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(this.form.email)) {
+      this.fieldErrors.email = 'Email không hợp lệ.'
+      hasError = true
+    }
+  }
+
+  if (!this.form.service.trim()) {
+    this.fieldErrors.service = 'Vui lòng nhập dịch vụ cần tư vấn.'
+    hasError = true
+  }
+
+  if (hasError) return
+  this.loading = true
+
+      //  Nếu không có lỗi, gửi dữ liệu
+      this.loading = true
       try {
         await bookingService.createBooking(this.form)
         this.success = 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm.'
@@ -248,6 +302,17 @@ textarea {
 
 .submit-btn:active {
   transform: scale(0.98);
+}
+
+.text-danger {
+  color: #ff4136; /* Màu đỏ đồng bộ với .error-message */
+  font-size: 0.92rem;
+  margin-top: 4px;
+  display: block;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  /* Có thể thêm hiệu ứng nhẹ nếu muốn */
+  transition: color 0.2s;
 }
 
 /* Responsive Styles */
@@ -465,7 +530,6 @@ html {
 .error-message {
   color: #ff4136;
   font-size: 0.8rem;
-
   font-weight: bold;
 }
 
