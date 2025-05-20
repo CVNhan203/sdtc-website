@@ -73,15 +73,26 @@ export default {
         clearTimeout(this.resetTimer);
       }
       
-      // Thay đổi ảnh hiển thị
-      this.selectedImage = image.src;
-      this.selectedImageAlt = image.alt;
+      // Lưu ảnh hiện tại trước khi thay đổi
+      const currentMainImage = {
+        src: this.selectedImage,
+        alt: this.selectedImageAlt
+      };
       
-      // Đặt timer để trở về ảnh ban đầu sau 5 giây
-      this.resetTimer = setTimeout(() => {
-        this.selectedImage = this.originalImage;
-        this.selectedImageAlt = this.originalImageAlt;
-      }, 3000);
+      // Tìm vị trí của ảnh được chọn trong mảng
+      const imageIndex = this.images.findIndex(img => img.src === image.src);
+      
+      if (imageIndex !== -1) {
+        // Thay đổi ảnh hiển thị chính
+        this.selectedImage = image.src;
+        this.selectedImageAlt = image.alt;
+        
+        // Thay thế ảnh được chọn bằng ảnh chính cũ (không dùng $set)
+        this.images[imageIndex] = currentMainImage;
+        
+        // Tạo một mảng mới để đảm bảo tính reactive
+        this.images = [...this.images];
+      }
     }
   }
 }

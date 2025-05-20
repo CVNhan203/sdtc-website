@@ -200,16 +200,15 @@ export default {
 /* Grid layout hiển thị các bài viết tin tức */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
   margin-top: 80px;
 }
 
 /* Card hiển thị mỗi bài viết tin tức */
 .news-card {
-  width: 392px;
-  height: 501px;
-  gap: 20px;
+  width: 100%;
+  height: auto;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -221,10 +220,11 @@ export default {
 
 /* Hình ảnh trong card tin tức */
 .news-image {
-  width: 392px;
+  width: 100%;
   height: 280px;
   border-radius: 20px;
   border-width: 0.2px;
+  object-fit: cover;
 }
 
 /* Hiệu ứng khi hover vào hình ảnh */
@@ -232,7 +232,6 @@ export default {
   filter: grayscale(70%) brightness(105%);
   opacity: 0.7;
 }
-
 
 .news-content {
   margin-left: 15px; 
@@ -371,17 +370,13 @@ export default {
     margin-top: 60px;
   }
 
-  .news-card {
-    height: auto;
-  }
-
   .news-image {
     height: 220px;
   }
 
   .news-content {
-    padding: 20px;
-    max-width: 20px;
+    padding: 15px;
+    max-width: initial;
   }
 }
 

@@ -27,7 +27,7 @@
 
         <!-- Hình ảnh bài viết -->
         <div class="news-image">
-          <img :src="currentNews.imageUrl" @error="handleImageError($event)" />
+          <img :src="getImageUrl(currentNews.image)" @error="handleImageError($event)" />
         </div>
 
         <!-- Nội dung văn bản của bài viết -->
@@ -602,10 +602,11 @@ export default {
   .sidebar {
     width: 100%;
     position: static;
+    margin-top: 30px;
   }
 
-  .navigation-container {
-    width: 100%;
+  .news-title {
+    font-size: 28px;
   }
 }
 
@@ -624,13 +625,70 @@ export default {
     height: 50px;
   }
 
+  .post-info {
+    max-width: calc(100% - 90px);
+  }
+
   .news-meta {
     gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 12px;
   }
 
   .nav-button {
     font-size: 14px;
     padding: 10px 16px;
+  }
+
+  .recent-posts h2 {
+    font-size: 24px;
+  }
+
+  .news-image img {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-detail-container {
+    padding: 12px;
+  }
+  
+  .news-title {
+    font-size: 20px;
+  }
+
+  .news-content-wrapper {
+    gap: 20px;
+  }
+
+  .news-image img {
+    max-height: 220px;
+  }
+
+  .post-navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .nav-button {
+    width: 100%;
+  }
+
+  .post-image {
+    width: 60px;
+    height: 40px;
+  }
+  
+  .post-info {
+    max-width: calc(100% - 75px);
+  }
+  
+  .post-excerpt {
+    font-size: 14px;
   }
 }
 </style>
