@@ -1,3 +1,4 @@
+<!-- deploy -->
 <template>
   <div class="price-list-container">
     <!-- Phần header cho bảng giá -->
